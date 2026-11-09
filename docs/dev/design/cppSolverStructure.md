@@ -80,10 +80,14 @@ SolveSteps:  FinishStep for the initial state (or the restart state)
   `IncreaseStepSize` of the solver class.
 - **Explicit**: `automaticStepSize` for the tableaus with an embedded method (ODE23, DOPRI5): inside `Newton()` the
   error of the embedded solution in the RMS norm with `absoluteTolerance` and `relativeTolerance` (positions,
-  velocities, ODE1), the elementary controller h (1/e)^(1/q) with `stepSizeSafety`, `stepSizeMaxIncrease`,
-  `minimumStepSize`; a rejected step repeated at once, an accepted one gives the next step size (#2109). The reduction
-  by Newton/post-Newton failures is the shared path above.
-- So there are two step size rules in C++, and a third in Python (the PI controller of `_ErrorStepSize`, RG20.8.1).
+  velocities, ODE1), scaled by the absolute values; the step size by `StepSizeController` (below); a rejected step
+  repeated at once, an accepted one gives the next step size (#2109, #3245).
+- **`StepSizeController`** (`src/Solver/StepSizeController.h`) is the one step size rule of the adaptive solvers
+  (ODE23, DOPRI5, TrapezoidalGGL, the implicit Runge-Kutta solvers): `Control` is the PI controller of Gustafsson with
+  `stepSizeSafety`, `stepSizeMaxIncrease`, `minimumStepSize` and no growth after a rejection; `ReducedStepSize` is the
+  step after a failed post-Newton step or Newton iteration - the recommended step size, at most 0.75 h, else
+  `adaptiveStepDecrease` - also without growth afterwards (#3394); generalized-alpha uses `ReducedStepSize` as well.
+  The Python solvers have the same rule in `_ErrorStepSize` (RG20.8.1).
   The values a two-step error estimate needs - the stage velocities of the previous step - are not kept: the explicit
   solver keeps the stages of the current step only (`rk.stageDerivODE2`), the implicit solver none.
 
@@ -201,7 +205,8 @@ CSolverBase                                   unchanged: step loop, discontinuou
 - **`StepSizeController`** (new, small, `src/Solver/StepSizeController.h`): the PI controller of `_ErrorStepSize`
   (RG20.8.1) with the settings of `timeIntegration` (safety, maximal increase and decrease, minimum step), the
   rejection and the step after a rejection; used by `CSolverImplicitRungeKutta` and, replacing its elementary rule, by
-  the explicit ODE23 and DOPRI5 (RG20.8.2). The reduction after a failed Newton stays the base class path.
+  the explicit ODE23 and DOPRI5 (RG20.8.2); the reduction after a failed Newton or post-Newton step by its
+  `ReducedStepSize` (RG20.8.4).
 - **`StepErrorEstimate`**: `oneStep` - the difference to the embedded trapezoidal solution of the first and the last
   stage; `twoSteps` - the quadrature error against the polynomial through the stage values of the previous and this
   step, which needs the stage velocities and accelerations of the last accepted step kept (a few vectors of nODE2 +

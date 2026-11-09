@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "revision2026c step RG13.1: before total coordinates are added (RG13.2, #1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers",
   "dateRaised": "2026-10-16",
-  "deadline": "2027-04-14"
+  "deadline": "2027-04-14",
+  "workingRemarks": "planned as revision2026c step RG5.8 (moved from RG13 on 2026-11-09: total coordinates only with a performance gain)"
 }

@@ -9092,6 +9092,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-17
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1: before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
+  - **remarks:** planned as revision2026c step RG5.8 (moved from RG13 on 2026-11-09: total coordinates only with a performance gain)
   - date raised: 2026-10-16
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
@@ -9108,6 +9109,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-05
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
+  - **remarks:** revision2026c step RG11.7 closed 2026-11-09: a remark in group RG5, a measured performance step only
   - date raised: 2026-09-29
 - `TESTING` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` the ROS examples were last tested in 2023 and nobody can run them (#2511)
   - description: ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
@@ -9178,7 +9180,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2024-11-02
 - `CHECK` `HIGH EFF` total coordinates (#1910)
   - description: consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
-  - **remarks:** planned as revision2026c step RG13.2 (maintainer 2026-10-16): the solvers keep relative coordinates, total coordinates an additional result; after the performance baseline RG13.1 (\#3002)
+  - **remarks:** planned as revision2026c step RG13.2 (maintainer 2026-10-16): the solvers keep relative coordinates, total coordinates an additional result; after the performance baseline RG13.1 (\#3002); planned as revision2026c step RG5.8 (moved from RG13 on 2026-11-09: total coordinates only with a performance gain)
   - date raised: 2024-10-26
 - `EXTENSION` `HIGH EFF` Reference/link data (#1904)
   - description: evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls

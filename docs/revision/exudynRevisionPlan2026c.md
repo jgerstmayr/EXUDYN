@@ -52,7 +52,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The baseline of the solvers** (RG13.1), measured by python/testing/solverBaseline.py.
+2. **The baseline of the solvers** (RG5.8.1), measured by python/testing/solverBaseline.py; it decides on the total coordinates (RG5.8.2).
 3. **The larger open work**, once the next release is planned: the linear algebra benchmark (RG5.1), the plugin
    interface (RG8), the checked item interface (RG9.6).
 
@@ -72,6 +72,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
+  - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
@@ -95,12 +96,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (2 open sub-steps)
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
-  - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
-- **RG13** Total coordinates
-  - RG13.1 Measure the solvers on more models, solvers and configurations, as the baseline
-  - RG13.2 Evaluate how the total coordinates are provided efficiently
 - **RG14** Uniform evaluation of symbolic systems on the CPU and the GPU
   - RG14.2 Evaluate a symbolic system by levels of numpy ufuncs on the CPU, for one state and for ensembles (1 open sub-step)
   - RG14.3 Run the arrays of the uniform evaluation by CuPy on the GPU
@@ -124,15 +121,15 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
-| RG5 | OPEN | 8 | Performance |
+| RG5 | OPEN | 11 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 5 | Misc |
+| RG11 | OPEN | 4 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
-| RG13 | OPEN | 2 | Total coordinates |
+| RG13 | CLOSED | 0 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
 | RG19 | OPEN | 5 | Revision of the robotics submodule |
 | RG20 | OPEN | 2 | Advanced solvers |
@@ -477,6 +474,8 @@ the tolerance, the step size of the examples, or the check off in them.
 
 Measurement first, then the code that is actually hot.
 
+Remark (maintainer 2026-11-09, from RG11.7, #2746): objects that compute from the coordinates passed in instead of reading them from their nodes would simplify automatic differentiation and could speed up the finite elements; done only as a measured performance step of this group, together with the numerical differentiation of the Jacobians (evaluation in the log of revision2026b step RG15.1).
+
 ### **OPEN_RG5.1** Write a linear algebra micro-benchmark that every build carries
 
 `exudyn.special.RunLinalgBenchmark()`: the real operations - `Vector` add, scale and `MultAdd`, `SlimVector` and
@@ -563,6 +562,18 @@ CLOSED 2026-10-24 (#3081; maintainer: the data is recorded now): removed with it
 Analysis 2026-11-02 (same machine, builds side by side): the slowdown is smaller than the performance logs of different days suggest - generalContactSpheresPerf with one thread 4.27 s at 1.13.190 against 4.59 s now (+7.5 %), of which the contact +0.1 s (3.17 / 3.27 s, Contact:Overall) and the 50000 loads +0.2 s. A model of 50000 mass points with a LoadForceVector each, 300 steps of explicit Euler: ODE2RHS 2.29 s at 1.13.190, 2.82 s now; without the loads unchanged. The bisection gives d0ef1944 (#2978, the symbolic user functions in the threads): 2.18 s before, 2.88 s after, about 45 ns more per evaluated load (30 % of a load). Its source changes nothing in the serial path of the loads (ComputeODE2LoadsRHS, ComputeODE2SingleLoad, CLoad::GetLoadVector and the marker functions are the same): a virtual GetUserFunctions in CLoad, CMarker, CNode, CObject, UserFunctionBase as base class of the user functions, a bool in CSystemData, the include of PythonUserFunctions.h in CSystem.cpp. So it is the generated code (inlining, layout with whole-program optimization), not an added computation; no simple fix found. Proposed fix: the loop over the loads on data precomputed at Assemble per load (its marker type, the coordinate index or the ltg, the load type, bodyFixed, the user function), so that the common load on a node needs no virtual call of the marker; measured on the model above.
 
 CLOSED 2026-11-03 (#3232 closed, won't fix; maintainer 2026-11-03): not relevant now - the new contact module will treat the rigid bodies (particles), their loads and markers in a completely different and more efficient way, possibly with CUDA. The precomputed load data is not done.
+
+### **OPEN_RG5.8** Total coordinates, only if they give a performance gain
+
+From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a performance gain is expected). Total coordinates (reference plus current) beside the Current and Reference configurations, in the system data, the solvers, the items and the user functions. Today every item adds the reference to the current coordinates itself; the total coordinates would be formed once per update, at the cost of one vector addition and its memory. Only done if the baseline shows that the repeated additions cost more than that. The decision between total and relative coordinates in the user functions (RG7.3.4 point 13, userFunctionBoundary.md section 10) follows from it.
+
+#### **OPEN_RG5.8.1** Measure the solvers on more models, solvers and configurations, as the baseline
+
+#3002, moved from RG13.1. Rigid multibody, flexible bodies, contact, large systems; implicit and explicit solvers; dense and sparse, modified Newton, step sizes, multithreading - so that the cost of an additional vector addition per step is visible. python/testing/solverBaseline.py, first run by the timer of 2026-11-10 04:00.
+
+#### **OPEN_RG5.8.2** Evaluate whether and how total coordinates give a performance gain
+
+#1910, moved from RG13.2. After RG5.8.1: where the items add reference and current coordinates today and what that costs; where total coordinates would be formed (once per step, per Newton iteration, per evaluation), stored or linked (currentState.ODE2CoordsTotal, an option of the solver); a proposal only if the gain exceeds the vector addition and the memory.
 
 ## **OPEN_RG6** Graphics and rendering
 
@@ -1276,6 +1287,10 @@ CLOSED 2026-10-17, not done (maintainer: visualization is not critical for speed
 thin; a show flag would belong to the visualization items, so that the computation does not carry it). The drawing
 functions keep their argument itemNumber.
 
+#### **CLOSED_RG9.9.5** Evaluate what is left of the own item number in the arguments
+
+CLOSED 2026-11-09, evaluation: no own number is left in the computation (RG9.9.2/.3). What remains is itemNumber in UpdateGraphics of about 95 visualization items, which do not store their number; RG9.9.4 decided to keep this. The other numbers in arguments select another item. **Recommendation: close RG9.9** after deleting two dead comments; removing the argument from the drawing would take a number in every visualization item, in 5 groups (generator and base classes, bodies, connectors, nodes and markers, loads and sensors) - not recommended. [log](exudynRevisionLog2026c.md#rg9-9-5)
+
 ### **CLOSED_RG9.10** ObjectGenericDAE: an object on ODE2, ODE1 and algebraic coordinates, linear by matrices, nonlinear by user functions
 
 CLOSED 2026-11-01 (#3143; all sub-steps closed): the item with its matrices and five user functions, the analytic ODE1
@@ -1910,6 +1925,10 @@ CLOSED 2026-11-09: collision #3382, tool frame #3356, parent names and numbers s
 
 #782 (NGsolve, with its coordinate order), #1892 (`Vector3DList` and the others in the HDF5 load and save); the scipy CSR matrices are there (#1863 closed).
 
+##### **CLOSED_RG11.4.4.1** Evaluate numpy, scipy and HDF5 for MatrixContainer and the lists
+
+CLOSED 2026-11-09, evaluation: numpy and scipy CSR are accepted by MatrixContainer already (#1863), nothing to do; NGsolve not wanted, close #782; SaveDictToHDF5 refuses Vector2D/3D/6DList, Matrix3D/6DList and MatrixContainer (#1892), about 30 lines and a test model. **Recommendation: do #1892 as a sub-step, close #782, then close RG11.4.4.** [log](exudynRevisionLog2026c.md#rg11-4-4-1)
+
 #### **CLOSED_RG11.4.5** Images in dicts: the textures of graphics data and of the renderer to and from a dict
 
 CLOSED 2026-11-05 (#3268): SC.renderer.GetTexture(name) as a dict of name, image, interpretation and flags; 'textures' in the dicts of the renderer, the SystemContainer and Robot, added again by their SetDictionary; rendererDictionaryTest.py and robotDictionaryTest.py extended. [log](exudynRevisionLog2026c.md#rg11-4-5)
@@ -1939,10 +1958,16 @@ localPosition of the rigid body markers are deprecated and will be removed).
 
 CLOSED 2026-11-02 (#3179 resolved): the descriptions of rotationMarker0/1 of the five joints and connectors and of localPosition of MarkerBodyRigid and MarkerKinematicTreeRigid; no warning; revisions.md. [log](exudynRevisionLog2026c.md#rg11-6-1)
 
-### **OPEN_RG11.7** Let objects compute from the coordinates passed in instead of reading their nodes
+#### **CLOSED_RG11.6.2** Evaluate the joints on homogeneous transformations and the documentation of their Jacobians
+
+CLOSED 2026-11-09, evaluation: the 3D joints already compute on the marker frames with Jacobians by automatic differentiation, their rotation equations are entries of A0^T A1 - #2884 is mostly there. Left: (1) one shared function of the relative frame for ObjectJointGeneric, JointRevoluteZ and JointPrismaticX (small to medium); (2) analytic Jacobians by the relative twist, a performance question for RG5; (3) the 2D, sliding and rolling joints stay; (4) #845, one section on how the joint Jacobians are obtained. **Recommendation: do (1) and (4) as two sub-steps, (2) as a remark in RG5, then close RG11.6 and #2884.** [log](exudynRevisionLog2026c.md#rg11-6-2)
+
+### **CLOSED_RG11.7** Let objects compute from the coordinates passed in instead of reading their nodes
 
 #2746: for automatic differentiation; a performance question for the finite elements. The evaluation is in the log of
 revision2026b step RG15.1. From revision2026b group RG15.
+
+CLOSED 2026-11-09, not done (maintainer: a performance question): a remark in RG5; #2746 stays open as its issue.
 
 ### **CLOSED_RG11.8** Resolve the quick old issues
 
@@ -3288,7 +3313,7 @@ CLOSED 2026-11-02 (#3219 resolved): rigid markers, the friction of the built-in 
 
 CLOSED 2026-11-02 (#3220 resolved): _StepSize as the step size functions of the C++ solvers; symbolicSolversAdaptiveStepTest equal to SolveDynamic; a Newton failure still raises. [log](exudynRevisionLog2026c.md#rg12-74)
 
-## **OPEN_RG13** Total coordinates
+## **CLOSED_RG13** Total coordinates
 
 Total coordinates - reference plus current - beside the Current and Reference configurations, in the system data, the
 solvers, the computation functions of the items and the user functions (maintainer 2026-10-16). The solvers keep
@@ -3297,16 +3322,22 @@ one vector addition per update and their memory in the cache - mostly visible in
 between total and relative coordinates in the user functions (RG7.3.4 point 13, userFunctionBoundary.md section 10)
 waits for this group.
 
-### **OPEN_RG13.1** Measure the solvers on more models, solvers and configurations, as the baseline
+CLOSED 2026-11-09 (maintainer: total coordinates only if they give a performance gain): moved to RG5.8.
+
+### **CLOSED_RG13.1** Measure the solvers on more models, solvers and configurations, as the baseline
 
 #3002. Rigid multibody, flexible bodies, contact, large systems; implicit and explicit solvers; dense and sparse,
 modified Newton, step sizes, multithreading - so that the cost of an additional vector addition per step is visible.
 
-### **OPEN_RG13.2** Evaluate how the total coordinates are provided efficiently
+CLOSED 2026-11-09: moved to RG5.8.1 (#3002).
+
+### **CLOSED_RG13.2** Evaluate how the total coordinates are provided efficiently
 
 #1910. After RG13.1: where they are formed (once per step, per Newton iteration, per evaluation of the right-hand
 side), stored or linked (`currentState.ODE2CoordsTotal`, an option of the solver), how items and user functions get
 them, what it costs in each solver; a proposal for decision.
+
+CLOSED 2026-11-09: moved to RG5.8.2 (#1910).
 
 ## **OPEN_RG14** Uniform evaluation of symbolic systems on the CPU and the GPU
 

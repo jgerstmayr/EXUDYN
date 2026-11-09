@@ -197,7 +197,7 @@ the connector outside the list of connectors.
 | the user body is a finite element on existing nodes, with the body access functions (maintainer 2026-10-11) | every marker, connector, load and sensor works on it at once; ObjectGenericODE2 is a superelement, reached only at its mesh nodes |
 | the user connector gets its markers as Python objects per call (2026-10-12) | arrays of fixed marker quantities cannot reach a shape marker at varying local coordinates |
 | four user types per enumeration (2026-10-12) | enough to start; beyond them a user item reuses a type |
-| `qRef, qTotal` instead of displacements (2026-10-22, #3062) | nearly every user body needed the total coordinates; the C++ may move to total coordinates (RG13) |
+| `qRef, qTotal` instead of displacements (2026-10-22, #3062) | nearly every user body needed the total coordinates; the C++ may move to total coordinates where they give a performance gain (#1910) |
 | `parameters` a vector, its names in a ParameterLayout of the kind (#3056) | one recording serves every item of a kind |
 | no visualization argument; graphics data mapped by the positionUserFunction (2026-10-22, #3064) | the graphics function reaches its item through `mbs`; a symbolic body is drawn without Python |
 | algebraic equations, data coordinates, ODE1 not now (2026-10-22) | later through MainSystem functions |

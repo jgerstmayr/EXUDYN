@@ -380,9 +380,17 @@ $$
 $$
 and after a rejection the step size does not grow. The maximum step size is $h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}$,
 the minimum step size $h_{min}$ is given in the `timeIntegration` `simulationSettings`; a step at $h_{min}$ is accepted
-with a warning. The factor $f_{maxInc}$ limits the increase of the current step size $h$, the factor $f_{sfty}$ is a
-safety factor for limiting the chosen step size relative to the optimal one in order to avoid frequent step
-rejections.
+with a warning. The factor $f_{maxInc}$ (`timeIntegration.stepSizeMaxIncrease`) limits the increase of the current
+step size $h$, the factor $f_{sfty}$ (`timeIntegration.stepSizeSafety`) is a safety factor for limiting the chosen step
+size relative to the optimal one in order to avoid frequent step rejections; $a_{tol}$ and $r_{tol}$ are
+`timeIntegration.absoluteTolerance` and `relativeTolerance`, and $h_{min}$ is `timeIntegration.minimumStepSize`.
+
+A step can also fail outside of the error control: the post-Newton step of contact or friction does not converge, or
+the Newton iteration of an implicit solver fails. The step is then repeated with the step size the items recommend,
+at most $0.75 h$, or else with $h$ times `timeIntegration.adaptiveStepDecrease`; the next step does not grow either.
+This controller - the PI rule, the rejection, the limits and the reduction - is one implementation
+(`src/Solver/StepSizeController.h`) for `ODE23`, `DOPRI5`, `TrapezoidalGGL` and the implicit Runge-Kutta solvers
+(#3245, #3394); `exudyn.symbolics.advancedSolvers` uses the same rule in Python.
 For more details, see Hairer et al. [Hairer1987].
 
 ### Stability limit

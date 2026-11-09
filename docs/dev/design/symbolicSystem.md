@@ -112,7 +112,7 @@ so a changed reference needs a new export.
 **Recommendation**: keep `q` - the name of the solvers - and say it once in the base class: "q: the ODE2 coordinates
 relative to the reference configuration, qTotal = qRef + q"; `qRef` a member of the base class (zero in
 `NumpySystem`); the reference values an optional variable of `Equations()`, as the parameters. Whether user
-functions get total coordinates in general is RG13.2.
+functions get total coordinates in general is #1910, a performance question.
 
 ### 12.7 The table of operations
 

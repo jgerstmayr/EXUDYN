@@ -6431,6 +6431,52 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg9-9-5"></a>
+### RG9.9.5 — what is left of the own item number in the arguments (2026-11-09, #3013)
+*(Maintainer 2026-11-09: evaluate first.)*
+
+**What is left.** The computation has no own number left in any argument: RG9.9.2 and RG9.9.3 removed it from the objects, connectors, constraints, CSystem, MainObject and the sensors. What still takes a number:
+
+| where | argument | count | own number? |
+|---|---|---|---|
+| `UpdateGraphics` of the visualization items | itemNumber | 58 objects, 12 nodes, 14 markers, 3 loads, 7 sensors, ~80 files and the generated headers | yes, but the visualization items do not store it; the drawing loop passes its index |
+| `CallUserFunction`, `DrawMarker`, `VisualizationItemHelpers.h` | itemNumber | a few | as above |
+| `CSystem::ComputeObjectJacobianODE2/AlgebraicEquations/ReactionForces`, `AssembleObjectLTGLists`, `CSystemData::DeleteCObject` | objectNumber | 5 | no: the number selects the object |
+| `MainSystemData::PyGetObjectLocalToGlobal...`, the `Raise...` checks, `GeneralContact` | objectNumber, itemIndex | ~10 | no: the Python interface and other items |
+| `CObjectGenericDAE::SetNodeNumber`, `CSensor/CMarker::SetObjectNumber/SetNodeNumber` | nodeNumber, objectNumber | setters | no: the item they refer to |
+| two commented-out lines (`CObjectALEANCFCable2D.cpp`, `CObjectANCFBeam.cpp`) | objectNumber | 2 | dead comments |
+
+So the only remaining own number is the drawing. RG9.9.4 decided it stays there: nodes and markers stay thin, and the number lives in the loop of `VisualizationSystem.cpp`. Removing it would need a number (or a pointer to the computational item) in every visualization item. That costs memory per item, and the visualization only gains a shorter signature in about 95 functions.
+
+**Recommendation:** close RG9.9 as done, after deleting the two dead comments. If the drawing is to lose the argument after all, the groups would be: (1) the generator and the base classes of the five kinds, (2) the bodies and finite elements, (3) the connectors and joints, (4) nodes and markers, (5) loads and sensors. Each group is one build and the graphics regression test (`test_graphicsRegression.py`). I do not recommend it.
+
+<a id="rg11-4-4-1"></a>
+### RG11.4.4.1 — numpy, scipy and HDF5 for MatrixContainer and the lists (2026-11-09, #782, #1892)
+*(Maintainer 2026-11-09: evaluate first.)*
+
+**numpy and scipy are there.** `exu.MatrixContainer(m)` and `SetWithDenseMatrix` take a numpy array, the constructor and `SetWithSparseMatrixCSR` a scipy CSR matrix (#1863), and every item parameter of type MatrixContainer takes both. `GetPythonObject()` returns a numpy array for a dense matrix and a dict of triplets for a sparse one. Returning a scipy matrix there would make scipy a dependency of that call; `scipy.sparse.csr_matrix((v, (r, c)))` of the triplets is one line for the user. Nothing to do.
+
+**NGsolve (#782):** not wanted; a conversion through scipy is what `exudyn.FEM` already does. Close #782.
+
+**HDF5 (#1892):** `SaveDictToHDF5` refuses `Vector3DList` and `MatrixContainer` today (measured: "unsupported type"), while a scipy CSR matrix works. Storing the five list types (`Vector2DList`, `Vector3DList`, `Vector6DList`, `Matrix3DList`, `Matrix6DList`) as one array, and a `MatrixContainer` as its dense array or its triplets, each with its type name as `datatype`, and rebuilding them in `LoadDictFromHDF5` by their constructors is about 30 lines in `advancedUtilities.py` and one test model.
+
+**Recommendation:** do #1892 as RG11.4.4.2 (small), close #782, and then close RG11.4.4.
+
+<a id="rg11-6-2"></a>
+### RG11.6.2 — the joints on homogeneous transformations (2026-11-09, #2884, #845)
+*(Maintainer 2026-11-09: evaluate first.)*
+
+**What is there.** Since revision2026b step RG14.2, the joints use the marker interface. Each joint writes its equations once, as a template `ComputeConstraintEquationsTemplate` over `MarkerRigid<TReal>` or `MarkerPosition<TReal>`. Their Jacobians come from automatic differentiation of that template (the `...Diff` variants with `DReal`), so there is no hand-written Jacobian left in `ObjectJointGeneric`, `JointRevoluteZ`, `JointPrismaticX` and `JointSpherical`. The rotation equations are already entries of the relative rotation: `vRot0 * A1.column(k)` is an entry of $\Am_0\tp\Am_1$, and the position equations are $\pv_1-\pv_0$, or $\Am_0\tp(\pv_1-\pv_0)$ when only some translations are constrained. So the joints effectively compute on $\Hm_0^{-1}\Hm_1$; #2884 is mostly realized, without the name.
+
+**What is left of #2884 and #845:**
+
+1. **One function of the relative transformation for the three 3D joints.** `JointRevoluteZ` and `JointPrismaticX` repeat the equations of `ObjectJointGeneric` for a fixed set of constrained axes (about 45 lines each). A shared template `RelativeFrameConstraints(H0, H1, constrainedAxes, ...)` would leave one implementation. The results should stay identical, and the test suite checks that. Small to medium.
+2. **Analytic Jacobians by the relative twist** instead of automatic differentiation. This is purely a performance question: one Jacobian per Newton iteration and joint. It belongs to RG5, after a measurement of the share of the joint Jacobians in a model with many joints. Not now.
+3. **The 2D joints, the sliding joints and the rolling disc** have their own geometry (curves, contact). A common relative-frame function does not fit them; they stay.
+4. **#845, the documentation of the Jacobians:** the joint pages and the theory part say how the Jacobian is obtained: the automatic differentiation of the equations above, the projection by the marker Jacobians ($\Cm_\qv = \partial\gv/\partial\Hm \cdot \Jm_{marker}$), and which joints have analytic Jacobians. About one section.
+
+**Recommendation:** do 1 and 4 as RG11.6.3 and RG11.6.4 (one issue each), move 2 as a remark to RG5, and then close RG11.6 and #2884.
+
 <a id="rg20-8-4"></a>
 ### RG20.8.4 — The reduction after a failed post-Newton step in the common controller (2026-11-09, #3394)
 
