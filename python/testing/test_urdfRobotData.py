@@ -118,9 +118,9 @@ testRobotPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 def TestRobotFromURDF():
     """the Robot of testRobot.urdf, read by the toolbox: the masses of links without mass from their meshes (1000 kg/m^3),
     the inertias corrected, PD control, the tool frame of the link tool0 in the frame of the last Exudyn link"""
-    from exudyn.robotics.urdfImport import LoadURDFrobot, RobotFromURDFdata
+    from exudyn.robotics.urdfImport import LoadURDFrobot, RobotFromURDFdata, CompleteInertiasFromMeshes
     rtbRobot = LoadURDFrobot(os.path.join('urdf', 'testRobot.urdf'), testRobotPath)['robot']
-    data = GetURDFrobotData(rtbRobot, meshDensity=1000., correctInertia=True, verbose=0, toolLinkName='tool0')
+    data = CompleteInertiasFromMeshes(GetURDFrobotData(rtbRobot, densityForInertiaEstimation=1000., verbose=0, toolLinkName='tool0'))
     return RobotFromURDFdata(data, PDcontrol=(200., 4.))
 
 def _Equal(a, b):
@@ -141,7 +141,7 @@ def testCollisionGeometriesOfTheURDF():
     from exudyn.robotics.urdfImport import LoadURDFrobot, RobotFromURDFdata
     from exudyn.cUtilities import ConvexShape
     rtbRobot = LoadURDFrobot(os.path.join('urdf', 'testRobot.urdf'), testRobotPath)['robot']
-    data = GetURDFrobotData(rtbRobot, verbose=0, collision=True, meshDensity=1000., correctInertia=True)
+    data = GetURDFrobotData(rtbRobot, verbose=0, collision=True, densityForInertiaEstimation=1000.)
     (link1, link2) = data['linkList']
     assert [g['type'] for g in link1['collision']] == ['box', 'cylinder'] and [g['type'] for g in link2['collision']] == ['sphere']
     assert [g['type'] for g in data['collisionBase']] == ['mesh']

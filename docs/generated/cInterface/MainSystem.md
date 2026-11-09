@@ -1577,7 +1577,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`capsulePrim
 - **output**: (type: ObjectIndex) returns kinematic tree object index
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`robotics/humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/humanRobotInteraction.py) (Ex), [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), ...
 
 
 (sec-mainsystemextensions-createffrfreducedorderobject)=
@@ -1755,7 +1755,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 - **notes**: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM)
 
 
 (sec-mainsystemextensions-createdistancesensor)=

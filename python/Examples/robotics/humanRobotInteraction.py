@@ -1,0 +1,219 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  A Puma560 (exudyn.robotics.models) moves its tool against the hand of an articulated dummy, modelled as a
+#           second Robot of revolute joints; both are kinematic trees with the control of Robot.SetControl, called in
+#           one PreStepUserFunction, and touch by general contact. The dummy needs articulatedDummy.h5 of the repository
+#           CommonData_git beside this one (internal).
+#
+# Author:   Johannes Gerstmayr
+# Date:     2021-08-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+import numpy as np
+import os
+from exudyn.robotics import *
+from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
+
+from math import pi
+import copy
+import time
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+addRobot = True
+
+tStart = time.time()
+gravity = [0, 0, -9.81]
+
+#%%+++ the articulated dummy: a Robot of the joints of the left arm and hand, the rest of the body are the graphics of its base; as its STL files are not part of Exudyn, it is stored in the
+#repository CommonData_git beside this one
+dummyFile = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'articulatedDummy.h5')
+if not os.path.isfile(dummyFile):
+    raise ValueError('this example needs articulatedDummy.h5 of the repository CommonData_git beside this one: ' + dummyFile)
+articulatedBody = Robot()
+articulatedBody.LoadFromHDF5(dummyFile)
+
+leftElbow = np.array([0.109, -0.206, 1.122]) #position of the left elbow joint in meter
+leftHand = np.array([0.0945, -0.2520, 0.8536]) #position of the left hand joint in meter
+rHand = 0.025
+
+mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphics.CheckerBoard(size=4)])))
+
+#motion of the articulated body
+z0 = -0.15*pi
+q0 = [0,0,0,0,0,0,0]
+q1 = [0,pi*0.125,z0,pi*(0.375-0.03),0,0,0]
+bodyTrajectory = Trajectory(initialCoordinates=q0, initialTime=0.25)
+bodyTrajectory.Add(ProfileConstantAcceleration(q1,0.4))
+
+articulatedBodyDict = articulatedBody.CreateKinematicTree(mbs)
+oKTarticulatedBody = articulatedBodyDict['objectKinematicTree']
+articulatedBody.SetControl(bodyTrajectory)
+mHand = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTarticulatedBody, linkNumber = 3,
+                                               localPosition=leftHand-leftElbow))
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#add simple robot:
+
+if addRobot:
+    from exudyn.robotics.models import ManipulatorPuma560, LinkDict2Robot
+    
+    robotDef = ManipulatorPuma560() #get dictionary that defines kinematics
+    fc = 0.5
+    Pcontrol = fc* np.array([40000, 40000, 40000, 100, 100, 10])
+    Dcontrol = fc* np.array([400,   400,   100,   1,   1,   0.1])
+
+    pBase = np.array([-1,-0.2,0.75])
+    #+++++++++
+    #some graphics for Puma560    
+    jointWidth=0.1
+    jointRadius=0.06
+    linkWidth=0.1
+    
+    graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
+    graphicsBaseList = [graphics.Brick([0,0,-0.75*0.5-0.05], [pBase[2],pBase[2],0.65], graphics.color.brown)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
+    
+    rRobotTCP = 0.041 #also used for contact
+    ty = 0.03
+    tz = 0.04
+    zOff = -0.05+0.1
+    toolSize= [0.05,0.5*ty,0.06]
+    graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+    # graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)] #gripper
+    # graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)] #gripper
+    graphicsToolList+= [graphics.Sphere(point=[0,0,0.12],radius=rRobotTCP, color=[1,0,0,1], nTiles=16)]
+    
+    #+++++++++
+    
+    #changed to new robot structure July 2021:
+    robot = Robot(gravity=gravity,
+                  base = RobotBase(HT=exu.HT(translation=pBase), visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                  tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=graphicsToolList)),
+                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
+
+    robotDef['Pcontrol'] = Pcontrol
+    robotDef['Dcontrol'] = Dcontrol
+    LinkDict2Robot(robotDef, robotClass=robot) #the links of the Puma560 added to robot
+
+    q0 = [0,0.5*pi,-0.5*pi,0,0,0] #zero angle configuration
+    
+    q1 = [-0.35*pi,0.5*pi,-0.5*pi,0,0,0] #zero angle configuration
+    q2 = [-0.35*pi,0.5*pi,-1.0*pi,0,0,0] #zero angle configuration
+    q3 = [-0.35*pi,0.25*pi,-0.75*pi,0,0,0] #zero angle configuration
+    q4 = [ 0.07*pi,0.38*pi,-0.88*pi,0,0,0] #zero angle configuration
+
+    robot.q0 = q0 #the initial configuration of the model
+    
+    #trajectory generated with optimal acceleration profiles:
+    robotTrajectory = Trajectory(initialCoordinates=q0, initialTime=0.)
+    robotTrajectory.Add(ProfileConstantAcceleration(q0,0.25))
+    # robotTrajectory.Add(ProfileConstantAcceleration(q1,0.25))
+    # robotTrajectory.Add(ProfileConstantAcceleration(q2,0.5))
+    robotTrajectory.Add(ProfileConstantAcceleration(q3,0.25))
+    robotTrajectory.Add(ProfileConstantAcceleration(q4,0.2)) #0.25 is regular speed
+    
+    robotDict = robot.CreateKinematicTree(mbs)
+    oKTrobot = robotDict['objectKinematicTree']
+    robot.SetControl(robotTrajectory)
+
+    mRobotTCP0 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTrobot, linkNumber = 5, 
+                                                   localPosition=[0,0,0.12]))
+    # mRobotTCP1 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTrobot, linkNumber = 5, 
+    #                                                localPosition=[0,0,0.12]))
+    # mRobotTCP2 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTrobot, linkNumber = 5, 
+    #                                                localPosition=[0,0,0.14]))
+
+#the control of both, the articulated body and the robot, in one PreStepUserFunction
+def PreStepUF(mbs, t):
+    articulatedBody.PreStepControl(mbs, t)
+    if addRobot:
+        robot.PreStepControl(mbs, t)
+    return True
+
+mbs.SetPreStepUserFunction(PreStepUF)
+
+print('loading took',time.time()-tStart,'seconds')
+
+
+if True:
+    markerList = [mHand, mRobotTCP0]
+    radiusList = [rHand*1.1, rRobotTCP]
+
+    
+    
+    gContact = mbs.AddGeneralContact()
+    gContact.verboseMode = 1
+    
+    contactStiffness = 5e5# 1e6*2 #2e6 for test with spheres
+    contactDamping = 0.02*contactStiffness
+
+    for i in range(len(markerList)):
+        m = markerList[i]
+        r = radiusList[i]
+        gContact.AddSphereWithMarker(m, radius=r, contactStiffness=contactStiffness, contactDamping=contactDamping, frictionMaterialIndex=0)
+
+
+    gContact.SetFrictionPairings(0.*np.eye(1))
+    gContact.SetSearchTreeCellSize(numberOfCells=[4,4,4]) #could also be 1,1,1
+    gContact.SetSearchTreeBox(pMin=np.array([-2,-2,-2]), pMax=np.array([2,2,2])) 
+
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#assemble system before solving
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+
+tEnd = 1.25 #simulation time
+h = 0.25*1e-3 #step size
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.timeIntegration.verboseMode = 1
+#simulationSettings.timeIntegration.realtime.active = True
+simulationSettings.solution.file.writePeriod = 0.005 #store every 5 ms
+
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
+SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.general.autoFitScene = False
+
+SC.visualizationSettings.nodes.drawNodesAsPoint=False
+SC.visualizationSettings.nodes.showBasis=True
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
+SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
+
+SC.visualizationSettings.openGL.multiSampling=4
+SC.visualizationSettings.openGL.lineWidth = 2
+# SC.visualizationSettings.openGL.light0.shadow=0.3 #don't do this for fine meshes!
+SC.visualizationSettings.openGL.light0.position=[-6,2,12,0]
+
+SC.renderer.Start()
+SC.renderer.RestoreSavedState() #reload old view
+
+SC.renderer.DoIdleTasks() #stop before simulating
+
+mbs.SolveDynamic(simulationSettings = simulationSettings,
+                  solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+
+SC.renderer.Stop() #safely close rendering window!
+
+mbs.SolutionViewer()
+
+if False:
+    
+    mbs.PlotSensor([sens1],[1])
+
+

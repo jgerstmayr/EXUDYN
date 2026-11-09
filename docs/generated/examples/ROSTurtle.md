@@ -2,7 +2,7 @@
 (examples-rosturtle)=
 # ROSTurtle.py
 
-You can view and download this file on Github: [ROSTurtle.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ROSTurtle.py)
+You can view and download this file on Github: [ROSTurtle.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/ROSTurtle.py)
 
 ```{code-block} python
 :linenos:

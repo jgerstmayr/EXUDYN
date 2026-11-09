@@ -72,6 +72,7 @@ lugreFrictionTest
 massSpringFrictionInteractive
 minimizeExample
 mobileMecanumWheelRobotWithLidar
+mobileRobotsNavigation
 mouseInteractionExample
 mpi4pyExample
 multiMbsTest
@@ -108,6 +109,7 @@ particlesSilo
 particlesTest
 particlesTest3D
 particlesTest3D2
+pathPlanningUR5
 pendulum
 pendulum2Dconstraint
 pendulumGeomExactBeam2D
@@ -118,6 +120,7 @@ performanceMultiThreadingNG
 pistonEngine
 plotSensorExamples
 pymeshlabFileImport
+quadrupedsFloatingBase
 reevingSystem
 reevingSystemOpen
 reinforcementLearningRobot
@@ -152,6 +155,7 @@ solutionViewerMultipleSimulations
 solutionViewerPreStepUserFunction
 solutionViewerTest
 solverFunctionsTestEigenvalues
+spotReinforcementLearning
 SpringDamperMasspointSystem
 SpringDamperMassUserFunction
 springDamperUserFunctionNumbaJIT

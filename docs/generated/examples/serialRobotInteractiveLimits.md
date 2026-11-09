@@ -2,7 +2,7 @@
 (examples-serialrobotinteractivelimits)=
 # serialRobotInteractiveLimits.py
 
-You can view and download this file on Github: [serialRobotInteractiveLimits.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotInteractiveLimits.py)
+You can view and download this file on Github: [serialRobotInteractiveLimits.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/serialRobotInteractiveLimits.py)
 
 ```{code-block} python
 :linenos:

@@ -368,7 +368,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 - **output**: None
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex), [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM)
 
 
 (sec-advancedutilities-loaddictfromhdf5)=
@@ -383,7 +383,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePist
 - **output**: dict which contains loaded data
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex), [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM), [`urdfRobotHDF5Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/urdfRobotHDF5Test.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`robotics/quadrupedsFloatingBase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/quadrupedsFloatingBase.py) (Ex), [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex), [`robotics/spotReinforcementLearning.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/spotReinforcementLearning.py) (Ex), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM), [`urdfRobotHDF5Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/urdfRobotHDF5Test.py) (TM)
 
 
 (sec-advancedutilities-convertfunctiontosymbolic)=

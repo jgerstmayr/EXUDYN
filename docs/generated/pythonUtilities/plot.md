@@ -69,7 +69,7 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotFlexible.py) (Ex), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM)
 
 
 (sec-plot-plotsensor)=
@@ -241,4 +241,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`robotics/serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotKinematicTree.py) (Ex)

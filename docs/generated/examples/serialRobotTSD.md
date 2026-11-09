@@ -2,7 +2,7 @@
 (examples-serialrobottsd)=
 # serialRobotTSD.py
 
-You can view and download this file on Github: [serialRobotTSD.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotTSD.py)
+You can view and download this file on Github: [serialRobotTSD.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/serialRobotTSD.py)
 
 ```{code-block} python
 :linenos:

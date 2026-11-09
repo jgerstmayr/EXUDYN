@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.497.dev1
+- Exudyn version = 1.13.500.dev1
 - last change = 2026-11-09
 - Number of issues = 3386
-- Number of resolved issues = 3274 (497 in current version)
+- Number of resolved issues = 3277 (500 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9044,15 +9044,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Remove the deprecated joint torque loads of CreateRedundantCoordinateMBS at the end of their deprecation period (#3361)
   - description: jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.
-  - date raised: 2026-11-08
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The inertia workflow of imported robots (#3357)
-  - description: A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.
-  - date raised: 2026-11-08
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` All robot examples in Examples/robotics (#3355)
-  - description: Decided: python/Examples/robotics holds all robot examples; the remaining ones are moved there.
-  - date raised: 2026-11-08
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The articulated dummy of humanRobotInteraction.py as a stored Robot (#3353)
-  - description: The example reads the STL files of the dummy from an absolute path of one machine. Decided: stored as a Robot in HDF5 in CommonData\_git/data/Exudyn/robotics/RobotHDF5.
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
   - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.

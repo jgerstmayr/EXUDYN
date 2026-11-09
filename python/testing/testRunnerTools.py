@@ -675,9 +675,6 @@ def ExampleSkipReason(exampleFileName, fileString):
         'dispyParameterVariationExample': 'needs the output of parameterVariationExample.py',
         #the same class - a file that is not in the repository and that no run produces
         #(maintainer, 2026-09-18; #2507)
-        'humanRobotInteraction': 'needs the articulated-dummy STL files; which the example itself '
-                                 'says are not included and are downloaded from GrabCAD - it reads '
-                                 'them from an absolute path on the author machine (line 79)',
         'stlFileImport': 'reads solution/stlImport.stl, which it only WRITES when its '
                          'if-False branch is switched on by hand',
         'fixedFixedANCFALEdiscreteMassesPostprocessing': 'reads the results of the parameter variations '
@@ -686,6 +683,10 @@ def ExampleSkipReason(exampleFileName, fileString):
     for key, reason in byName.items():
         if key in exampleFileName:
             return reason
+    if 'humanRobotInteraction' in exampleFileName: #its robot is in the repository beside this one (#3353)
+        dummy = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'articulatedDummy.h5')
+        if not os.path.isfile(dummy):
+            return 'needs articulatedDummy.h5 of the repository CommonData_git'
 
     #NOT availability questions, so these stay unconditional: the first would start a training run
     #even where stable-baselines3 is installed, and the other two need something no package provides

@@ -22,7 +22,7 @@ an occupancy grid with A* and RRT-Connect in the plane for mobile robots, pure p
 - **output**: array of shape (n, 2), lower and upper limit per joint
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-navigation-planjointpath)=
@@ -64,7 +64,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPl
 - **output**: array of the waypoints, one per row, with the first and the last one of path
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-navigation-plantopose)=
@@ -85,7 +85,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPl
 - **output**: array of the waypoints, one per row, from qStart to the goal
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-navigation-trajectoryfrompath)=
@@ -104,7 +104,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPl
 - **output**: the Trajectory, for Robot.SetControl or Trajectory.Evaluate
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-navigation-plangridpath)=
@@ -123,7 +123,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPl
 - **output**: array of the waypoints [x, y], one per row, from start to goal
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileRobotsNavigation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileRobotsNavigation.py) (Ex), [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
 
 
 (sec-navigation-planse2path)=
@@ -176,7 +176,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNaviga
 - **output**: (wLeft, wRight), the angular velocities of the left and the right wheel
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileRobotsNavigation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileRobotsNavigation.py) (Ex), [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
 
 
 (sec-module-robotics.navigation-class-occupancygrid)=
@@ -281,7 +281,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNaviga
 - **class function description**: True if the straight line between two points only passes free cells inside the grid
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileRobotsNavigation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileRobotsNavigation.py) (Ex), [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
 
 
 (sec-module-robotics.navigation-class-purepursuit)=
@@ -323,4 +323,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNaviga
 - **output**: (v, omega), the forward velocity and the rotation velocity; (0, 0) after the end of the path is reached
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileRobotsNavigation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileRobotsNavigation.py) (Ex), [`robotNavigationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotNavigationTest.py) (TM)

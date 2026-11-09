@@ -559,8 +559,7 @@ links - the Interbotix robots, Spot, ANYmal - have the kinematics of the RTB; it
 The user manual has a chapter {ref}`Robotics <sec-robotics>` - the modules, the workflows, the URDF import and ROS -
 with the notebook tutorialRobotics of the Puma560 (#3281). `GetURDFrobotData` handles flipped joints (the URDF
 coordinate in a link frame turned by `flipHT`), reports the problems of the mass and inertia of each link in
-`'inertiaProblems'`, corrects them with `correctInertia=True`, computes the mass of a link without one from its meshes
-with `meshDensity`, and draws textured meshes with their texture (#3282). `Trajectory.Add(profile,
+`'inertiaProblems'`, computes the data of a link without any from its meshes with `densityForInertiaEstimation`, completes partly given data by `CompleteInertiasFromMeshes` (#3357), and draws textured meshes with their texture (#3282). `Trajectory.Add(profile,
 blendTimeWithNext='auto')` chooses the largest overlap within the deceleration and acceleration phases in which the
 blending is not faster than the profiles (or `maxVelocities` of `Trajectory`, where larger), a given blend time is
 checked against these limits when `maxVelocities` are given, and `blendSpace='cartesian'` blends two Cartesian

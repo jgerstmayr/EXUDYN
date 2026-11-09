@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 480 | 1.13.497 |
+| 1.13 | Newborn | 483 | 1.13.500 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.500** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The inertia workflow of imported robots (#3357)
+  - description: A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.
+  - **notes:** GetURDFrobotData(densityForInertiaEstimation=) and urdfImport.CompleteInertiasFromMeshes for missing or partly given inertias.
+  - date resolved: **2026-11-09 10:19**, date raised: 2026-11-08
+- **1.13.499** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` All robot examples in Examples/robotics (#3355)
+  - description: Decided: python/Examples/robotics holds all robot examples; the remaining ones are moved there.
+  - **notes:** The robot examples are in python/Examples/robotics; the documentation lists this folder as well.
+  - date resolved: **2026-11-09 10:19**, date raised: 2026-11-08
+- **1.13.498** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The articulated dummy of humanRobotInteraction.py as a stored Robot (#3353)
+  - description: The example reads the STL files of the dummy from an absolute path of one machine. Decided: stored as a Robot in HDF5 in CommonData\_git/data/Exudyn/robotics/RobotHDF5.
+  - **notes:** The articulated dummy is stored as a Robot in HDF5 in CommonData\_git and read by humanRobotInteraction.py.
+  - date resolved: **2026-11-09 10:19**, date raised: 2026-11-08
 - **1.13.497** `EXAMPLE` `raised by: Claude-JG` `resolved by: Claude-JG` Examples of path planning: the UR5 among obstacles, mobile robots, a notebook (#3385)
   - description: Examples pathPlanningUR5.py and mobileRobotsNavigation.py, a section of the robotics chapter and the notebook tutorialPathPlanning. Decided: a mecanum-wheeled robot with a cuboid body and a differential drive with a flat cylindrical body, built in the example.
   - **notes:** Examples pathPlanningUR5.py and mobileRobotsNavigation.py, the notebook tutorialPathPlanning and a section of the robotics chapter.

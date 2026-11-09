@@ -811,7 +811,10 @@ def ExtractExamplesWithKeyword(keyword, dirPath, checkPreString=True):
     #reshuffle every documentation file.
     fileNames = sorted([f for f in listdir(dirPath) if isfile(join(dirPath, f))],
                       key=str.lower)
-    
+    if dirPath.rstrip('/').endswith('Examples'): #the robot examples are in a folder of their own (#3355)
+        fileNames += sorted(['robotics/' + f for f in listdir(join(dirPath, 'robotics')) if isfile(join(dirPath, 'robotics', f))],
+                            key=str.lower)
+
     filesWithKeyword = []
 
     for fileName in fileNames:

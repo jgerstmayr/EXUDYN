@@ -2,7 +2,7 @@
 (examples-reinforcementlearningrobot)=
 # reinforcementLearningRobot.py
 
-You can view and download this file on Github: [reinforcementLearningRobot.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/reinforcementLearningRobot.py)
+You can view and download this file on Github: [reinforcementLearningRobot.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/reinforcementLearningRobot.py)
 
 ```{code-block} python
 :linenos:

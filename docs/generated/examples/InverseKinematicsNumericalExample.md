@@ -2,7 +2,7 @@
 (examples-inversekinematicsnumericalexample)=
 # InverseKinematicsNumericalExample.py
 
-You can view and download this file on Github: [InverseKinematicsNumericalExample.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/InverseKinematicsNumericalExample.py)
+You can view and download this file on Github: [InverseKinematicsNumericalExample.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/InverseKinematicsNumericalExample.py)
 
 ```{code-block} python
 :linenos:

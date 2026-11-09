@@ -36,7 +36,7 @@ mbs = SC.AddSystem()
 
 robotDict = ManipulatorStaubliTX2_90L()
 robot = LinkDict2Robot(robotDict)
-robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF') #the repository CommonData_git beside this one, if it is there (#3352)
+robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF') #the repository CommonData_git beside this one, if it is there (#3352)
 urdf = robotDict['urdfGraphics']
 urdfFile = os.path.join(robotDataPath, urdf['file'])
 if os.path.exists(urdfFile):

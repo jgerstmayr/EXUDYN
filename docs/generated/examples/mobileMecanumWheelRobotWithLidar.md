@@ -2,7 +2,7 @@
 (examples-mobilemecanumwheelrobotwithlidar)=
 # mobileMecanumWheelRobotWithLidar.py
 
-You can view and download this file on Github: [mobileMecanumWheelRobotWithLidar.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/mobileMecanumWheelRobotWithLidar.py)
+You can view and download this file on Github: [mobileMecanumWheelRobotWithLidar.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py)
 
 ```{code-block} python
 :linenos:

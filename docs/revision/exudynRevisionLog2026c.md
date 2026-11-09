@@ -6431,6 +6431,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg19-13-1"></a>
+### RG19.13.1 - densityForInertiaEstimation and CompleteInertiasFromMeshes (2026-11-09, #3357)
+- GetURDFrobotData(densityForInertiaEstimation=None) replaces meshDensity, for links without any inertial data; correctInertia is replaced by urdfImport.CompleteInertiasFromMeshes(robotData, density), a function of its own: mass without a positive definite inertia gets that of the solid of the meshes scaled to the mass, no mass the density, then the triangle inequality. testRobot.h5 is unchanged by the new path. urdfCompleteInertiasTest.py.
+    
+<a id="rg19-11-2"></a>
+### RG19.11.2 - the robot examples in Examples/robotics (2026-11-09, #3355)
+- 15 examples moved by git mv (not ROSMassPoint.py, kinematicTree*.py and the openAIgym examples, which are no robots); the relative paths to CommonData_git one level longer. The pages of the examples and the lists of relevant examples of the documentation now also read Examples/robotics, so that the moved examples keep their pages and the four other ones of the folder get theirs.
+    
+<a id="rg19-10-2"></a>
+### RG19.10.2 - the articulated dummy as a stored Robot (2026-11-09, #3353)
+- createArticulatedDummy.py writes articulatedDummy.h5 (13.5 MB) in CommonData_git: the 7 joints of arm and hand, the rest of the body as graphics of the base. Corrected at this occasion: the center of mass of the hand was relative to the shoulder instead of the wrist, and the mass of hand and fingers was counted twice, in the lower arm and in the hand. humanRobotInteraction.py loads it; the examples runner skips it only without CommonData_git.
+    
 <a id="rg21-6"></a>
 ### RG21.6 - examples and notebook of path planning (2026-11-09, #3385)
 - pathPlanningUR5.py: a goal given by a pose of the tool, a margin of 0.01, the smallest distance during the simulation 0.0099. mobileRobotsNavigation.py: a mecanum-wheeled robot and a differential drive through a room, both reach their goals; kinematic trees of x, y, phi and the wheels under PD, the contact of the wheels with the ground is not modeled. tutorialPathPlanning.ipynb; a section of the robotics chapter. Left out of the design: ShapesFromLinks, AddToMbs (the shapes as contact items), triangles of URDF meshes as shapes.

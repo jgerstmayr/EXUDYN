@@ -25,7 +25,7 @@ specific friction angle of rolling disc is used to model rolls of mecanum wheels
 - **notes**: for coordinate system, see Python function definition
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/ROSMobileManipulator.py) (Ex)
 
 
 (sec-mobile-generatrix2polynomial)=
@@ -89,7 +89,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 - **function description**: DEPRECATED: the wheel velocities of a mecanum platform for the velocities [xVel, yVel, angVel]; use MobileKinematics
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM)
 
 
 (sec-mobile-mecanumwheelvelocity2xyphi)=
@@ -149,4 +149,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 - **author**: Peter Manzl
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileRobotsNavigation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileRobotsNavigation.py) (Ex), [`robotics/ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/ROSMobileManipulator.py) (Ex)

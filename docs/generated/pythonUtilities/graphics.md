@@ -302,7 +302,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM)
 
 
 (sec-graphics-solidofrevolution)=
@@ -410,7 +410,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInverseKinematics.py) (Ex)
 
 
 (sec-graphics-quad)=
@@ -684,7 +684,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactPrim
 - **output**: returns [points, triangles], with points as list of np.array with 3 floats per point and triangles as a list of np.array with 3 int per triangle (0-based indices to points)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`particleClusters.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`pymeshlabFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pymeshlabFileImport.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM), [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`particleClusters.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`pymeshlabFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pymeshlabFileImport.py) (Ex), [`tippeTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tippeTop.py) (Ex), [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`createPrimitiveContactsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createPrimitiveContactsTest.py) (TM), [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), ...
 
 
 (sec-graphics-transform)=
@@ -719,7 +719,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 - **notes**: transformation corresponds to HomogeneousTransformation(Aoff, pOff), transforming original coordinates v into vNew = pOff + Aoff @ v
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`raytracerNOGLFWtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM), [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex), [`raytracerNOGLFWtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM), [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM), ...
 
 
 (sec-graphics-mergetrianglelists)=
@@ -732,7 +732,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 - **output**: one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1; the texture of one of them is kept, and the points of the other get the texture coordinates nan, so that their triangles are drawn without it; two different textures cannot be merged (#3031)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`particleClusters.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), [`generalContactFrictionTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py) (TM), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`particleClusters.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`robotics/serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotKinematicTreeDigging.py) (Ex), [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), [`generalContactFrictionTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py) (TM), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM), ...
 
 
 (sec-graphics-inverttriangles)=
@@ -947,7 +947,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
 - **notes**: the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed! The normals are those of the triangles, computed from their points.
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`ROSTurtle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSTurtle.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`stlFileImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stlFileImportTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex), [`robotics/ROSTurtle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/ROSTurtle.py) (Ex), [`stlFileImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stlFileImportTest.py) (TM)
 
 
 (sec-graphics-addedgesandsmoothennormals)=
@@ -960,7 +960,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 - **notes**: this function is suitable for STL import; it assumes that all colors in graphicsData are the same and only takes the first color!
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`NGsolveGeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveGeometry.py) (Ex), [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`pymeshlabFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pymeshlabFileImport.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveGeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveGeometry.py) (Ex), [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`pymeshlabFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pymeshlabFileImport.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex)
 
 
 (sec-graphics-exportstl)=

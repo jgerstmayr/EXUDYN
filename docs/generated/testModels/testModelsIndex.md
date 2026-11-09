@@ -309,6 +309,7 @@ textureTest
 trajectoryBlendingCartesianTest
 trajectoryBlendingTest
 typeInformationTest
+urdfCompleteInertiasTest
 urdfRobotHDF5Test
 userANCFBeam3DTest
 userANCFCable2DTest

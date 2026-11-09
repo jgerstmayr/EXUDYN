@@ -4,7 +4,7 @@
 # Details:  A robot read from a URDF file, loaded from the HDF5 file it was stored in, without the Robotics Toolbox
 #           (#3285): testData/urdf/testRobot/testRobot.urdf has STL meshes, a fixed link turned by rpy, a flipped joint
 #           (axis 0 -1 0), a link without mass whose brick of an OBJ file has a texture, and an inertia violating the
-#           triangle inequality; urdfImport.GetURDFrobotData read it with meshDensity=1000 and correctInertia=True, and
+#           triangle inequality; urdfImport.GetURDFrobotData read it with densityForInertiaEstimation=1000 and CompleteInertiasFromMeshes, and
 #           Robot.GetDictionary stored it in testRobot.h5 (python/testing/test_urdfRobotData.py, where the toolbox is
 #           installed). Checked: the mass and inertia of the brick, the corrected inertia, the frames of the links and
 #           the tool against the URDF computed here, the texture and its coordinates; the robot simulated as a

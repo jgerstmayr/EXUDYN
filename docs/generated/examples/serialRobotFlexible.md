@@ -2,7 +2,7 @@
 (examples-serialrobotflexible)=
 # serialRobotFlexible.py
 
-You can view and download this file on Github: [serialRobotFlexible.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotFlexible.py)
+You can view and download this file on Github: [serialRobotFlexible.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/serialRobotFlexible.py)
 
 ```{code-block} python
 :linenos:

@@ -2,7 +2,7 @@
 (examples-staublitx2trajectories)=
 # staubliTX2trajectories.py
 
-You can view and download this file on Github: [staubliTX2trajectories.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/staubliTX2trajectories.py)
+You can view and download this file on Github: [staubliTX2trajectories.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/staubliTX2trajectories.py)
 
 ```{code-block} python
 :linenos:
@@ -47,7 +47,7 @@ mbs = SC.AddSystem()
 robotDict = ManipulatorStaubliTX2_90L()
 robot = LinkDict2Robot(robotDict)
 #the meshes of the URDF, if the repository CommonData_git is beside this one (internal, #3352), or give the path here
-robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF')
+robotDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF')
 urdf = robotDict['urdfGraphics']
 urdfFile = os.path.join(robotDataPath, urdf['file'])
 #the robot with its meshes as HDF5 file

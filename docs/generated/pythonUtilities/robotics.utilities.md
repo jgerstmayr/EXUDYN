@@ -36,7 +36,7 @@ The utilities contains general helper functions for the robotics module: the lid
 - **notes**: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM)
 
 
 (sec-utilities-getroboticstoolboxinternalmodel)=
@@ -47,7 +47,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 - **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex)
 
 
 (sec-utilities-loadurdfrobot)=
@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex)
 
 
 (sec-utilities-geturdfrobotdata)=
@@ -69,4 +69,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **function description**: DEPRECATED: moved to exudyn.robotics.urdfImport
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex)

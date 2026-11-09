@@ -2,7 +2,7 @@
 (examples-serialroboturdf)=
 # serialRobotURDF.py
 
-You can view and download this file on Github: [serialRobotURDF.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotURDF.py)
+You can view and download this file on Github: [serialRobotURDF.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/serialRobotURDF.py)
 
 ```{code-block} python
 :linenos:
@@ -52,7 +52,7 @@ onlyShowModel = False #True: only graphics, no simulation
 listRobots = []
 #the URDF of UR5 and Panda in the repository CommonData_git beside this one (internal), if it is there (#3352); their
 #source is https://github.com/Gepetto/example-robot-data
-commonDataURDF = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF')
+commonDataURDF = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'URDF')
 commonDataPackages = {'UR5': ('ur_description', 'urdf/ur5_robot.urdf'), 'Panda': ('panda_description', 'urdf/panda.urdf')}
 saveHDF5 = False        #use this to save robot data, allowing to load directly from there
 loadFromHDF5 = False#faster load; does not require roboticstoolbox, pymeshlab, etc.

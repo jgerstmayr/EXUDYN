@@ -86,12 +86,14 @@ def TestModelNames():
 
 
 def ExampleNames():
-    """every .py in python/Examples; sorted, because listdir() order is filesystem dependent and
-    made the generated documentation differ between Windows and Linux"""
-    directory = paths.examplesDir
-    return sorted([name for name in os.listdir(directory)
-                   if name.endswith('.py') and os.path.isfile(os.path.join(directory, name))],
-                  key=str.lower)
+    """every .py in python/Examples and its folder robotics (#3355), there as 'robotics/name.py'; sorted, because
+    listdir() order is filesystem dependent and made the generated documentation differ between Windows and Linux"""
+    names = []
+    for (subfolder, prefix) in [('', ''), ('robotics', 'robotics/')]:
+        directory = os.path.join(paths.examplesDir, subfolder)
+        names += [prefix + name for name in os.listdir(directory)
+                  if name.endswith('.py') and os.path.isfile(os.path.join(directory, name))]
+    return sorted(names, key=lambda name: name.split('/')[-1].lower())
 
 
 def WriteSourcePages(folder, fileNames, title, label, directoryName, indexName):
@@ -107,14 +109,15 @@ def WriteSourcePages(folder, fileNames, title, label, directoryName, indexName):
              + '```{toctree}\n:maxdepth: 2\n\n')
 
     for fileName in fileNames:
-        pureName = fileName.replace('.py', '')
+        baseName = fileName.split('/')[-1]
+        pureName = baseName.replace('.py', '')
         with io.open(os.path.join(paths.pythonDir, folder, fileName), encoding='utf8') as file:
             source = file.read()
 
         page = (Banner() + MarkdownLabel(folder.lower() + '-' + pureName) + '\n'
-                + '# ' + fileName + '\n\n'
+                + '# ' + baseName + '\n\n'
                 + 'You can view and download this file on Github: ['
-                + fileName + '](' + githubDir + '/' + fileName + ')\n\n'
+                + baseName + '](' + githubDir + '/' + fileName + ')\n\n'
                 #the directive rather than a plain fence, because the line numbers are what makes
                 #a source listing quotable in an issue or a lecture
                 + '```{code-block} python\n:linenos:\n\n' + source.rstrip() + '\n```\n')

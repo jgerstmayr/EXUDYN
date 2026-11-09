@@ -122,13 +122,12 @@ packagePath)` for a URDF or xacro file of a ROS package, and `GetURDFrobotData` 
 links of fixed joints are added to the joint link above them, and a flipped joint keeps its coordinate in a link
 frame turned by `flipHT`. The import gives the kinematics of the toolbox for the robots of its data and of the robot
 data sets tried (KUKA, Stäubli, ANYmal, Spot, a Mars rover). Many URDF files have no masses or inertias, which a
-dynamic model needs: every link reports the problems of its mass and inertia, `correctInertia=True` makes them
-physical, and `meshDensity` gives a link without mass that of its meshes. Textured meshes (.dae, .obj) are drawn with
+dynamic model needs: every link reports the problems of its mass and inertia, `densityForInertiaEstimation` gives a link without inertial data those of the solid of its meshes, with one overall density of about 1000 kg/m^3 as a mesh tells nothing of the interior, and `CompleteInertiasFromMeshes` completes partly given data as an estimate and makes it physical. Textured meshes (.dae, .obj) are drawn with
 their texture. The models of `robotics.models` run without the toolbox and without files: `ManipulatorUR5`, `ManipulatorFrankaEmikaPanda`, `ManipulatorUR10`,
 `ManipulatorKukaLBRiiwa14`, `ManipulatorStaubliTX2_90L` and `QuadrupedANYmalB` hold the values of their URDF in its joint frames, the first two with `useDH=True` also the DH parameters; `RobotModelDictFromData` writes such a list of links from the imported data. The UR5, the Panda and the TX2-90L have simple collision shapes, a capsule per link in `'collisionShapes'`, by `FitCapsuleToPoints` (#3373, #3374, #3375). `Robot.GetCollisionModel(obstacles)` gives the collision check of the robot in C++, from the shapes of its links, for path planning (#3380). `Robot.CreateKinematicTree(mbs, floatingBase=inertia)` puts the tree on a free rigid body, the base of legged and mobile robots, as in `python/Examples/robotics/quadrupedsFloatingBase.py` (#3359). `ReduceURDFrobotData` leaves out joints and links in these data, such as the fingers of a gripper: a locked joint merges its link into the link above with its mass and inertia, a removed link goes with all below it (#3372). `RobotFromURDFdata` creates the `Robot` from these data, with the joint limits, the tool frame of the
 link named by `toolLinkName` and, from the URDF file, the friction of its joints. The example serialRobotURDF.py builds
 robots this way. With `collision=True`, `GetURDFrobotData` also reads the `<collision>` elements (box, cylinder, sphere, mesh), and `RobotFromURDFdata` makes them the collision shapes of the links and of the base (#3382): a mesh is turned into up to two capsules by `FitCapsulesToMesh`, or into its convex hull. `robot.SaveToHDF5` keeps all of this, so that the robot loads without the toolbox; the test model urdfRobotHDF5Test.py loads a small robot of a URDF
-file read with `meshDensity` and `correctInertia` this way.
+file read with `densityForInertiaEstimation` and `CompleteInertiasFromMeshes` this way.
 
 (sec-robotics-planning)=
 ## Path planning and navigation
@@ -160,6 +159,7 @@ there is no Python 2 support for Exudyn.
 | serialRobotKinematicTreeDigging.py | a robot digging in particles |
 | humanRobotInteraction.py | a robot touching an articulated dummy |
 | serialRobotURDF.py | robots read from URDF files |
+| spotReinforcementLearning.py | learning to walk with the quadruped Spot |
 | mobileMecanumWheelRobotWithLidar.py | a mobile robot on mecanum wheels with a lidar |
 | pathPlanningUR5.py | the UR5 around a wall: collision check, RRT-Connect, a blended trajectory and its simulation |
 | mobileRobotsNavigation.py | a mecanum-wheeled robot and a differential drive through a room, by A\* and pure pursuit |

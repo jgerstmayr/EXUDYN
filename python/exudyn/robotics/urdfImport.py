@@ -22,7 +22,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData', 'FitCapsuleToPoints', 'FitCapsulesToMesh', 'CollisionShapesFromGeometry', 'ConvexHullOfMesh', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'CompleteInertiasFromMeshes', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData', 'FitCapsuleToPoints', 'FitCapsulesToMesh', 'CollisionShapesFromGeometry', 'ConvexHullOfMesh', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
     'AddURDFgraphics',
     ]
 
@@ -144,6 +144,56 @@ def _Steiner(mass, d):
     """the inertia of a point mass at the distance vector d"""
     return mass*(np.dot(d, d)*np.eye(3) - np.outer(d, d))
 
+def _MeshMassProperties(linkDict, density):
+    """[mass, COM, inertia at the COM] of the solid enclosed by the meshes of a link; mass 0 without meshes"""
+    parts = []
+    for g in linkDict['graphicsDataList']:
+        if g['type'] == 'TriangleList':
+            points = np.array(g['points'], dtype=float).reshape(-1, 3)
+            parts.append(graphics._MassPropertiesOfTriangles(points[np.array(g['triangles'], dtype=int).reshape(-1, 3)], density))
+    m = sum(part[1] for part in parts)
+    if m <= 0:
+        return [0., np.zeros(3), np.zeros((3, 3))]
+    c = sum(part[1]*np.array(part[2]) for part in parts)/m
+    return [m, c, sum(np.array(part[3]) + _Steiner(part[1], np.array(part[2]) - c) for part in parts)]
+
+def CompleteInertiasFromMeshes(robotData, density=1000., verbose=1):
+    """An estimate for the links of GetURDFrobotData whose mass or inertia is missing or not physical (#3357). A mesh gives the surface, not the interior of a link with its
+    hollow arms, drives and cables, so that only one overall density of the enclosed volume makes sense, around 1000 kg/m^3; the inertials of a URDF which are correct always remain.
+    A link with a mass but without a positive definite inertia gets the inertia of the solid of its meshes, scaled to the mass; a link without mass gets the mass, center of mass and
+    inertia of that solid with the density. The principal moments are then raised as little as possible to fulfill the triangle inequality.
+
+    Args:
+        robotData: the dict of GetURDFrobotData
+        density: the overall density of the volume enclosed by the meshes of a link, in kg/m^3, used for the links without mass
+        verbose: 0 .. no output, 1 .. the links which remain without a physical mass or inertia
+
+    Returns:
+        a new dict of the same form; 'inertiaProblems' of each link tells what was changed, with ' (corrected)' at each problem, or what remains
+
+    Note:
+        the result is an estimate; store it with the Robot (Robot.SaveToHDF5), where it can be read and corrected
+    """
+    result = dict(robotData)
+    result['linkList'] = [dict(link) for link in robotData['linkList']]
+    for link in result['linkList']:
+        problems = _InertiaProblems(link['mass'], link['inertiaCOM'])
+        if len(problems) == 0:
+            link['inertiaProblems'] = []
+            continue
+        [m, c, inertia] = _MeshMassProperties(link, 1.)
+        if link['mass'] <= 0 and m > 0:
+            (link['mass'], link['com'], link['inertiaCOM']) = (m*density, c, inertia*density)
+        elif link['mass'] > 0 and m > 0 and np.linalg.eigvalsh(0.5*(np.array(link['inertiaCOM']) + np.array(link['inertiaCOM']).T))[0] <= 0:
+            link['inertiaCOM'] = inertia*(link['mass']/m)
+        if link['mass'] > 0:
+            link['inertiaCOM'] = _CorrectedInertia(link['inertiaCOM'])
+            problems = [problem + ' (corrected)' for problem in problems]
+        elif verbose > 0:
+            exudyn.Print('WARNING: CompleteInertiasFromMeshes: link', link['name'], 'has neither a mass nor meshes')
+        link['inertiaProblems'] = problems
+    return result
+
 def GetURDFrobotData(robot, 
                      urdf=None, 
                      linkColorList = None,
@@ -151,8 +201,7 @@ def GetURDFrobotData(robot,
                      returnStaticGraphicsList = False,
                      exportMesh = False,
                      verbose=1,
-                     meshDensity = 0.,
-                     correctInertia = False,
+                     densityForInertiaEstimation = None,
                      toolLinkName = None,
                      collision = False):
     """Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
@@ -165,11 +214,8 @@ def GetURDFrobotData(robot,
         returnStaticGraphicsList: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)
         exportMesh: if True, the returned dict also contains a meshSetList which refers to the MeshSet in pymeshlab, which can be used for debugging purposes
         verbose: 0 .. no output printed (only exceptions), 1 .. warnings, 2 .. further information
-        meshDensity: if > 0, a joint link without mass gets the mass, center of mass and inertia of the solid its meshes
-            enclose, with this density (kg/m^3); a mesh that does not close gives an estimate only (#3282)
-        correctInertia: if True, an inertia tensor that is not positive definite or whose principal moments violate the
-            triangle inequality gets its principal moments raised as little as possible, and a zero one that of the shape
-            of the meshes with the mass of the link; every link reports the problems
+        densityForInertiaEstimation: None, or the overall density of the volume enclosed by the meshes in kg/m^3, around 1000: a joint link without any inertial data gets the mass, center of
+            mass and inertia of that solid; a mesh that does not close gives an estimate only; for partly given data see CompleteInertiasFromMeshes (#3357). Every link reports the problems
             of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
         toolLinkName: if not None, the name of the link of the tool frame; the frame of this link relative to the last
             joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
@@ -391,31 +437,12 @@ def GetURDFrobotData(robot,
                 elif verbose > 0:
                     exudyn.Print('WARNING: GetURDFrobotData: collision geometry', scene.stype, 'of link', link.name, 'is ignored')
 
-    def MeshMassProperties(linkDict, density): #[mass, COM, inertia at the COM] of the meshes of a link; mass 0 without meshes
-        parts = []
-        for g in linkDict['graphicsDataList']:
-            if g['type'] == 'TriangleList':
-                points = np.array(g['points'], dtype=float).reshape(-1, 3)
-                parts.append(graphics._MassPropertiesOfTriangles(points[np.array(g['triangles'], dtype=int).reshape(-1, 3)], density))
-        m = sum(part[1] for part in parts)
-        if m <= 0:
-            return [0., np.zeros(3), np.zeros((3, 3))]
-        c = sum(part[1]*np.array(part[2]) for part in parts)/m
-        return [m, c, sum(np.array(part[3]) + _Steiner(part[1], np.array(part[2]) - c) for part in parts)]
-
     for linkDict in linkList:
-        if linkDict['mass'] <= 0 and meshDensity > 0:
-            [m, c, inertia] = MeshMassProperties(linkDict, meshDensity)
+        if densityForInertiaEstimation is not None and linkDict['mass'] <= 0 and np.max(np.abs(linkDict['inertiaCOM'])) == 0:
+            [m, c, inertia] = _MeshMassProperties(linkDict, densityForInertiaEstimation)
             if m > 0:
                 (linkDict['mass'], linkDict['com'], linkDict['inertiaCOM']) = (m, c, inertia)
         problems = _InertiaProblems(linkDict['mass'], linkDict['inertiaCOM'])
-        if correctInertia and len(problems) != 0 and linkDict['mass'] > 0:
-            if np.max(np.abs(linkDict['inertiaCOM'])) == 0: #no inertia at all: that of the shape of the meshes, with the mass
-                [m, c, inertia] = MeshMassProperties(linkDict, 1.)
-                if m > 0:
-                    linkDict['inertiaCOM'] = inertia*(linkDict['mass']/m)
-            linkDict['inertiaCOM'] = _CorrectedInertia(linkDict['inertiaCOM'])
-            problems = [problem + ' (corrected)' for problem in problems]
         linkDict['inertiaProblems'] = problems
         if len(problems) != 0 and verbose > 0:
             exudyn.Print('WARNING: GetURDFrobotData: link', linkDict['name'] + ':', '; '.join(problems))

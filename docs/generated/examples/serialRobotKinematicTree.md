@@ -2,7 +2,7 @@
 (examples-serialrobotkinematictree)=
 # serialRobotKinematicTree.py
 
-You can view and download this file on Github: [serialRobotKinematicTree.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotKinematicTree.py)
+You can view and download this file on Github: [serialRobotKinematicTree.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/serialRobotKinematicTree.py)
 
 ```{code-block} python
 :linenos:

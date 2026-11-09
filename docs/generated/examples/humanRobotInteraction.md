@@ -2,7 +2,7 @@
 (examples-humanrobotinteraction)=
 # humanRobotInteraction.py
 
-You can view and download this file on Github: [humanRobotInteraction.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/humanRobotInteraction.py)
+You can view and download this file on Github: [humanRobotInteraction.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/humanRobotInteraction.py)
 
 ```{code-block} python
 :linenos:
@@ -12,8 +12,8 @@ You can view and download this file on Github: [humanRobotInteraction.py](https:
 #
 # Details:  A Puma560 (exudyn.robotics.models) moves its tool against the hand of an articulated dummy, modelled as a
 #           second Robot of revolute joints; both are kinematic trees with the control of Robot.SetControl, called in
-#           one PreStepUserFunction, and touch by general contact. The STL files of the dummy are not part of Exudyn
-#           (GrabCAD, articulated-dummy).
+#           one PreStepUserFunction, and touch by general contact. The dummy needs articulatedDummy.h5 of the repository
+#           CommonData_git beside this one (internal).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-08-05
@@ -26,6 +26,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+import os
 from exudyn.robotics import *
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
 
@@ -37,304 +38,36 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 addRobot = True
-useKT = True #model articulated body as kinematic tree; allows simpler control
-addHand = True
-addHandKinematic = True and addHand
-addFullBody = True #only graphics
-
 
 tStart = time.time()
+gravity = [0, 0, -9.81]
 
-#try to turn of warnings for stl geometry:
-try:
-    import stl
-    def NoWarnings(*args): pass
-    stl.base.BaseMesh.warning = NoWarnings
-except: pass
+#%%+++ the articulated dummy: a Robot of the joints of the left arm and hand, the rest of the body are the graphics of its base; as its STL files are not part of Exudyn, it is stored in the
+#repository CommonData_git beside this one
+dummyFile = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'articulatedDummy.h5')
+if not os.path.isfile(dummyFile):
+    raise ValueError('this example needs articulatedDummy.h5 of the repository CommonData_git beside this one: ' + dummyFile)
+articulatedBody = Robot()
+articulatedBody.LoadFromHDF5(dummyFile)
 
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++
-#physical parameters
-gravity=[0,0,-9.81]  #gravity
-L = 1               #length
-w = 0.1             #width
-bodyDim=[L,w,w] #body dimensions
-p0 =    [0,0,0]     #origin of pendulum
-pMid0 = np.array([L*0.5*0,0,0]) #center of mass, body0
-
-#ground body
-
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-scaleBody = 0.0254 #conversion: inches to meter (articulated-dummy), original file
-scaleBody = 0.001  #conversion: millimeter to meter (articulated-dummy2), modified file
-
-leftShoulder = np.array([0.086, -0.185, 1.383]) #position of left shoulder joint in meter
-leftElbow = np.array([0.109, -0.206, 1.122]) #position of left shoulder joint in meter
-leftHand = np.array([0.0945, -0.2520, 0.8536]) #position of left shoulder joint in meter
-
-rightShoulder = np.array([0.086, 0.185, 1.383]) #position of left shoulder joint in meter
-rightElbow = np.array([0.109, 0.206, 1.122]) #position of left shoulder joint in meter
-rShoulder = 0.047
-rElbow = 0.032
+leftElbow = np.array([0.109, -0.206, 1.122]) #position of the left elbow joint in meter
+leftHand = np.array([0.0945, -0.2520, 0.8536]) #position of the left hand joint in meter
 rHand = 0.025
 
-density = 1000. #human body average density ... like water
-verbose = False
-graphicsBody =[]
-graphicsUAL =[]
-graphicsLAL =[]
+mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphics.CheckerBoard(size=4)])))
 
-listBody = ['UpperArm_R', 'LowerArm_R', 'Hand_R', 'Fingers_R', 'Head', 'Pelvis',
-            'LowerLeg_R', 'LowerLeg_L', 'UpperLeg_R', 'UpperLeg_L', 'Foot_L', 'Foot_R']
+#motion of the articulated body
+z0 = -0.15*pi
+q0 = [0,0,0,0,0,0,0]
+q1 = [0,pi*0.125,z0,pi*(0.375-0.03),0,0,0]
+bodyTrajectory = Trajectory(initialCoordinates=q0, initialTime=0.25)
+bodyTrajectory.Add(ProfileConstantAcceleration(q1,0.4))
 
-listAll = ['Torso', 'UpperArm_L', 'LowerArm_L', 'Hand_L', 'Fingers_L'] + listBody
-myDir = 'C:/DATA/cpp/DocumentationAndInformation/STL/articulated-dummy2/' #graphics for articulated dummy not included in model; download at GrabCAD / articulated-dummy
-
-
-if False:
-    #convert ascii files to binary stl:
-    from stl import mesh, Mode
-    for file in ['Fingers_L']:
-    #for file in listAll:
-        print('convert',file)
-        data=mesh.Mesh.from_file(myDir+file+'.stl')
-        data.save(filename=myDir+file+'.stl', mode=Mode.BINARY)
-
-
-#graphics taken from https://grabcad.com/library/articulated-dummy-1
-#print('1*********************************************',flush=True)
-dataUAL = graphics.FromSTLfile(fileName=myDir+'UpperArm_L.stl', 
-                                        color=graphics.color.blue, verbose=verbose, density=density,
-                                        scale = scaleBody)
-
-dataLAL = graphics.FromSTLfile(fileName=myDir+'LowerArm_L.stl', 
-                                        color=graphics.color.dodgerblue, verbose=verbose, density=density,
-                                        scale = scaleBody)
-
-if addHand:
-    dataHandL = graphics.FromSTLfile(fileName=myDir+'Hand_L.stl', 
-                                            color=graphics.color.brown, verbose=verbose, density=density,
-                                            scale = scaleBody)
-    dataFingersL = graphics.FromSTLfile(fileName=myDir+'Fingers_L.stl', 
-                                            color=graphics.color.brown, verbose=verbose, density=density,
-                                            scale = scaleBody)
-    
-    #++++++++++++++++++++++++++++++++++
-    #merge mass, COM and inertia of lower arm, hand and fingers:
-    rbiLAL = RigidBodyInertia(dataLAL[1]['mass'], dataLAL[1]['inertia'], dataLAL[1]['COM'], inertiaTensorAtCOM=True)
-    rbiHandL = RigidBodyInertia(dataHandL[1]['mass'], dataHandL[1]['inertia'], dataHandL[1]['COM'], inertiaTensorAtCOM=True)
-    rbiFingersL = RigidBodyInertia(dataFingersL[1]['mass'], dataFingersL[1]['inertia'], dataFingersL[1]['COM'], inertiaTensorAtCOM=True)
-    
-    # print('rbiLAL=',rbiLAL)
-    # print('rbiHandL=',rbiHandL)
-    # print('rbiFingersL=',rbiFingersL)
-    rbiLAL= rbiLAL + rbiHandL + rbiFingersL
-    dataLAL[1]['mass'] = rbiLAL.Mass()
-    dataLAL[1]['inertia'] = rbiLAL.InertiaCOM()
-    dataLAL[1]['COM'] = rbiLAL.COM()
-#++++++++++++++++++++++++++++++++++
-graphicsBody += [graphics.AddEdgesAndSmoothenNormals(graphics.FromSTLfile(fileName=myDir+'Torso.stl', 
-                                        color=graphics.color.grey, verbose=verbose, density=density,
-                                        scale = scaleBody)[0], addEdges=False)]
-
-
-if addFullBody:
-    for part in listBody:
-        data = graphics.FromSTLfile(fileName=myDir+''+part+'.stl', 
-                                       color=graphics.color.grey, verbose=verbose, density=density*0,
-                                       scale = scaleBody)
-        graphicsBody += [graphics.AddEdgesAndSmoothenNormals(data, addEdges=False)]
-        #graphicsBody += [data[0]]
-
-
-# if True: #makes even bigger files ...
-    # fileName = myDir+'data.npy'
-    # with open(fileName, 'wb') as f:
-    #     np.save(f, graphicsBody, allow_pickle=True)
-
-    # with open(fileName, 'rb') as f:
-    #     graphicsBody = np.load(f, allow_pickle=True).all()
-
-
-#body fixed to ground    
-graphicsBody += [graphics.CheckerBoard(size=4)]
-
-pBody = np.array([0,0,0])
-oGround = mbs.AddObject(ObjectGround(referencePosition=pBody, visualization=VObjectGround(graphicsData=graphicsBody)))
-
-if useKT:
-
-    #%%++++++++++++++++++++++++++++++++++++++++
-    #motion and control of articulated body
-    z0 = -0.15*pi
-    q0 = [0,0,0,0,0,0,0] #zero angle configuration, max 7 joints
-    q1 = [0,pi*0.125,z0,pi*(0.375-0.03),0,0,0] #zero angle configuration, max 7 joints
-    # q1 = [-pi*0.5,0,0,0,0,0,0]
-    q2 = [-pi*0.5,pi*0.5,0,0,0,0,0]
-    q3 = [-pi*0.5,pi*0.5,pi*0.5,0,0,0,0]
-    q4 = [0,pi*0.125,0,pi*0.375,0,0,0]
-    
-    #trajectory generated with optimal acceleration profiles:
-    bodyTrajectory = Trajectory(initialCoordinates=q0, initialTime=0.25)
-    bodyTrajectory.Add(ProfileConstantAcceleration(q1,0.4))
-    #bodyTrajectory.Add(ProfileConstantAcceleration(q1,0.25))
-    # bodyTrajectory.Add(ProfileConstantAcceleration(q2,0.25))
-    # bodyTrajectory.Add(ProfileConstantAcceleration(q3,0.25))
-    # bodyTrajectory.Add(ProfileConstantAcceleration(q4,0.25))
-    # bodyTrajectory.Add(ProfileConstantAcceleration(q0,0.25))
-
-    Pcontrol = 0.1*np.array([5000,2*5000,5000, 2*5000, 2000,2000,2000]) #3 x elbow, 1 x shoulder, 3 x hand
-    Dcontrol = 0.02 * Pcontrol
-    #%%++++++++++++++++++++++++++++++++++++++++
-
-    articulatedBody = Robot(gravity=[0,0,9.81],
-                  #base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)), #already added to ground
-                  #tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=graphicsToolList)),
-                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
-
-    jointRadius = 0.06
-    jointWidth  = 0.0125
-    linkWidth   = 0.001
-    showMBSjoint= False
-    showCOM     = False
-
-    body = dataUAL
-    body[0] = graphics.Move(graphics.AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftShoulder, np.eye(3))
-    link = body[1]
-
-    articulatedBody.AddLink(RobotLink(jointType='Rx',
-                                      mass = 0, COM=[0,0,0], inertia = 0*np.eye(3),
-                                      preHT=exu.HT(translation=leftShoulder),
-                                      PDcontrol=(Pcontrol[0], Dcontrol[0]),
-                                      visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint)
-                                      ))
-    articulatedBody.AddLink(RobotLink(jointType='Ry',
-                                      mass = 0, COM=[0,0,0], inertia = 0*np.eye(3),
-                                      #preHT=HT0(),
-                                      PDcontrol=(Pcontrol[1], Dcontrol[1]),
-                                      visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint)
-                                      ))
-                                      
-    
-    articulatedBody.AddLink(RobotLink(jointType='Rz',
-                                      mass=link['mass'],
-                            COM=link['COM']-leftShoulder,
-                            inertia=link['inertia'],
-                            #preHT=HomogeneousTransformation(np.eye(3), leftShoulder),
-                            PDcontrol=(Pcontrol[2], Dcontrol[2]),
-                            visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint,
-                                                     graphicsData=[body[0]])
-                            ))
-
-    body = dataLAL
-    body[0] = graphics.Move(graphics.AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftElbow, np.eye(3))
-    link = body[1]
-    gList = [body[0]]
-    
-    if addHand:
-        if not addHandKinematic:
-            dataHandL[0] = graphics.Move(graphics.AddEdgesAndSmoothenNormals(dataHandL[0], addEdges=False), -leftElbow, np.eye(3))
-            dataFingersL[0] = graphics.Move(dataFingersL[0], -leftElbow, np.eye(3))
-            gList = [body[0], dataHandL[0], dataFingersL[0]]
-        
-        
-    gList += [graphics.Sphere(leftHand-leftElbow, radius=rHand, color=graphics.color.brown, nTiles=16)]
-    
-    articulatedBody.AddLink(RobotLink(jointType='Ry',
-                                      mass=link['mass'],
-                                      COM=link['COM']-leftElbow,
-                                      inertia=link['inertia'],
-                                      preHT=exu.HT(translation=leftElbow-leftShoulder),
-                                      PDcontrol=(Pcontrol[3], Dcontrol[3]),
-                                      visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint,
-                                                               graphicsData=gList)
-                                      ))
-
-    if addHandKinematic:
-        body = dataHandL
-        link = body[1]
-        dataHandL[0] = graphics.Move(dataHandL[0], -leftHand, np.eye(3))
-        dataFingersL[0] = graphics.Move(dataFingersL[0], -leftHand, np.eye(3))
-        gList = [dataHandL[0], dataFingersL[0]]
-
-
-        articulatedBody.AddLink(RobotLink(jointType='Rx',
-                                          mass = 0, COM=[0,0,0], inertia = 0*np.eye(3),
-                                          preHT=exu.HT(translation=leftHand-leftElbow),
-                                          PDcontrol=(Pcontrol[4], Dcontrol[4]),
-                                          visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint)
-                                          ))
-        articulatedBody.AddLink(RobotLink(jointType='Ry',
-                                          mass = 0, COM=[0,0,0], inertia = 0*np.eye(3),
-                                          PDcontrol=(Pcontrol[5], Dcontrol[5]),
-                                          visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint)
-                                          ))
-        articulatedBody.AddLink(RobotLink(jointType='Rz',
-                                          mass=link['mass'],
-                                          COM=link['COM']-leftShoulder,
-                                          inertia=link['inertia'],
-                                          PDcontrol=(Pcontrol[6], Dcontrol[6]),
-                                          visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint,
-                                                                 graphicsData=gList)
-                                ))
-
-
-    articulatedBody.referenceConfiguration = q0[0:articulatedBody.NumberOfLinks()]
-    #create kinematic tree of body
-    articulatedBodyDict = articulatedBody.CreateKinematicTree(mbs)
-    oKTarticulatedBody = articulatedBodyDict['objectKinematicTree']
-    articulatedBody.SetControl(bodyTrajectory)
-
-    mHand = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTarticulatedBody, linkNumber = 3, 
-                                                   localPosition=leftHand-leftElbow))
-
-else:
-    #%%++++++++++++++++++++++++++
-    #upper arm left:
-    if False:
-        body = dataUAL
-        
-        body[0] = graphics.Move(body[0], -body[1]['COM'], np.eye(3))
-        
-        dictUAL1 = mbs.CreateRigidBody(
-                      inertia=RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
-                      referencePosition=body[1]['COM'],
-                      referenceRotationMatrix=np.eye(3),
-                      gravity=gravity,
-                      graphicsDataList=[body[0]],
-                      returnDict=True)
-        [nUAL, bUAL] = [dictUAL1['nodeNumber'], dictUAL1['bodyNumber']]
-        
-        #markers for ground and rigid body (not needed for option 3):
-        markerGroundUAL = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=leftShoulder))
-        markerUAL0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bUAL, localPosition=leftShoulder-body[1]['COM']))
-        markerUAL1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bUAL, localPosition=leftElbow-body[1]['COM']))
-        
-        jUAL = mbs.AddObject(SphericalJoint(markerNumbers=[markerGroundUAL, markerUAL0], 
-                                            visualization=VSphericalJoint(jointRadius=rShoulder)))
-        
-        
-        #%%++++++++++++++++++++++++++
-        #lower arm left:
-        body = dataLAL
-        
-        body[0] = graphics.Move(body[0], -body[1]['COM'], np.eye(3))
-        
-        dictUAL2 = mbs.CreateRigidBody(
-                      inertia=RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
-                      referencePosition=body[1]['COM'],
-                      referenceRotationMatrix=np.eye(3),
-                      gravity=gravity,
-                      graphicsDataList=[body[0]],
-                      returnDict=True)
-        [nUAL, bUAL] = [dictUAL2['nodeNumber'], dictUAL2['bodyNumber']]
-        
-        #markers for ground and rigid body (not needed for option 3):
-        markerLAL0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bUAL, localPosition=leftElbow-body[1]['COM']))
-        
-        jLAL = mbs.AddObject(GenericJoint(markerNumbers=[markerUAL1, markerLAL0], 
-                                          constrainedAxes=[1,1,1, 1,0,1],
-                                          visualization=VGenericJoint(axesRadius=0.1*rElbow)))
+articulatedBodyDict = articulatedBody.CreateKinematicTree(mbs)
+oKTarticulatedBody = articulatedBodyDict['objectKinematicTree']
+articulatedBody.SetControl(bodyTrajectory)
+mHand = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber = oKTarticulatedBody, linkNumber = 3,
+                                               localPosition=leftHand-leftElbow))
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add simple robot:
@@ -413,8 +146,7 @@ if addRobot:
 
 #the control of both, the articulated body and the robot, in one PreStepUserFunction
 def PreStepUF(mbs, t):
-    if useKT:
-        articulatedBody.PreStepControl(mbs, t)
+    articulatedBody.PreStepControl(mbs, t)
     if addRobot:
         robot.PreStepControl(mbs, t)
     return True

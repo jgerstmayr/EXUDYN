@@ -2,7 +2,7 @@
 (examples-serialrobotinversekinematics)=
 # serialRobotInverseKinematics.py
 
-You can view and download this file on Github: [serialRobotInverseKinematics.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotInverseKinematics.py)
+You can view and download this file on Github: [serialRobotInverseKinematics.py](https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/robotics/serialRobotInverseKinematics.py)
 
 ```{code-block} python
 :linenos:
