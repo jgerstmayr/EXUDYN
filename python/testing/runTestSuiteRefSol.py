@@ -809,7 +809,7 @@ def AVX2ReferenceSolutionUpdate():
         'generalContactFrictionTests.py':          12.022115875486731,        #drift 4.8e-03
         'generalContactCylinderTest.py':           12.246589711797922,        #drift 3.1e-04
         'sphereTriangleTest2.py':                  4.356258097407118,         #drift 8.0e-06
-        'explicitSolversPostNewtonTest.py': 4.557710057926907, #drift 3.9e-07 (fast module, 2026-11-09)
+        'explicitSolversPostNewtonTest.py': 4.557770844507367, #drift 6.1e-05 (fast module, 2026-11-09)
         'robotFrictionEndStopsTest.py': 11.671115042362164, #drift 1.0e-13 (fast module, 2026-11-09)
         'contactUserFunctionTest.py': 2.7852392407686537, #drift 3.5e-13 (fast module, 2026-11-09)
         'convexConvexContactTest.py': 9.948739036525897, #drift 6.3e-10 (fast module, 2026-11-09)

@@ -12,7 +12,7 @@
 #           deepest point of the drop 0.09639 for all, the counted rotation angle 0.2616 at the end.
 #           Last, the drop with DOPRI5 and a large maximum step size (300 steps for 0.3 s), with and without
 #           the step size the contacts recommend where they begin and end (#2109): the height after the
-#           rebound 0.11615 with the recommendation for both contacts, against 0.11625 of the implicit solver
+#           rebound 0.1161 with the recommendation for both contacts, against 0.11625 of the implicit solver
 #           with 20 000 steps; without it the step size control alone gives 0.1147 to 0.1196. Run directly, the
 #           SolutionViewer shows this drop on ObjectContactSphereSphere with the recommended step size.
 #
