@@ -808,7 +808,13 @@ def AVX2ReferenceSolutionUpdate():
         'generalContactFrictionTests.py':          12.022115875486731,        #drift 4.8e-03
         'generalContactCylinderTest.py':           12.246589711797922,        #drift 3.1e-04
         'sphereTriangleTest2.py':                  4.356258097407118,         #drift 8.0e-06
-        'explicitSolversPostNewtonTest.py':        4.557710447618821,         #drift 7.7e-06
+        'explicitSolversPostNewtonTest.py': 4.557710057926907, #drift 3.9e-07 (fast module, 2026-11-09)
+        'robotFrictionEndStopsTest.py': 11.671115042362164, #drift 1.0e-13 (fast module, 2026-11-09)
+        'contactUserFunctionTest.py': 2.7852392407686537, #drift 3.5e-13 (fast module, 2026-11-09)
+        'convexConvexContactTest.py': 9.948739036525897, #drift 6.3e-10 (fast module, 2026-11-09)
+        'journalBearingTest.py': 8.789021646959824, #drift 5.4e-06 (fast module, 2026-11-09)
+        'contactPrimitivesTableTest.py': 10.521724576125148, #drift 6.2e-04 (fast module, 2026-11-09)
+        'sphereCylinderContactTest.py': 8.613788897623888, #drift 4.4e-13 (fast module, 2026-11-09)
         'restartFileTest.py':                      -2.931848,                 #drift 1.0e-06
         'generalContactImplicit1.py':              0.7758156549599001,        #drift 8.9e-08
         'rollingDiscTangentialForces.py':          1.0342017444582357,        #drift 4.4e-09

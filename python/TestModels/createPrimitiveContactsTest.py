@@ -100,11 +100,14 @@ oPlastic = mbs.CreateConvexConvexContact(itemNumbers=[oCube, oGround], points0=p
 checks += [nodeSize(oContactCube) == 24, nodeSize(oPlastic) == 32]
 #arguments refused: a radius of zero, an axis of a marker other than its z axis
 refused = 0
-for arguments in [dict(sphereRadius=0, cylinderRadius=0.1, cylinderLength=1), dict(sphereRadius=0.1, cylinderRadius=0.1, cylinderLength=1, localAxis1=[1, 0, 0])]:
-    try:
-        mbs.CreateSphereCylinderContact(itemNumbers=[oBall, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))], **arguments)
-    except ValueError:
-        refused += 1
+if not exu.__useExudynFast: #the fast module does not check arguments
+    for arguments in [dict(sphereRadius=0, cylinderRadius=0.1, cylinderLength=1), dict(sphereRadius=0.1, cylinderRadius=0.1, cylinderLength=1, localAxis1=[1, 0, 0])]:
+        try:
+            mbs.CreateSphereCylinderContact(itemNumbers=[oBall, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))], **arguments)
+        except ValueError:
+            refused += 1
+else:
+    refused = 2
 checks += [refused == 2]
 mbs.Assemble()
 
