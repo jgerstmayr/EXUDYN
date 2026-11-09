@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 497 | 1.13.520 |
+| 1.13 | Newborn | 499 | 1.13.522 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.522** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The icon bar is shown for some seconds when the render window opens (#3396)
+  - description: A new user does not know that the icon bar folds in at the right border of the render window. Decided: the bar is shown when the window opens and folds out after general.iconBarStartTime milliseconds, default 5000; it is drawn after the frame is saved, so it is not on saved or raytraced images.
+  - **notes:** The icon bar is shown for visualizationSettings.general.iconBarStartTime milliseconds, 5000 by default, when the render window opens, so that a new user sees where it is; it is not on saved or raytraced images.
+  - date resolved: **2026-11-10 00:16**, date raised: 2026-11-10
+- **1.13.521** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The descriptions of the penalty contacts name the impact models by ContactImpactModel (#3395)
+  - description: The descriptions of ObjectContactSphereSphere, SphereTorus, SphereTriangle and SphereCylinder named the impact model only by its number m\_impact or by the parameter impactModel, while the Python value is exu.ContactImpactModel.Linear, HuntCrossley or GonthierCarvalhoMartins. Decided: the descriptions name the values of ContactImpactModel and link its page.
+  - **notes:** The descriptions of the sphere contacts name the impact models by exu.ContactImpactModel.Linear, HuntCrossley and GonthierCarvalhoMartins and link its page.
+  - date resolved: **2026-11-10 00:16**, date raised: 2026-11-10
 - **1.13.520** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` Load/Save HDF5 (#1892)
   - description: Add Data structures like MatrixContainer, Vector3DList, etc.
   - **notes:** SaveDictToHDF5 and LoadDictFromHDF5 store and restore Vector2DList, Vector3DList, Vector6DList, Matrix3DList, Matrix6DList and MatrixContainer (dense and sparse), also inside lists.

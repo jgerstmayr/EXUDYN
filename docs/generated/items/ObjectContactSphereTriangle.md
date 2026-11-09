@@ -116,7 +116,8 @@ only then does marker 0 need an orientation.
 ### Connector forces
 
 The normal force - from the penetration $\delta = -g$, with `contactStiffness` $k_c$, the exponent
-$n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
+$n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` - `ContactImpactModel.Linear`, `HuntCrossley` or
+`GonthierCarvalhoMartins`, see [ContactImpactModel](#sec-contactimpactmodel) - with the restitution
 coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
 computed exactly as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere),
 with the normal $\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force

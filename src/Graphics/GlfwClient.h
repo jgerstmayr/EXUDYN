@@ -271,6 +271,7 @@ private:
 		double lastTime = 0.;			//!< time of the last frame, for the animation
 		bool pressed = false;			//!< a mouse button was pressed on the bar: its release is the bar's as well
 		double lastShownTime = 0.;		//!< the last time the mouse was at the bar: it stays general.iconBarTimeout longer
+		double startShownUntil = -1.;	//!< the bar is shown until this time after the window opened; -1: not yet drawn (#3396)
 		Index regionStep = 0;			//!< zoom to a region: 0 off, 1 waiting for the first corner, 2 for the second, 3 SHIFT+drag
 		double regionX = 0., regionY = 0.;	//!< the first corner, in pixels of the frame buffer
 		std::vector<Index> textureIDs;	//!< the numbers of the icons in the TextureStore

@@ -1,0 +1,16 @@
+{
+  "number": 3395,
+  "title": "The descriptions of the penalty contacts name the impact models by ContactImpactModel",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The descriptions of ObjectContactSphereSphere, SphereTorus, SphereTriangle and SphereCylinder named the impact model only by its number m_impact or by the parameter impactModel, while the Python value is exu.ContactImpactModel.Linear, HuntCrossley or GonthierCarvalhoMartins. Decided: the descriptions name the values of ContactImpactModel and link its page.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 00:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "The descriptions of the sphere contacts name the impact models by exu.ContactImpactModel.Linear, HuntCrossley and GonthierCarvalhoMartins and link its page.",
+  "resolvedInVersion": "1.13.521"
+}

@@ -929,11 +929,17 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 
 	//slide in or out; after the mouse left, the bar stays general.iconBarTimeout
 	double now = EXUstd::GetTimeInSeconds();
+	if (bar.startShownUntil < 0.) { bar.startShownUntil = now + 0.001*(double)visSettings->general.iconBarStartTime; }
 	if (show) { bar.lastShownTime = now; }
 	else if (showBar && bar.visible > 0.f && now - bar.lastShownTime < 0.001*(double)visSettings->general.iconBarTimeout)
 	{
 		show = true;
 		SetCallBackRefreshSignal(); //the next frame checks again
+	}
+	else if (showBar && now < bar.startShownUntil) //shown when the window opens, so that it is seen where it is (#3396)
+	{
+		show = true;
+		SetCallBackRefreshSignal();
 	}
 	float step = (float)((now - bar.lastTime)/iconBarFoldTime);
 	bar.lastTime = now;

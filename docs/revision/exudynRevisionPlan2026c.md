@@ -67,6 +67,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.24 Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
+  - RG4.27 Decide whether a contact switches off when its force pulls
 - **RG5** Performance
   - RG5.1 Write a linear algebra micro-benchmark that every build carries (4 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
@@ -75,6 +76,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
+  - RG6.22 Buttons and sliders in the render window, with one Python callback
+  - RG6.23 Zoom and drag of the scopes while the simulation is idle
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -119,9 +122,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | CLOSED | 0 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 4 | Implementation problems and bugs |
+| RG4 | OPEN | 5 | Implementation problems and bugs |
 | RG5 | OPEN | 11 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
@@ -468,6 +471,22 @@ so a smaller step does not reach 1e-5; rendererNOGLFWexample.py writes its image
 #3009 (found with runTestExamples.py in RG12.3.6): tutorialRigidBody.py and tutorialRigidBodyCreate.py stop with a drift
 of 1.005e-5 at t = 1.7, fixedFixedANCFALEdiscreteMasses.py with 2.7e-4 - the check of RG4.25.1 is on for TrapezoidalIndex2;
 the tolerance, the step size of the examples, or the check off in them.
+
+### **OPEN_RG4.27** Decide whether a contact switches off when its force pulls
+
+#904. Maintainer 2026-11-09: a contact should not switch off when its force pulls (negative force). With the linear damping this is the behaviour of the linear spring-damper, and the accurate impact models are `ContactImpactModel.HuntCrossley` and `GonthierCarvalhoMartins`. Unless there are other arguments, keep the behaviour of ObjectContactSphereSphere; this list is the basis for the decision.
+
+| contact | switched by | the damping may pull at the end of a contact |
+|---|---|---|
+| ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTorus, ObjectContactSphereTriangle, ObjectContactSphereCylinder | the gap of the last post-Newton step | yes |
+| ObjectContactCylinderCylinder, ObjectContactCylinderTriangle, ObjectContactConvexConvex, ObjectContactPrimitiveConvex (the contact points) | the gap per contact point | yes |
+| ObjectContactConvexRoll, ObjectConnectorRollingDiscPenalty | the gap | yes |
+| ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D | the gap per segment | yes |
+| ObjectContactCurveCircles | the gap **and** a pressing normal force (`gap < 0 and fNormal < 0` in its post-Newton step) | no |
+| GeneralContact, sphere-sphere and sphere-triangle | `keepContactWhilePenetrating`: True by the gap, **False (the default)** by a pressing force; a sphere-triangle contact with an explicit solver always by the gap | only with True |
+| GeneralContact, ANCF cable and other contacts | the gap | yes |
+
+So two places switch by the force: ObjectContactCurveCircles, and GeneralContact by default. To decide: (1) keep everything by the gap and change the default of `keepContactWhilePenetrating` to True (a behaviour change of GeneralContact models, with new reference values), or keep its default; (2) whether ObjectContactCurveCircles switches by the gap alone; (3) close #904 as won't fix.
 
 ## **OPEN_RG5** Performance
 
@@ -856,6 +875,37 @@ CLOSED 2026-11-04 (#3251): VSettingsScopes at sensors.scopes (colors, lineWidth,
 #### **CLOSED_RG6.20.13** xResolution 1, the values of a plot over another sensor, the default scopes a third of the height; the design note as internals page
 
 CLOSED 2026-11-05 (#3252): maintainer's adjustments after testing; docs/dev/internals/scope.md with the current state replaces the design note. [log](exudynRevisionLog2026c.md#rg6-20-13)
+
+### **CLOSED_RG6.21** Show the icon bar for some seconds when the render window opens
+
+CLOSED 2026-11-10 (#3396; maintainer 2026-11-09): visualizationSettings.general.iconBarStartTime, 5000 ms by default; not in saved or raytraced images. [log](exudynRevisionLog2026c.md#rg6-21)
+
+### **OPEN_RG6.22** Buttons and sliders in the render window, with one Python callback
+
+Maintainer 2026-11-09: buttons and sliders with labels directly in the render window, like the icon bar, instead of a tkinter dialog. This would also simplify the interactive robot model of RG19.16. Each has transparency, a centered text, a font size and a location `[[x0, y0], [x1, y1]]` relative to the window, so that it scales when the window is resized. All of them call one Python callback, like the key press function, with the ID of the element and its state as a Vector3D (`state = data[0]`), so that the interface can grow.
+
+**Recommendation (to be decided before the implementation):**
+- **An API of the renderer, not visualization settings.** The settings hold settings, and the elements change at run time. The calls would be `SC.renderer.AddButton(...)` and `AddSlider(...)`, each returning its ID; `SetControlState(id, data)` and `GetControlState(id)`; `DeleteControl(id)` and `ClearControls()`; and `SetControlUserFunction(f)` with `f(id, data)`. Each element is also its dict, with `type`, `location`, `text`, `fontSize`, `color`, `backgroundColor` (alpha = transparency), and for a slider `minMax`, `value` and `format` (the value in the label, e.g. `'q1 = {:.2f}'`); a button is either `push` or `toggle`. The elements go into `SC.renderer.GetDictionary`/`SetDictionary`.
+- **Location** as for the scopes: `[[x0, y0], [x1, y1]]` relative to the window from the top left corner (`StdArray22F`); the font size scales with the display scaling.
+- **The mouse**: the icon bar first, then the elements, then the scopes and the view, so that a click on an element never rotates the model. A slider is dragged with the left button or changed by the mouse wheel, and a button acts on release.
+- **The callback** follows the path of the key press function (the renderer thread takes the GIL). `data = [state, 0, 0]`: 0/1 for a button (a push button sends 1 on release), the value for a slider; the two other components are reserved.
+- **In images:** they are drawn after the frame is saved, as the icon bar, so they are not in saved or raytraced images; an option could include them later.
+- **Python helper:** a small class in `exudyn.interactive` that maps IDs to Python functions, so that a model writes `controls.Slider('q1', ..., function=...)`; the robot model of RG19.16 is its first user.
+
+Sub-steps when decided: (1) the element list, drawing and mouse in C++, (2) the Python API, callback and dictionary, with a test of the API without a window, (3) the helper class and RG19.16 on it, (4) the documentation in the GUI chapter.
+
+### **OPEN_RG6.23** Zoom and drag of the scopes while the simulation is idle
+
+Maintainer 2026-11-09: while the simulation is idle (paused or stopped), the mouse zooms and drags the lines of a scope it is over. A double click, or the simulation continuing, resets the view to the stored one. The switching probably belongs to the render state, like the other mouse interactions.
+
+**Recommendation (to be decided before the implementation):**
+- **Idle** means: no solver is running, or the solver is paused (SPACE), or the solution viewer's animation is paused. The renderer reads this from the flags it already has for the pause and the running simulation; there is no new setting.
+- **Interaction** while the mouse is over a scope region: the wheel zooms about the cursor, with SHIFT only x and with CTRL only y; dragging with the left button moves the lines; a double click resets. Outside the scopes, or while running, the mouse does what it does now.
+- **Where the view is kept**: in the render state of the view, per scope, as an override of the ranges (`[xmin, xmax, ymin, ymax]`, empty = none). It is not in `VSettingsScope.minMaxX/minMaxY`, so that the stored settings stay what the user wrote. `ScopePlot::AddScope` takes the override in place of its ranges (section 2 of docs/dev/internals/scope.md); OpenGL and the raytracer draw the same.
+- **Reset**: when the simulation runs again (the next time step), with a double click, and when the settings of the scope change.
+- The tick labels follow the zoomed range, as they follow the ranges now.
+
+Sub-steps when decided: (1) the idle flag and the override in the render state, ScopePlot with the override, (2) the mouse handling with its priority after the icon bar and the controls of the step on buttons and sliders, (3) the user documentation (GUI chapter, scopes) and an interactive example.
 
 ## **OPEN_RG7** Python user items
 
@@ -1951,6 +2001,10 @@ CLOSED 2026-11-06 (#3271): SC.GetDictionary/SetDictionary call renderer.GetState
 ### **CLOSED_RG11.5** Document single items that the general pages did not reach
 
 CLOSED 2026-11-09 (#625, #626, #627, #987, #2325; maintainer 2026-11-09: the contact of circle and cable and the ALE cable stay short): the figure of the rigid body, the axes of the rotation constraints of ObjectJointGeneric, the terms and output of the ALE cable; ObjectContactFrictionCircleCable2D already had its description, equations and figure.
+
+#### **CLOSED_RG11.5.1** The impact models of the penalty contacts by the names of ContactImpactModel in their descriptions
+
+CLOSED 2026-11-10 (#3395; maintainer 2026-11-09): ObjectContactSphereSphere names the three cases by ContactImpactModel.Linear, HuntCrossley and GonthierCarvalhoMartins, SphereTorus, SphereTriangle and SphereCylinder name them and link the type. [log](exudynRevisionLog2026c.md#rg6-21)
 
 ### **OPEN_RG11.6** Write the joints and their Jacobians on homogeneous transformations
 

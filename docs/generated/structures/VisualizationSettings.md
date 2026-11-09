@@ -33,6 +33,7 @@ VSettingsGeneral has the following items:
 | `graphicsUpdateInterval` | UFloat | 0.1 | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed |
 | `iconBarFoldDistance` | UFloat | 20. | distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026) |
 | `iconBarScaling` | PFloat | 0.7 | size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026) |
+| `iconBarStartTime` | UInt | 5000 | time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images (#3396) |
 | `iconBarTimeout` | UInt | 300 | time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026) |
 | `limitWindowToScreenSize` | bool | True | True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize |
 | `minSceneSize` | PFloat | 0.01 | minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see [](#sec-renderer-modelsize); SET GREATER THAN ZERO |

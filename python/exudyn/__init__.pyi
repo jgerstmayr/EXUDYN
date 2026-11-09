@@ -1713,6 +1713,8 @@ class VSettingsGeneral:
     """distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)."""
     iconBarScaling: float
     """size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)."""
+    iconBarStartTime: int
+    """time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images (#3396)."""
     iconBarTimeout: int
     """time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)."""
     limitWindowToScreenSize: bool

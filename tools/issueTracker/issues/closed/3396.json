@@ -1,0 +1,16 @@
+{
+  "number": 3396,
+  "title": "The icon bar is shown for some seconds when the render window opens",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "A new user does not know that the icon bar folds in at the right border of the render window. Decided: the bar is shown when the window opens and folds out after general.iconBarStartTime milliseconds, default 5000; it is drawn after the frame is saved, so it is not on saved or raytraced images.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 00:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/GlfwClientExtended.cpp",
+  "releaseNotes": "The icon bar is shown for visualizationSettings.general.iconBarStartTime milliseconds, 5000 by default, when the render window opens, so that a new user sees where it is; it is not on saved or raytraced images.",
+  "resolvedInVersion": "1.13.522"
+}

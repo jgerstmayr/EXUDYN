@@ -6431,6 +6431,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-21"></a>
+### RG6.21 — the icon bar at the start; RG11.5.1, RG4.27, RG6.22, RG6.23 (2026-11-10, #3396, #3395, #904)
+*(Maintainer 2026-11-09: the icon bar open for 5 seconds at the start; plan the buttons and sliders and the zoom of
+the scopes first; the impact models by their names in the contact descriptions; a step to decide #904.)*
+
+- **Icon bar** (#3396): `visualizationSettings.general.iconBarStartTime` (ms, 5000); `IconBarState.startShownUntil`
+  is set at the first frame of a window and reset when the renderer starts; until then the bar is shown as if the
+  mouse were at it. It is drawn after the frame is saved, so saved and raytracer images do not have it. Not seen on
+  screen here (no window may open); to be checked by the maintainer.
+- **Contact descriptions** (#3395): the cases of ObjectContactSphereSphere are `ContactImpactModel.Linear` (the
+  adhesive elasto-plastic model, linear without adhesion and plasticity), `HuntCrossley`,
+  `GonthierCarvalhoMartins`; the other sphere contacts name them and link [ContactImpactModel](#sec-contactimpactmodel);
+  ObjectContactCoordinate named them already.
+- **RG4.27** (#904): read in the post-Newton steps and in GeneralContact: every contact item switches by the gap,
+  except ObjectContactCurveCircles (gap and pressing force) and GeneralContact with `keepContactWhilePenetrating =
+  False`, its default (sphere-sphere and sphere-triangle by the pressing force, `CContact.h` `ContactActs`).
+- **RG6.22, RG6.23**: the recommendations are in the plan.
+
 <a id="rg11-4-4-2"></a>
 ### RG11.4.4.2 — the exudyn lists and MatrixContainer in HDF5 (2026-11-09, #1892)
 *(Maintainer 2026-11-09: do the HDF5 part, close the rest.)*

@@ -701,7 +701,7 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
   SimulationSettings.timeIntegration.discontinuous: maxIterations(attribute,dict)
   SimulationSettings.timeIntegration.newton: maxIterations(attribute,dict) maxModifiedNewtonIterations(attribute,dict) maxModifiedNewtonRestartIterations(attribute,dict) residualMode(attribute,dict)
   VisualizationSettings.exportImages: saveImageFileCounter(attribute,dict)
-  VisualizationSettings.general: iconBarTimeout(attribute,dict) showHelpOnStartup(attribute,dict)
+  VisualizationSettings.general: iconBarStartTime(attribute,dict) iconBarTimeout(attribute,dict) showHelpOnStartup(attribute,dict)
   VisualizationSettings.interactive: highlightMbsNumber(attribute,dict)
   VisualizationSettings.openGL.advanced: curvedTriangleMaxTiling(attribute,dict)
   VisualizationSettings.raytracer: maxReflectionDepth(attribute,dict) maxTransparencyDepth(attribute,dict)

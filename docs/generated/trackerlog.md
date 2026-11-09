@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.520.dev1
-- last change = 2026-11-09
-- Number of issues = 3395
-- Number of resolved issues = 3297 (520 in current version)
+- Exudyn version = 1.13.522.dev1
+- last change = 2026-11-10
+- Number of issues = 3397
+- Number of resolved issues = 3299 (522 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9314,6 +9314,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-02-02
 - `EXTENSION` `LOW EFF` GeneralContact (#904)
   - description: PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force
+  - **remarks:** revision2026c step RG4.27: the list of the contacts and how they switch; the maintainer decides (2026-11-09: keep the switching by the gap, as ObjectContactSphereSphere)
   - date raised: 2022-01-31
 - `CHANGE` `MEDIUM EFF` GeneralContact (#867)
   - description: change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu

@@ -1547,6 +1547,7 @@ bool GlfwRenderer::StartRenderer(Index verbose)
     rendererStartTime = EXUstd::GetTimeInSeconds();
     lastTryCloseWindow = rendererStartTime - 1000; //
     iconBarStandardUpdateInterval = -1.f; //taken when the icon bar is drawn first (#3026)
+	for (IconBarState& bar : iconBarStates) { bar.startShownUntil = -1.; } //shown again when the window opens (#3396)
 
 	//glfwCreateThread(); //does not work properly ...
 	//auto th = new std::thread(GlfwRenderer::StartThread);

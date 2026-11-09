@@ -100,7 +100,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 This section outlines the computation of the forces acting on the two spheres when they are in contact with each other. Two types of forces can act on the spheres due to the connector:
 
-- normal force computed according to the chosen impact model $m_\mathrm{impact}$ and with contact damping if $d_c\neq0$; this type of force does not create a torque acting on the spheres.
+- normal force computed according to the impact model $m_\mathrm{impact}$, the parameter `impactModel` of type [ContactImpactModel](#sec-contactimpactmodel), and with contact damping if $d_c\neq0$; this type of force does not create a torque acting on the spheres.
 - tangential force due to a regularized friction law to model dry friction between the spheres; this type of force creates a torque acting on the spheres and is computed independently of the chosen impact model if $\mu_d\neq0$ is set. Note that in the implemented model, rolling deformations are not considered, i.e. the friction is only a function of the relative tangential velocity between the spheres at the contact point.
 
 (fig-objectspherespherecontact)=
@@ -176,7 +176,7 @@ $$
 
 The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against $\LU{0}{\nv}$ for marker 1. As an illustrative case, the gap velocity is positive, if sphere 0 does not move, i.e. $\LU{0}{\vv}_{m0}=0$ holds, and sphere 1 in direction of the normal vector. Note that this holds for the sphere-sphere contact and sphere-hollowsphere contact cases. The elastic force $f_c$ is computed depending on the chosen impact model.
 
-CASE $m_\mathrm{impact}=0$: the Adhesive Elasto-Plastic model described in [Morrissey2014] is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap $\delta_p$ is needed. It is computed with
+`impactModel = ContactImpactModel.Linear` ($m_\mathrm{impact}=0$): the Adhesive Elasto-Plastic model described in [Morrissey2014] is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap $\delta_p$ is needed. It is computed with
 
 $$
 \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta \, .
@@ -195,7 +195,7 @@ $$
 
 Note that $k_2$ is computed with $k_2 = k_c/(1-\lambda_\mathrm{P})$. The terms with the stiffness $k_c$ and $k_2$ have a positive sign, since they act in the direction of $\LU{0}{\nv}$ for marker 1. The constant adhesion force $f_\mathrm{adh}$ and the stiffness $k_\mathrm{adh}$ act against $\LU{0}{\nv}$, which corresponds to a force sticking the spheres together.
 
-CASE $m_\mathrm{impact}=1$: the restitution model proposed by Hunt and Crossley in [Hunt1975] is used to simulate the energy loss of the spheres during contact:
+`impactModel = ContactImpactModel.HuntCrossley` ($m_\mathrm{impact}=1$): the restitution model proposed by Hunt and Crossley in [Hunt1975] is used to simulate the energy loss of the spheres during contact:
 
 $$
 f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
@@ -215,7 +215,7 @@ $$
 
 Note that the Hunt-Crossley restitution is valid for a very small energy loss ($e_\mathrm{res}\approx1$) [Carvalho2019].
 
-CASE $m_\mathrm{impact}=2$: a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in [Carvalho2019] is used for $e_\mathrm{res} > \frac{1}{3}$ and a model proposed by Gonthier et al. in [Gonthier2004] is used for impacts with a high plastic proportion, $e_\mathrm{res} < \frac{1}{3}$. Note that the two models are identical at $e_\mathrm{res} = \frac{1}{3}$. $\lambda$ is therefore computed as follows:
+`impactModel = ContactImpactModel.GonthierCarvalhoMartins` ($m_\mathrm{impact}=2$): a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in [Carvalho2019] is used for $e_\mathrm{res} > \frac{1}{3}$ and a model proposed by Gonthier et al. in [Gonthier2004] is used for impacts with a high plastic proportion, $e_\mathrm{res} < \frac{1}{3}$. Note that the two models are identical at $e_\mathrm{res} = \frac{1}{3}$. $\lambda$ is therefore computed as follows:
 
 $$
 \lambda=
