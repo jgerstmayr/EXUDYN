@@ -247,6 +247,9 @@ The literature the documentation cites. A citation in the text - [Newmark1959], 
 (ref-shabana2013)=
 **[Shabana2013]** Ahmed A Shabana: *Dynamics of Multibody Systems*. 4th, Cambridge University Press, Cambridge, 2013.
 
+(ref-shampine1986)=
+**[Shampine1986]** L. F. Shampine: *Some practical Runge-Kutta formulas*. Mathematics of Computation 46(173), pp. 135–150, 1986.
+
 (ref-siciliano2016)=
 **[Siciliano2016]** Bruno Siciliano, Oussama Khatib (ed.): *Springer Handbook of Robotics*. Springer, 2016.
 

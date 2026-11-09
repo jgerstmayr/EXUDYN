@@ -2,10 +2,14 @@
   "number": 3378,
   "title": "The C++ unit-test build does not compile, and a symbolic unit test fails",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "effort": "LOW",
   "description": "exudev build --unittests stops in src/Tests/UnitTestBase.cpp: Linalg/Symbolic.h needs pybind11 and py there. With that added, the test at SymbolicUnitTests.h line 154 (what Diff refuses) gets no exception; the other tests pass.",
   "dateRaised": "2026-11-08",
-  "deadline": "2027-05-07"
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-09 00:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The C++ unit-test build compiles again and its symbolic test states the derivative of piecewise constant operations.",
+  "resolvedInVersion": "1.13.487"
 }

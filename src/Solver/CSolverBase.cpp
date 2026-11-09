@@ -2510,6 +2510,26 @@ void CSolverBase::WriteOutputWithinStep(CSystem& computationalSystem, const Simu
 	STOPTIMER(timer.writeSolution);
 }
 
+void CSolverBase::InterpolateQuinticHermite(const CSystemState& s0, const CSystemState& s1, const VectorBase<Real>& a0, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s)
+{
+	Real x2 = x * x, x3 = x2 * x, x4 = x3 * x, x5 = x4 * x;
+	Real H0 = 1. - 10. * x3 + 15. * x4 - 6. * x5, H1 = 1. - H0;
+	Real V0 = x - 6. * x3 + 8. * x4 - 3. * x5, V1 = -4. * x3 + 7. * x4 - 3. * x5;
+	Real A0 = 0.5 * x2 - 1.5 * x3 + 1.5 * x4 - 0.5 * x5, A1 = 0.5 * x3 - x4 + 0.5 * x5;
+	Real dH0 = -30. * x2 + 60. * x3 - 30. * x4, dV0 = 1. - 18. * x2 + 32. * x3 - 15. * x4, dV1 = -12. * x2 + 28. * x3 - 15. * x4;
+	Real dA0 = x - 4.5 * x2 + 6. * x3 - 2.5 * x4, dA1 = 1.5 * x2 - 4. * x3 + 2.5 * x4;
+	Real ddH0 = -60. * x + 180. * x2 - 120. * x3, ddV0 = -36. * x + 96. * x2 - 60. * x3, ddV1 = -24. * x + 84. * x2 - 60. * x3;
+	Real ddA0 = 1. - 9. * x + 18. * x2 - 10. * x3, ddA1 = 3. * x - 12. * x2 + 10. * x3;
+	for (Index i = 0; i < s.ODE2Coords.NumberOfItems(); i++)
+	{
+		if (isLinearODE2[i]) { continue; }
+		Real q0 = s0.ODE2Coords[i], q1 = s1.ODE2Coords[i], v0 = s0.ODE2Coords_t[i], v1 = s1.ODE2Coords_t[i], a1 = s1.ODE2Coords_tt[i];
+		s.ODE2Coords[i] = H0 * q0 + H1 * q1 + h * (V0 * v0 + V1 * v1) + h * h * (A0 * a0[i] + A1 * a1);
+		s.ODE2Coords_t[i] = dH0 * (q0 - q1) / h + dV0 * v0 + dV1 * v1 + h * (dA0 * a0[i] + dA1 * a1);
+		s.ODE2Coords_tt[i] = ddH0 * (q0 - q1) / (h * h) + (ddV0 * v0 + ddV1 * v1) / h + ddA0 * a0[i] + ddA1 * a1;
+	}
+}
+
 //the state at time T within the step from startOfStepState to outputEndOfStepState (#3286)
 void CSolverBase::SetStateWithinStep(CSystem& computationalSystem, Real T)
 {
@@ -2567,6 +2587,7 @@ void CSolverBase::SetStateWithinStep(CSystem& computationalSystem, Real T)
 	Linear(s0.ODE1Coords, s1.ODE1Coords, s.ODE1Coords);
 	Linear(s0.ODE1Coords_t, s1.ODE1Coords_t, s.ODE1Coords_t);
 	Linear(s0.AECoords, s1.AECoords, s.AECoords);
+	InterpolateWithinStep(s0, s1, outputLinearODE2, x, h, s);
 	s.time = T;
 }
 

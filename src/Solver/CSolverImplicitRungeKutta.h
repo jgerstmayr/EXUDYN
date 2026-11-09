@@ -99,6 +99,7 @@ public:
 	Real previousT0 = 0., previousH = 0.;
 	Vector previousV[ImplicitRungeKuttaMethod::maxStages], previousA[ImplicitRungeKuttaMethod::maxStages];
 	Vector candidateV[ImplicitRungeKuttaMethod::maxStages], candidateA[ImplicitRungeKuttaMethod::maxStages];
+	Vector previousYd[ImplicitRungeKuttaMethod::maxStages], candidateYd[ImplicitRungeKuttaMethod::maxStages]; //!< the ODE1 velocities of the stages, for the output within the step (#3379)
 	Real candidateT0 = 0., candidateH = 0.;
 	//TrapezoidalGGL: the mean accelerations (v1 - v0)/h of the last two accepted steps, for the velocity error (#3287)
 	Vector meanA1, meanA2, candidateMeanA;
@@ -133,6 +134,9 @@ public:
 	//! the step from the start of the step state to it.currentTime; false if Newton did not converge or the error
 	//! estimate rejected the step (rejectedByError, the new step size in it.currentStepSize)
 	bool Step(CSolverImplicitSecondOrderTimeInt& solver, CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! the output within the step just accepted, see the implementation (#3379)
+	void InterpolateWithinStep(const CSystemState& s0, const CSystemState& s1, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s) const;
 
 	//! the step is accepted (after the discontinuous iteration): its stages become the previous step
 	void AcceptStep();

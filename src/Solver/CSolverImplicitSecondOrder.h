@@ -52,6 +52,12 @@ public:
 	//! return true, if static solver; needs to be overwritten in derived class
 	virtual bool IsStaticSolver() const override { return false; }
 
+	//! the implicit Runge-Kutta methods have their own interpolation (#3379)
+	virtual void InterpolateWithinStep(const CSystemState& s0, const CSystemState& s1, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s) const override
+	{
+		if (rungeKutta.active) { rungeKutta.InterpolateWithinStep(s0, s1, isLinearODE2, x, h, s); }
+	}
+
 	//! get solver name - needed for output file header and visualization window
 	virtual const STDstring GetSolverName() const override
 	{

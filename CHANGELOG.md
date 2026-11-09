@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 469 | 1.13.486 |
+| 1.13 | Newborn | 471 | 1.13.488 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.488** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The output within the step by the interpolation of the solver (#3379)
+  - description: The output within a step used the cubic Hermite polynomial for every solver, which limits the higher-order methods. Decided: the collocation polynomial for the Radau and Lobatto solvers, the dense output for DOPRI5, a quintic Hermite polynomial with the accelerations for RK67.
+  - **notes:** The output within the step has the order of the solver: the dense output for DOPRI5, the quintic Hermite polynomial for RK67, Radau and Lobatto solvers.
+  - date resolved: **2026-11-09 00:53**, date raised: 2026-11-09
+- **1.13.487** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The C++ unit-test build does not compile, and a symbolic unit test fails (#3378)
+  - description: exudev build --unittests stops in src/Tests/UnitTestBase.cpp: Linalg/Symbolic.h needs pybind11 and py there. With that added, the test at SymbolicUnitTests.h line 154 (what Diff refuses) gets no exception; the other tests pass.
+  - **notes:** The C++ unit-test build compiles again and its symbolic test states the derivative of piecewise constant operations.
+  - date resolved: **2026-11-09 00:53**, date raised: 2026-11-08
 - **1.13.486** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotics.models: Spot, ANYmal, Mars rover, LBR iiwa and UR10 (#3375)
   - description: Decided: these robots added to robotics.models, running without their shapes; a tree or a floating base needs parent in the link dict. Collision shapes only where the URDF offers them.
   - **notes:** New in robotics.models: ManipulatorUR10, ManipulatorKukaLBRiiwa14 and QuadrupedANYmalB. Spot and the Mars rover are not added, as they have no license file.

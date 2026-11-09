@@ -26,6 +26,8 @@
 #include <unordered_map>    //VariableSet
 #include <typeinfo>         //typeid, in SetExpressionNamedReal and IsExpressionNamedReal
 #include <memory>           //shared_ptr, the data of a lookup table
+#include <pybind11/pybind11.h> //py::object of the named vectors and matrices in VariableSet
+namespace py = pybind11;
 
 namespace Symbolic
 {

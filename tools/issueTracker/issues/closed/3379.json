@@ -1,0 +1,15 @@
+{
+  "number": 3379,
+  "title": "The output within the step by the interpolation of the solver",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "The output within a step used the cubic Hermite polynomial for every solver, which limits the higher-order methods. Decided: the collocation polynomial for the Radau and Lobatto solvers, the dense output for DOPRI5, a quintic Hermite polynomial with the accelerations for RK67.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 00:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The output within the step has the order of the solver: the dense output for DOPRI5, the quintic Hermite polynomial for RK67, Radau and Lobatto solvers.",
+  "resolvedInVersion": "1.13.488"
+}

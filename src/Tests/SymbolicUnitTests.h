@@ -149,13 +149,15 @@ const lest::test symbolic_specific_test[] =
 		{
 			Symbolic::SReal x("x", 0.5);
 
-			//THROWS: these have no derivative at all
+			//zero: piecewise constant functions, the derivative where it exists (the rule Zero of the operation table)
 			Symbolic::SReal rounded = Symbolic::SReal::round(x);
-			EXPECT_THROWS(rounded.DiffSReal(x));
+			EXPECT(rounded.DiffSReal(x) == 0.);
 			Symbolic::SReal floored = Symbolic::SReal::floor(x);
-			EXPECT_THROWS(floored.DiffSReal(x));
+			EXPECT(floored.DiffSReal(x) == 0.);
 			Symbolic::SReal smaller = (x < Symbolic::SReal(1.));
-			EXPECT_THROWS(smaller.DiffSReal(x));
+			EXPECT(smaller.DiffSReal(x) == 0.);
+
+			//THROWS: an operation without a derivative rule
 			Symbolic::SReal minimum = Symbolic::SReal::min(x, Symbolic::SReal(1.));
 			EXPECT_THROWS(minimum.DiffSReal(x));
 

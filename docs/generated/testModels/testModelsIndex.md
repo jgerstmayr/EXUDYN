@@ -173,6 +173,7 @@ objectFFRFTest2
 objectGenericODE2Test
 ode1LoadsJacobianTest
 orientTrianglesTest
+outputInterpolationOrderTest
 parameterConversionTest
 PARTS_ATEs_moving
 pendulumFriction

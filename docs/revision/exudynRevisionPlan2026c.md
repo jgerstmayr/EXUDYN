@@ -101,7 +101,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
   - RG11.8 Resolve the quick old issues
-  - RG11.14 FlatArray: markers, forces and torques of the connector interface passed with their size (1 open sub-step)
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
 - **RG13** Total coordinates
@@ -150,7 +149,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 6 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 10 | Misc |
+| RG11 | OPEN | 8 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -2253,7 +2252,7 @@ docs/manual/symbolicUserFunctions.md; the scripts in tools/benchmarks; WORKFLOW.
 
 CLOSED 2026-11-05 (#3278): DEVELOPMENT.md and internals/README.md as group pages, GIT under GETTING_STARTED, building and running in BUILD.md; docs/howTo/misc.md with the five notes, published, without duplicates and history. [log](exudynRevisionLog2026c.md#rg11-13)
 
-### **OPEN_RG11.14** FlatArray: markers, forces and torques of the connector interface passed with their size
+### **CLOSED_RG11.14** FlatArray: markers, forces and torques of the connector interface passed with their size
 
 Maintainer 2026-11-08: the raw pointers of ComputeConnectorForceRigid and its relatives replaced by a transporting class without resize or math. Design docs/dev/design/flatArray.md.
 
@@ -2265,7 +2264,7 @@ CLOSED 2026-11-08 (#3367): the analysis and the recommendation of a class FlatAr
 
 #3368.
 
-#### **OPEN_RG11.14.3** The C++ unit-test build repaired
+#### **CLOSED_RG11.14.3** The C++ unit-test build repaired
 
 #3378.
 
@@ -3714,6 +3713,10 @@ CLOSED 2026-11-04 (#3241): the result, the solution file and the sensors of Solv
 #### **CLOSED_RG20.4.4** The solver page: the output interpolated within the step
 
 CLOSED 2026-11-06 (#3310; maintainer 2026-11-06): a section Output of the solution and the sensors in solver.md - the write times, the Hermite interpolation of the ODE2 coordinates, the linear one of the others and of Lie group nodes, the data coordinates, automatic steps, the static solver. [log](exudynRevisionLog2026c.md#rg20-4-4)
+
+#### **CLOSED_RG20.4.5** The output within the step by the interpolation of the solver
+
+#3379.
 
 ### **CLOSED_RG20.5** Explicit solvers with constraints: coordinate constraints in the symbolic SolveExplicit, Euler parameters by projection
 

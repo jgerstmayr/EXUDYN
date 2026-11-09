@@ -251,7 +251,12 @@ the end of the step, with $\tau = (t - t_0)/h$:
   
   and the velocities by its derivative; the interpolation is of order 4 in the coordinates, so it does not reduce the
   accuracy of the methods of order up to 4;
-- the accelerations, the ODE1 coordinates and their derivatives and the algebraic coordinates linearly;
+- in the solvers below, by their own interpolation (#3379): `DOPRI5` by its dense output of order 4 [Shampine1986]; `RK67`, `Radau3`, `Radau5`, `LobattoIIIA4`
+  and `LobattoIIIC4GGL` by the quintic Hermite polynomial of the coordinates, velocities and accelerations at both ends, with the velocities and accelerations by
+  its derivatives, and in the collocation solvers `Radau3`, `Radau5` and `LobattoIIIA4` the ODE1 coordinates by the collocation polynomial. The interpolated
+  output then has the order of the method, also for `Radau5`, where the collocation polynomial would only reach order 4; a measurement of this is in
+  `python/TestModels/outputInterpolationOrderTest.py`;
+- else the accelerations, the ODE1 coordinates and their derivatives; and in all solvers the algebraic coordinates linearly;
 - the ODE2 coordinates of Lie group nodes (rotation vectors updated by composition) linearly, as their velocities are
   not the derivatives of their coordinates;
 - the data coordinates (contact states, friction, plasticity) as at the end of the step.

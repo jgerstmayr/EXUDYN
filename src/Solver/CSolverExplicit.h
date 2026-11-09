@@ -60,6 +60,7 @@ public: //made public for access via pybind
 	//copy of parameters from integration scheme (cannot be changed during integration!)
 	DynamicSolverType dynamicSolverType; //must be explicit
 	bool eliminateConstraints;
+	bool interpolateWithEndAccelerations = false; //!< the accelerations at the end of the step are computed, for the output within the step (#3379)
 	//! a coordinate eliminated by a CoordinateConstraint to the ground, fixed to the value of its equation
 	//! factor1 value1 - value0 - offset = 0 (#3240)
 	class EliminatedCoordinate
@@ -96,6 +97,9 @@ public: //made public for access via pybind
 public:
 
 	//! return true, if static solver; needs to be overwritten in derived class
+	//! DOPRI5: its dense output; RK67: the quintic Hermite polynomial (#3379)
+	virtual void InterpolateWithinStep(const CSystemState& s0, const CSystemState& s1, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s) const override;
+
 	virtual bool IsStaticSolver() const override { return false; }
 
 	//! get solver name - needed for output file header and visualization window

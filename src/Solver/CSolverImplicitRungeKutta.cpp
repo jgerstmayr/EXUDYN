@@ -125,7 +125,7 @@ void CSolverImplicitRungeKutta::Initialize(CSolverImplicitSecondOrderTimeInt& so
 	for (Index i = 0; i < s; i++)
 	{
 		stageA[i].SetNumberOfItems(n2); stageYd[i].SetNumberOfItems(n1); stageZ[i].SetNumberOfItems(na); stageMu[i].SetNumberOfItems(na);
-		Q[i].SetNumberOfItems(n2); V[i].SetNumberOfItems(n2); Y[i].SetNumberOfItems(n1); qIterate[i].SetNumberOfItems(n2);
+		Q[i].SetNumberOfItems(n2); V[i].SetNumberOfItems(n2); Y[i].SetNumberOfItems(n1); previousYd[i].SetNumberOfItems(n1); candidateYd[i].SetNumberOfItems(n1); qIterate[i].SetNumberOfItems(n2);
 	}
 	residual.SetNumberOfItems(nUnknowns); increment.SetNumberOfItems(nUnknowns);
 	temp2.SetNumberOfItems(n2); tempF.SetNumberOfItems(n2); temp1.SetNumberOfItems(n1);
@@ -917,8 +917,44 @@ bool CSolverImplicitRungeKutta::Step(CSolverImplicitSecondOrderTimeInt& solver, 
 	candidateT0 = t0;
 	candidateH = h;
 	for (Index j = 0; j < solver.data.nODE2; j++) { candidateMeanA[j] = (V[s - 1][j] - v0[j]) / h; }
-	for (Index j = 0; j < s; j++) { candidateV[j].CopyFrom(V[j]); candidateA[j].CopyFrom(stageA[j]); }
+	for (Index j = 0; j < s; j++) { candidateV[j].CopyFrom(V[j]); candidateA[j].CopyFrom(stageA[j]); candidateYd[j].CopyFrom(stageYd[j]); }
 	return true;
+}
+
+//the positions, velocities and accelerations by the quintic Hermite polynomial, whose error is below those of the methods and of their collocation
+//polynomial (of the error h^(s+1) with s stages); the ODE1 coordinates by the collocation polynomial, u'(c_j h) = the stage derivatives (#3379)
+void CSolverImplicitRungeKutta::InterpolateWithinStep(const CSystemState& s0, const CSystemState& s1, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s) const
+{
+	if (method.s == 2 && method.ggl) { return; } //TrapezoidalGGL, of order 2: the cubic polynomial
+	CSolverBase::InterpolateQuinticHermite(s0, s1, s0.ODE2Coords_tt, isLinearODE2, x, h, s);
+	if (method.ggl || !hasPrevious) { return; } //LobattoIIIC is no collocation method
+	const Index n = method.s;
+	for (Index j = 0; j < n; j++)
+	{
+		//the coefficients of the Lagrange polynomial of node j
+		Real p[ImplicitRungeKuttaMethod::maxStages] = { 1. };
+		Index degree = 0;
+		for (Index m = 0; m < n; m++)
+		{
+			if (m == j) { continue; }
+			Real denominator = method.c[j] - method.c[m];
+			degree++;
+			for (Index k = degree; k >= 0; k--) { p[k] = ((k > 0 ? p[k - 1] : 0.) - method.c[m] * (k < degree ? p[k] : 0.)) / denominator; }
+		}
+		Real L = 0., b = 0.;
+		for (Index k = degree; k >= 0; k--)
+		{
+			L = L * x + p[k];
+			b = b * x + p[k] / (Real)(k + 1);
+		}
+		b *= x;
+		for (Index i = 0; i < s.ODE1Coords.NumberOfItems(); i++)
+		{
+			if (j == 0) { s.ODE1Coords[i] = s0.ODE1Coords[i]; s.ODE1Coords_t[i] = 0.; }
+			s.ODE1Coords[i] += h * b * previousYd[j][i];
+			s.ODE1Coords_t[i] += L * previousYd[j][i];
+		}
+	}
 }
 
 void CSolverImplicitRungeKutta::AcceptStep()
@@ -931,7 +967,7 @@ void CSolverImplicitRungeKutta::AcceptStep()
 	meanH2 = meanH1;
 	meanH1 = candidateH;
 	numberOfMeans = EXUstd::Minimum(numberOfMeans + 1, (Index)2);
-	for (Index j = 0; j < method.s; j++) { previousV[j].CopyFrom(candidateV[j]); previousA[j].CopyFrom(candidateA[j]); }
+	for (Index j = 0; j < method.s; j++) { previousV[j].CopyFrom(candidateV[j]); previousA[j].CopyFrom(candidateA[j]); previousYd[j].CopyFrom(candidateYd[j]); }
 	hasPrevious = true;
 	candidateH = 0.;
 }

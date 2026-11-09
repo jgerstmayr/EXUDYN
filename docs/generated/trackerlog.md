@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.486.dev1
-- last change = 2026-11-08
-- Number of issues = 3379
-- Number of resolved issues = 3263 (486 in current version)
+- Exudyn version = 1.13.488.dev1
+- last change = 2026-11-09
+- Number of issues = 3380
+- Number of resolved issues = 3265 (488 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `FIX` `LOW EFF` `raised by: Claude-JG` The C++ unit-test build does not compile, and a symbolic unit test fails (#3378)
-  - description: exudev build --unittests stops in src/Tests/UnitTestBase.cpp: Linalg/Symbolic.h needs pybind11 and py there. With that added, the test at SymbolicUnitTests.h line 154 (what Diff refuses) gets no exception; the other tests pass.
-  - date raised: 2026-11-08
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
   - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.
   - date raised: 2026-11-08

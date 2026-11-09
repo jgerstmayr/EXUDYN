@@ -239,6 +239,14 @@ public:
 	//! algebraic coordinates linear, the coordinates of Lie group nodes linear, the data coordinates of the end (#3286)
 	void SetStateWithinStep(CSystem& computationalSystem, Real T);
 
+	//! the interpolation of the solver itself within the step just accepted, at x = (T-t0)/h in [0,1], for the ODE2 coordinates not marked in
+	//! isLinearODE2 and the ODE1 coordinates; the default keeps the cubic Hermite polynomial and the linear ODE1 coordinates (#3379)
+	virtual void InterpolateWithinStep(const CSystemState& s0, const CSystemState& s1, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s) const {}
+
+	//! the ODE2 coordinates not marked in isLinearODE2 by the quintic Hermite polynomial of positions, velocities and accelerations at both ends, velocities
+	//! and accelerations by its derivatives; a0 the accelerations at the start of the step (#3379)
+	static void InterpolateQuinticHermite(const CSystemState& s0, const CSystemState& s1, const VectorBase<Real>& a0, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s);
+
 	//! the solver and the numbers of coordinates and items: what a restart file must fit (#2850)
 	virtual STDstring RestartFingerprint(const CSystem& computationalSystem) const;
 

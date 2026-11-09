@@ -165,10 +165,50 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	}
 }
 
+//the interpolation of the step just accepted (#3379)
+void CSolverExplicitTimeInt::InterpolateWithinStep(const CSystemState& s0, const CSystemState& s1, const ArrayIndex& isLinearODE2, Real x, Real h, CSystemState& s) const
+{
+	if (dynamicSolverType == DynamicSolverType::DOPRI5)
+	{
+		//the dense output of order 4 of Shampine, 'Some practical Runge-Kutta formulas', Math. Comp. 46, 1986, as coefficients of x, x^2, x^3, x^4
+		static const Real BI[7][4] = {
+			{1., -183. / 64., 37. / 12., -145. / 128.},
+			{0., 0., 0., 0.},
+			{0., 1500. / 371., -1000. / 159., 1000. / 371.},
+			{0., -125. / 32., 125. / 12., -375. / 64.},
+			{0., 9477. / 3392., -729. / 106., 25515. / 6784.},
+			{0., -11. / 7., 11. / 3., -55. / 28.},
+			{0., 3. / 2., -4., 5. / 2.} };
+		for (Index j = 0; j < 7; j++)
+		{
+			Real b = x * (BI[j][0] + x * (BI[j][1] + x * (BI[j][2] + x * BI[j][3])));
+			Real db = BI[j][0] + x * (2. * BI[j][1] + x * (3. * BI[j][2] + x * 4. * BI[j][3]));
+			for (Index i = 0; i < s.ODE2Coords.NumberOfItems(); i++)
+			{
+				if (isLinearODE2[i]) { continue; }
+				if (j == 0) { s.ODE2Coords[i] = s0.ODE2Coords[i]; s.ODE2Coords_t[i] = s0.ODE2Coords_t[i]; s.ODE2Coords_tt[i] = 0.; }
+				s.ODE2Coords[i] += h * b * rk.stageDerivODE2[j][i];
+				s.ODE2Coords_t[i] += h * b * rk.stageDerivODE2_t[j][i];
+				s.ODE2Coords_tt[i] += db * rk.stageDerivODE2_t[j][i];
+			}
+			for (Index i = 0; i < s.ODE1Coords.NumberOfItems(); i++)
+			{
+				if (j == 0) { s.ODE1Coords[i] = s0.ODE1Coords[i]; }
+				s.ODE1Coords[i] += h * b * rk.stageDerivODE1[j][i];
+			}
+		}
+	}
+	else if (dynamicSolverType == DynamicSolverType::RK67 && interpolateWithEndAccelerations)
+	{
+		InterpolateQuinticHermite(s0, s1, rk.stageDerivODE2_t[0], isLinearODE2, x, h, s); //the first stage: the accelerations at the start also in the first step
+	}
+}
+
 //! initialize all data,it,conv; called from InitializeSolver()
 void CSolverExplicitTimeInt::InitializeSolverData(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	CSolverBase::InitializeSolverData(computationalSystem, simulationSettings);
+	interpolateWithEndAccelerations = simulationSettings.timeIntegration.explicitSettings.computeEndOfStepAccelerations;
 
 	//these sizes are different from implicit solvers:
 	data.systemJacobian->SetNumberOfRowsAndColumns(0, 0);
