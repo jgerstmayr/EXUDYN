@@ -1,0 +1,45 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The arguments createJointTorqueLoads and jointLoadUserFunctionList of Robot.CreateRedundantCoordinateMBS, deprecated (#3386): without them the model has no loads
+#           on the joints; with them it has two per revolute joint, and the use is reported. The result is the number of loads and the sum of the checks.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-09
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn.robotics.models import ManipulatorPuma560, LinkDict2Robot
+import numpy as np
+import warnings
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+def NumberOfLoads(**arguments):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround())))
+    LinkDict2Robot(ManipulatorPuma560()).CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, **arguments)
+    return mbs.systemData.NumberOfLoads()
+
+without = NumberOfLoads()
+with warnings.catch_warnings():
+    warnings.simplefilter('ignore', DeprecationWarning)
+    exu.special.deprecations.warnOnce = False
+    withLoads = NumberOfLoads(createJointTorqueLoads=True)
+    withFunctions = NumberOfLoads(createJointTorqueLoads=False, jointLoadUserFunctionList=[lambda mbs, t, load: load]*6)
+    exu.special.deprecations.warnOnce = True
+
+uses = exu.sys['deprecationUse']['library']
+names = [name for name in uses if 'CreateRedundantCoordinateMBS' in name]
+checks = [withLoads - without == 12, withFunctions - without == 12, len(names) == 2]
+
+u = sum(checks) + without
+exu.Print('loads', without, withLoads, withFunctions, 'reported:', names)
+exu.Print('checks:', checks)
+exu.Print('solution of robotDeprecatedJointLoadsTest=', u)
+exu.sys['testResult'] = u

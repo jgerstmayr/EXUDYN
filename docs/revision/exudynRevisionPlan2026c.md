@@ -113,8 +113,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG14.5 Export the equations of motion as C++ and Python - the programs, the sparsity pattern and the scatter -, the CPU reference of the GPU tests
   - RG14.6 User items of GenericJoint, HydraulicActuatorSimple, ReevingSystemSprings and ObjectFFRFreducedOrder for the advanced GPU tests
 - **RG19** Revision of the robotics submodule
-  - RG19.8 Clean up the robotics examples and test models on the revised interfaces
-  - RG19.12 A Robot from the data of the URDF import, saved and loaded by the class Robot
+  - RG19.14 A floating base for legged and mobile robots (1 open sub-step)
   - RG19.15 The joint torque loads: the test models on SetControl now, the deprecated parameters removed at the end of the deprecation period (1 open sub-step)
   - RG19.16 serialRobotInteractiveLimits.py with new renderer features, checked by hand
 - **RG20** Advanced solvers
@@ -3498,7 +3497,7 @@ Design docs/dev/design/robotics.md (decisions section 3).
 
 CLOSED 2026-11-05 (#3277): configurations and initialConfiguration per model, LinkDict2Robot(initialConfiguration, friction), the Puma560 friction from the RTB motor data; Puma560, UR5, Panda equal to the RTB 1.5; robotModelsTest.py. [log](exudynRevisionLog2026c.md#rg19-7-1)
 
-### **OPEN_RG19.8** Clean up the robotics examples and test models on the revised interfaces
+### **CLOSED_RG19.8** Clean up the robotics examples and test models on the revised interfaces
 
 Design docs/dev/design/robotics.md (decisions section 3); P/D values adjusted slightly in favour of simple scripts.
 
@@ -3526,6 +3525,10 @@ CLOSED 2026-11-08 (#3352; maintainer 2026-11-08): URDF/staubli (TX2-90), ur_desc
 
 #3353.
 
+#### **CLOSED_RG19.10.3** SaveDictToHDF5 and Robot.SaveToHDF5 with compression, the articulated dummy compressed
+
+(#3387)
+
 ### **CLOSED_RG19.11** All robot examples in Examples/robotics
 
 Maintainer 2026-11-08: design section 3.3, decision 12.
@@ -3538,7 +3541,7 @@ CLOSED 2026-11-08 (#3354; maintainer 2026-11-08): spotModel.py and spotReinforce
 
 #3355.
 
-### **OPEN_RG19.12** A Robot from the data of the URDF import, saved and loaded by the class Robot
+### **CLOSED_RG19.12** A Robot from the data of the URDF import, saved and loaded by the class Robot
 
 Maintainer 2026-11-08: design section 3.3, decision 13.
 
@@ -3562,7 +3565,7 @@ CLOSED 2026-11-08 (#3358; maintainer 2026-11-08): the masses, centers of mass an
 
 CLOSED 2026-11-08 (#3371; maintainer 2026-11-08): link 5 0.849 kg, link 6 0.456 kg, centers of mass unchanged, inertias scaled with the masses. [log](exudynRevisionLog2026c.md#rg19-13-3)
 
-### **CLOSED_RG19.14** A floating base for legged and mobile robots
+### **OPEN_RG19.14** A floating base for legged and mobile robots
 
 Maintainer 2026-11-08: design section 3.3, decision 14.
 
@@ -3578,6 +3581,10 @@ Maintainer 2026-11-08: design section 3.3, decision 14.
 
 (#3381)
 
+#### **OPEN_RG19.14.4** A real training run of spotReinforcementLearning.py
+
+#3388. Maintainer 2026-11-09: to be done later, needs gym and stable_baselines3.
+
 ### **OPEN_RG19.15** The joint torque loads: the test models on SetControl now, the deprecated parameters removed at the end of the deprecation period
 
 #3361. Maintainer 2026-11-08: as suggested, when the deprecation period ends.
@@ -3589,6 +3596,10 @@ CLOSED 2026-11-08 (#3363; maintainer 2026-11-08): serialRobotTest.py and movingG
 #### **OPEN_RG19.15.2** jointLoadUserFunctionList and createJointTorqueLoads removed at the end of the deprecation period
 
 #3361.
+
+#### **CLOSED_RG19.15.3** createJointTorqueLoads and jointLoadUserFunctionList deprecated with a warning, removal 2027-01-01
+
+(#3386) Maintainer 2026-11-09: rarely used; one release before 2027 contains both, then RG19.15.2.
 
 ### **OPEN_RG19.16** serialRobotInteractiveLimits.py with new renderer features, checked by hand
 

@@ -371,7 +371,7 @@ if not useFlexBody:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #build mbs robot model:
-robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
 
 #the joint control along the trajectory, with the static compensation of gravity
 newRobot.SetControl(trajectory, compensation='static')

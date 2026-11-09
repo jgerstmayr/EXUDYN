@@ -1,0 +1,10 @@
+{
+  "number": 3388,
+  "title": "A real training run of spotReinforcementLearning.py",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "The example on the floating base has been run with stubs of gym and stable_baselines3 only. Decided: installed and trained later.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08"
+}

@@ -14,7 +14,7 @@ import this library e.g. with import exudyn.robotics as robotics
 (sec-roboticscore-stddh2ht)=
 ## Function: StdDH2HT
 
-[`StdDH2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1912)
+[`StdDH2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1917)
 
 - **function description**: compute the homogeneous transformation HT, an exudyn.HT, from standard DHparameters=[theta, d, a, alpha]
 
@@ -25,7 +25,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 (sec-roboticscore-moddhkk2ht)=
 ## Function: ModDHKK2HT
 
-[`ModDHKK2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1930)
+[`ModDHKK2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1935)
 
 - **function description**: compute pre- and post- homogeneous transformations (exudyn.HT) from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
 
@@ -33,7 +33,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 (sec-roboticscore-projectangletopmpi)=
 ## Function: projectAngleToPMPi
 
-[`projectAngleToPMPi(q0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1940)
+[`projectAngleToPMPi(q0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1945)
 
 - **function description**: This function projects an angle in the range $[-min_{float}, +max_{float}]$ fo the range $[-\pi, +\pi]$
 - **input**:
@@ -316,18 +316,19 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-savetohdf5)=
 ### Class function: SaveToHDF5
 
-[`SaveToHDF5(self, fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L622)
+[`SaveToHDF5(self, fileName, compression = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L622)
 
 - **class function description**: save the robot with its graphics and textures to an HDF5 file, the dict of GetDictionary (#3356)
 - **input**:
   - `fileName`: the file name, including its ending, usually .h5
+  - `compression`: None, or 'gzip' for smaller files, as graphics data compress well (#3387)
 - **notes**: requires h5py and scipy
 
 
 (sec-roboticscore-robot-loadfromhdf5)=
 ### Class function: LoadFromHDF5
 
-[`LoadFromHDF5(self, fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L634)
+[`LoadFromHDF5(self, fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L635)
 
 - **class function description**: set the robot from an HDF5 file of SaveToHDF5, as SetDictionary does (#3356)
 - **input**:
@@ -338,7 +339,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-addlink)=
 ### Class function: AddLink
 
-[`AddLink(self, robotLink)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L646)
+[`AddLink(self, robotLink)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L647)
 
 - **class function description**: add a link to serial robot
 
@@ -346,7 +347,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-isserialrobot)=
 ### Class function: IsSerialRobot
 
-[`IsSerialRobot(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L668)
+[`IsSerialRobot(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L669)
 
 - **class function description**: return True, if robot is a serial robot
 
@@ -354,7 +355,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getlink)=
 ### Class function: GetLink
 
-[`GetLink(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L673)
+[`GetLink(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L674)
 
 - **class function description**: return Link object of link i
 
@@ -362,7 +363,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-hasparent)=
 ### Class function: HasParent
 
-[`HasParent(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L678)
+[`HasParent(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L679)
 
 - **class function description**: True if link has parent, False if not
 
@@ -370,7 +371,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getparentindex)=
 ### Class function: GetParentIndex
 
-[`GetParentIndex(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L683)
+[`GetParentIndex(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L684)
 
 - **class function description**: Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
 
@@ -378,7 +379,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-numberoflinks)=
 ### Class function: NumberOfLinks
 
-[`NumberOfLinks(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L689)
+[`NumberOfLinks(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L690)
 
 - **class function description**: return number of links
 
@@ -386,7 +387,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getbaseht)=
 ### Class function: GetBaseHT
 
-[`GetBaseHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L694)
+[`GetBaseHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L695)
 
 - **class function description**: return base as homogeneous transformation
 
@@ -394,7 +395,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-gettoolht)=
 ### Class function: GetToolHT
 
-[`GetToolHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L699)
+[`GetToolHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L700)
 
 - **class function description**: return the tool frame relative to the frame of the last link, as homogeneous transformation; GetGlobalToolHT gives it in global coordinates
 
@@ -402,7 +403,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getglobaltoolht)=
 ### Class function: GetGlobalToolHT
 
-[`GetGlobalToolHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L705)
+[`GetGlobalToolHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L706)
 
 - **class function description**: the tool frame (TCP) in global coordinates at the joint coordinates q, an exudyn.HT (#3273), computed in Python by LinkHT; for many q, e.g. along a trajectory, create the C++ chain once, chain = robot.GetKinematicChain(), and call chain.ToolHT(q), about 100 times faster (some 100000 evaluations per second)
 - **input**:
@@ -413,7 +414,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-setcontrol)=
 ### Class function: SetControl
 
-[`SetControl(self, trajectory, compensation = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L718)
+[`SetControl(self, trajectory, compensation = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L719)
 
 - **class function description**: the joint control of the model of CreateKinematicTree or CreateRedundantCoordinateMBS, by PreStepControl (#3262, #3270): the PD control of the links (RobotLink PDcontrol) towards the joint coordinates and velocities of trajectory
 - **input**:
@@ -424,7 +425,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-prestepcontrol)=
 ### Class function: PreStepControl
 
-[`PreStepControl(self, mbs, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L740)
+[`PreStepControl(self, mbs, t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L741)
 
 - **class function description**: the PreStepUserFunction of the joint control of SetControl (#3262, #3270), for the model created last by CreateKinematicTree or CreateRedundantCoordinateMBS: the joint position and velocity offsets of the PD control from the trajectory at time t, and the joint forces of the compensation; pass it directly, mbs.SetPreStepUserFunction(robot.PreStepControl), or call it in the PreStepUserFunction of the script for several robots
 - **input**:
@@ -436,7 +437,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-addsensors)=
 ### Class function: AddSensors
 
-[`AddSensors(self, mbs, outputVariables = [exudyn.OutputVariableType.Coordinates, exudyn.OutputVariableType.Coordinates_t], storeInternal = True, fileName = '', writeToFile = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L781)
+[`AddSensors(self, mbs, outputVariables = [exudyn.OutputVariableType.Coordinates, exudyn.OutputVariableType.Coordinates_t], storeInternal = True, fileName = '', writeToFile = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L782)
 
 - **class function description**: add sensors of the joints to the model created last by CreateKinematicTree or CreateRedundantCoordinateMBS (#3270); each sensor gives the vector of one quantity over all joints, the same in both models
 - **input**:
@@ -451,7 +452,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getkinematicchain)=
 ### Class function: GetKinematicChain
 
-[`GetKinematicChain(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L875)
+[`GetKinematicChain(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L876)
 
 - **class function description**: the kinematics of the robot in C++, an exudyn.cUtilities.KinematicChain of its links, base, tool and gravity (#3259): JointHT, LinkHT, ToolHT, Jacobian and StaticTorques of the chain compute what the functions of the same names of Robot compute in Python, some hundred times faster; create it again after the robot is changed
 
@@ -459,7 +460,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getcollisionmodel)=
 ### Class function: GetCollisionModel
 
-[`GetCollisionModel(self, obstacles = None, baseShapes = None, excludeCollidingAt = None, excludeMargin = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L889)
+[`GetCollisionModel(self, obstacles = None, baseShapes = None, excludeCollidingAt = None, excludeMargin = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L890)
 
 - **class function description**: the collision check of the robot and its environment in C++, an exudyn.cUtilities.CollisionModel, from the collisionShapes of its links (#3380); create it again after the robot is changed
 - **input**:
@@ -474,7 +475,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-linkht)=
 ### Class function: LinkHT
 
-[`LinkHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L918)
+[`LinkHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L919)
 
 - **class function description**: compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different! The C++ version is KinematicChain.LinkHT of GetKinematicChain()
 
@@ -482,7 +483,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-jointht)=
 ### Class function: JointHT
 
-[`JointHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L937)
+[`JointHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L938)
 
 - **class function description**: compute list of homogeneous transformations (exudyn.HT) for every joint (after rotation), using current joint coordinates q; the C++ version is KinematicChain.JointHT of GetKinematicChain()
 
@@ -490,7 +491,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-comht)=
 ### Class function: COMHT
 
-[`COMHT(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L954)
+[`COMHT(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L955)
 
 - **class function description**: compute list of  homogeneous transformations HT (exudyn.HT) from base to every COM using HT list from Robot.JointHT(...)
 
@@ -498,7 +499,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-statictorques)=
 ### Class function: StaticTorques
 
-[`StaticTorques(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L964)
+[`StaticTorques(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L965)
 
 - **class function description**: compute the generalized forces of gravity on the joints (gravity and masses as given in robot), the sum over the links j of J_j^T m_j g with the Jacobian J_j of the center of mass of link j, taking HT from Robot.JointHT(); in one backward pass (#3259): the mass and its first moment summed over the links after each joint, then tau_i = axis . ((S_i - M_i o_i) x g) for a revolute joint at o_i, axis . (M_i g) for a prismatic one; the joint torques that hold the robot are their negative; the C++ version is KinematicChain.StaticTorques of GetKinematicChain()
 
@@ -506,7 +507,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-inversedynamics)=
 ### Class function: InverseDynamics
 
-[`InverseDynamics(self, q, q_t, q_tt)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L986)
+[`InverseDynamics(self, q, q_t, q_tt)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L987)
 
 - **class function description**: the joint torques and forces that move the robot with the joint accelerations q_tt at the joint coordinates q and velocities q_t against gravity (#3276), M(q) q_tt + h(q, q_t) minus the generalized forces of gravity - at q_t = q_tt = 0 the negative of StaticTorques; the recursive Newton-Euler algorithm in global vectors: forward the angular velocity and acceleration of each link and the acceleration of its joint origin (the base accelerated by -g, which gives the weights), the force m a_c at the COM and the moment I alpha + omega x I omega; backward the force and the moment about the joint origin, summed over the subtree, projected on the joint axis; the C++ version is KinematicChain.InverseDynamics of GetKinematicChain(), about 100 times faster
 - **input**:
@@ -519,7 +520,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-jacobian)=
 ### Class function: Jacobian
 
-[`Jacobian(self, HT, toolPosition = [], mode = 'all', linkIndex = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1039)
+[`Jacobian(self, HT, toolPosition = [], mode = 'all', linkIndex = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1040)
 
 - **class function description**: compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes; the C++ version is KinematicChain.Jacobian of GetKinematicChain(), which takes q and a position in the link frame
 - **input**:
@@ -533,7 +534,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-inversekinematicsnumerical)=
 ### Class function: InverseKinematicsNumerical
 
-[`InverseKinematicsNumerical(self, HT, qInitial, weights = None, tolerance = 1e-10, maxIterations = 100, restarts = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1106)
+[`InverseKinematicsNumerical(self, HT, qInitial, weights = None, tolerance = 1e-10, maxIterations = 100, restarts = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1107)
 
 - **class function description**: the numerical inverse kinematics by Levenberg-Marquardt (#3269): joint coordinates q with the tool frame LinkHT(q)[-1]*tool.HT equal to HT (exu.HT or 4x4 matrix), starting from qInitial, for any serial robot (also with fewer or more than 6 joints). The error e is the position difference and the rotation vector of R_HT R(q)^T, multiplied by weights; the step solves (J^T J + lambda I) dq = J^T e, which lowers E = e.e/2; lambda divided by 10 after a step that lowers E and multiplied by 10 until one does
 - **input**:
@@ -550,7 +551,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-armconfiguration)=
 ### Class function: ArmConfiguration
 
-[`ArmConfiguration(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1177)
+[`ArmConfiguration(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1178)
 
 - **class function description**: the configuration of the arm at the joint coordinates q, which tells the solutions of InverseKinematicsAnalytic apart (#3265): [shoulder, elbow, wrist], each +1 or -1, and 0 in the singular configuration between them; from the joint axes omega_i at q, independent of the DH convention and the zero angles of the joints, for the robots of InverseKinematicsAnalytic. The wrist center W is the point of the axes 5 and 6 (of 4, 5, 6 for a spherical wrist), or the tool position (3 links); a, b are the vectors from axis 2 to axis 3 and from axis 3 to W (to axis 4 for the UR), normal to omega_2: shoulder = sign((W - p_1) . (omega_1 x omega_2)), W in front of (+1) or behind axis 1, 0 for W on axis 1; elbow = sign(omega_3 . (a x b)), the bend of the elbow about axis 3, 0 for the arm stretched; wrist = sign(omega_5 . (omega_4 x omega_6)), 0 for axis 6 parallel to axis 4 (always 0 for 3 links). The signs follow the directions of the axes; which sign is called up or down, left or right is that of the robot.
 - **input**:
@@ -562,7 +563,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-inversekinematicsanalytic)=
 ### Class function: InverseKinematicsAnalytic
 
-[`InverseKinematicsAnalytic(self, HT, qReference = None, configuration = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1224)
+[`InverseKinematicsAnalytic(self, HT, qReference = None, configuration = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1225)
 
 - **class function description**: the analytic inverse kinematics: all joint coordinates q with the tool frame LinkHT(q)[-1]*tool.HT equal to HT (an exu.HT or 4x4 matrix in global coordinates), for three geometries of revolute joints in series: 3 links with the axes 2 and 3 parallel (the position of the tool only, up to 4 solutions); 6 links with the axes 2 and 3 parallel and the axes 4, 5, 6 through one point, a spherical wrist (the Puma560, KUKA, Staeubli; up to 8); 6 links with the axes 2, 3 and 4 parallel and the axes 5 and 6 crossing (the UR robots; up to 8); a ValueError for other robots. The robot is a product of exponentials, T(q) = E_1(q_1) ... E_n(q_n) T(0), solved by the subproblems of Paden and Kahan (#3260); every solution is checked by the forward kinematics. In a singular configuration, where a joint angle is free, it takes the value of qReference (or 0).
 - **input**:
@@ -576,7 +577,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-createkinematictree)=
 ### Class function: CreateKinematicTree
 
-[`CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0, floatingBase = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1333)
+[`CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0, floatingBase = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1334)
 
 - **class function description**: Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class; Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object; Current implementation only works for serial robots; Control can be realized simply by adding PDcontrol to RobotLink structures, then modifying jointPositionOffsetVector and jointVelocityOffsetVector in ObjectKinematicTree; force offsets (e.g., static or dynamic torque compensation) can be added to KinematicTree jointForceVector; more general control can be added by using KinematicTree forceUserFunction; The coordinates in KinematicTree (as well as jointPositionOffsetVector, etc.) are sorted in the order as the RobotLinks are added to the Robot class; Note that the ObjectKinematicTree is still under development and interfaces may change.
 - **input**:
@@ -591,15 +592,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-createredundantcoordinatembs)=
 ### Class function: CreateRedundantCoordinateMBS
 
-[`CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList = [], jointLoadUserFunctionList = [], createJointTorqueLoads = True, rotationMarkerBase = None, rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1527)
+[`CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList = [], jointLoadUserFunctionList = [], createJointTorqueLoads = None, rotationMarkerBase = None, rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1528)
 
 - **class function description**: Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body); The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints; Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(...) function; See several Python examples, e.g., `serialRobotTestTSD.py`, in Examples or TestModels; For more efficient models, use CreateKinematicTree(...) function!
 - **input**:
   - `mbs`: the multibody system, which will be extended
   - `baseMarker`: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
   - `jointSpringDamperUserFunctionList`: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
-  - `jointLoadUserFunctionList`: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
-  - `createJointTorqueLoads`: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
+  - `jointLoadUserFunctionList`: DEPRECATED, removed on 2027-01-01, use Robot.SetControl: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction; can be empty list
+  - `createJointTorqueLoads`: DEPRECATED, removed on 2027-01-01, use Robot.SetControl: None creates no loads; if True, joint loads with zero torques are created, stored in jointTorque0List and jointTorque1List, which need to be updated in every step
   - `rotationMarkerBase`: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
   - `rigidBodyNodeType`: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
 - **output**: the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links; 'jointCoordinateMarkerList': per joint the marker of its coordinate (MarkerBodiesRelativeRotationCoordinate or MarkerBodiesRelativeTranslationCoordinate, the absolute joint coordinate), 'jointFrictionList' and 'jointEndStopList': per link the CoordinateSpringDamperExt of its friction and of its end stops, or None
@@ -609,7 +610,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getkinematictree66)=
 ### Class function: GetKinematicTree66
 
-[`GetKinematicTree66(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1837)
+[`GetKinematicTree66(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1842)
 
 - **class function description**: export kinematicTree
 
@@ -617,7 +618,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-robot-getlinkgraphicsdata)=
 ### Class function: GetLinkGraphicsData
 
-[`GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1867)
+[`GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1872)
 
 - **class function description**: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
 
@@ -635,7 +636,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-inversekinematicsnumerical()---init--)=
 ### Class function: __init__
 
-[`__init__(self, robot, jointStiffness = 1e0, useRenderer = False, flagDebug = False, useAlternativeConstraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1966)
+[`__init__(self, robot, jointStiffness = 1e0, useRenderer = False, flagDebug = False, useAlternativeConstraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1971)
 
 - **class function description**: DEPRECATED: the inverse kinematics of robot
 - **input**:
@@ -649,7 +650,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-inversekinematicsnumerical()-getcurrentrobotht)=
 ### Class function: GetCurrentRobotHT
 
-[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1982)
+[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1987)
 
 - **class function description**: the HT of the tool at the last solution (or the reference configuration), an exudyn.HT
 
@@ -657,7 +658,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-inversekinematicsnumerical()-interpolatehts)=
 ### Class function: InterpolateHTs
 
-[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1987)
+[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1992)
 
 - **class function description**: 
 - **input**:
@@ -673,7 +674,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-inversekinematicsnumerical()-solvesafe)=
 ### Class function: SolveSafe
 
-[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L2022)
+[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L2027)
 
 - **class function description**: the inverse kinematics of Solve with 10 restarts
 - **input**:
@@ -685,7 +686,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 (sec-roboticscore-inversekinematicsnumerical()-solve)=
 ### Class function: Solve
 
-[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L2034)
+[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L2039)
 
 - **class function description**: the inverse kinematics by KinematicChain.InverseKinematicsNumerical from q0
 - **input**:

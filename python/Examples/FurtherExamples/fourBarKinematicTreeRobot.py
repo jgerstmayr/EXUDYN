@@ -110,7 +110,7 @@ nLinks = newRobot.NumberOfLinks()
 sMBS = []
 if useMBS: # for comparison
 
-    robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+    robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker)
     bodies = robDict['bodyList']
 
     sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[0], localPosition=[0,0,0], storeInternal=True,

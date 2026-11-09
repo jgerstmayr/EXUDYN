@@ -524,12 +524,13 @@ def ConvertDictToScipySparse(sparseDict):
     return csr_matrix((sparseDict['data'], sparseDict['indices'], sparseDict['indptr']),
                       shape=sparseDict['shape'])
 
-def SaveDictToHDF5(fileName, dataDict):
+def SaveDictToHDF5(fileName, dataDict, compression=None):
     """recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
 
     Args:
         fileName: file name (possibly including path) for HDF5 file, including file ending
         dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function; a list of only int or only float values is stored as one dataset
+        compression: None, or a compression of h5py such as 'gzip', for the arrays in the file (#3387)
 
     Returns:
         None
@@ -540,6 +541,8 @@ def SaveDictToHDF5(fileName, dataDict):
     except ImportError:
         raise ImportError('SaveDictToHDF5 only works if scipy and h5py are installed')        
     
+    compressionOptions = {} if compression is None else {'compression': compression}
+
     def IsExudynUserFunction(fDict):
         if isinstance(fDict, dict):
             if 'function' in fDict and 'type' in fDict:
@@ -573,7 +576,7 @@ def SaveDictToHDF5(fileName, dataDict):
             if isinstance(item, dict):
                 HandleSaveDict(hdf5group, key, item)
             elif isinstance(item, list) and IsNumericList(item):
-                hdf5group.create_dataset(key, data=np.array(item))
+                hdf5group.create_dataset(key, data=np.array(item), **compressionOptions)
                 hdf5group[key].attrs['datatype'] = 'numericList'
             elif isinstance(item, csr_matrix):
                 # Save sparse matrix by storing its components and setting type attribute
@@ -589,7 +592,7 @@ def SaveDictToHDF5(fileName, dataDict):
                 for idx, subItem in enumerate(item):
                     subKey = f"item_{idx}"
                     if isinstance(subItem, list) and IsNumericList(subItem):
-                        subgroup.create_dataset(subKey, data=np.array(subItem))
+                        subgroup.create_dataset(subKey, data=np.array(subItem), **compressionOptions)
                         subgroup[subKey].attrs['datatype'] = 'numericList'
                     elif isinstance(subItem, specialExudynTypes):
                         # Save basic types with the corresponding datatype
@@ -615,13 +618,13 @@ def SaveDictToHDF5(fileName, dataDict):
                         nested_group.attrs['datatype'] = 'list'
                         RecursivelySaveDictToHDF5(nested_group, {f"item_{i}": subItem[i] for i in range(len(subItem))})
                     elif isinstance(subItem, np.ndarray):
-                        subgroup.create_dataset(subKey, data=subItem)
+                        subgroup.create_dataset(subKey, data=subItem, **(compressionOptions if subItem.ndim > 0 else {}))
                         subgroup[subKey].attrs['datatype'] = 'ndarray'
                     else:
                         raise ValueError(f"SaveDictToHDF5: unsupported type in list: {item} / {subItem}")
                         #RecursivelySaveDictToHDF5(subgroup.create_group(subKey), {'item': subItem})
             elif isinstance(item, np.ndarray): #stored directly
-                hdf5group.create_dataset(key, data=item)
+                hdf5group.create_dataset(key, data=item, **(compressionOptions if item.ndim > 0 else {}))
                 hdf5group[key].attrs['datatype'] = 'ndarray'
             elif isinstance(item, (bool, int, float, np.int32, np.int64, np.float32, np.float64)) or item is None:
                 # Save numbers directly with their type in the attributes

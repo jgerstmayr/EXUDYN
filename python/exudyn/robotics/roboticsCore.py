@@ -15,7 +15,7 @@
 
 #constants and fixed structures:
 from exudyn.misc.docmeta import docmeta
-from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
+from exudyn.misc.deprecation import Deprecated, DeprecatedArgument #the deprecations of the library (#2807)
 import numpy as np
 
 import exudyn
@@ -619,17 +619,18 @@ class Robot:
         for texture in robotDict.get('textures', []):
             exudyn._compiledModule._SetTexture(texture)
 
-    def SaveToHDF5(self, fileName):
+    def SaveToHDF5(self, fileName, compression=None):
         """save the robot with its graphics and textures to an HDF5 file, the dict of GetDictionary (#3356)
 
         Args:
             fileName: the file name, including its ending, usually .h5
+            compression: None, or 'gzip' for smaller files, as graphics data compress well (#3387)
 
         Note:
             requires h5py and scipy
         """
         from exudyn.advancedUtilities import SaveDictToHDF5
-        SaveDictToHDF5(fileName, self.GetDictionary())
+        SaveDictToHDF5(fileName, self.GetDictionary(), compression=compression)
 
     def LoadFromHDF5(self, fileName):
         """set the robot from an HDF5 file of SaveToHDF5, as SetDictionary does (#3356)
@@ -1526,7 +1527,7 @@ class Robot:
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList= [], 
                                      jointLoadUserFunctionList=[], 
-                                     createJointTorqueLoads=True, rotationMarkerBase=None,
+                                     createJointTorqueLoads=None, rotationMarkerBase=None,
                                      rigidBodyNodeType=exudyn.NodeType.RotationEulerParameters): 
         """Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
         The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints;
@@ -1538,8 +1539,8 @@ class Robot:
             mbs: the multibody system, which will be extended
             baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
             jointSpringDamperUserFunctionList: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
-            jointLoadUserFunctionList: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
-            createJointTorqueLoads: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
+            jointLoadUserFunctionList: DEPRECATED, removed on 2027-01-01, use Robot.SetControl: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction; can be empty list
+            createJointTorqueLoads: DEPRECATED, removed on 2027-01-01, use Robot.SetControl: None creates no loads; if True, joint loads with zero torques are created, stored in jointTorque0List and jointTorque1List, which need to be updated in every step
             rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
             rigidBodyNodeType: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
 
@@ -1549,6 +1550,10 @@ class Robot:
         Note:
             the initial joint coordinates are q0; the friction and the end stops of the links act by a CoordinateSpringDamperExt on the joint coordinate marker (#3270), which needs a baseMarker on a body (e.g. MarkerBodyRigid of the ground); PreStepControl and AddSensors act on this model until another one is created
         """
+        if len(jointLoadUserFunctionList) != 0: #removed on 2027-01-01 (#3361, #3386)
+            DeprecatedArgument('jointLoadUserFunctionList', '1.13.0', 2027, use='Robot.SetControl')
+        if createJointTorqueLoads is not None:
+            DeprecatedArgument('createJointTorqueLoads', '1.13.0', 2027, use='Robot.SetControl')
         #build robot model:
         nodeList = []           #node number or rigid node for link
         bodyList = []           #body number or rigid body for link

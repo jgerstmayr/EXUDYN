@@ -6431,6 +6431,10 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg19-15-3"></a>
+### RG19.15.3 - the joint torque loads deprecated, compression of HDF5 files (2026-11-09, #3386, #3387)
+- createJointTorqueLoads (default None, no loads) and jointLoadUserFunctionList report their use by DeprecatedArgument, expiry 2027; the 14 scripts passing createJointTorqueLoads=False no longer do; #3361 deferred until 2027-01-01. robotDeprecatedJointLoadsTest.py. SaveDictToHDF5 and Robot.SaveToHDF5 with compression='gzip': articulatedDummy.h5 from 13.5 to 4.0 MB. RG19.14.4 (#3388) keeps the real training run of Spot for later.
+    
 <a id="rg19-13-1"></a>
 ### RG19.13.1 - densityForInertiaEstimation and CompleteInertiasFromMeshes (2026-11-09, #3357)
 - GetURDFrobotData(densityForInertiaEstimation=None) replaces meshDensity, for links without any inertial data; correctInertia is replaced by urdfImport.CompleteInertiasFromMeshes(robotData, density), a function of its own: mass without a positive definite inertia gets that of the solid of the meshes scaled to the mass, no mass the density, then the triangle inequality. testRobot.h5 is unchanged by the new path. urdfCompleteInertiasTest.py.

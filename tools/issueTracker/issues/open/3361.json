@@ -8,6 +8,8 @@
   "effort": "LOW",
   "description": "jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.",
   "dateRaised": "2026-11-08",
-  "deadline": "2027-05-07",
-  "file": "python/TestModels/serialRobotTest.py"
+  "deadline": "2027-01-01",
+  "file": "python/TestModels/serialRobotTest.py",
+  "workingRemarks": "deferred until 2027-01-01 (Claude-JG, 2026-11-09): the arguments are deprecated with a warning by #3386, one release before 2027 contains both, then they are removed",
+  "deferredUntil": "2027-01-01"
 }

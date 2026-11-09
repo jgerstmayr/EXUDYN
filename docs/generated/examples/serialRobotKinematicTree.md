@@ -79,7 +79,7 @@ if useKinematicTree:
 else:
     objectGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0]))
     baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
-    robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+    robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
 
 robot.SetControl(trajectory, compensation='static')
 mbs.SetPreStepUserFunction(robot.PreStepControl)

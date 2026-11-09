@@ -1,0 +1,14 @@
+{
+  "number": 3387,
+  "title": "SaveDictToHDF5 and Robot.SaveToHDF5 with compression",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "A robot with graphics takes more space than its meshes. An argument compression, 'gzip' for the arrays; the articulated dummy is stored with it.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 11:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SaveDictToHDF5 and Robot.SaveToHDF5 have the argument compression.",
+  "resolvedInVersion": "1.13.502"
+}

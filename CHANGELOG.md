@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 483 | 1.13.500 |
+| 1.13 | Newborn | 485 | 1.13.502 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.502** `IMPROVEMENT` `raised by: Claude-JG` `resolved by: Claude-JG` SaveDictToHDF5 and Robot.SaveToHDF5 with compression (#3387)
+  - description: A robot with graphics takes more space than its meshes. An argument compression, 'gzip' for the arrays; the articulated dummy is stored with it.
+  - **notes:** SaveDictToHDF5 and Robot.SaveToHDF5 have the argument compression.
+  - date resolved: **2026-11-09 11:39**, date raised: 2026-11-09
+- **1.13.501** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` Deprecate createJointTorqueLoads and jointLoadUserFunctionList of CreateRedundantCoordinateMBS, removal on 2027-01-01 (#3386)
+  - description: They are rarely used. Decided: deprecated now with a warning, one release before 2027 contains both, then \#3361 removes them. Without the arguments no joint loads are created.
+  - **notes:** createJointTorqueLoads and jointLoadUserFunctionList of CreateRedundantCoordinateMBS are deprecated with removal on 2027-01-01; without them no joint loads are created.
+  - date resolved: **2026-11-09 11:39**, date raised: 2026-11-09
 - **1.13.500** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The inertia workflow of imported robots (#3357)
   - description: A mesh gives the surface only. Decided: an option densityForInertiaEstimation=None with one overall density of a link, and a documented function of its own which completes partly given inertias from the meshes and adapts them to the triangle inequality.
   - **notes:** GetURDFrobotData(densityForInertiaEstimation=) and urdfImport.CompleteInertiasFromMeshes for missing or partly given inertias.

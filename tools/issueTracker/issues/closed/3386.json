@@ -1,0 +1,14 @@
+{
+  "number": 3386,
+  "title": "Deprecate createJointTorqueLoads and jointLoadUserFunctionList of CreateRedundantCoordinateMBS, removal on 2027-01-01",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "They are rarely used. Decided: deprecated now with a warning, one release before 2027 contains both, then #3361 removes them. Without the arguments no joint loads are created.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 11:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "createJointTorqueLoads and jointLoadUserFunctionList of CreateRedundantCoordinateMBS are deprecated with removal on 2027-01-01; without them no joint loads are created.",
+  "resolvedInVersion": "1.13.501"
+}

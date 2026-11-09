@@ -104,7 +104,7 @@ for i in range(n):
                                ))
 
 if useMBS:
-    robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+    robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker)
                                                     # invertJoints=True)
     joints = robDict['jointList']
     #user function for sensor, convert position into angle:

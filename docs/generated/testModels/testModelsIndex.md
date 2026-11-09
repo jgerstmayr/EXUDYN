@@ -201,6 +201,7 @@ RigidPendulumTest
 robotCartesianPathsTest
 robotCollisionModelTest
 robotCollisionShapesTest
+robotDeprecatedJointLoadsTest
 robotDictionaryTest
 robotFloatingBaseTest
 robotFrictionEndStopsTest

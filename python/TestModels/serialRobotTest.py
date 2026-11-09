@@ -109,7 +109,7 @@ baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPositio
 #build mbs robot model, with the PD control of the links in the joints:
 for (i, link) in enumerate(newRobot.links):
     link.SetPDcontrol(Pcontrol[i], Dcontrol[i])
-newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
 
 #the control follows the trajectory, with the static torques compensated:
 newRobot.SetControl(trajectory, compensation='static')

@@ -81,7 +81,7 @@ for model in ['tree', 'redundant']:
             robot.CreateKinematicTree(mbs)
         else:
             oGround = mbs.AddObject(ObjectGround())
-            robot.CreateRedundantCoordinateMBS(mbs, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)), createJointTorqueLoads=False)
+            robot.CreateRedundantCoordinateMBS(mbs, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)))
         robot.SetControl(trajectory, compensation=compensation)
         sensors = robot.AddSensors(mbs, [OVT.Coordinates])
         mbs.SetPreStepUserFunction(robot.PreStepControl)

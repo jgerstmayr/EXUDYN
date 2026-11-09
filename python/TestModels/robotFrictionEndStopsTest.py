@@ -39,7 +39,7 @@ def Simulate(robot, model, endTime=1., numberOfSteps=500, show=False):
     else:
         oGround = mbs.AddObject(ObjectGround())
         mBase = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=robot.base.HT.translation))
-        robot.CreateRedundantCoordinateMBS(mbs, mBase, createJointTorqueLoads=False)
+        robot.CreateRedundantCoordinateMBS(mbs, mBase)
     sensors = robot.AddSensors(mbs, [OVT.Coordinates, OVT.Force])
     mbs.SetPreStepUserFunction(robot.PreStepControl)
     mbs.Assemble()

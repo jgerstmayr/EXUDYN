@@ -208,7 +208,7 @@ if case == '3Dmechanism' or performTest:
     # locPos = [0,0,0]
     nLinks = newRobot.NumberOfLinks()
     if useMBS:
-        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker)
         bodies = robDict['bodyList']
     
         sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[0], localPosition=locPos, storeInternal=True,
@@ -415,7 +415,7 @@ if case == 'invertedPendulum' or performTest:
     locPos = [0,0,0]
     nLinks = newRobot.NumberOfLinks()
     if useMBS:
-        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker)
         bodies = robDict['bodyList']
     
         sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
@@ -573,7 +573,7 @@ if case == 'treeStructure' or performTest:
     locPos = [0,0,0]
     nLinks = newRobot.NumberOfLinks()
     if useMBS:
-        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker)
         bodies = robDict['bodyList']
     
         sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,

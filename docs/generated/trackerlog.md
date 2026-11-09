@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.500.dev1
+- Exudyn version = 1.13.502.dev1
 - last change = 2026-11-09
-- Number of issues = 3386
-- Number of resolved issues = 3277 (500 in current version)
+- Number of issues = 3389
+- Number of resolved issues = 3279 (502 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,11 +9039,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
+  - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.
+  - date raised: 2026-11-09
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
   - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Remove the deprecated joint torque loads of CreateRedundantCoordinateMBS at the end of their deprecation period (#3361)
   - description: jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.
+  - **remarks:** deferred until 2027-01-01 (Claude-JG, 2026-11-09): the arguments are deprecated with a warning by \#3386, one release before 2027 contains both, then they are removed
   - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
   - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.

@@ -81,7 +81,7 @@ robot.SetEndStops(stiffness=1e4, damping=1e2)
 q0 = [0,0,0,0,0,0]
 objectGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0]))
 baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
-robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
 springDampers = robotDict['springDamperList'] #the PD control of the joints
 
 #a CartesianSpringDamper for the mouse drag

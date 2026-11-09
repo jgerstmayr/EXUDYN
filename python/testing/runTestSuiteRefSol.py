@@ -266,6 +266,7 @@ def TestExamplesReferenceSolution():
         'robotFloatingBaseTest.py':4.803800000000002, #new 2026-11-09: a floating base for Robot (#3359)
         'robotPathPlanningTest.py':20, #new 2026-11-09: path planning of a serial robot (#3383)
         'robotNavigationTest.py':44.46530100307383, #new 2026-11-09: navigation of mobile robots (#3384)
+        'robotDeprecatedJointLoadsTest.py':9, #new 2026-11-09: the deprecated joint loads of CreateRedundantCoordinateMBS (#3386)
         'urdfCompleteInertiasTest.py':22.43333333333333, #new 2026-11-09: estimates of inertias of imported robots (#3357)
         'robotCollisionShapesTest.py':19.9, #new 2026-11-09: the collision shapes of a robot (#3382)
         'robotCollisionModelTest.py':14.05, #new 2026-11-09: the collision check of a robot (#3380)
