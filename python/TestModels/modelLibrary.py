@@ -62,7 +62,7 @@ def _RigidBodyChain(mbs, useJoints, n=3):
     damping = 0.01*stiffness
     for i in range(n):
         body = mbs.CreateRigidBody(inertia=inertia, referencePosition=[L*(i + 0.5), 0, 0], gravity=g,
-                                   graphicsDataList=[graphics.Brick(size=[L, w, w], color=graphics.colorList[i])])
+                                   graphicsDataList=[graphics.Brick(size=[L, w, w], color=graphics.colorList[i % len(graphics.colorList)])])
         if useJoints:
             mbs.CreateRevoluteJoint(itemNumbers=[previous, body], position=[L*i, 0, 0], axis=[0, 0, 1])
         else:

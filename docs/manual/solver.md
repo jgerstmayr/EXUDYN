@@ -257,8 +257,9 @@ the end of the step, with $\tau = (t - t_0)/h$:
   output then has the order of the method, also for `Radau5`, where the collocation polynomial would only reach order 4; a measurement of this is in
   `python/TestModels/outputInterpolationOrderTest.py`;
 - else the accelerations, the ODE1 coordinates and their derivatives; and in all solvers the algebraic coordinates linearly;
-- the ODE2 coordinates of Lie group nodes (rotation vectors updated by composition) linearly, as their velocities are
-  not the derivatives of their coordinates;
+- the rotation of Lie group nodes (rotation vectors updated by composition, whose angular velocities are not the derivatives of their
+  coordinates) as $\Rot_0 \exp(\tilde{\	psi})$, with $\	psi$ the cubic Hermite polynomial of the rotation relative to the start of the step,
+  by the angular velocities at both ends; their displacements as all other ODE2 coordinates (#3389);
 - the data coordinates (contact states, friction, plasticity) as at the end of the step.
 
 The sensors and the solution file are evaluated in the interpolated state, so a sensor of a position, a force or an

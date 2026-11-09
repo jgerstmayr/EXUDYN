@@ -1,0 +1,70 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The output within the step for a rigid body with a Lie group node (#3389): the rotation is a cubic Hermite polynomial in the Lie algebra relative to the start of the step, the
+#           displacements a cubic Hermite polynomial. A free body turning about all axes under gravity converges with RK44 with order 4 in the rotation and 3 in the angular velocity, and follows the parabola of the position exactly, against
+#           a run with small steps; a fast rotation about z passes the angle 2 pi, where the rotation vector jumps, and stays exact. The result is the number of checks and an error.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-09
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+import exudyn.graphics as graphics
+from exudyn import cMath
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+outputVariables = [exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocityLocal, exu.OutputVariableType.Position]
+period = 0.0137
+
+def Run(numberOfSteps, angularVelocity, gravity, show=False):
+    """the sensor data of a free rigid body at the multiples of the period, for each of the output variables"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    inertia = InertiaCuboid(1000, [0.1, 0.3, 0.6])
+    body = mbs.CreateRigidBody(inertia=inertia, nodeType=exu.NodeType.RotationRotationVector, initialAngularVelocity=angularVelocity, gravity=gravity,
+                               graphicsDataList=[graphics.Brick(size=[0.1, 0.3, 0.6], color=graphics.color.dodgerblue)])
+    sensors = [mbs.AddSensor(SensorBody(bodyNumber=body, storeInternal=True, outputVariableType=variable)) for variable in outputVariables]
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
+    simulationSettings.timeIntegration.endTime = 1.
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.sensors.writePeriod = period
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+    if show:
+        mbs.SolutionViewer()
+    return [mbs.GetSensorStoredData(sensor) for sensor in sensors]
+
+def Errors(data, reference):
+    return [float(np.max(np.abs(a[:, 1:] - b[:, 1:]))) for (a, b) in zip(data, reference)]
+
+(angularVelocity, gravity) = ([5., 3., 8.], [0, 0, -9.81])
+reference = Run(3200, angularVelocity, gravity)
+(coarse, fine) = (Errors(Run(50, angularVelocity, gravity), reference), Errors(Run(100, angularVelocity, gravity), reference))
+orders = [cMath.log(a/b)/cMath.log(2.) for (a, b) in zip(coarse, fine)]
+exu.Print('errors of rotation, angular velocity, position:', coarse, fine, 'orders', orders)
+checks = [abs(orders[0] - 4.) < 0.5, abs(orders[1] - 3.) < 0.5, coarse[2] < 1e-10] #the velocity is the derivative of the polynomial; the parabola of the position is exact
+
+#a fast rotation about z, passing the angle 2 pi several times: rotation about z by the angle omega*t
+omega = 20.
+data = Run(50, [0, 0, omega], [0, 0, 0])[0]
+errorFast = 0.
+for row in data:
+    (c, s) = (cMath.cos(omega*row[0]), cMath.sin(omega*row[0]))
+    errorFast = max(errorFast, float(np.max(np.abs(row[1:].reshape(3, 3) - np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])))))
+checks += [errorFast < 1e-3]
+exu.Print('fast rotation: error of the rotation matrix', errorFast)
+
+if not testIsActive:
+    Run(200, angularVelocity, gravity, show=True)
+
+u = sum(checks) + errorFast
+exu.Print('checks:', checks)
+exu.Print('solution of lieGroupOutputWithinStepTest=', u)
+exu.sys['testResult'] = u

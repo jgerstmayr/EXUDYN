@@ -161,6 +161,6 @@ there is no Python 2 support for Exudyn.
 | serialRobotURDF.py | robots read from URDF files |
 | spotReinforcementLearning.py | learning to walk with the quadruped Spot |
 | mobileMecanumWheelRobotWithLidar.py | a mobile robot on mecanum wheels with a lidar |
-| pathPlanningUR5.py | the UR5 around a wall: collision check, RRT-Connect, a blended trajectory and its simulation |
-| mobileRobotsNavigation.py | a mecanum-wheeled robot and a differential drive through a room, by A\* and pure pursuit |
+| pathPlanningUR5.py | the UR5 in three scenes (wall, shelf, window): collision check, RRT-Connect, a blended trajectory and its simulation, with the planned path and the sensor trace drawn |
+| mobileRobotsNavigation.py | a mecanum-wheeled robot and a differential drive through a room, by A\* and pure pursuit, with the distance map and the planned paths in the renderer and in matplotlib |
 | quadrupedsFloatingBase.py | ANYmal and Spot on floating bases, standing on contact spheres |

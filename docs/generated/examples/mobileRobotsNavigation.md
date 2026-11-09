@@ -13,7 +13,8 @@ You can view and download this file on Github: [mobileRobotsNavigation.py](https
 # Details:  A mecanum-wheeled robot with a cuboid body and a differential drive like a vacuum cleaner with a flat cylindrical body drive through a room with known obstacles: an occupancy
 #           grid inflated by the radius of each robot, the shortest path by A*; the mecanum-wheeled robot follows a blended trajectory of x and y, the differential drive follows the
 #           path by pure pursuit. The bodies are kinematic trees with joints x, y and the rotation under PD control, and with the wheels, which turn by the wheel velocities of the
-#           kinematics of each drive; the contact of the wheels with the ground is not modeled.
+#           kinematics of each drive; the contact of the wheels with the ground is not modeled. The floor shows the distance map of the obstacles as texture, the planned paths are drawn with a
+#           sphere at each waypoint, the simulated paths as sensor traces; a matplotlib figure shows the map and the paths.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-09
@@ -40,10 +41,9 @@ boxes = [([0.2, 2.6], [3, 1.3]), ([0.2, 2.6], [6.5, 1.3]), ([0.2, 3.4], [4.5, 5.
 cylinders = [(0.5, [7.5, 5]), (0.4, [1.8, 4.5])]
 height = 0.5
 
-graphicsRoom = [graphics.CheckerBoard([5, 3.5, 0], size=11, nTiles=11)]
+graphicsRoom = [graphics.CheckerBoard([5, 3.5, -0.005], size=11, nTiles=11)]
 graphicsRoom += [graphics.Brick(centerPoint=[c[0], c[1], 0.5*height], size=[s[0], s[1], height], color=graphics.color.grey) for (s, c) in boxes]
 graphicsRoom += [graphics.Cylinder(pAxis=[c[0], c[1], 0], vAxis=[0, 0, height], radius=r, color=graphics.color.lightgrey, nTiles=32) for (r, c) in cylinders]
-mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=graphicsRoom)))
 
 def Grid(robotRadius):
     """the map for a robot of this radius, which is then planned as a point"""
@@ -52,8 +52,31 @@ def Grid(robotRadius):
         grid.AddRectangle(c, s)
     for (r, c) in cylinders:
         grid.AddCircle(c, r)
-    grid.Inflate(robotRadius)
+    if robotRadius > 0:
+        grid.Inflate(robotRadius)
     return grid
+
+#%%+++ the distance map: for each cell of the grid, the distance to the nearest obstacle. Inflating the obstacles by the radius of a robot marks the cells closer than this radius as occupied,
+#so that the robot can be planned as a point; a clearanceWeight of PlanGridPath would also use the distance to keep away from the obstacles.
+mapCellDistances = Grid(0.).DistanceTransform() #indices x, y
+inflation = 0.4                                 #the radius of the larger robot
+dMax = float(mapCellDistances.max())
+image = np.zeros(mapCellDistances.T.shape + (3,), dtype=np.uint8)
+distance = mapCellDistances.T[::-1]             #row 0 of the image is its top, at the largest y
+level = distance/dMax
+bands = 0.85 + 0.15*(np.mod(distance, 0.5) > 0.03) #dark lines every 0.5 m
+image[:, :, 0] = (255*(0.35 + 0.65*level)*bands).astype(np.uint8)
+image[:, :, 1] = (255*(0.55 + 0.45*level)*bands).astype(np.uint8)
+image[:, :, 2] = (255*bands).astype(np.uint8)
+image[distance < inflation] = [235, 150, 120]   #not available to the larger robot
+image[distance == 0] = [60, 60, 60]             #the obstacles
+SC.renderer.AddTexture('distanceMap', image, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)
+graphicsRoom += [graphics.Quad([[0, 0, 0], [10, 0, 0], [10, 7, 0], [0, 7, 0]], texture='distanceMap')]
+
+def GraphicsOfPath(path, color):
+    """the planned path, slightly above the floor, and a sphere at each waypoint"""
+    points = [[p[0], p[1], 0.02] for p in path]
+    return [graphics.Lines(points, color=color)] + [graphics.Sphere(point=p, radius=0.05, color=color, nTiles=12) for p in points]
 
 def PlanarRobot(bodyGraphics, wheelPositions, wheelRadius, wheelWidth, start):
     """a tree of the joints x, y, rotation with the body on the last one and a wheel per position, which turns about the local y axis"""
@@ -88,6 +111,7 @@ kinematics = MobileKinematics(wheelRadius, lx, ly)
 mecanum = PlanarRobot(body, [[lx, ly], [lx, -ly], [-lx, ly], [-lx, -ly]], wheelRadius, 0.05, start)
 treeMecanum = mecanum.CreateKinematicTree(mbs)
 wheelsMecanum = np.zeros(4)
+graphicsRoom += GraphicsOfPath(pathMecanum, graphics.color.blue)
 
 #%%+++ the differential drive
 (track, wheelRadiusDrive) = (0.26, 0.035)
@@ -101,6 +125,12 @@ controller = PurePursuit(pathDrive, lookAhead=0.3, speed=0.5, goalTolerance=0.03
 poseCommand = start.copy() #the commanded pose, the integral of the velocities of the controller
 wheelsDrive = np.zeros(2)
 deviation = [0.]
+graphicsRoom += GraphicsOfPath(pathDrive, graphics.color.red)
+mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=graphicsRoom)))
+
+#the simulated paths on the height of the bodies, drawn as traces
+sensors = [mbs.AddSensor(SensorKinematicTree(objectNumber=tree['objectKinematicTree'], linkNumber=2, localPosition=[0, 0, 0.02], storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
+           for tree in [treeMecanum, treeDrive]]
 
 state = {'t': 0.}
 def PreStepUserFunction(mbs, t):
@@ -137,8 +167,12 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.solution.file.writePeriod = 0.05
+simulationSettings.solution.sensors.writePeriod = 0.05
 SC.visualizationSettings.general.autoFitScene = True
 SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.sensors.traces.listOfPositionSensors = sensors
+SC.visualizationSettings.sensors.traces.showPositionTrace = True
+SC.visualizationSettings.sensors.traces.showPast = True
 
 mbs.SolveDynamic(simulationSettings, showHints=False)
 
@@ -146,4 +180,19 @@ poseMecanum = mbs.GetNodeOutput(treeMecanum['nodeGeneric'], exu.OutputVariableTy
 poseDrive = mbs.GetNodeOutput(treeDrive['nodeGeneric'], exu.OutputVariableType.Coordinates)[:3]
 exu.Print('end time', tEnd, ', mecanum robot at', np.round(poseMecanum, 4), ', differential drive at', np.round(poseDrive, 4), ', reached:', controller.finished)
 mbs.SolutionViewer()
+
+#%%+++ the map, the planned paths (dashed) and the simulated paths
+import matplotlib.pyplot as plt
+plt.figure()
+plt.imshow(mapCellDistances.T, origin='lower', extent=[0, 10, 0, 7], cmap='viridis')
+plt.colorbar(label='distance to the nearest obstacle [m]')
+plt.contour(np.linspace(0.025, 9.975, mapCellDistances.shape[0]), np.linspace(0.025, 6.975, mapCellDistances.shape[1]), mapCellDistances.T, levels=[0.25, 0.4], colors=['white', 'orange'])
+for (path, sensor, name, color) in [(pathMecanum, sensors[0], 'mecanum robot', 'C0'), (pathDrive, sensors[1], 'differential drive', 'C3')]:
+    plt.plot(path[:, 0], path[:, 1], 'o--', color=color, label=name + ', planned')
+    data = mbs.GetSensorStoredData(sensor)
+    plt.plot(data[:, 1], data[:, 2], '-', color=color, label=name + ', simulated')
+plt.xlabel('x [m]')
+plt.ylabel('y [m]')
+plt.legend()
+plt.show()
 ```

@@ -1,0 +1,15 @@
+{
+  "number": 3391,
+  "title": "mobileRobotsNavigation.py: the planned paths and the distance map in the renderer and in matplotlib",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "MEDIUM",
+  "description": "The example shows only the motion. Decided: the planned paths as ground objects and the distance map of the grid as a texture on the floor, and a matplotlib figure of the map with the paths.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mobileRobotsNavigation.py shows the distance map as texture, the planned paths and sensor traces in the renderer, and a matplotlib figure of them.",
+  "resolvedInVersion": "1.13.510"
+}

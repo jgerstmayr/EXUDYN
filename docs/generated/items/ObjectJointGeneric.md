@@ -162,7 +162,15 @@ $$
 \end{aligned}
 $$
 
-If **2 rotation axes are constrained** (revolute joint), e.g., $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$, the index 3 constraint equations read
+If **2 rotation axes are constrained** (revolute joint), the free axis $f$ of $J0$ stays normal to the two locked axes $l_0$, $l_1$ of $J1$, in the rows $l_0$ and $l_1$ of the equations:
+
+| `constrainedAxes[3:6]` | axis of rotation $f$ | locked axes $l_0$, $l_1$ |
+|---|---|---|
+| $[0,1,1]$ | $x$ | $y$, $z$ |
+| $[1,0,1]$ | $y$ | $x$, $z$ |
+| $[1,1,0]$ | $z$ | $x$, $y$ |
+
+For example, $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$ gives the index 3 constraint equations
 
 $$
 \begin{aligned}
@@ -172,7 +180,15 @@ $$
 \end{aligned}
 $$
 
-If **1 rotation axis is constrained** (universal joint), e.g.,  $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$, the index 3 constraint equations read
+If **1 rotation axis is constrained** (universal joint), one equation keeps the axis $a$ of $J0$ normal to the axis $b$ of $J1$; these two are the axes of the two rotations of the joint, and the equation is the row of the locked axis $l$:
+
+| `constrainedAxes[3:6]` | locked axis $l$ | axis $a$ of $J0$ | axis $b$ of $J1$ |
+|---|---|---|---|
+| $[1,0,0]$ | $x$ | $y$ | $z$ |
+| $[0,1,0]$ | $y$ | $x$ | $z$ |
+| $[0,0,1]$ | $z$ | $x$ | $y$ |
+
+For example, $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$ gives the index 3 constraint equations
 
 $$
 \begin{aligned}

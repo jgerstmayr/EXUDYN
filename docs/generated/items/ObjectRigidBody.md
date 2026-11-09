@@ -137,6 +137,13 @@ $$ (eq-objectrigidbody-alpha)
 remember that derivatives for angular velocities can also be done in the local frame. In case of Euler parameters and the Lie-group rotation vector we find that
 $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$.
 
+(fig-objectrigidbody-frames)=
+```{figure} /docs/figures/ObjectRigidBodyFrames.*
+:width: 450
+
+The global frame $0$, the body frame $b$ at the reference point, given by the node with position $\mathbf{p}$, and the center of mass at $\LU{b}{\bv_{COM}}$ in the body frame.
+```
+
 ### Equations of motion for {ref}`COM <COM>`
 
 The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point $=$ {ref}`COM <COM>` and split for translations and rotations, using a coordinate-free notation,

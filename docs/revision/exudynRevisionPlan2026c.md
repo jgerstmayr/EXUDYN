@@ -52,7 +52,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The single items not yet documented** (RG11.5) - independent of the release and without a decision.
+2. **The baseline of the solvers** (RG13.1), measured by python/testing/solverBaseline.py.
 3. **The larger open work**, once the next release is planned: the linear algebra benchmark (RG5.1), the plugin
    interface (RG8), the checked item interface (RG9.6).
 
@@ -96,7 +96,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (3 open sub-steps)
-  - RG11.5 Document single items that the general pages did not reach
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
   - RG11.7 Let objects compute from the coordinates passed in instead of reading their nodes
 - **RG12** Symbolic
@@ -135,7 +134,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 7 | Misc |
+| RG11 | OPEN | 6 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | OPEN | 2 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1922,10 +1921,9 @@ CLOSED 2026-11-05 (#3268): SC.renderer.GetTexture(name) as a dict of name, image
 
 CLOSED 2026-11-06 (#3271): SC.GetDictionary/SetDictionary call renderer.GetState/SetState; rendererDictionaryTest.py checks for no warning. [log](exudynRevisionLog2026c.md#rg11-4-6)
 
-### **OPEN_RG11.5** Document single items that the general pages did not reach
+### **CLOSED_RG11.5** Document single items that the general pages did not reach
 
-#625 (`ObjectRigidBody`), #626 and #2325 (`ObjectJointGeneric`), #627 (`ObjectContactFrictionCircleCable2D`), #987
-(`ObjectALEANCFCable2D`). From revision2026b group RG13.
+CLOSED 2026-11-09 (#625, #626, #627, #987, #2325; maintainer 2026-11-09: the contact of circle and cable and the ALE cable stay short): the figure of the rigid body, the axes of the rotation constraints of ObjectJointGeneric, the terms and output of the ALE cable; ObjectContactFrictionCircleCable2D already had its description, equations and figure.
 
 ### **OPEN_RG11.6** Write the joints and their Jacobians on homogeneous transformations
 
@@ -3582,6 +3580,10 @@ Maintainer 2026-11-08: design section 3.3, decision 14.
 
 #3388. Maintainer 2026-11-09: to be done later, needs gym and stable_baselines3.
 
+#### **CLOSED_RG19.14.5** quadrupedsFloatingBase.py: all links and the body of ANYmal drawn
+
+CLOSED 2026-11-09 (#3392): the default graphics of a link ends at the joint of its child, so the shanks were missing, and the base had no graphics. [log](exudynRevisionLog2026c.md#rg21-6-1)
+
 ### **OPEN_RG19.15** The joint torque loads: the test models on SetControl now, the deprecated parameters removed at the end of the deprecation period
 
 #3361. Maintainer 2026-11-08: as suggested, when the deprecation period ends.
@@ -3719,6 +3721,10 @@ CLOSED 2026-11-06 (#3310; maintainer 2026-11-06): a section Output of the soluti
 #### **CLOSED_RG20.4.5** The output within the step by the interpolation of the solver
 
 #3379.
+
+#### **CLOSED_RG20.4.6** The rotations of Lie group nodes in the output within the step by a cubic Hermite polynomial in the Lie algebra
+
+CLOSED 2026-11-09 (#3389; maintainer 2026-11-09): relative rotation Log(R0^T R1) and the angular velocities at both ends, displacements cubic; order 4 in the rotation, 3 in the angular velocity. [log](exudynRevisionLog2026c.md#rg20-4-6)
 
 ### **CLOSED_RG20.5** Explicit solvers with constraints: coordinate constraints in the symbolic SolveExplicit, Euler parameters by projection
 
@@ -3937,3 +3943,11 @@ CLOSED 2026-11-07 (#3316): decided by the maintainer, design section 5 - navigat
 ### **CLOSED_RG21.5** Occupancy grid, A*, RRT in SE(2); mecanum and differential-drive execution with pure pursuit
 
 ### **CLOSED_RG21.6** Examples: the UR5 among obstacles, a mecanum-wheeled and a differential-drive robot; the robotics chapter, a notebook
+
+#### **CLOSED_RG21.6.1** pathPlanningUR5.py: planned path, sensor trace, three scenes, the meshes of the URDF; ShortcutPath between points anywhere on the path
+
+CLOSED 2026-11-09 (#3390): checked the motion; the detour was that of the random search. [log](exudynRevisionLog2026c.md#rg21-6-1)
+
+#### **CLOSED_RG21.6.2** mobileRobotsNavigation.py: the distance map as texture, the planned paths, a matplotlib figure
+
+CLOSED 2026-11-09 (#3391). [log](exudynRevisionLog2026c.md#rg21-6-1)

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 485 | 1.13.502 |
+| 1.13 | Newborn | 493 | 1.13.511 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,38 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.511** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` quadrupedsFloatingBase.py: ANYmal is drawn with only parts of its legs (#3392)
+  - description: The legs of ANYmal in the example are drawn incompletely. To be located and fixed.
+  - **notes:** quadrupedsFloatingBase.py draws all links and the body of ANYmal.
+  - date resolved: **2026-11-09 17:09**, date raised: 2026-11-09
+- **1.13.510** `EXAMPLE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mobileRobotsNavigation.py: the planned paths and the distance map in the renderer and in matplotlib (#3391)
+  - description: The example shows only the motion. Decided: the planned paths as ground objects and the distance map of the grid as a texture on the floor, and a matplotlib figure of the map with the paths.
+  - **notes:** mobileRobotsNavigation.py shows the distance map as texture, the planned paths and sensor traces in the renderer, and a matplotlib figure of them.
+  - date resolved: **2026-11-09 17:09**, date raised: 2026-11-09
+- **1.13.509** `EXAMPLE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pathPlanningUR5.py: the planned path, traces, three scenes and the URDF graphics (#3390)
+  - description: The motion goes through an intermediate configuration far off the goal. Decided: check and if needed revise the planner; sensor traces and the planned trajectory as ground object with spheres at the end of each part; two further more challenging scenes in the file; shadow and the URDF graphics of the UR5, the collision shapes switchable; more comments on the path planning and trajectories.
+  - **notes:** ProfilePTP(syncAccTimes=True) is implemented and used by Trajectory.FromWaypoints, so that the motion between waypoints is their straight line in the coordinates; ShortcutPath connects points anywhere on the path. pathPlanningUR5.py has three scenes, the planned path, the sensor trace and the meshes of the UR5.
+  - date resolved: **2026-11-09 17:09**, date raised: 2026-11-09
+- **1.13.508** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Lie group nodes in the output within the step: cubic Hermite polynomial in the Lie algebra (#3389)
+  - description: The output within the step interpolates all coordinates of NodeRigidBodyRotVecLG linearly, component by component, which is no geodesic and wrong when the rotation vector jumps at an angle of 2 pi within the step. Decided: the displacements by the cubic Hermite polynomial as all other coordinates; the rotation R0 Exp(psi) with psi the cubic Hermite polynomial of the relative rotation Log(R0^T R1), with the angular velocities at both ends.
+  - **notes:** The output of a Lie group node within a step interpolates its rotation by a cubic Hermite polynomial in the Lie algebra and its displacements by the cubic polynomial of the other coordinates; also correct when the rotation vector jumps at 2 pi.
+  - date resolved: **2026-11-09 17:09**, date raised: 2026-11-09
+- **1.13.507** `DOCU` `LOW EFF` `resolved by: Claude-JG` GenericJoint (#2325)
+  - description: improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
+  - **notes:** The order of the axes for 1 and 2 constrained rotations of ObjectJointGeneric is given in tables.
+  - date resolved: **2026-11-09 17:09**, date raised: 2026-03-23
+- **1.13.506** `DOCU` `NORMAL` `MEDIUM EFF` `resolved by: Claude-JG` ALEANCFCable2D (#987)
+  - description: add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)
+  - **notes:** The page of ObjectALEANCFCable2D says which terms are added to ObjectANCFCable2D and what its output variables refer to, with the reference to the paper.
+  - date resolved: **2026-11-09 17:09**, date raised: 2022-03-15
+- **1.13.504** `DOCU` `MEDIUM EFF` `resolved by: Claude-JG` GenericJoint (#626)
+  - description: add more description on constraint configurations, coordinate transformations and figures for GenericJoint
+  - **notes:** The page of ObjectJointGeneric gives the rotation axes of the constraint equations in tables.
+  - date resolved: **2026-11-09 17:09**, date raised: 2021-04-21
+- **1.13.503** `DOCU` `MEDIUM EFF` `resolved by: Claude-JG` ObjectRigidBody (#625)
+  - description: revise equations of motion and add figure for COM and local coordinates
+  - **notes:** The page of ObjectRigidBody has a figure of the global frame, the body frame at the reference point and the center of mass.
+  - date resolved: **2026-11-09 17:09**, date raised: 2021-04-15
 - **1.13.502** `IMPROVEMENT` `raised by: Claude-JG` `resolved by: Claude-JG` SaveDictToHDF5 and Robot.SaveToHDF5 with compression (#3387)
   - description: A robot with graphics takes more space than its meshes. An argument compression, 'gzip' for the arrays; the articulated dummy is stored with it.
   - **notes:** SaveDictToHDF5 and Robot.SaveToHDF5 have the argument compression.

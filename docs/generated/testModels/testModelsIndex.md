@@ -152,6 +152,7 @@ kinematicTreeTest
 kinematicTreeUserFunctionTest
 laserScannerTest
 libraryDeprecationTest
+lieGroupOutputWithinStepTest
 linearFEMgenericODE2
 loadUserFunctionTest
 LShapeGeomExactBeam2D

@@ -302,7 +302,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotics/quadrupedsFloatingBase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/quadrupedsFloatingBase.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM)
 
 
 (sec-graphics-solidofrevolution)=

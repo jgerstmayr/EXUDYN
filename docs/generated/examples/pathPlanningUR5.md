@@ -10,8 +10,10 @@ You can view and download this file on Github: [pathPlanningUR5.py](https://gith
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  A UR5 moves around a wall between two poses of its tool: the collision check of its capsules in C++, RRT-Connect in joint space, shortcuts of the path, a blended trajectory
-#           through the waypoints and the simulation of the kinematic tree with PD control of the joints; the smallest distance of the simulated robot to the obstacles is measured.
+# Details:  A UR5 moves between two poses of its tool in one of three scenes - around a wall, between the compartments of a shelf, through a window to a goal behind a wall. The planning steps:
+#           the collision check of its capsules in C++, RRT-Connect in joint space, shortcuts of the path, a blended trajectory through the waypoints; then the simulation of the kinematic tree with
+#           PD control of the joints. The planned path of the tool is drawn as ground object with a sphere at the end of each part, the simulated path as sensor trace; the smallest distance of
+#           the simulated robot to the obstacles is measured. The meshes of the UR5 come from the repository CommonData_git beside this one; without it the collision capsules are drawn.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-09
@@ -24,46 +26,99 @@ import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 from exudyn.cUtilities import ConvexShape
-from exudyn.robotics import VRobotLink
+from exudyn.robotics import VRobotBase, VRobotLink
 from exudyn.robotics.models import ManipulatorUR5, LinkDict2Robot
+from exudyn.advancedUtilities import LoadDictFromHDF5
 from exudyn.robotics.navigation import JointLimits, PlanToPose, ShortcutPath, TrajectoryFromPath
 import numpy as np
+import os
 import time
+
+scene = 'wall'              #'wall', 'shelf' or 'window'
+showCollisionShapes = False #True: the capsules used for planning are drawn transparently over the meshes
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#%%+++ the robot, drawn with its collision shapes
+#%%+++ the scenes: the obstacles as (size of a box, position), the joint coordinates at the start and at the goal
+table = ([2, 2, 0.1], [0, 0, -0.15])
+scenes = {
+    #the arm is stretched past the wall at the start and the goal, so it has to fold in front of the wall, closer to its base, to pass it
+    'wall': {'boxes': [table, ([0.05, 0.4, 1.6], [0.45, 0, 0.3])],
+             'qStart': [-0.8, -1.2, 1.2, -1.5, -1.57, 0.], 'qGoal': [0.8, -1.2, 1.2, -1.5, -1.57, 0.], 'seed': 1},
+    #the tool has to leave the upper compartment, pass the board in front of the shelf and enter the lower one
+    'shelf': {'boxes': [table] + [([0.3, 0.8, 0.03], [0.7, 0, z]) for z in [0.1, 0.5, 0.9]] + [([0.3, 0.03, 0.83], [0.7, y, 0.5]) for y in [-0.4, 0.4]] + [([0.03, 0.8, 0.83], [0.86, 0, 0.5])],
+              'qStart': [0.071, -1.043, 0.653, -2.752, -1.642, 1.571], 'qGoal': [-0.445, -0.928, 1.535, -3.749, -1.126, 1.571], 'seed': 1},
+    #the wrist has to pass an opening of 0.36 x 0.35 m; a narrow passage is hard for a random planner: other seeds may need more than the 20000 points of PlanJointPath
+    'window': {'boxes': [table, ([0.04, 0.42, 1.1], [0.3, -0.39, 0.45]), ([0.04, 0.42, 1.1], [0.3, 0.39, 0.45]), ([0.04, 0.36, 0.35], [0.3, 0, 0.075]), ([0.04, 0.36, 0.4], [0.3, 0, 0.8])],
+               'qStart': [1.137, -1.437, 2.145, -3.849, -1.137, 0.], 'qGoal': [-0.264, -1.436, 1.927, -3.633, -1.306, 1.571], 'seed': 1},
+}
+boxes = scenes[scene]['boxes']
+qStart = np.array(scenes[scene]['qStart'])
+qGoal = np.array(scenes[scene]['qGoal'])
+seed = scenes[scene]['seed']
+
+#%%+++ the robot: its joint frames are those of the URDF, whose visual meshes are stored in the HDF5 file of the repository CommonData_git
 robot = LinkDict2Robot(ManipulatorUR5(), initialConfiguration='model')
-qStart = np.array([-0.8, -1.2, 1.2, -1.5, -1.57, 0.])
 robot.q0 = qStart
-for (i, link) in enumerate(robot.links):
-    link.visualization = VRobotLink(graphicsData=[graphics.Capsule(pAxis=shape['pAxis'], vAxis=shape['vAxis'], radius=shape['radius'], color=graphics.colorList[i % 8][:3] + [0.7])
-                                                  for shape in link.collisionShapes], showMBSjoint=False)
+ur5File = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'ur5Data.h5')
+hasMeshes = os.path.exists(ur5File)
+if hasMeshes:
+    data = LoadDictFromHDF5(ur5File)
+    robot.base.visualization = VRobotBase(graphicsData=list(data['graphicsBaseList']))
+    for (link, linkData) in zip(robot.links, data['linkList']):
+        link.visualization = VRobotLink(graphicsData=list(linkData['graphicsDataList']), showMBSjoint=False, showCOM=False)
+else:
+    exu.Print(ur5File, 'not found; the collision capsules are drawn instead')
+if showCollisionShapes or not hasMeshes:
+    for (i, link) in enumerate(robot.links):
+        capsules = [graphics.Capsule(pAxis=shape['pAxis'], vAxis=shape['vAxis'], radius=shape['radius'], color=graphics.colorList[i % 8][:3] + [0.5]) for shape in link.collisionShapes]
+        link.visualization = VRobotLink(graphicsData=list(link.visualization.graphicsData) + capsules, showMBSjoint=False, showCOM=False)
 
-#%%+++ the obstacles: (size of a box, position)
-boxes = [([0.05, 0.4, 1.6], [0.45, 0, 0.3]), #the wall
-         ([2, 2, 0.1], [0, 0, -0.15])]       #the table
 obstacles = [(ConvexShape('Box', size=size), exu.HT(translation=position)) for (size, position) in boxes]
-mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphics.Brick(centerPoint=position, size=size, color=graphics.color.lightgrey) for (size, position) in boxes])))
+graphicsGround = [graphics.Brick(centerPoint=position, size=size, color=graphics.color.lightgrey if size[2] > 0.1 or size[0] < 1 else graphics.color.grey) for (size, position) in boxes]
 
-#%%+++ plan: the shapes of neighboring links overlap and are not checked
+#%%+++ planning
+#The collision model holds the capsules of the links and the obstacles; it answers in C++ whether a configuration, or a straight line between two configurations, keeps the distance margin.
+#Capsules of neighboring links overlap by construction: the pairs closer than the margin in a free configuration of the arm are never checked.
 margin = 0.01
-model = robot.GetCollisionModel(obstacles=obstacles, excludeCollidingAt=qStart, excludeMargin=margin)
-qGoal = np.array([0.8, -1.2, 1.2, -1.5, -1.57, 0.])
-HTgoal = robot.GetKinematicChain().ToolHT(qGoal) #a pose of the tool
+model = robot.GetCollisionModel(obstacles=obstacles, excludeCollidingAt=[0, -1.2, 1.2, -1.5, -1.57, 0], excludeMargin=margin)
+chain = robot.GetKinematicChain()
+HTgoal = chain.ToolHT(qGoal) #the goal is a pose of the tool
 
+#PlanToPose takes the free solution of the inverse kinematics nearest to qStart. RRT-Connect grows a tree of random configurations from the start and one from the goal until they connect:
+#in 6 joint coordinates it needs no grid, but its path is a zigzag which differs per seed.
 t0 = time.time()
-path = PlanToPose(model, robot, qStart, HTgoal, JointLimits(robot), margin=margin, seed=1)
-short = ShortcutPath(model, path, margin=margin, seed=1)
+path = PlanToPose(model, robot, qStart, HTgoal, JointLimits(robot), margin=margin, seed=seed)
+#ShortcutPath replaces parts of the path by straight lines in joint space where these are free, between arbitrary points on the path; this removes the detours of the random search.
+#What remains is what the obstacles require: at the wall, the tool moves up and towards the base, because the extended arm cannot turn past the wall.
+short = ShortcutPath(model, path, margin=margin, seed=seed)
 exu.Print('planned in', round(time.time() - t0, 3), 's:', len(path), 'waypoints, after shortcuts', len(short))
+#The waypoints are connected by straight lines in joint space, so the tool moves on curves. The Trajectory runs through them within the limits of velocity and acceleration of the joints
+#without stopping: parabolic blends cut the corners, so the trajectory is checked for collisions, and the blends are reduced if needed.
 trajectory = TrajectoryFromPath(model, short, [1.5]*6, [4.]*6, margin=margin)
+times = trajectory.GetTimes()
+
+#%%+++ the planned path of the tool: a line along the trajectory and a sphere at the end of each part; blue: the start, red: the goal
+def ToolPosition(q):
+    return list(np.array(chain.ToolHT(q))[:3, 3])
+
+graphicsGround += [graphics.Lines([ToolPosition(trajectory.Evaluate(t)[0]) for t in np.linspace(times[0], times[-1], 300)], color=graphics.color.green)]
+for (i, q) in enumerate(short):
+    isEnd = i == 0 or i == len(short) - 1
+    color = graphics.color.blue if i == 0 else (graphics.color.red if i == len(short) - 1 else graphics.color.green)
+    graphicsGround += [graphics.Sphere(point=ToolPosition(q), radius=0.025 if isEnd else 0.015, color=color, nTiles=16)]
+mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=graphicsGround)))
 
 #%%+++ the model
 robotDict = robot.CreateKinematicTree(mbs)
 nodeJoints = robotDict['nodeGeneric']
 robot.SetControl(trajectory, compensation='static')
 minimumDistance = [np.inf]
+
+#the simulated path of the tool, drawn as trace
+sensorTool = mbs.AddSensor(SensorKinematicTree(objectNumber=robotDict['objectKinematicTree'], linkNumber=robot.NumberOfLinks() - 1, localPosition=list(robot.tool.HT.translation),
+                                               storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
 
 def PreStepUserFunction(mbs, t):
     robot.PreStepControl(mbs, t)
@@ -74,19 +129,28 @@ def PreStepUserFunction(mbs, t):
 mbs.SetPreStepUserFunction(PreStepUserFunction)
 mbs.Assemble()
 
-tEnd = trajectory.GetTimes()[-1] + 0.5
+tEnd = times[-1] + 0.5
 stepSize = 1e-3
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.solution.file.writePeriod = 0.02
-SC.visualizationSettings.general.drawWorldBasis = True
+simulationSettings.solution.sensors.writePeriod = 0.01
+
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
+SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
+SC.visualizationSettings.openGL.advanced.initialModelRotation = RotationMatrixZ(0.6 + np.pi) @ RotationMatrixX(0.5*np.pi - 0.45) #view from the side of the robot
 SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.openGL.light0.shadow = 0.3
+SC.visualizationSettings.sensors.traces.listOfPositionSensors = [sensorTool]
+SC.visualizationSettings.sensors.traces.showPositionTrace = True
+SC.visualizationSettings.sensors.traces.showPast = True
 
 mbs.SolveDynamic(simulationSettings, showHints=False)
 
 q = np.array(mbs.GetNodeOutput(nodeJoints, exu.OutputVariableType.Coordinates))
-exu.Print('error of the joints at the end', np.max(np.abs(q - short[-1])), ', smallest distance during the simulation', minimumDistance[0])
+exu.Print('scene', scene, ': error of the joints at the end', np.max(np.abs(q - short[-1])), ', smallest distance during the simulation', minimumDistance[0])
 mbs.SolutionViewer()
+mbs.PlotSensor(sensorTool, components=[0, 1, 2], labels=['x', 'y', 'z'], title='the position of the tool')
 ```

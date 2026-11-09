@@ -69,6 +69,11 @@ anymal = LinkDict2Robot(model)
 anymal.q0 = legsDown
 footRadius = 0.03
 names = [link['name'] for link in model['links']]
+for (i, linkDict) in enumerate(model['links']): #each link as a capsule to the joint of its child, or to the foot
+    children = [other for other in model['links'] if other['parent'] == i]
+    end = list(children[0]['preHT'].translation) if children else list(model['feet'][linkDict['name']])
+    link = anymal.links[i]
+    link.visualization = VRobotLink(graphicsData=[graphics.Capsule(pAxis=[0, 0, 0], vAxis=end, radius=0.025, color=link.visualization.linkColor)], showCOM=False)
 
 def HeightOfBase(robot, model, shank, position, radius):
     """the height of the base for which the first foot just touches the ground, by the kinematics at q0"""
@@ -87,7 +92,7 @@ def HeightOfBase(robot, model, shank, position, radius):
 
 feetAnymal = list(model['feet'].items())
 z = HeightOfBase(anymal, model, [f[0] for f in feetAnymal], [f[1] for f in feetAnymal], footRadius)
-anymal.base = RobotBase(HT=exu.HT(translation=[-0.8, 0, z + 0.01]))
+anymal.base = RobotBase(HT=exu.HT(translation=[-0.8, 0, z + 0.01]), visualization=VRobotBase(graphicsData=[graphics.Brick(size=[0.56, 0.24, 0.16], color=graphics.color.red)]))
 base = model['baseInertia']
 treeA = anymal.CreateKinematicTree(mbs, floatingBase=RigidBodyInertia(mass=base['mass'], inertiaTensor=base['inertia'], com=base['COM'], inertiaTensorAtCOM=True))
 AddFeet(treeA['objectKinematicTree'], [(names.index(n), p) for (n, p) in feetAnymal], footRadius)
@@ -143,8 +148,10 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False
 simulationSettings.solution.file.writePeriod = 0.02
 simulationSettings.solution.sensors.writePeriod = 0.01
-SC.visualizationSettings.general.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
 SC.visualizationSettings.openGL.light0.shadow = 0.3
+SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
+SC.visualizationSettings.openGL.advanced.initialModelRotation = RotationMatrixZ(0.5) @ RotationMatrixX(0.5*np.pi - 0.3)
 
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitMidpoint, showHints=False)
 for sensor in sensors:

@@ -212,6 +212,7 @@ class ProfilePTP:
 
     Args:
         finalCoordinates: list or numpy array with final coordinates for profile
+        syncAccTimes: True: all coordinates accelerate and decelerate at the same times, the motion is a straight line in the coordinates; False: each coordinate uses its largest acceleration, so that the motion deviates from this line (#3390)
         maxVelocities: list or numpy array with maximum velocities; may be empty list []; used if smaller than globalMaxVelocities
         maxAccelerations: list or numpy array with maximum accelerations; may be empty list []; used if smaller than globalMaxAccelerations
 
@@ -229,8 +230,6 @@ class ProfilePTP:
             raise ValueError('ProfilePTP: maxVelocities must by > 0')
         if min(list(maxAccelerations)+[1]) <= 0:
             raise ValueError('ProfilePTP: maxAccelerations must by > 0')
-        if syncAccTimes:
-            raise ValueError('ProfilePTP: syncAccTime must be False; other case yet not implemented')
         
     def GetBasicProfile(self, initialTime, initialCoordinates,
                       globalMaxVelocities, globalMaxAccelerations):
@@ -269,7 +268,25 @@ class ProfilePTP:
         
         
         maxDuration = max(durations)
-    
+
+        if self.syncAccTimes: #one path parameter from 0 to 1 for all coordinates, with the velocity and acceleration all of them allow
+            moving = np.abs(sMax) > 0
+            aMax = np.array(aMax, dtype=float)
+            limitVelocity = np.full(len(aMax), np.inf)
+            if len(globalMaxVelocities) != 0:
+                limitVelocity = np.minimum(limitVelocity, globalMaxVelocities)
+            if len(self.maxVelocities) != 0:
+                limitVelocity = np.minimum(limitVelocity, self.maxVelocities)
+            pathAcceleration = np.min(aMax[moving]/np.abs(sMax[moving]))
+            pathVelocity = min(np.min(limitVelocity[moving]/np.abs(sMax[moving])), np.sqrt(pathAcceleration))
+            tAcc = pathVelocity/pathAcceleration
+            return BasicProfile(coordinateSets=[np.array(initialCoordinates,dtype=float),self.finalCoordinates],
+                                initialTime=initialTime,
+                                finalTime=initialTime + tAcc + 1./pathVelocity,
+                                accelerationTimes=tAcc*np.ones(len(aMax)),
+                                maxVelocities=pathVelocity*np.abs(sMax),
+                                maxAccelerations=pathAcceleration*np.abs(sMax))
+
         #solve quadratic equation for vMax of joint axis (may be vectorized?):
         vMaxSync = copy(vMax)
         tAccSync = 0.*vMaxSync
@@ -685,7 +702,7 @@ class Trajectory:
             raise ValueError('Trajectory.FromWaypoints: at least two different waypoints are needed')
         trajectory = cls(points[0], initialTime=initialTime, maxVelocities=maxVelocities, maxAccelerations=maxAccelerations)
         for q in points[1:]:
-            trajectory.Add(ProfilePTP(q, syncAccTimes=False), blendTimeWithNext=blend)
+            trajectory.Add(ProfilePTP(q, syncAccTimes=True), blendTimeWithNext=blend) #a straight line in the coordinates, as the edges of a path
         if blendFactor != 1.:
             trajectory.blendTimes = [b if b == 'auto' else b*blendFactor for b in trajectory.blendTimes]
             trajectory.initialized = False

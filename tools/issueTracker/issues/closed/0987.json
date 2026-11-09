@@ -2,12 +2,15 @@
   "number": 987,
   "title": "ALEANCFCable2D",
   "author": "JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)",
   "dateRaised": "2022-03-15",
   "deadline": "2022-05-14",
-  "workingRemarks": "planned as revision2026b step RG13.9 (triage 2026-10-07)"
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The page of ObjectALEANCFCable2D says which terms are added to ObjectANCFCable2D and what its output variables refer to, with the reference to the paper.",
+  "resolvedInVersion": "1.13.506"
 }

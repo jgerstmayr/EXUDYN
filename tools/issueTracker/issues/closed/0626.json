@@ -2,11 +2,14 @@
   "number": 626,
   "title": "GenericJoint",
   "author": "JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
   "description": "add more description on constraint configurations, coordinate transformations and figures for GenericJoint",
   "dateRaised": "2021-04-21",
   "deadline": "2021-06-20",
-  "workingRemarks": "planned as revision2026b step RG13.9 (triage 2026-10-07)"
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The page of ObjectJointGeneric gives the rotation axes of the constraint equations in tables.",
+  "resolvedInVersion": "1.13.504"
 }

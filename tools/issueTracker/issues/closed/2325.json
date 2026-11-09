@@ -2,11 +2,14 @@
   "number": 2325,
   "title": "GenericJoint",
   "author": "JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "LOW",
   "description": "improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained",
   "dateRaised": "2026-03-23",
   "deadline": "2026-09-19",
-  "workingRemarks": "planned as revision2026b step RG13.9 (triage 2026-10-07)"
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The order of the axes for 1 and 2 constrained rotations of ObjectJointGeneric is given in tables.",
+  "resolvedInVersion": "1.13.507"
 }

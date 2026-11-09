@@ -68,7 +68,8 @@ public: //made public for simpler access via pybind; nevertheless, C++ functions
 	Index stepsSinceLastStepSizeReduction = 0; //!< steps since the step size was reduced; an increase waits for adaptiveStepRecoverySteps of them
 	Real pausedSeconds = 0.; //!< wall-clock time the simulation was paused (SPACE, pauseAfterEachStep), not counted by the real-time mode (#2905)
 	CSystemState outputEndOfStepState; //!< the state at the end of the step while the output within the step is written (#3286)
-	ArrayIndex outputLinearODE2; //!< 1 for the ODE2 coordinates interpolated linearly in the output within the step: those of Lie group nodes (#3286)
+	ArrayIndex outputLinearODE2; //!< 1 for the ODE2 coordinates not interpolated as polynomials in the output within the step: the rotations of Lie group nodes (#3286, #3389)
+	ArrayIndex outputLieGroupNodes; //!< the Lie group nodes, whose rotations are interpolated in the Lie algebra in the output within the step (#3389)
 public:
 	CSolverBase()
 	{

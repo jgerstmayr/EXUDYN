@@ -1,0 +1,15 @@
+{
+  "number": 625,
+  "title": "ObjectRigidBody",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "revise equations of motion and add figure for COM and local coordinates",
+  "dateRaised": "2021-04-15",
+  "deadline": "2021-06-14",
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The page of ObjectRigidBody has a figure of the global frame, the body frame at the reference point and the center of mass.",
+  "resolvedInVersion": "1.13.503"
+}

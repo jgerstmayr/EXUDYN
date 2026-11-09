@@ -1,0 +1,15 @@
+{
+  "number": 3392,
+  "title": "quadrupedsFloatingBase.py: ANYmal is drawn with only parts of its legs",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "The legs of ANYmal in the example are drawn incompletely. To be located and fixed.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "quadrupedsFloatingBase.py draws all links and the body of ANYmal.",
+  "resolvedInVersion": "1.13.511"
+}

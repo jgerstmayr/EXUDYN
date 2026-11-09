@@ -1,0 +1,15 @@
+{
+  "number": 627,
+  "title": "ObjectContactFrictionCircleCable2D",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "add description, connector equations and figure",
+  "dateRaised": "2021-04-21",
+  "deadline": "2021-06-20",
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "no longer applies: the page of ObjectContactFrictionCircleCable2D has the description, the connector equations and the figure; kept short as it is (maintainer 2026-11-09).",
+  "resolvedInVersion": "1.13.505"
+}

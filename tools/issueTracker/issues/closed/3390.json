@@ -1,0 +1,15 @@
+{
+  "number": 3390,
+  "title": "pathPlanningUR5.py: the planned path, traces, three scenes and the URDF graphics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "MEDIUM",
+  "description": "The motion goes through an intermediate configuration far off the goal. Decided: check and if needed revise the planner; sensor traces and the planned trajectory as ground object with spheres at the end of each part; two further more challenging scenes in the file; shadow and the URDF graphics of the UR5, the collision shapes switchable; more comments on the path planning and trajectories.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ProfilePTP(syncAccTimes=True) is implemented and used by Trajectory.FromWaypoints, so that the motion between waypoints is their straight line in the coordinates; ShortcutPath connects points anywhere on the path. pathPlanningUR5.py has three scenes, the planned path, the sensor trace and the meshes of the UR5.",
+  "resolvedInVersion": "1.13.509"
+}

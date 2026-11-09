@@ -2541,15 +2541,19 @@ void CSolverBase::SetStateWithinStep(CSystem& computationalSystem, Real T)
 	Index nODE2 = s1.ODE2Coords.NumberOfItems();
 	if (outputLinearODE2.NumberOfItems() != nODE2)
 	{
-		//the velocities of Lie group nodes are not the derivatives of their coordinates: these interpolated linearly
+		//the angular velocities of Lie group nodes are not the derivatives of their rotation coordinates
 		outputLinearODE2.SetNumberOfItems(nODE2);
 		outputLinearODE2.SetAll(0);
-		for (auto* node : computationalSystem.GetSystemData().GetCNodes())
+		outputLieGroupNodes.SetNumberOfItems(0);
+		const auto& nodes = computationalSystem.GetSystemData().GetCNodes();
+		for (Index n = 0; n < nodes.NumberOfItems(); n++)
 		{
-			if (EXUstd::IsOfType(node->GetType(), Node::LieGroupWithDirectUpdate))
+			if (EXUstd::IsOfType(nodes[n]->GetType(), Node::LieGroupWithDirectUpdate))
 			{
-				Index off = node->GetGlobalODE2CoordinateIndex();
-				for (Index j = 0; j < node->GetNumberOfODE2Coordinates(); j++) { outputLinearODE2[off + j] = 1; }
+				const CNodeRigidBody& node = (const CNodeRigidBody&)(*nodes[n]);
+				Index off = node.GetGlobalODE2CoordinateIndex();
+				for (Index j = node.GetNumberOfDisplacementCoordinates(); j < node.GetNumberOfODE2Coordinates(); j++) { outputLinearODE2[off + j] = 1; }
+				outputLieGroupNodes.Append(n);
 			}
 		}
 	}
@@ -2571,16 +2575,38 @@ void CSolverBase::SetStateWithinStep(CSystem& computationalSystem, Real T)
 
 	for (Index i = 0; i < nODE2; i++)
 	{
-		if (outputLinearODE2[i])
+		if (outputLinearODE2[i]) { continue; }
+		Real q0 = s0.ODE2Coords[i], v0 = s0.ODE2Coords_t[i], q1 = s1.ODE2Coords[i], v1 = s1.ODE2Coords_t[i];
+		s.ODE2Coords[i] = h00 * q0 + h * h10 * v0 + h01 * q1 + h * h11 * v1;
+		s.ODE2Coords_t[i] = (d00 * q0 + d01 * q1) / h + d10 * v0 + d11 * v1;
+	}
+
+	//the rotations of Lie group nodes: R0*Exp(psi), psi the cubic Hermite polynomial of the rotation relative to the start of the step, by the local angular velocities (#3389)
+	for (Index n : outputLieGroupNodes)
+	{
+		const CNodeRigidBody& node = (const CNodeRigidBody&)(*computationalSystem.GetSystemData().GetCNodes()[n]);
+		Index nDisplacement = node.GetNumberOfDisplacementCoordinates();
+		Index off = node.GetGlobalODE2CoordinateIndex() + nDisplacement;
+		LinkedDataVector reference = node.GetReferenceCoordinateVector();
+		Vector3D theta0, theta1, omega0, omega1;
+		for (Index j = 0; j < 3; j++)
 		{
-			s.ODE2Coords[i] = (1. - x) * s0.ODE2Coords[i] + x * s1.ODE2Coords[i];
-			s.ODE2Coords_t[i] = (1. - x) * s0.ODE2Coords_t[i] + x * s1.ODE2Coords_t[i];
+			theta0[j] = reference[nDisplacement + j] + s0.ODE2Coords[off + j];
+			theta1[j] = reference[nDisplacement + j] + s1.ODE2Coords[off + j];
+			omega0[j] = s0.ODE2Coords_t[off + j];
+			omega1[j] = s1.ODE2Coords_t[off + j];
 		}
-		else
+		Vector3D relativeRotation = EXUlie::LogSO3Vector(EXUlie::ExpSO3(theta0).GetTransposed() * EXUlie::ExpSO3(theta1));
+		Vector3D psi_x1 = h * (EXUlie::TExpSO3Inv(relativeRotation) * omega1); //the derivative of psi by x at the end
+		Vector3D psi_x0 = h * omega0;
+		Vector3D psi = h01 * relativeRotation + h10 * psi_x0 + h11 * psi_x1;
+		Vector3D psi_x = d01 * relativeRotation + d10 * psi_x0 + d11 * psi_x1;
+		Vector3D theta = EXUlie::CompositionRotationVector(theta0, psi);
+		Vector3D omega = (1. / h) * (EXUlie::TExpSO3(psi) * psi_x);
+		for (Index j = 0; j < 3; j++)
 		{
-			Real q0 = s0.ODE2Coords[i], v0 = s0.ODE2Coords_t[i], q1 = s1.ODE2Coords[i], v1 = s1.ODE2Coords_t[i];
-			s.ODE2Coords[i] = h00 * q0 + h * h10 * v0 + h01 * q1 + h * h11 * v1;
-			s.ODE2Coords_t[i] = (d00 * q0 + d01 * q1) / h + d10 * v0 + d11 * v1;
+			s.ODE2Coords[off + j] = theta[j] - reference[nDisplacement + j];
+			s.ODE2Coords_t[off + j] = omega[j];
 		}
 	}
 	Linear(s0.ODE2Coords_tt, s1.ODE2Coords_tt, s.ODE2Coords_tt);

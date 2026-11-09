@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.502.dev1
+- Exudyn version = 1.13.511.dev1
 - last change = 2026-11-09
-- Number of issues = 3389
-- Number of resolved issues = 3279 (502 in current version)
+- Number of issues = 3393
+- Number of resolved issues = 3288 (511 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9116,10 +9116,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
   - **remarks:** planned as revision2026b step RG12.44 (triage 2026-10-07)
   - date raised: 2026-04-17
-- `DOCU` `LOW EFF` GenericJoint (#2325)
-  - description: improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
-  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
-  - date raised: 2026-03-23
 - `EXTENSION` `HIGH EFF` Add ObjectJointSliding (#2317)
   - description: Add implementation and tests for SlidingJoint with thick ANCF beam
   - **remarks:** planned as revision2026b step RG4.22 (triage 2026-10-07)
@@ -9313,10 +9309,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: make sparse version similar to numerically differentiated single objects in JacobianODE2RHS
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2022-03-15
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` ALEANCFCable2D (#987)
-  - description: add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)
-  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
-  - date raised: 2022-03-15
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#937)
   - description: add option to draw contact forces
   - date raised: 2022-02-10
@@ -9382,18 +9374,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: implement CollectCurrentNodeData for NodeRigidBody2D, optimize CollectCurrentNodeData for all rigid body nodes
   - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
   - date raised: 2021-07-08
-- `DOCU` `MEDIUM EFF` ObjectContactFrictionCircleCable2D (#627)
-  - description: add description, connector equations and figure
-  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
-  - date raised: 2021-04-21
-- `DOCU` `MEDIUM EFF` GenericJoint (#626)
-  - description: add more description on constraint configurations, coordinate transformations and figures for GenericJoint
-  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
-  - date raised: 2021-04-21
-- `DOCU` `MEDIUM EFF` ObjectRigidBody (#625)
-  - description: revise equations of motion and add figure for COM and local coordinates
-  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
-  - date raised: 2021-04-15
 - `EXTENSION` `HIGH EFF` sensor dependencies (#614)
   - description: add functionality to compute sensor-dependencies (for LTG computation), used in controller connectors? alternatively add dependentNodes to existing connectors
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

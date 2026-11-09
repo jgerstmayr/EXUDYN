@@ -1,0 +1,15 @@
+{
+  "number": 3389,
+  "title": "Lie group nodes in the output within the step: cubic Hermite polynomial in the Lie algebra",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "The output within the step interpolates all coordinates of NodeRigidBodyRotVecLG linearly, component by component, which is no geodesic and wrong when the rotation vector jumps at an angle of 2 pi within the step. Decided: the displacements by the cubic Hermite polynomial as all other coordinates; the rotation R0 Exp(psi) with psi the cubic Hermite polynomial of the relative rotation Log(R0^T R1), with the angular velocities at both ends.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The output of a Lie group node within a step interpolates its rotation by a cubic Hermite polynomial in the Lie algebra and its displacements by the cubic polynomial of the other coordinates; also correct when the rotation vector jumps at 2 pi.",
+  "resolvedInVersion": "1.13.508"
+}

@@ -925,6 +925,13 @@ definitions.append(ItemDefinition(
     remember that derivatives for angular velocities can also be done in the local frame. In case of Euler parameters and the Lie-group rotation vector we find that
     $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$.
     
+    (fig-objectrigidbody-frames)=
+    ```{figure} /docs/figures/ObjectRigidBodyFrames.*
+    :width: 450
+
+    The global frame $0$, the body frame $b$ at the reference point, given by the node with position $\mathbf{p}$, and the center of mass at $\LU{b}{\bv_{COM}}$ in the body frame.
+    ```
+
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
     #### Equations of motion for ABRV:COM
@@ -5764,8 +5771,8 @@ definitions.append(ItemDefinition(
     If you apply a LoadForce using a MarkerPosition, the force is acting on the beam finite element, but not on the axially moving coordinate.
     In contrast to the latter, the ObjectJointALEMoving2D and the MarkerBodyMass are acting on the moving coordinate as well.
 
-    A detailed paper on this element is yet under submission, but a similar formulation can be found in [CITE:PechsteinGerstmayr2013ale] and 
-    the underlying beam element is identical to ObjectANCFCable2D.
+    In the equations of motion, the element adds to those of ObjectANCFCable2D the inertia terms of the material moving with the Eulerian velocity, which couple the nodal accelerations with the one of the ALE coordinate, and the convective terms, which are proportional to this velocity and to its square; the formulation is given in [CITE:PechsteinGerstmayr2013ale], and the underlying beam element is identical to ObjectANCFCable2D.
+    The local position of the output variables is fixed on the element and does not move with the material; `Velocity` includes the Eulerian term, the axial motion itself is the coordinate of the ALE node.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
@@ -16583,7 +16590,15 @@ definitions.append(ItemDefinition(
                         \end{aligned}
                         $$
 
-    If **2 rotation axes are constrained** (revolute joint), e.g., $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$, the index 3 constraint equations read
+    If **2 rotation axes are constrained** (revolute joint), the free axis $f$ of $J0$ stays normal to the two locked axes $l_0$, $l_1$ of $J1$, in the rows $l_0$ and $l_1$ of the equations:
+
+    | `constrainedAxes[3:6]` | axis of rotation $f$ | locked axes $l_0$, $l_1$ |
+    |---|---|---|
+    | $[0,1,1]$ | $x$ | $y$, $z$ |
+    | $[1,0,1]$ | $y$ | $x$, $z$ |
+    | $[1,1,0]$ | $z$ | $x$, $y$ |
+
+    For example, $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$ gives the index 3 constraint equations
 
     $$
                         \begin{aligned}
@@ -16593,7 +16608,15 @@ definitions.append(ItemDefinition(
                         \end{aligned}
                         $$
 
-    If **1 rotation axis is constrained** (universal joint), e.g.,  $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$, the index 3 constraint equations read
+    If **1 rotation axis is constrained** (universal joint), one equation keeps the axis $a$ of $J0$ normal to the axis $b$ of $J1$; these two are the axes of the two rotations of the joint, and the equation is the row of the locked axis $l$:
+
+    | `constrainedAxes[3:6]` | locked axis $l$ | axis $a$ of $J0$ | axis $b$ of $J1$ |
+    |---|---|---|---|
+    | $[1,0,0]$ | $x$ | $y$ | $z$ |
+    | $[0,1,0]$ | $y$ | $x$ | $z$ |
+    | $[0,0,1]$ | $z$ | $x$ | $y$ |
+
+    For example, $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$ gives the index 3 constraint equations
 
     $$
                         \begin{aligned}

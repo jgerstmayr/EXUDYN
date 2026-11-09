@@ -128,14 +128,14 @@ def PlanJointPath(collisionModel, qStart, qGoal, jointLimits=None, margin=0., ma
 
 
 def ShortcutPath(collisionModel, path, margin=0., edgeStep=0.02, iterations=200, seed=None):
-    """A shorter path: random pairs of waypoints are connected directly wherever the straight motion in joint space is free.
+    """A shorter path: random points anywhere on the path are connected directly wherever the straight motion in joint space is free, then waypoints which are not needed are left out.
 
     Args:
         collisionModel: the exudyn.cUtilities.CollisionModel of the robot and its environment
         path: the waypoints, one per row, as returned by PlanJointPath
         margin: the distance which the shapes keep
         edgeStep: the step of the collision check along an edge
-        iterations: the number of random pairs
+        iterations: the number of random pairs of points
         seed: the seed of the random numbers, for a repeatable result
 
     Returns:
@@ -143,12 +143,30 @@ def ShortcutPath(collisionModel, path, margin=0., edgeStep=0.02, iterations=200,
     """
     waypoints = [np.array(q, dtype=float) for q in path]
     rng = np.random.default_rng(seed)
-    for iteration in range(iterations):
+    clearance = 1e-3 #a shortcut touches the obstacles between the points of its check otherwise
+
+    def PointAt(length, positions):
+        """the edge containing the arc length, and the point on it"""
+        i = min(int(np.searchsorted(positions, length, side='right')) - 1, len(waypoints) - 2)
+        fraction = (length - positions[i])/max(positions[i + 1] - positions[i], 1e-14)
+        return (i, waypoints[i] + fraction*(waypoints[i + 1] - waypoints[i]))
+
+    for iteration in range(iterations): #points inside the edges remove the corners that the waypoints of a tree have
         if len(waypoints) < 3:
             break
-        (i, j) = np.sort(rng.choice(len(waypoints), 2, replace=False))
-        if j - i >= 2 and collisionModel.IsEdgeFree(waypoints[i], waypoints[j], margin, edgeStep):
-            waypoints = waypoints[:i + 1] + waypoints[j:]
+        positions = np.concatenate([[0.], np.cumsum([float(cMath.norm(b - a)) for (a, b) in zip(waypoints[:-1], waypoints[1:])])])
+        (i, qA) = PointAt(rng.uniform(0., positions[-1]), positions)
+        (j, qB) = PointAt(rng.uniform(0., positions[-1]), positions)
+        if i > j:
+            (i, j, qA, qB) = (j, i, qB, qA)
+        if i != j and collisionModel.IsEdgeFree(qA, qB, margin + clearance, edgeStep):
+            waypoints = waypoints[:i + 1] + [qA, qB] + waypoints[j + 1:]
+    k = 1
+    while k < len(waypoints) - 1: #each waypoint less is a segment less of the trajectory
+        if collisionModel.IsEdgeFree(waypoints[k - 1], waypoints[k + 1], margin + clearance, edgeStep):
+            del waypoints[k]
+        else:
+            k += 1
     return np.array(waypoints)
 
 
@@ -210,8 +228,8 @@ def TrajectoryFromPath(collisionModel, path, maxVelocities, maxAccelerations, ma
         if blendFactor == 0.:
             break
         times = trajectory.GetTimes()
-        points = int(np.ceil((times[-1] - times[0])*np.max(maxVelocities)/edgeStep)) + 1
-        if all(collisionModel.IsFree(trajectory.Evaluate(t)[0], margin) for t in np.linspace(times[0], times[-1], points)):
+        points = 4*int(np.ceil((times[-1] - times[0])*np.max(maxVelocities)/edgeStep)) + 1 #finer than a path, as a blend is curved and its corners are close to the obstacles
+        if all(collisionModel.IsFree(trajectory.Evaluate(t)[0], margin + 1e-3) for t in np.linspace(times[0], times[-1], points)):
             break
     return trajectory
 

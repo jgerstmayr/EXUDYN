@@ -96,8 +96,8 @@ to the nodal coordinates, the cable can be fixed, while still the axial componen
 If you apply a LoadForce using a MarkerPosition, the force is acting on the beam finite element, but not on the axially moving coordinate.
 In contrast to the latter, the ObjectJointALEMoving2D and the MarkerBodyMass are acting on the moving coordinate as well.
 
-A detailed paper on this element is yet under submission, but a similar formulation can be found in [PechsteinGerstmayr2013ale] and
-the underlying beam element is identical to ObjectANCFCable2D.
+In the equations of motion, the element adds to those of ObjectANCFCable2D the inertia terms of the material moving with the Eulerian velocity, which couple the nodal accelerations with the one of the ALE coordinate, and the convective terms, which are proportional to this velocity and to its square; the formulation is given in [PechsteinGerstmayr2013ale], and the underlying beam element is identical to ObjectANCFCable2D.
+The local position of the output variables is fixed on the element and does not move with the material; `Velocity` includes the Eulerian term, the axial motion itself is the coordinate of the ALE node.
 
 (miniexample-objectaleancfcable2d)=
 ## Mini example
