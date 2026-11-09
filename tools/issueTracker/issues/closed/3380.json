@@ -1,0 +1,15 @@
+{
+  "number": 3380,
+  "title": "The collision shapes of RobotLink and the collision check in C++",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "For the path planning: RobotLink.collisionShapes, Robot.GetCollisionModel, and exudyn.cUtilities.CollisionModel with MinimumDistance, IsFree and IsEdgeFree on the distance kernels of the contact primitives; design robotPlanning.md section 4.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 01:55",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Robot.GetCollisionModel and exudyn.cUtilities.CollisionModel check a robot against itself and obstacles in C++.",
+  "resolvedInVersion": "1.13.492"
+}

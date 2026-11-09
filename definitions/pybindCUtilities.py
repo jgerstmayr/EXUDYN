@@ -169,6 +169,28 @@ module.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const P
                            description='the string representation of the ConvexShape', returnType='str', isLambdaFunction=True)
 module.DefPyFinishClass('ConvexShape')
 
+#the collision check of a robot, for path planning (#3380)
+classStr = 'PyCollisionModel'
+module.DefPyStartClass(classStr, 'CollisionModel', 'A CollisionModel is the collision check of a robot and its environment in C++: a KinematicChain with ConvexShape on its links and base, and obstacles; a link is not checked against its parent; Robot.GetCollisionModel builds it from the collision shapes of the links',
+                       subSection=True, labelName='sec:cutilities-collisionmodel', forbidPythonConstructor=True)
+module.DefStartTable('CollisionModel')
+module.CppCode('        .def(py::init<const PyKinematicChain&>(), py::arg("chain"))\n')
+module.AddDocuList(['CollisionModel(chain): the collision model of a KinematicChain, which is copied'])
+for (name, argList, defaultArgs, argTypes, cmReturnType, description) in [
+    ('AddLinkShape', ['linkIndex', 'shape', 'HT'], ['', '', 'py::none()'], ['int', 'ConvexShape', 'HT'], 'None', 'add a shape on link linkIndex (-1 the base) in the frame HT relative to the link frame; None for the link frame'),
+    ('AddObstacle', ['shape', 'HT'], ['', 'py::none()'], ['ConvexShape', 'HT'], 'None', 'add a shape fixed in the world, in the global frame HT'),
+    ('ExcludeLinkPair', ['link0', 'link1'], [], ['int', 'int'], 'None', 'the pair of links is not checked, in addition to each link and its parent; -1 the base'),
+    ('NumberOfShapes', [], [], [], 'int', 'the number of shapes on the links and the base and of obstacles'),
+    ('MinimumDistance', ['q'], [], [vector], 'float', 'the smallest signed distance over all checked pairs at the joint coordinates q, negative for a penetration'),
+    ('IsFree', ['q', 'margin'], ['', '0.'], [vector, 'float'], 'bool', 'True if all checked distances at the joint coordinates q are larger than margin'),
+    ('IsEdgeFree', ['q0', 'q1', 'margin', 'maxStep'], ['', '', '0.', '0.02'], [vector, vector, 'float', 'float'], 'bool', 'True if the straight motion in joint space from q0 to q1 is free, checked at steps of at most maxStep in any coordinate'),
+    ]:
+    module.DefPyFunctionAccess(cClass=classStr, pyName=name, cName=name, description=description,
+                               argList=argList, defaultArgs=defaultArgs, argTypes=argTypes, returnType=cmReturnType)
+module.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyCollisionModel &item) {\n            return item.ToString(); }',
+                           description='the string representation of the CollisionModel', returnType='str', isLambdaFunction=True)
+module.DefPyFinishClass('CollisionModel')
+
 module.DefPyFunctionAccess(cClass='', pyName='Distance', cName='PyCUtilities::Distance',
                            description='the signed distance of two ConvexShape in the frames HT0 and HT1 (exu.HT or 4x4 matrix) as a tuple (distance, point0, point1, normal): distance negative for a penetration (minus the penetration depth), point0 and point1 the closest points of the shapes (the deepest points of a penetration), normal the unit vector from shape 0 to shape 1, all global; by GJK on the cores (the sphere a point, the capsule a segment, their radii subtracted) and EPA where the cores overlap, to the rounding for spheres, capsules, boxes, triangles and points; a cylinder, whose curved side GJK and EPA approach slowly, is refined by alternating projections of the closest points (separated) and by moving shape 1 out along the normal (penetrating), to about 1e-12 of the size of the shapes when they are apart and 1e-7 within about 1e-6 of contact; with analytic=True a sphere and a cylinder by the closed formula',
                            argList=['shape0', 'HT0', 'shape1', 'HT1', 'analytic'], defaultArgs=['', '', '', '', 'true'],

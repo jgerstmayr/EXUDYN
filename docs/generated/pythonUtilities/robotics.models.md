@@ -62,7 +62,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **notes**: define myRobot kinematics, UR5 Universal Robotics, Standard DH-parameters: [theta, d, a, alpha], according to P. Corke, Links modeld as cylindrical tubes, Inertia from Parham M. Kebria2016 / Kuefeta2014
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`systemContainerComputeOnlyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/systemContainerComputeOnlyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM), [`systemContainerComputeOnlyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/systemContainerComputeOnlyTest.py) (TM)
 
 
 (sec-models-manipulatorpuma560)=
@@ -147,7 +147,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L937)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L938)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

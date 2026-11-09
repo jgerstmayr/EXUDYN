@@ -6431,6 +6431,10 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg21-2"></a>
+### RG21.2 - the collision shapes of RobotLink and Robot, cUtilities.CollisionModel (2026-11-09, #3380)
+- RobotLink.collisionShapes (the capsules of robotics.models or tuples of ConvexShape and HT), Robot.GetCollisionModel(obstacles, baseShapes); C++ class PyCollisionModel on EGeometry::ConvexDistance: MinimumDistance, IsFree, IsEdgeFree, with a bounding sphere filter. 2.1 us per MinimumDistance of the UR5 with 2 obstacles at its ready configuration. robotCollisionModelTest.py. ShapesFromLinks of the design is left out for now.
+    
 <a id="rg19-14-2"></a>
 ### RG19.14.2 - ANYmal and Spot on the floating base in one model (2026-11-09, #3360)
 - quadrupedsFloatingBase.py: both as trees of 12 joints on floating bases, feet on spheres of GeneralContact with explicit integration, standing and lowering the body; Spot only if the data of CommonData_git are there, its masses assumed. The Mars rover is not added (no license). spotModel.py with its 6 dummy joints stays as it is.

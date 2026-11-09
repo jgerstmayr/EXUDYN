@@ -26,6 +26,7 @@
 
 class PyKinematicChain
 {
+	friend class PyCollisionModel; //its coordinates, parents and base frame (#3380)
 	Index numberOfLinks;
 	ArrayIndex jointTypes;			//!< 0, 1, 2: revolute about x, y, z; 3, 4, 5: prismatic along x, y, z
 	ArrayIndex parents;				//!< the parent link, -1 for the base
@@ -164,6 +165,8 @@ public:
 	}
 
 	Index NumberOfLinks() const { return numberOfLinks; }
+	Index GetParent(Index link) const { return parents[link]; }
+	const HomogeneousTransformation& GetBaseHT() const { return baseHT; }
 
 	//! the joint frames (after the joint motion) and the link frames of all links
 	void ComputeFrames(const Vector& q, ResizableArray<HomogeneousTransformation>& jointFrames,

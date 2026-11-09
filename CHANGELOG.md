@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 474 | 1.13.491 |
+| 1.13 | Newborn | 475 | 1.13.492 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.492** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The collision shapes of RobotLink and the collision check in C++ (#3380)
+  - description: For the path planning: RobotLink.collisionShapes, Robot.GetCollisionModel, and exudyn.cUtilities.CollisionModel with MinimumDistance, IsFree and IsEdgeFree on the distance kernels of the contact primitives; design robotPlanning.md section 4.
+  - **notes:** Robot.GetCollisionModel and exudyn.cUtilities.CollisionModel check a robot against itself and obstacles in C++.
+  - date resolved: **2026-11-09 01:55**, date raised: 2026-11-09
 - **1.13.491** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Spot model on the floating base of Robot, ANYmal and the Mars rover imported (#3360)
   - description: spotModel.py builds Spot by its own code. Decided: adapted to the floating base of Robot; ANYmal and the Mars rover imported the same way.
   - **notes:** The example quadrupedsFloatingBase.py has ANYmal and Spot on floating bases in one model, with contact at their feet. The Mars rover is not added, as it has no license file.

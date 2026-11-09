@@ -253,11 +253,29 @@ class VRobotLink:
         return str(self)
 
 
+def _ConvexShapeAndHT(shape):
+    """(ConvexShape, HT) of a collision shape, a dict of a capsule or a tuple which is returned as it is (#3380)"""
+    if isinstance(shape, dict):
+        if shape['type'] != 'capsule':
+            raise ValueError("a collision shape given by a dict must be of type 'capsule', not " + str(shape['type']))
+        p = np.array(shape['pAxis'], dtype=float)
+        v = np.array(shape['vAxis'], dtype=float)
+        length = float(cMath.norm(v))
+        z = v/length if length > 0. else np.array([0., 0., 1.])
+        x = np.array([1., 0., 0.]) if abs(z[0]) < 0.9 else np.array([0., 1., 0.])
+        y = np.cross(z, x)
+        y = y/cMath.norm(y)
+        x = np.cross(y, z)
+        return (exudyn.cUtilities.ConvexShape('Capsule', radius=shape['radius'], length=length),
+                exudyn.HT(rotation=np.column_stack([x, y, z]), translation=p + 0.5*v))
+    return shape
+
+
 class RobotLink:
     """class to define one link of a robot
     """
     def __init__(self, mass, COM, inertia, localHT=None, jointType='Rz', parent=-2, preHT=None, PDcontrol=(None,None), visualization=VRobotLink(),
-                 jointLimits=None, viscousFriction=0., coulombFriction=0., endStopStiffness=0., endStopDamping=0.):
+                 jointLimits=None, viscousFriction=0., coulombFriction=0., endStopStiffness=0., endStopDamping=0., collisionShapes=None):
         """initialize robot link
 
         Args:
@@ -275,6 +293,7 @@ class RobotLink:
             coulombFriction: the Coulomb friction torque (force) of the joint, in Nm or N, regularized below Robot.frictionRegularization
             endStopStiffness: the stiffness of the end stops at the jointLimits, in Nm/rad or N/m
             endStopDamping: the damping of the end stops, in Nm/(rad/s) or N/(m/s)
+            collisionShapes: a list of shapes of the link for Robot.GetCollisionModel, each a dict of a capsule as in exudyn.robotics.models or a tuple (ConvexShape, HT) (#3380)
         """
         self.mass = mass
         self.COM = np.array(COM)
@@ -288,6 +307,7 @@ class RobotLink:
             self.PDcontrol = PDcontrol
         #friction and end stops, realized in both models of Robot by a CoordinateSpringDamperExt on the joint coordinate (#3270)
         self.jointLimits = None if jointLimits is None else [float(jointLimits[0]), float(jointLimits[1])]
+        self.collisionShapes = [] if collisionShapes is None else list(collisionShapes) #for GetCollisionModel (#3380)
         self.viscousFriction = viscousFriction
         self.coulombFriction = coulombFriction
         self.endStopStiffness = endStopStiffness
@@ -860,6 +880,30 @@ class Robot:
                                                 baseHT=self.base.HT, toolHT=self.tool.HT, gravity=self.gravity,
                                                 inertias=[link.inertia for link in self.links])
 
+    def GetCollisionModel(self, obstacles=None, baseShapes=None):
+        """the collision check of the robot and its environment in C++, an exudyn.cUtilities.CollisionModel, from the collisionShapes
+        of its links (#3380); create it again after the robot is changed
+
+        Args:
+            obstacles: None or a list of shapes in the global frame
+            baseShapes: None or a list of shapes on the base, in its frame
+
+        Returns:
+            the CollisionModel
+
+        Note:
+            a shape is a dict {'type': 'capsule', 'pAxis': ..., 'vAxis': ..., 'radius': ...} as in exudyn.robotics.models, or a tuple (ConvexShape, HT)
+        """
+        model = exudyn.cUtilities.CollisionModel(self.GetKinematicChain())
+        for shape in ([] if baseShapes is None else baseShapes):
+            model.AddLinkShape(-1, *_ConvexShapeAndHT(shape))
+        for (i, link) in enumerate(self.links):
+            for shape in link.collisionShapes:
+                model.AddLinkShape(i, *_ConvexShapeAndHT(shape))
+        for shape in ([] if obstacles is None else obstacles):
+            model.AddObstacle(*_ConvexShapeAndHT(shape))
+        return model
+
     def LinkHT(self, q):
         """compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different! The C++ version is KinematicChain.LinkHT of GetKinematicChain()
         """
@@ -1286,9 +1330,9 @@ class Robot:
         Args:
             mbs: the multibody system, which will be extended
             name: object name in KinematicTree; transferred to KinematicTree, default = ''
+            forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
             floatingBase: None for a base fixed at base.HT; else a RigidBodyInertia of the base, which becomes a free rigid body with a Lie group node
                 at base.HT, with the graphics of the base, on which the tree moves (#3359); the initial velocity of the base is zero
-            forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
 
         Returns:
             the function returns a dictionary containing 'nodeBase' and 'objectBase' with a floating base (else None), 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None, 'jointFrictionList' and 'jointEndStopList': per link the CoordinateSpringDamperExt of its friction and of its end stops, or None

@@ -4,7 +4,7 @@ from typing import Union
 from numpy.typing import ArrayLike, NDArray
 from exudyn import HT, Twist
 
-__all__ = ['ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis', 'SymmetricBasisRotationJacobian', 'Skew', 'Skew2Vec', 'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix', 'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D', 'PointVelocity', 'LocalTwist', 'RelativeTwist', 'Distance', 'KinematicChain', 'ConvexShape']
+__all__ = ['ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis', 'SymmetricBasisRotationJacobian', 'Skew', 'Skew2Vec', 'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix', 'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D', 'PointVelocity', 'LocalTwist', 'RelativeTwist', 'Distance', 'KinematicChain', 'ConvexShape', 'CollisionModel']
 
 def ComputeOrthonormalBasisVectors(vector0: ArrayLike) -> NDArray: 
     """The normalized vector0 and two normals to it, as the rows of a 3x3 array (unpacked as [v0, n1, n2] = ...); the normals are not unique; for vector0 = [0,0,0] the rows are vector0 and the x and y axes; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code."""
@@ -164,6 +164,34 @@ class ConvexShape:
         ...
     def __repr__(self) -> str: 
         """The string representation of the ConvexShape."""
+        ...
+
+#stub information for class CollisionModel functions
+class CollisionModel:
+    """A CollisionModel is the collision check of a robot and its environment in C++: a KinematicChain with ConvexShape on its links and base, and obstacles; a link is not checked against its parent; Robot.GetCollisionModel builds it from the collision shapes of the links"""
+    def AddLinkShape(self, linkIndex: int, shape: ConvexShape, HT: HT=None) -> None: 
+        """Add a shape on link linkIndex (-1 the base) in the frame HT relative to the link frame; None for the link frame."""
+        ...
+    def AddObstacle(self, shape: ConvexShape, HT: HT=None) -> None: 
+        """Add a shape fixed in the world, in the global frame HT."""
+        ...
+    def ExcludeLinkPair(self, link0: int, link1: int) -> None: 
+        """The pair of links is not checked, in addition to each link and its parent; -1 the base."""
+        ...
+    def NumberOfShapes(self) -> int: 
+        """The number of shapes on the links and the base and of obstacles."""
+        ...
+    def MinimumDistance(self, q: ArrayLike) -> float: 
+        """The smallest signed distance over all checked pairs at the joint coordinates q, negative for a penetration."""
+        ...
+    def IsFree(self, q: ArrayLike, margin: float=0.) -> bool: 
+        """True if all checked distances at the joint coordinates q are larger than margin."""
+        ...
+    def IsEdgeFree(self, q0: ArrayLike, q1: ArrayLike, margin: float=0., maxStep: float=0.02) -> bool: 
+        """True if the straight motion in joint space from q0 to q1 is free, checked at steps of at most maxStep in any coordinate."""
+        ...
+    def __repr__(self) -> str: 
+        """The string representation of the CollisionModel."""
         ...
 def Distance(shape0: ConvexShape, HT0: HT, shape1: ConvexShape, HT1: HT, analytic: bool=True) -> tuple[float, NDArray, NDArray, NDArray]: 
     """The signed distance of two ConvexShape in the frames HT0 and HT1 (exu.HT or 4x4 matrix) as a tuple (distance, point0, point1, normal): distance negative for a penetration (minus the penetration depth), point0 and point1 the closest points of the shapes (the deepest points of a penetration), normal the unit vector from shape 0 to shape 1, all global; by GJK on the cores (the sphere a point, the capsule a segment, their radii subtracted) and EPA where the cores overlap, to the rounding for spheres, capsules, boxes, triangles and points; a cylinder, whose curved side GJK and EPA approach slowly, is refined by alternating projections of the closest points (separated) and by moving shape 1 out along the normal (penetrating), to about 1e-12 of the size of the shapes when they are apart and 1e-7 within about 1e-6 of contact; with analytic=True a sphere and a cylinder by the closed formula."""

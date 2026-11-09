@@ -906,6 +906,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None, initialConfiguration=None, fr
                                jointType=link['jointType'],
                                preHT=link['preHT'],
                                parent=link.get('parent', i - 1), #a tree (#3375)
+                               collisionShapes=link.get('collisionShapes'), #(#3380)
                                PDcontrol = PDcontrol,
                                visualization=rob.VRobotLink(linkColor=graphics.colorList[i%16]),
                                jointLimits=link.get('jointLimits'), **_LinkFriction(link, friction),

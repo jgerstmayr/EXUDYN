@@ -28,7 +28,7 @@ __all__ = [
     'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t',
     'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX',
     'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D', 'PointVelocity', 'LocalTwist', 'RelativeTwist',
-    'KinematicChain', 'ConvexShape', 'Distance',
+    'KinematicChain', 'ConvexShape', 'CollisionModel', 'Distance',
     ]
 
 _cUtilities = _compiledModule._cUtilities
@@ -68,4 +68,5 @@ LocalTwist = _cUtilities.LocalTwist
 RelativeTwist = _cUtilities.RelativeTwist
 KinematicChain = _cUtilities.KinematicChain #the kinematics of a robot (#3259)
 ConvexShape = _cUtilities.ConvexShape #convex shapes and their distance (#3317)
+CollisionModel = _cUtilities.CollisionModel #the collision check of a robot (#3380)
 Distance = _cUtilities.Distance
