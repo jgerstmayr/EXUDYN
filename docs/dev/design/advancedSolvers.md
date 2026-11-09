@@ -298,7 +298,7 @@ IIIC-end and IIIA-GGL dropped; the formulas of the error estimates in this file 
 
 Decided (2026-11-05): LobattoIIIA4 (the constraints at the end), LobattoIIIC4-GGL and Radau3 go into C++ next to
 TrapezoidalGGL, with the automatic step size for TrapezoidalGGL and one Lobatto method; the other variants of section
-3.2 are not implemented; no Python interface of the phases of the new solvers (cppSolverStructure.md section 8).
+3.2 are not implemented; no Python interface of the phases of the new solvers (docs/dev/internals/solvers.md).
 
 Fifth question (2026-11-05): index 3 at the stages alone, without velocity constraints - measured (section 3.2):
 the positions of the full order, the velocities and the multipliers not; the end constraints kept, as they need
@@ -335,6 +335,6 @@ measurement; the estimate from the formulas evaluated without a solve - done wit
 | RG20.3 Adjoint sensitivities | .1 done, .2 not proposed | |
 | RG20.4 Output within the step | .3 done (Python, #3241), .2 open (C++) | |
 | RG20.5 Explicit solvers with constraints | done | fixed coordinates (#3238), Euler parameters, the C++ stages (#3240) |
-| RG20.6 The structure of the C++ solvers | .1 done (design cppSolverStructure.md), .2 open | the analysis; the recommendations after the symbolic solvers |
+| RG20.6 The structure of the C++ solvers | .1 done (now docs/dev/internals/solvers.md), .2 open | the analysis; the recommendations after the symbolic solvers |
 | RG20.7 TrapezoidalGGL and the Runge-Kutta methods in C++ | open | after RG20.6 |
 | RG20.8 Common step size controller | .1 done (Python), .2 open (C++, #3245) | |

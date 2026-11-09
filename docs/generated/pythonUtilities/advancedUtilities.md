@@ -359,23 +359,23 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-advancedutilities-savedicttohdf5)=
 ## Function: SaveDictToHDF5
 
-[`SaveDictToHDF5(fileName, dataDict, compression = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L527)
+[`SaveDictToHDF5(fileName, dataDict, compression = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L566)
 
 - **function description**: recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
 - **input**:
   - `fileName`: file name (possibly including path) for HDF5 file, including file ending
-  - `dataDict`: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function; a list of only int or only float values is stored as one dataset
+  - `dataDict`: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, exudyn.MatrixContainer, the lists exudyn.Vector2DList, Vector3DList, Vector6DList, Matrix3DList and Matrix6DList, Python function; a list of only int or only float values is stored as one dataset
   - `compression`: None, or a compression of h5py such as 'gzip', for the arrays in the file (#3387)
 - **output**: None
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex), [`hdf5ExudynTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/hdf5ExudynTypesTest.py) (TM), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM)
 
 
 (sec-advancedutilities-loaddictfromhdf5)=
 ## Function: LoadDictFromHDF5
 
-[`LoadDictFromHDF5(fileName, callerGlobals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L653)
+[`LoadDictFromHDF5(fileName, callerGlobals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L696)
 
 - **function description**: recursively loads a hierarchical dictionary from a HDF5 file with given fileName
 - **input**:
@@ -384,13 +384,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePist
 - **output**: dict which contains loaded data
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotics/quadrupedsFloatingBase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/quadrupedsFloatingBase.py) (Ex), [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex), [`robotics/spotReinforcementLearning.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/spotReinforcementLearning.py) (Ex), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM), [`urdfRobotHDF5Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/urdfRobotHDF5Test.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`testHDF5loadSave.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/testHDF5loadSave.py) (Ex), [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotics/quadrupedsFloatingBase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/quadrupedsFloatingBase.py) (Ex), [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex), [`robotics/spotReinforcementLearning.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/spotReinforcementLearning.py) (Ex), [`hdf5ExudynTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/hdf5ExudynTypesTest.py) (TM), [`pickleCopyMbs.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py) (TM), [`robotDictionaryTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotDictionaryTest.py) (TM), ...
 
 
 (sec-advancedutilities-convertfunctiontosymbolic)=
 ## Function: ConvertFunctionToSymbolic
 
-[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L856)
+[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L903)
 
 - **function description**: Internal function to convert a Python user function into a dictionary containing the symbolic representation; this function is under development and should be used with care
 - **input**:
@@ -408,7 +408,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`testHDF5loa
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1083)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0, optimize = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1130)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
@@ -447,7 +447,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1227)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1274)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -503,7 +503,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1298)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1345)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -527,7 +527,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1326)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1373)
 
 - **function description**: close a previously created TCPIP connection
 
@@ -563,7 +563,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-size)=
 ### Class function: Size
 
-[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1155)
+[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1202)
 
 - **class function description**: The length of the parameter vector.
 - **output**: the sum of the sizes of the entries
@@ -572,7 +572,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-tovector)=
 ### Class function: ToVector
 
-[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1163)
+[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1210)
 
 - **class function description**: The parameter vector of named quantities.
 - **input**:
@@ -583,7 +583,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-parameterlayout-todict)=
 ### Class function: ToDict
 
-[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1187)
+[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1234)
 
 - **class function description**: The named quantities of a parameter vector.
 - **input**:

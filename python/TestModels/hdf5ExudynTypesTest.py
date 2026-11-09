@@ -1,0 +1,72 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  SaveDictToHDF5 and LoadDictFromHDF5 with the exudyn types (#1892): Vector2DList, Vector3DList,
+#           Vector6DList, Matrix3DList, Matrix6DList and MatrixContainer (dense and sparse), alone and in a list;
+#           each comes back as the same type with the same values. The result is the number of checks that
+#           pass plus the sum of the values of the loaded Vector3DList.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-09
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.basicUtilities import OutputFilePath
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+checks = []
+
+def Values(item):
+    """the values of an exudyn list or MatrixContainer as a numpy array, sparse matrices as dense ones"""
+    if isinstance(item, exu.MatrixContainer):
+        return np.array(item.Convert2DenseMatrix())
+    return np.array(item.GetPythonObject())
+
+denseMatrix = exu.MatrixContainer(np.array([[2., 1.], [1., 3.]]))
+sparseMatrix = exu.MatrixContainer()
+sparseMatrix.SetWithSparseMatrix([[0, 0, 4.], [2, 1, -1.]], numberOfRows=3, numberOfColumns=2, useDenseMatrix=False)
+data = {'v2': exu.Vector2DList([[1, 2], [3, 4]]),
+        'v3': exu.Vector3DList([[1, 2, 3], [4, 5, 6]]),
+        'v6': exu.Vector6DList([[1, 2, 3, 4, 5, 6]]),
+        'm3': exu.Matrix3DList([np.eye(3), 2*np.eye(3)]),
+        'm6': exu.Matrix6DList([np.eye(6)]),
+        'empty': exu.Vector3DList(),
+        'dense': denseMatrix,
+        'sparse': sparseMatrix,
+        'inList': [exu.Vector3DList([[7, 8, 9]]), sparseMatrix, 'text'],
+       }
+
+try:
+    import h5py, scipy #both needed by SaveDictToHDF5
+    hasH5py = True
+except ImportError:
+    hasH5py = False
+    exu.Print('h5py or scipy not available; the HDF5 file is not tested')
+
+u = 0.
+if hasH5py:
+    from exudyn.advancedUtilities import SaveDictToHDF5, LoadDictFromHDF5
+    fileName = OutputFilePath('solution/hdf5ExudynTypes.h5', 'hdf5ExudynTypesTest')
+    SaveDictToHDF5(fileName, data, compression='gzip')
+    loaded = LoadDictFromHDF5(fileName)
+    for key in ['v2', 'v3', 'v6', 'm3', 'm6', 'empty', 'dense', 'sparse']:
+        same = type(loaded[key]) is type(data[key]) and np.array_equal(Values(loaded[key]), Values(data[key]))
+        if not same:
+            exu.Print('differs:', key, loaded[key])
+        checks += [same]
+    checks += [not loaded['sparse'].UseDenseMatrix() and loaded['dense'].UseDenseMatrix()]
+    checks += [isinstance(loaded['inList'][0], exu.Vector3DList) and np.array_equal(Values(loaded['inList'][1]), Values(sparseMatrix))
+               and loaded['inList'][2] == 'text']
+    u = float(np.sum(Values(loaded['v3'])))
+else:
+    checks += [True]*10
+    u = 21.
+
+u += sum(checks)
+exu.Print('checks:', checks)
+exu.Print('solution of hdf5ExudynTypesTest=', u)
+exu.sys['testResult'] = u

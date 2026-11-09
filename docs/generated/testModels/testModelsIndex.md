@@ -125,6 +125,7 @@ geometricallyExactBeamTest
 graphicsDataErrorsTest
 GraphicsDataTest
 gridGeomExactBeam2D
+hdf5ExudynTypesTest
 heavyTop
 hollowContactTest
 homogeneousTransformationInterfaceTest

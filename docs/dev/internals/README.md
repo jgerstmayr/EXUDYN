@@ -11,6 +11,7 @@ How parts of Exudyn work inside: written for whoever changes them, after the use
 | [systemUtilities.md](systemUtilities.md) | exudyn.systemUtilities: SystemQuantity, the energy, the constraint drift, the system graph |
 | [symmetricBasis.md](symmetricBasis.md) | the frame of two slope vectors, its rotation Jacobian and the variants measured |
 | [systemJacobians.md](systemJacobians.md) | the system Jacobians: the local Jacobians of the items, the connector interface, the parallel assembly, the checks |
+| [solvers.md](solvers.md) | the C++ solvers: the files, the classes, the step loop, the step size control, the output, the Python layer, the implicit Runge-Kutta solvers |
 | [scope.md](scope.md) | the scopes of the render window: the settings, one list of primitives for OpenGL and the raytracer, the static graphics, the locks |
 
 ```{toctree}
@@ -25,4 +26,5 @@ How parts of Exudyn work inside: written for whoever changes them, after the use
 /docs/dev/internals/symmetricBasis
 /docs/dev/internals/systemJacobians
 /docs/dev/internals/scope
+/docs/dev/internals/solvers
 ```

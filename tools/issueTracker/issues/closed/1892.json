@@ -1,0 +1,15 @@
+{
+  "number": 1892,
+  "title": "Load/Save HDF5",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Add Data structures like MatrixContainer, Vector3DList, etc.",
+  "dateRaised": "2024-10-13",
+  "deadline": "2025-04-11",
+  "dateResolved": "2026-11-09 23:56",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SaveDictToHDF5 and LoadDictFromHDF5 store and restore Vector2DList, Vector3DList, Vector6DList, Matrix3DList, Matrix6DList and MatrixContainer (dense and sparse), also inside lists.",
+  "resolvedInVersion": "1.13.520"
+}

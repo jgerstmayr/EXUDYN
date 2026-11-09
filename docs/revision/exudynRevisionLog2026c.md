@@ -6431,6 +6431,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg11-4-4-2"></a>
+### RG11.4.4.2 — the exudyn lists and MatrixContainer in HDF5 (2026-11-09, #1892)
+*(Maintainer 2026-11-09: do the HDF5 part, close the rest.)*
+
+`SaveDictToHDF5` stores `Vector2DList`, `Vector3DList`, `Vector6DList`, `Matrix3DList`, `Matrix6DList` as one array
+and a `MatrixContainer` as its dense array or as its triplets with the size, each with its type name as `datatype`,
+at the top level and in lists; `LoadDictFromHDF5` rebuilds them by their constructors (`_SaveExudynContainerToHDF5`,
+`_LoadExudynContainerFromHDF5` in advancedUtilities.py). hdf5ExudynTypesTest.py: all types, an empty list, a sparse
+matrix in a list, gzip. #782 (NGsolve) closed as not wanted; RG11.4.4 closed.
+
+The developer note on the C++ solvers moved from docs/dev/design/cppSolverStructure.md to
+docs/dev/internals/solvers.md and describes the solvers as they are (maintainer 2026-11-09). RG9.9 closed (RG9.9.5).
+
 <a id="rg9-9-5"></a>
 ### RG9.9.5 — what is left of the own item number in the arguments (2026-11-09, #3013)
 *(Maintainer 2026-11-09: evaluate first.)*

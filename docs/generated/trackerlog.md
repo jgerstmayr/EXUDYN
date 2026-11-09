@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.518.dev1
+- Exudyn version = 1.13.520.dev1
 - last change = 2026-11-09
 - Number of issues = 3395
-- Number of resolved issues = 3295 (518 in current version)
+- Number of resolved issues = 3297 (520 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9192,10 +9192,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#1894)
   - description: add n\*max(velocity)\*stepSize safety for bounding box, in order to update some objects less frequently (when max dist is reached)
   - date raised: 2024-10-16
-- `EXTENSION` `MEDIUM EFF` Load/Save HDF5 (#1892)
-  - description: Add Data structures like MatrixContainer, Vector3DList, etc.
-  - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)
-  - date raised: 2024-10-13
 - `EXTENSION` `HUGE EFF` inverse dynamics (#1822)
   - description: consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9344,10 +9340,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` GeneralContact rolling pivoting (#833)
   - description: add rolling and pivoting (drilling, boring) friction to spheres and triangles
   - date raised: 2021-12-17
-- `EXTENSION` `MEDIUM EFF` MatrixContainer (#782)
-  - description: add SetWithNGsolveSparseMatrix; add an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz
-  - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)
-  - date raised: 2021-10-27
 - `EXTENSION` `MEDIUM EFF` ContactCoordinate (#737)
   - description: check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

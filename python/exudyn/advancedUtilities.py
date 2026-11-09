@@ -524,12 +524,51 @@ def ConvertDictToScipySparse(sparseDict):
     return csr_matrix((sparseDict['data'], sparseDict['indices'], sparseDict['indptr']),
                       shape=sparseDict['shape'])
 
+#the lists of exudyn stored as one array, rebuilt by their constructor (#1892)
+_exudynListTypes = ('Vector2DList', 'Vector3DList', 'Vector6DList', 'Matrix3DList', 'Matrix6DList')
+
+def _SaveExudynContainerToHDF5(hdf5group, key, item, compressionOptions):
+    """a list type of _exudynListTypes or a MatrixContainer as one dataset with its type name as datatype; False if item
+    is none of them"""
+    typeName = type(item).__name__
+    if typeName in _exudynListTypes:
+        data = np.array(item.GetPythonObject(), dtype=float)
+        hdf5group.create_dataset(key, data=data, **(compressionOptions if data.size else {}))
+    elif typeName == 'MatrixContainer':
+        matrix = item.GetPythonObject()
+        if isinstance(matrix, dict): #sparse: its triplets and its size
+            data = np.array(matrix['triplets'], dtype=float).reshape(-1, 3)
+            hdf5group.create_dataset(key, data=data, **(compressionOptions if data.size else {}))
+            hdf5group[key].attrs['numberOfRows'] = matrix['numberOfRows']
+            hdf5group[key].attrs['numberOfColumns'] = matrix['numberOfColumns']
+            typeName = 'MatrixContainerSparse'
+        else:
+            data = np.array(matrix, dtype=float)
+            hdf5group.create_dataset(key, data=data, **(compressionOptions if data.size else {}))
+    else:
+        return False
+    hdf5group[key].attrs['datatype'] = typeName
+    return True
+
+def _LoadExudynContainerFromHDF5(dataset, datatype):
+    """the inverse of _SaveExudynContainerToHDF5; None if datatype is none of its types"""
+    if datatype in _exudynListTypes:
+        return getattr(exudyn, datatype)(dataset[()].tolist())
+    if datatype == 'MatrixContainer':
+        return exudyn.MatrixContainer(dataset[()])
+    if datatype == 'MatrixContainerSparse':
+        matrix = exudyn.MatrixContainer()
+        matrix.SetWithSparseMatrix(dataset[()], numberOfRows=int(dataset.attrs['numberOfRows']),
+                                   numberOfColumns=int(dataset.attrs['numberOfColumns']), useDenseMatrix=False)
+        return matrix
+    return None
+
 def SaveDictToHDF5(fileName, dataDict, compression=None):
     """recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
 
     Args:
         fileName: file name (possibly including path) for HDF5 file, including file ending
-        dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function; a list of only int or only float values is stored as one dataset
+        dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, exudyn.MatrixContainer, the lists exudyn.Vector2DList, Vector3DList, Vector6DList, Matrix3DList and Matrix6DList, Python function; a list of only int or only float values is stored as one dataset
         compression: None, or a compression of h5py such as 'gzip', for the arrays in the file (#3387)
 
     Returns:
@@ -578,6 +617,8 @@ def SaveDictToHDF5(fileName, dataDict, compression=None):
             elif isinstance(item, list) and IsNumericList(item):
                 hdf5group.create_dataset(key, data=np.array(item), **compressionOptions)
                 hdf5group[key].attrs['datatype'] = 'numericList'
+            elif _SaveExudynContainerToHDF5(hdf5group, key, item, compressionOptions):
+                pass
             elif isinstance(item, csr_matrix):
                 # Save sparse matrix by storing its components and setting type attribute
                 subgroup = hdf5group.create_group(key)
@@ -594,6 +635,8 @@ def SaveDictToHDF5(fileName, dataDict, compression=None):
                     if isinstance(subItem, list) and IsNumericList(subItem):
                         subgroup.create_dataset(subKey, data=np.array(subItem), **compressionOptions)
                         subgroup[subKey].attrs['datatype'] = 'numericList'
+                    elif _SaveExudynContainerToHDF5(subgroup, subKey, subItem, compressionOptions):
+                        pass
                     elif isinstance(subItem, specialExudynTypes):
                         # Save basic types with the corresponding datatype
                         subgroup.create_dataset(subKey, data=int(subItem))
@@ -716,6 +759,8 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
                                 listItems.append(item[subKey][()].decode('utf-8'))
                             elif subDatatype == 'numericList':
                                 listItems.append(item[subKey][()].tolist())
+                            elif _LoadExudynContainerFromHDF5(item[subKey], subDatatype) is not None:
+                                listItems.append(_LoadExudynContainerFromHDF5(item[subKey], subDatatype))
                             else:
                                 raise ValueError(f"Unsupported datatype {subDatatype} in list")
                         else:
@@ -749,6 +794,8 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
                     result[key] = item[()].decode('utf-8')  # Strings are stored as byte arrays, so decode them
                 elif datatype == 'numericList': #a list of numbers, one dataset (#3267)
                     result[key] = item[()].tolist()
+                elif _LoadExudynContainerFromHDF5(item, datatype) is not None:
+                    result[key] = _LoadExudynContainerFromHDF5(item, datatype)
                 #automatic:
                 # elif datatype == 'ndarray':
                 #     result[key] = item[:]  # Load the numpy array data

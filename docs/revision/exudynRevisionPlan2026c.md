@@ -92,9 +92,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG9** Structural core improvements
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
-  - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item
 - **RG11** Misc
-  - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (2 open sub-steps)
+  - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (1 open sub-step)
   - RG11.6 Write the joints and their Jacobians on homogeneous transformations
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
@@ -125,9 +124,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 5 | Structural core improvements |
+| RG9 | OPEN | 4 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 4 | Misc |
+| RG11 | OPEN | 3 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | CLOSED | 0 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -1261,10 +1260,12 @@ the numbers; `SetObjectNumber` is private to CSystemData; DeleteObject renumbers
 bodies. Maintainer 2026-10-17: the number is needed by many functions, also before Assemble.
 [log](exudynRevisionLog2026c.md#rg9-8)
 
-### **OPEN_RG9.9** Remove the own item number from the arguments of the item functions, which take it from the item
+### **CLOSED_RG9.9** Remove the own item number from the arguments of the item functions, which take it from the item
 
 #3013. Maintainer 2026-10-17: many old and new functions have the object number in their arguments and do not need it
 any more; evaluate, propose sub-steps, do what needs no decision. [log](exudynRevisionLog2026c.md#rg9-9)
+
+CLOSED 2026-11-09 (maintainer: close, RG9.9.5): no own number left in the computation; the drawing keeps itemNumber (RG9.9.4); the two comments with objectNumber adjusted. #3013 was resolved with RG9.9.2.
 
 #### **CLOSED_RG9.9.1** Evaluate which functions get their own number as argument
 
@@ -1921,13 +1922,19 @@ CLOSED 2026-11-09 (#2342): None, the V class or a dict of the non-default parame
 
 CLOSED 2026-11-09: collision #3382, tool frame #3356, parent names and numbers stored (#1931, #1932, #1941 closed); what is left in RG11.4.5.
 
-#### **OPEN_RG11.4.4** Link MatrixContainer to scipy, numpy and NGsolve matrices, and store the lists in HDF5
+#### **CLOSED_RG11.4.4** Link MatrixContainer to scipy, numpy and NGsolve matrices, and store the lists in HDF5
 
 #782 (NGsolve, with its coordinate order), #1892 (`Vector3DList` and the others in the HDF5 load and save); the scipy CSR matrices are there (#1863 closed).
+
+CLOSED 2026-11-09 (maintainer 2026-11-09): numpy and scipy were there, HDF5 done (RG11.4.4.2), NGsolve not wanted (#782 closed).
 
 ##### **CLOSED_RG11.4.4.1** Evaluate numpy, scipy and HDF5 for MatrixContainer and the lists
 
 CLOSED 2026-11-09, evaluation: numpy and scipy CSR are accepted by MatrixContainer already (#1863), nothing to do; NGsolve not wanted, close #782; SaveDictToHDF5 refuses Vector2D/3D/6DList, Matrix3D/6DList and MatrixContainer (#1892), about 30 lines and a test model. **Recommendation: do #1892 as a sub-step, close #782, then close RG11.4.4.** [log](exudynRevisionLog2026c.md#rg11-4-4-1)
+
+##### **CLOSED_RG11.4.4.2** Store the exudyn lists and MatrixContainer in HDF5
+
+CLOSED 2026-11-09 (#1892): SaveDictToHDF5/LoadDictFromHDF5 with Vector2D/3D/6DList, Matrix3D/6DList and MatrixContainer, dense and sparse, also in lists; hdf5ExudynTypesTest.py. [log](exudynRevisionLog2026c.md#rg11-4-4-2)
 
 #### **CLOSED_RG11.4.5** Images in dicts: the textures of graphics data and of the renderer to and from a dict
 

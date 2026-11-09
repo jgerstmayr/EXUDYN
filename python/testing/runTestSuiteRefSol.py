@@ -45,6 +45,7 @@ def TestExamplesReferenceSolution():
         'robotCartesianPathsTest.py': 24.036760791972597, #new 2026-11-05: circular, screw and spline paths, keepConfiguration, the jumps in Trajectory (#3272)
         'trajectoryBlendingTest.py': 10.527218840445627, #new 2026-11-05: the blending of the profiles of Trajectory (#3274)
         'trajectoryBlendingCartesianTest.py': 7.984211565491496, #new 2026-11-06: auto blend times, the velocity check, the blending in Cartesian space (#3283)
+        'hdf5ExudynTypesTest.py': 31., #new 2026-11-09: #1892
         'itemVisualizationArgumentTest.py': 8., #new 2026-11-09: #2342
         'explicitStepSizeControlTest.py': 25, #new 2026-11-06: the PI controller and the absolute values in the error scale of ODE23 and DOPRI5 (#3245)
         'generalizedAlphaODE1OrderTest.py': 3.3760530260735115, #2026-11-06: modified against full Newton (#3300), before 2.3760530260735115; new 2026-11-06: the order 2 of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha (#3258)

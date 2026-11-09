@@ -788,7 +788,7 @@ void CObjectANCFBeam::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 //	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
 //	LinkedDataVectorBase<DReal16> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 //
-//	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t, Index objectNumber);
+//	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t);
 //
 //	jacobianODE2.SetUseDenseMatrix(true);
 //	ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();

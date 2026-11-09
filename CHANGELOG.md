@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 496 | 1.13.518 |
+| 1.13 | Newborn | 497 | 1.13.520 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.520** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` Load/Save HDF5 (#1892)
+  - description: Add Data structures like MatrixContainer, Vector3DList, etc.
+  - **notes:** SaveDictToHDF5 and LoadDictFromHDF5 store and restore Vector2DList, Vector3DList, Vector6DList, Matrix3DList, Matrix6DList and MatrixContainer (dense and sparse), also inside lists.
+  - date resolved: **2026-11-09 23:56**, date raised: 2024-10-13
 - **1.13.518** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The reduction of the step size after a failed post-Newton step in the common step size controller (#3394)
   - description: ODE23 and DOPRI5 reduced a step after a failed post-Newton step by a fixed factor of 0.5 and allowed the next step to grow, unlike the implicit solvers. Decided: one rule in StepSizeController for all solvers: a recommended step size, limited to 0.75 times the step, otherwise timeIntegration.adaptiveStepDecrease, without growth after the reduction.
   - **notes:** A step reduced after a failed post-Newton step follows one rule in all adaptive solvers, also with ODE23 and DOPRI5: no growth of the next step afterwards, and timeIntegration.adaptiveStepDecrease if no step size is recommended.

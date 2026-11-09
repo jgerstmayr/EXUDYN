@@ -172,7 +172,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs) const
 	//ConstSizeVector<nODE2coordinates +1> qANCF_t;
 	//ComputeCurrentObjectCoordinates(qANCFALE);
 	//ComputeCurrentObjectVelocities(qANCFALE_t);
-	//ComputeODE2LHStemplate<Real>(ode2Lhs, qANCFALE, qANCFALE_t, Index objectNumber);
+	//ComputeODE2LHStemplate<Real>(ode2Lhs, qANCFALE, qANCFALE_t);
 	CObjectANCFCable2DBase::ComputeODE2LHS(ode2Lhs); //compute stiffness terms
 	
 	//ode2Lhs.SetNumberOfItems(nODE2coordinates + 1);
