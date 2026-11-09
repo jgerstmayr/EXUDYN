@@ -160,4 +160,10 @@ def main():
     print('written', base + '.csv', 'and .md;', len(rows), 'cases,', len(failed), 'failed')
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception: #a run without a console, by a timer, leaves its error in a file
+        import traceback
+        with open(os.path.join(here, '..', 'logs', 'performance', 'solverBaselineError.txt'), 'w', encoding='utf-8') as file:
+            file.write(traceback.format_exc())
+        raise

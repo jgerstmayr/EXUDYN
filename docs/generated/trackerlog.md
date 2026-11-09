@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.511.dev1
+- Exudyn version = 1.13.515.dev1
 - last change = 2026-11-09
-- Number of issues = 3393
-- Number of resolved issues = 3288 (511 in current version)
+- Number of issues = 3394
+- Number of resolved issues = 3292 (515 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` GetURDFrobotData: visual primitives, the names of the base links, the order of the links (#3393)
+  - description: GetURDFrobotData reads only meshes as visual geometry, so boxes, cylinders and spheres in the visual elements of a URDF are left out; the names of the links fixed to the base are not stored; whether a parent always precedes its children in the link list is not checked. Decided: read the primitives as graphics, store the base link names, reorder or refuse an order with a child before its parent.
+  - date raised: 2026-11-09
 - `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
   - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.
   - date raised: 2026-11-09
@@ -9176,18 +9179,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2025-04-15
-- `EXTENSION` `MEDIUM EFF` URDF (#1941)
-  - description: include parent names and create correct parent indices in URDF files by using link name lists; store list of base link names as well and do reordering
-  - **remarks:** planned as revision2026b step RG12.45 (triage 2026-10-07)
-  - date raised: 2024-11-12
-- `EXTENSION` `MEDIUM EFF` URDF import (#1932)
-  - description: GetURDFrobotData: add tool transformations accordingly (currently shown with no consecutive transformations)
-  - **remarks:** planned as revision2026b step RG12.45 (triage 2026-10-07)
-  - date raised: 2024-11-10
-- `EXTENSION` `MEDIUM EFF` URDF import (#1931)
-  - description: GetURDFrobotData: check for import of other scene information than mesh; check for import of collision
-  - **remarks:** planned as revision2026b step RG12.45 (triage 2026-10-07)
-  - date raised: 2024-11-10
 - `EXTENSION` `MEDIUM EFF` ContactSphereSphere (#1920)
   - description: add autodiff Jacobian
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9210,10 +9201,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Add Data structures like MatrixContainer, Vector3DList, etc.
   - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)
   - date raised: 2024-10-13
-- `EXTENSION` `HIGH EFF` MatrixContainer (#1863)
-  - description: consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets
-  - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)
-  - date raised: 2024-10-02
 - `EXTENSION` `HUGE EFF` inverse dynamics (#1822)
   - description: consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

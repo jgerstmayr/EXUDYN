@@ -1,0 +1,11 @@
+{
+  "number": 3393,
+  "title": "GetURDFrobotData: visual primitives, the names of the base links, the order of the links",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "GetURDFrobotData reads only meshes as visual geometry, so boxes, cylinders and spheres in the visual elements of a URDF are left out; the names of the links fixed to the base are not stored; whether a parent always precedes its children in the link list is not checked. Decided: read the primitives as graphics, store the base link names, reorder or refuse an order with a child before its parent.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08"
+}

@@ -2,11 +2,14 @@
   "number": 1863,
   "title": "MatrixContainer",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets",
   "dateRaised": "2024-10-02",
   "deadline": "2025-03-31",
-  "workingRemarks": "planned as revision2026b step RG12.46 (triage 2026-10-07)"
+  "dateResolved": "2026-11-09 17:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "no longer applies: MatrixContainer.SetWithSparseMatrix, AddSparseMatrix and SetWithSparseMatrixCSR take scipy CSR matrices by copying in C++, the minimal solution named here.",
+  "resolvedInVersion": "1.13.512"
 }
