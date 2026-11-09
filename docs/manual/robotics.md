@@ -108,6 +108,7 @@ mbs.SolveDynamic(simulationSettings)
 :maxdepth: 1
 
 /docs/generated/notebooks/tutorialRobotics
+/docs/generated/notebooks/tutorialPathPlanning
 ```
 
 (sec-robotics-urdf)=
@@ -136,7 +137,7 @@ file read with `meshDensity` and `correctInertia` this way.
 
 For a serial robot, `PlanJointPath` finds a path in joint space by RRT-Connect, `ShortcutPath` removes its detours, and `PlanToPose` takes a pose of the tool as the goal. `TrajectoryFromPath` turns the path into a `Trajectory` for `Robot.SetControl`: `Trajectory.FromWaypoints` runs it without stopping at the waypoints, and the blending, which cuts the corners, is reduced if the check finds a collision.
 
-For a mobile robot, an `OccupancyGrid` holds the map; after `Inflate` by the radius of the robot, `PlanGridPath` finds the shortest path of the cell centers by A\* and leaves out waypoints where the straight line is free. `PlanSE2Path` plans x, y and the rotation by RRT-Connect, for a robot which only passes a narrow space at the right angle. A mecanum-wheeled robot follows a `Trajectory` of x, y and phi; a differential drive follows `PathWithHeadings`, or the path by `PurePursuit`, with `DifferentialDriveWheelVelocities` for its wheels.
+For a mobile robot, an `OccupancyGrid` holds the map; after `Inflate` by the radius of the robot, `PlanGridPath` finds the shortest path of the cell centers by A\* and leaves out waypoints where the straight line is free. `PlanSE2Path` plans x, y and the rotation by RRT-Connect, for a robot which only passes a narrow space at the right angle. A mecanum-wheeled robot follows a `Trajectory` of x, y and phi; a differential drive follows `PathWithHeadings`, or the path by `PurePursuit`, with `DifferentialDriveWheelVelocities` for its wheels. The notebook {doc}`tutorialPathPlanning </docs/generated/notebooks/tutorialPathPlanning>` goes through both.
 
 (sec-robotics-ros)=
 ## ROS
@@ -160,3 +161,6 @@ there is no Python 2 support for Exudyn.
 | humanRobotInteraction.py | a robot touching an articulated dummy |
 | serialRobotURDF.py | robots read from URDF files |
 | mobileMecanumWheelRobotWithLidar.py | a mobile robot on mecanum wheels with a lidar |
+| pathPlanningUR5.py | the UR5 around a wall: collision check, RRT-Connect, a blended trajectory and its simulation |
+| mobileRobotsNavigation.py | a mecanum-wheeled robot and a differential drive through a room, by A\* and pure pursuit |
+| quadrupedsFloatingBase.py | ANYmal and Spot on floating bases, standing on contact spheres |

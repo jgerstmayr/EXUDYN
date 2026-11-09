@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 479 | 1.13.496 |
+| 1.13 | Newborn | 480 | 1.13.497 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.497** `EXAMPLE` `raised by: Claude-JG` `resolved by: Claude-JG` Examples of path planning: the UR5 among obstacles, mobile robots, a notebook (#3385)
+  - description: Examples pathPlanningUR5.py and mobileRobotsNavigation.py, a section of the robotics chapter and the notebook tutorialPathPlanning. Decided: a mecanum-wheeled robot with a cuboid body and a differential drive with a flat cylindrical body, built in the example.
+  - **notes:** Examples pathPlanningUR5.py and mobileRobotsNavigation.py, the notebook tutorialPathPlanning and a section of the robotics chapter.
+  - date resolved: **2026-11-09 08:41**, date raised: 2026-11-09
 - **1.13.496** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Occupancy grid, A\*, RRT-Connect in SE(2) and pure pursuit for mobile robots (#3384)
   - description: robotics.navigation: OccupancyGrid with obstacles, DistanceTransform and Inflate, PlanGridPath by A\*, PlanSE2Path, PathWithHeadings, PurePursuit and DifferentialDriveWheelVelocities. Decided: grid A\* and RRT in SE(2), pure pursuit for a differential drive.
   - **notes:** robotics.navigation: OccupancyGrid, PlanGridPath by A\*, PlanSE2Path, PathWithHeadings, PurePursuit and DifferentialDriveWheelVelocities.

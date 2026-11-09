@@ -886,7 +886,7 @@ class Robot:
                                                 baseHT=self.base.HT, toolHT=self.tool.HT, gravity=self.gravity,
                                                 inertias=[link.inertia for link in self.links])
 
-    def GetCollisionModel(self, obstacles=None, baseShapes=None, excludeCollidingAt=None):
+    def GetCollisionModel(self, obstacles=None, baseShapes=None, excludeCollidingAt=None, excludeMargin=0.):
         """the collision check of the robot and its environment in C++, an exudyn.cUtilities.CollisionModel, from the collisionShapes
         of its links (#3380); create it again after the robot is changed
 
@@ -894,6 +894,7 @@ class Robot:
             obstacles: None or a list of shapes in the global frame
             baseShapes: None for the collisionShapes of the base, or a list of shapes on the base, in its frame
             excludeCollidingAt: None or joint coordinates, a free configuration of the robot, at which overlapping pairs of links are found which are not checked, as the shapes of neighboring links overlap by their construction
+            excludeMargin: the pairs nearer than this distance at excludeCollidingAt are not checked; at least the margin given to the planner
 
         Returns:
             the CollisionModel
@@ -911,7 +912,7 @@ class Robot:
         for shape in ([] if obstacles is None else obstacles):
             model.AddObstacle(*_ConvexShapeAndHT(shape))
         if excludeCollidingAt is not None:
-            model.ExcludeCollidingPairs(excludeCollidingAt)
+            model.ExcludeCollidingPairs(excludeCollidingAt, excludeMargin)
         return model
 
     def LinkHT(self, q):

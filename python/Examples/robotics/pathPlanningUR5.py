@@ -1,0 +1,82 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  A UR5 moves around a wall between two poses of its tool: the collision check of its capsules in C++, RRT-Connect in joint space, shortcuts of the path, a blended trajectory
+#           through the waypoints and the simulation of the kinematic tree with PD control of the joints; the smallest distance of the simulated robot to the obstacles is measured.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-09
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+import exudyn.graphics as graphics
+from exudyn.cUtilities import ConvexShape
+from exudyn.robotics import VRobotLink
+from exudyn.robotics.models import ManipulatorUR5, LinkDict2Robot
+from exudyn.robotics.navigation import JointLimits, PlanToPose, ShortcutPath, TrajectoryFromPath
+import numpy as np
+import time
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+#%%+++ the robot, drawn with its collision shapes
+robot = LinkDict2Robot(ManipulatorUR5(), initialConfiguration='model')
+qStart = np.array([-0.8, -1.2, 1.2, -1.5, -1.57, 0.])
+robot.q0 = qStart
+for (i, link) in enumerate(robot.links):
+    link.visualization = VRobotLink(graphicsData=[graphics.Capsule(pAxis=shape['pAxis'], vAxis=shape['vAxis'], radius=shape['radius'], color=graphics.colorList[i % 8][:3] + [0.7])
+                                                  for shape in link.collisionShapes], showMBSjoint=False)
+
+#%%+++ the obstacles: (size of a box, position)
+boxes = [([0.05, 0.4, 1.6], [0.45, 0, 0.3]), #the wall
+         ([2, 2, 0.1], [0, 0, -0.15])]       #the table
+obstacles = [(ConvexShape('Box', size=size), exu.HT(translation=position)) for (size, position) in boxes]
+mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphics.Brick(centerPoint=position, size=size, color=graphics.color.lightgrey) for (size, position) in boxes])))
+
+#%%+++ plan: the shapes of neighboring links overlap and are not checked
+margin = 0.01
+model = robot.GetCollisionModel(obstacles=obstacles, excludeCollidingAt=qStart, excludeMargin=margin)
+qGoal = np.array([0.8, -1.2, 1.2, -1.5, -1.57, 0.])
+HTgoal = robot.GetKinematicChain().ToolHT(qGoal) #a pose of the tool
+
+t0 = time.time()
+path = PlanToPose(model, robot, qStart, HTgoal, JointLimits(robot), margin=margin, seed=1)
+short = ShortcutPath(model, path, margin=margin, seed=1)
+exu.Print('planned in', round(time.time() - t0, 3), 's:', len(path), 'waypoints, after shortcuts', len(short))
+trajectory = TrajectoryFromPath(model, short, [1.5]*6, [4.]*6, margin=margin)
+
+#%%+++ the model
+robotDict = robot.CreateKinematicTree(mbs)
+nodeJoints = robotDict['nodeGeneric']
+robot.SetControl(trajectory, compensation='static')
+minimumDistance = [np.inf]
+
+def PreStepUserFunction(mbs, t):
+    robot.PreStepControl(mbs, t)
+    q = mbs.GetNodeOutput(nodeJoints, exu.OutputVariableType.Coordinates)
+    minimumDistance[0] = min(minimumDistance[0], model.MinimumDistance(q))
+    return True
+
+mbs.SetPreStepUserFunction(PreStepUserFunction)
+mbs.Assemble()
+
+tEnd = trajectory.GetTimes()[-1] + 0.5
+stepSize = 1e-3
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.solution.file.writePeriod = 0.02
+SC.visualizationSettings.general.drawWorldBasis = True
+SC.visualizationSettings.openGL.multiSampling = 4
+
+mbs.SolveDynamic(simulationSettings, showHints=False)
+
+q = np.array(mbs.GetNodeOutput(nodeJoints, exu.OutputVariableType.Coordinates))
+exu.Print('error of the joints at the end', np.max(np.abs(q - short[-1])), ', smallest distance during the simulation', minimumDistance[0])
+mbs.SolutionViewer()
