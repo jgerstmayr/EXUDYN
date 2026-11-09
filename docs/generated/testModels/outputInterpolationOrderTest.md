@@ -56,7 +56,7 @@ def OutputErrors(solverType, numberOfSteps):
     position = mbs.GetSensorStoredData(sensorPosition)
     velocity = mbs.GetSensorStoredData(sensorVelocity)
     t = position[:, 0]
-    return [float(np.max(np.abs(position[:, 1] - np.cos(omega*t)))), float(np.max(np.abs(velocity[:, 1] + omega*np.sin(omega*t))))]
+    return [float(np.max(np.abs(position[:, 1] - np.array([cMath.cos(omega*x) for x in t])))), float(np.max(np.abs(velocity[:, 1] + np.array([omega*cMath.sin(omega*x) for x in t]))))]
 
 checks = []
 sumOfErrors = 0.

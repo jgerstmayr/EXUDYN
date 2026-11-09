@@ -38,6 +38,7 @@ using namespace std;
 #include "lest/lest.hpp"
 
 #include "Linalg/BasicLinalg.h"	//includes all necessary math libraries to test
+#include "Utilities/FlatArray.h"
 #include "Utilities/ObjectContainer.h" 
 
 using namespace EXUstd;
