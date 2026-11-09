@@ -121,6 +121,13 @@ void CSolverImplicitRungeKutta::Initialize(CSolverImplicitSecondOrderTimeInt& so
 	{
 		if (EXUstd::IsOfType(systemData.GetCNodes()[i]->GetType(), Node::LieGroupWithDirectUpdate)) { lieGroupNodes.Append(i); }
 	}
+	lieRotationCoordinate.SetNumberOfItems(solver.data.nODE2);
+	lieRotationCoordinate.SetAll(0);
+	for (Index k : lieGroupNodes)
+	{
+		const CNodeRigidBody& node = (const CNodeRigidBody&)(systemData.GetCNode(k));
+		for (Index m = 0; m < node.GetNumberOfRotationCoordinates(); m++) { lieRotationCoordinate[node.GetGlobalODE2CoordinateIndex() + node.GetNumberOfDisplacementCoordinates() + m] = 1; }
+	}
 
 	for (Index i = 0; i < s; i++)
 	{
@@ -676,7 +683,8 @@ Real CSolverImplicitRungeKutta::ErrorEstimate(CSolverImplicitSecondOrderTimeInt&
 		const Vector& aFirst = (method.c[0] == 0.) ? stageA[0] : a0;
 		for (Index j = 0; j < n2; j++)
 		{
-			Add(Q[s - 1][j] - (q0[j] + 0.5 * h * (vFirst[j] + V[s - 1][j])), q0[j], Q[s - 1][j]);
+			//the rotation coordinates of a Lie group node are composed, they are no integral of their velocities (#3313)
+			if (!lieRotationCoordinate[j]) { Add(Q[s - 1][j] - (q0[j] + 0.5 * h * (vFirst[j] + V[s - 1][j])), q0[j], Q[s - 1][j]); }
 			Add(V[s - 1][j] - (v0[j] + 0.5 * h * (aFirst[j] + stageA[s - 1][j])), v0[j], V[s - 1][j]);
 		}
 		order = 3.;

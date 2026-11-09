@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.488.dev1
+- Exudyn version = 1.13.489.dev1
 - last change = 2026-11-09
 - Number of issues = 3380
-- Number of resolved issues = 3265 (488 in current version)
+- Number of resolved issues = 3266 (489 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9063,10 +9063,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
   - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.
   - date raised: 2026-11-08
-- `CHECK` `LOW EFF` `raised by: Claude-JG` Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10 (#3313)
-  - description: The solver study (solverConvergenceFigures.py, efficiency\_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.
-  - **remarks:** 2026-11-08 analysis: reproduced (sliderCrank3D, automatic steps from 2e-2, errorEstimate twoSteps): tol 1e-7..1e-10 end error 4.7e-7..1.4e-7 with 33..105 steps, while 105 constant steps would give 5e-10 (constant steps order 3.99). The error is in the rotation of the crank (1.4e-7), grows with time. Radau3 converges with the same nodes; LobattoIIIA4 converges on massOscillator, nPendulum, rigidBodyJoints and on the slider crank with Euler parameter nodes (1.9e-9 at 1e-10, 57 steps). So: LobattoIIIA4 + Lie group nodes (RotVecLG) + changing step size. Not the scaling of the carried-over first stage (a0, z0 are the unscaled last stage). Next: instrument the Lie group stage composition and the explicit first stage across a change of h. Also: both solvers halve the first step 10 times to the minimum 1e-8, the estimate of the first step does not shrink with h.
-  - date raised: 2026-11-06
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
   - date raised: 2026-11-04

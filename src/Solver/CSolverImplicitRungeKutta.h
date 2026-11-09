@@ -83,6 +83,7 @@ public:
 	ArrayIndex velocityLevelRow;		//!< 1 for the rows of velocity-level constraints
 	ArrayIndex specialRow;				//!< 1 for the rows of velocity-level constraints and of equations of the multiplier
 	ArrayIndex lieGroupNodes;
+	ArrayIndex lieRotationCoordinate;	//!< 1 for the rotation coordinates of Lie group nodes (#3313)
 
 	//the stages
 	Vector stageA[ImplicitRungeKuttaMethod::maxStages], stageYd[ImplicitRungeKuttaMethod::maxStages];

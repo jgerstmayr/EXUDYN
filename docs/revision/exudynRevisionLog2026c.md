@@ -6431,6 +6431,11 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="RG20-8-3"></a>
+### RG20.8.3 - the automatic step size with Lie group nodes (2026-11-09, #3313)
+- Cause: the error estimate of the first step, which has no previous step, compared the positions with the integral of the velocities. The rotation coordinates of Lie group nodes are composed, so that term did not shrink beyond O(h): with a rod with a reference rotation the estimate was 1e5 times the tolerance at h = 1e-3, proportional to h, and the first step went to the minimum 1e-8. There the rounding of the position constraints divided by h^2 gave a velocity error of about 1e-8 which stayed for the whole run. The rotation coordinates are left out of this check.
+    - sliderCrank3D, LobattoIIIA4: end error 2.7e-11 at the tolerances 1e-7 and 1e-9 with 201 and 203 steps, as constant steps of the same number; the smallest step 2e-4 instead of 1e-8; Radau3, Radau5 and LobattoIIIC4GGL the same. automaticStepLieGroupTest.py.
+    
 <a id="rg20-4-5"></a>
 ### RG20.4.5 - the output within the step by the interpolation of the solver (2026-11-09, #3379)
 - DOPRI5 by its dense output of order 4 (Shampine 1986, the coefficients of ntrp45), RK67 by the quintic Hermite polynomial with the end accelerations (the first stage as the acceleration at the start).

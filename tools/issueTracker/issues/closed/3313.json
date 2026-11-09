@@ -2,12 +2,15 @@
   "number": 3313,
   "title": "Automatic step size of LobattoIIIA4 on the spatial slider crank: the error stays at 1e-7 for the tolerances 1e-5 to 1e-10",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "LOW",
   "description": "The solver study (solverConvergenceFigures.py, efficiency_adaptive.png): LobattoIIIA4 with automatic step size on sliderCrank3D of modelLibrary.py takes 21 to 106 steps for the tolerances 1e-5 to 1e-10, but the relative error of the ODE2 coordinates stays at 1.2e-6 to 1.1e-7, while 106 constant steps give about 1e-10 and Radau3 with automatic steps reaches 2e-10. On the other models its error follows the tolerance. To be analyzed: the error estimate twoSteps with the Lie group nodes of the model, a single step with a large error (the first one, or one after a rejection), the interpolated output.",
   "dateRaised": "2026-11-06",
   "deadline": "2027-05-05",
+  "dateResolved": "2026-11-09 01:28",
+  "resolvedAuthor": "Claude-JG",
   "file": "src/Solver/CSolverImplicitRungeKutta.cpp",
-  "workingRemarks": "2026-11-08 analysis: reproduced (sliderCrank3D, automatic steps from 2e-2, errorEstimate twoSteps): tol 1e-7..1e-10 end error 4.7e-7..1.4e-7 with 33..105 steps, while 105 constant steps would give 5e-10 (constant steps order 3.99). The error is in the rotation of the crank (1.4e-7), grows with time. Radau3 converges with the same nodes; LobattoIIIA4 converges on massOscillator, nPendulum, rigidBodyJoints and on the slider crank with Euler parameter nodes (1.9e-9 at 1e-10, 57 steps). So: LobattoIIIA4 + Lie group nodes (RotVecLG) + changing step size. Not the scaling of the carried-over first stage (a0, z0 are the unscaled last stage). Next: instrument the Lie group stage composition and the explicit first stage across a change of h. Also: both solvers halve the first step 10 times to the minimum 1e-8, the estimate of the first step does not shrink with h."
+  "releaseNotes": "The automatic step size of the implicit Runge-Kutta solvers with Lie group nodes: the error estimate of the first step leaves out the rotation coordinates, which brought the first step to the minimum step size and limited the error at about 1e-7.",
+  "resolvedInVersion": "1.13.489"
 }

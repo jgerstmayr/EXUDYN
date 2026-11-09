@@ -48,7 +48,7 @@ workflows, documentation, tests and examples.
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written (decision D11)
 
-+  Exudyn version = 1.13.488.dev1 (Newborn)
++  Exudyn version = 1.13.489.dev1 (Newborn)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg

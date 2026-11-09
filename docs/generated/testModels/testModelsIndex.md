@@ -25,6 +25,7 @@ ANCFslidingAndALEjointTest
 ANCFThinPlateRevisionTest
 ANCFThinPlateRotationTest
 appendSystemTest
+automaticStepLieGroupTest
 ballBearingTest
 binarySolutionFileTest
 bricardMechanism
