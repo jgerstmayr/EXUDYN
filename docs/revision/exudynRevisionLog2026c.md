@@ -6431,10 +6431,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
-<a id="rg21-3"></a>
-### RG21.3 - collision geometries of a URDF, up to two capsules per link (2026-11-09, #3382)
-- GetURDFrobotData(collision=True) replaces collisionMeshes; keys 'collision' of the links, 'collisionBase'; ReduceURDFrobotData moves them; RobotFromURDFdata(collisionMeshesAs=). FitCapsulesToMesh (assignment by the distance to the axes; the two capsules are taken if the volume of their union is smaller; the points are sampled on long triangles, as a hull alone leaves out the middle of a straight link); the volumes of the union relative to one capsule: UR5 forearm 0.86, upper arm 0.89, Panda link 7 0.67, TX2 link 6 0.79, Spot lower leg 0.63; a link stays at one capsule only if the second brings nothing. UR5, Panda, TX2 and Spot (CommonData_git) re-fitted from the raw meshes. RobotBase.collisionShapes; CollisionModel.ExcludeCollidingPairs, as the capsules of the base and link 2 of the UR5 overlap at any configuration. The capsule of the URDF extensions is not read, the toolbox does not know it.
-    
+<a id="rg21-6"></a>
+### RG21.6 - examples and notebook of path planning (2026-11-09, #3385)
+- pathPlanningUR5.py: a goal given by a pose of the tool, a margin of 0.01, the smallest distance during the simulation 0.0099. mobileRobotsNavigation.py: a mecanum-wheeled robot and a differential drive through a room, both reach their goals; kinematic trees of x, y, phi and the wheels under PD, the contact of the wheels with the ground is not modeled. tutorialPathPlanning.ipynb; a section of the robotics chapter. Left out of the design: ShapesFromLinks, AddToMbs (the shapes as contact items), triangles of URDF meshes as shapes.
+
+<a id="rg21-5"></a>
+### RG21.5 - occupancy grid, A*, RRT in SE(2), pure pursuit (2026-11-09, #3384)
+- navigation.py: OccupancyGrid (rectangles, circles, convex shapes in a range of heights, DistanceTransform from the occupied cells with a free neighbor in numpy, Inflate), PlanGridPath with line of sight, PlanSE2Path on a chain Px, Py, Rz, so that it reuses PlanJointPath and the C++ check, PathWithHeadings, PurePursuit, DifferentialDriveWheelVelocities. robotNavigationTest.py: A* around a wall 13.47 against about 13.28 known, 0.05 cells; pure pursuit deviates 0.05 at a corner. ConvexShape.BoundingRadius bound.
+
+<a id="rg21-4"></a>
+### RG21.4 - RRT-Connect, ShortcutPath, PlanToPose, Trajectory.FromWaypoints (2026-11-09, #3383)
+- navigation.py on CollisionModel. UR5 around a wall: 47 waypoints, 4 after 200 shortcuts, 38 ms. TrajectoryFromPath checks the blended motion and halves the blend times until it is free, without blending it is the path. robotPathPlanningTest.py.
+
 <a id="rg21-3"></a>
 ### RG21.3 - collision geometries of a URDF, up to two capsules per link (2026-11-09, #3382)
 - GetURDFrobotData(collision=True) replaces collisionMeshes; keys 'collision' of the links, 'collisionBase'; ReduceURDFrobotData moves them; RobotFromURDFdata(collisionMeshesAs=). FitCapsulesToMesh (assignment by the distance to the axes; the two capsules are taken if the volume of their union is smaller; the points are sampled on long triangles, as a hull alone leaves out the middle of a straight link); the volumes of the union relative to one capsule: UR5 forearm 0.86, upper arm 0.89, Panda link 7 0.67, TX2 link 6 0.79, Spot lower leg 0.63; a link stays at one capsule only if the second brings nothing. UR5, Panda, TX2 and Spot (CommonData_git) re-fitted from the raw meshes. RobotBase.collisionShapes; CollisionModel.ExcludeCollidingPairs, as the capsules of the base and link 2 of the UR5 overlap at any configuration. The capsule of the URDF extensions is not read, the toolbox does not know it.
