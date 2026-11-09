@@ -3582,6 +3582,10 @@ Maintainer 2026-11-08: design section 3.3, decision 14.
 
 #3360.
 
+#### **CLOSED_RG19.14.3** spotReinforcementLearning.py on the floating base, spotModel.py removed
+
+(#3381)
+
 ### **OPEN_RG19.15** The joint torque loads: the test models on SetControl now, the deprecated parameters removed at the end of the deprecation period
 
 #3361. Maintainer 2026-11-08: as suggested, when the deprecation period ends.

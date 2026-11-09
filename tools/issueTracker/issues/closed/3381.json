@@ -1,0 +1,14 @@
+{
+  "number": 3381,
+  "title": "spotReinforcementLearning.py on the floating base, spotModel.py removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "The learning example of Spot used a tree with six dummy joints from spotModel.py. Decided: the model moves into spotReinforcementLearning.py on Robot.CreateKinematicTree(floatingBase=...), its state is position and rotation vector of the base and the joints; spotModel.py is removed, as quadrupedsFloatingBase.py shows Spot standing.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 07:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "spotReinforcementLearning.py uses a kinematic tree on a floating base; spotModel.py is removed.",
+  "resolvedInVersion": "1.13.493"
+}

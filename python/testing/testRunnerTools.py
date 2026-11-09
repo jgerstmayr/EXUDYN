@@ -866,7 +866,7 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
     process timeout is therefore short on purpose, and a timeout AFTER the solver was reached is a
     pass; a timeout before it is a failure, because then the example hung while building.
 
-    An example in a subfolder of the examples ('FurtherExamples/spotModel.py') runs in its own folder,
+    An example in a subfolder of the examples ('robotics/quadrupedsFloatingBase.py') runs in its own folder,
     as a user runs it: it reads its data files beside it (#2757).
 
     Args:

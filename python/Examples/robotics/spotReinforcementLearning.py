@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  This file shows reinfocement learning for spotModel.py (has to be in same folder)
+# Details:  This file shows reinforcement learning of walking for the quadruped Spot, a kinematic tree on a floating base; needs spotData.h5 of the repository CommonData_git beside this one (internal)
 #
 # Author:   Johannes Gerstmayr, Janik Thentie
 # 
@@ -37,7 +37,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 import numpy as np
 import gym
 
-import spotModel #the model of this folder, spotModel.py
+from exudyn.advancedUtilities import LoadDictFromHDF5
 
 dtypeNumpy = np.float64
 
@@ -127,6 +127,75 @@ class RewardLoggingCallback(BaseCallback):
         return True
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++
+def GetSpotModel(addShoulderContact=False):
+    """Spot as a kinematic tree on a floating base, standing on the ground on contact spheres at its feet; the masses are assumed, as its URDF has none"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+
+    k = 5e4
+    d = 0.01*k
+    planeL = 16
+    zContact = -0.7+0.01214+6.45586829e-02 #contact at the beginning for legsInit
+    mbs.variables['zContact'] = zContact
+
+    gContact = mbs.AddGeneralContact()
+    gContact.sphereSphereContact = False
+    gContact.SetFrictionPairings(0.8*np.eye(1))
+    gContact.SetSearchTreeCellSize(numberOfCells=[1,1,1])
+    stFact = 0.3 #smaller grid as we do not walk that far
+    gContact.SetSearchTreeBox(pMin=[-0.5*planeL*stFact,-0.5*planeL*stFact,-1], pMax=[0.5*planeL*stFact,0.5*planeL*stFact,0.1])
+    gContact.frictionProportionalZone = 0.01
+
+    p0 = [0,0,zContact]
+    mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[exu.graphics.CheckerBoard(p0,size=planeL, nTiles=16)])))
+    mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround())))
+    [meshPoints, meshTrigs] = exu.graphics.ToPointsAndTrigs(exu.graphics.CheckerBoard(p0,size=planeL, nTiles=1))
+    gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
+                                        pointList=meshPoints, triangleList=meshTrigs, staticTriangles=True)
+
+    spotDataFile = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'spotData.h5')
+    if not os.path.isfile(spotDataFile):
+        raise ValueError('this example needs spotData.h5 of the repository CommonData_git beside this one: ' + spotDataFile)
+    robotData = LoadDictFromHDF5(spotDataFile)
+
+    legsInit = [0,36*np.pi/180,-54*np.pi/180.]
+    mbs.variables['legsInit'] = legsInit
+    fact = 0.5*1e3 #soft control, to avoid heavy oscillatory motion
+    robot = Robot(gravity=[0,0,-9.81], base=RobotBase(visualization=VRobotBase(graphicsData=list(robotData['graphicsBaseList']))),
+                  referenceConfiguration=legsInit*4)
+    linkNumbers = {'None':-1, 'base':-1, 'base_link':-1}
+    for cnt, link in enumerate(robotData['linkList']):
+        linkNumbers[link['name']] = cnt
+        (mass, com, inertia) = (link['mass'], link['com'], link['inertiaCOM'])
+        if mass == 0: #the URDF has no masses
+            if 'hip' in link['name']:
+                (mass, inertia) = (0.5, InertiaCuboid(density=2000,sideLengths=[0.05,0.2,0.05]).InertiaCOM())
+            else:
+                (mass, com, inertia) = (2, [0,0,-0.35/2], InertiaCuboid(density=3000,sideLengths=[0.05,0.05,0.4]).InertiaCOM())
+        robot.AddLink(RobotLink(mass=mass, parent=linkNumbers[link['parentName']], COM=com, inertia=inertia, preHT=link['preHT'],
+                                jointType=link['jointType'], PDcontrol=(fact, 0.05*fact),
+                                visualization=VRobotLink(graphicsData=link['graphicsDataList'], showMBSjoint=False, jointWidth=0.12, jointRadius=0.01)))
+
+    robotDict = robot.CreateKinematicTree(mbs, floatingBase=RigidBodyInertia(mass=20, inertiaTensor=InertiaCuboid(density=2000,sideLengths=[0.7,0.4,0.12]).InertiaCOM()))
+    oKT = robotDict['objectKinematicTree']
+
+    if addShoulderContact: #False for efficiency
+        for i in ['fl.hip','fr.hip','hl.hip','hr.hip']:
+            offy = -0.1 if 'l' not in i else 0.1
+            m = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oKT, linkNumber=linkNumbers[i], localPosition=[0,offy,0.005]))
+            gContact.AddSphereWithMarker(m, radius=0.08, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
+
+    r = 0.05 #radius of the contact sphere at a foot
+    mbs.variables['legMarkers'] = []
+    for i in ['fl.lleg','fr.lleg','hl.lleg','hr.lleg']:
+        m = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oKT, linkNumber=linkNumbers[i], localPosition=[0,0.,-0.370+r]))
+        gContact.AddSphereWithMarker(m, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
+        mbs.variables['legMarkers'] += [m]
+    mbs.Assemble()
+    return (mbs, SC, oKT, robotDict['nodeGeneric'], robotDict['nodeBase'])
+
+
 #%%#########################
 addShoulderContact = False
 
@@ -149,10 +218,8 @@ class SpotEnv(OpenAIGymInterfaceEnv):
         #%%++++++++++++++++++++++++
         self.cntCalls = 0
         
-        self.mbs, self.SC, self.oKT, self.nKT = spotModel.GetModel(addShoulderContact=addShoulderContact)
+        self.mbs, self.SC, self.oKT, self.nKT, self.nBase = GetSpotModel(addShoulderContact=addShoulderContact)
         self.legsInit = self.mbs.variables['legsInit']
-        self.legMarkers = self.mbs.variables['legMarkers']
-        self.legRadius = self.mbs.variables['legRadius']
         self.legMarkers = self.mbs.variables['legMarkers']
         self.zContact = self.mbs.variables['zContact']+0.05
 
@@ -270,15 +337,15 @@ class SpotEnv(OpenAIGymInterfaceEnv):
                                 )
             self.previousSetCoordinates = modAction
 
-        setJoint = list(self.state[:6]) + list(modAction)
               
-        self.mbs.SetObjectParameter(self.oKT, 'jointPositionOffsetVector', setJoint)
+        self.mbs.SetObjectParameter(self.oKT, 'jointPositionOffsetVector', list(modAction))
         
         
     def Output2StateAndDone(self):        
         #+++++++++++++++++++++++++
-        statesVector =  self.mbs.GetNodeOutput(self.nKT, variableType=exu.OutputVariableType.Coordinates)
-        statesVector_t =  self.mbs.GetNodeOutput(self.nKT, variableType=exu.OutputVariableType.Coordinates_t)
+        #the state: position and rotation vector of the base, then the joints
+        statesVector = list(self.mbs.GetNodeOutput(self.nBase, variableType=exu.OutputVariableType.Coordinates)) + list(self.mbs.GetNodeOutput(self.nKT, variableType=exu.OutputVariableType.Coordinates))
+        statesVector_t = list(self.mbs.GetNodeOutput(self.nBase, variableType=exu.OutputVariableType.Coordinates_t)) + list(self.mbs.GetNodeOutput(self.nKT, variableType=exu.OutputVariableType.Coordinates_t))
 
         #add position of leg contact relative to ground -> allows RL to see if foot has contact
         legStates = [0]*self.nLegStates
@@ -357,7 +424,7 @@ class SpotEnv(OpenAIGymInterfaceEnv):
         #reset incremental set values
         self.previousSetCoordinates = np.zeros(self.nActuatedJoints)
         self.previousSetCoordinates += np.array(self.legsInit*4)
-        self.state[:self.nActuatedJoints] += self.previousSetCoordinates
+        self.state[6:6+self.nActuatedJoints] += self.previousSetCoordinates
         
         self.initialPosition = self.state[0:2]
         self.maxDistTarget = np.linalg.norm(self.initialPosition - self.target_position[:2])

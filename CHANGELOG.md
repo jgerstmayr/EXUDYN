@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 475 | 1.13.492 |
+| 1.13 | Newborn | 476 | 1.13.493 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.493** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` spotReinforcementLearning.py on the floating base, spotModel.py removed (#3381)
+  - description: The learning example of Spot used a tree with six dummy joints from spotModel.py. Decided: the model moves into spotReinforcementLearning.py on Robot.CreateKinematicTree(floatingBase=...), its state is position and rotation vector of the base and the joints; spotModel.py is removed, as quadrupedsFloatingBase.py shows Spot standing.
+  - **notes:** spotReinforcementLearning.py uses a kinematic tree on a floating base; spotModel.py is removed.
+  - date resolved: **2026-11-09 07:14**, date raised: 2026-11-09
 - **1.13.492** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The collision shapes of RobotLink and the collision check in C++ (#3380)
   - description: For the path planning: RobotLink.collisionShapes, Robot.GetCollisionModel, and exudyn.cUtilities.CollisionModel with MinimumDistance, IsFree and IsEdgeFree on the distance kernels of the contact primitives; design robotPlanning.md section 4.
   - **notes:** Robot.GetCollisionModel and exudyn.cUtilities.CollisionModel check a robot against itself and obstacles in C++.
