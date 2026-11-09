@@ -938,8 +938,7 @@ With automatic step size, {numref}`fig-solver-efficiency-adaptive` against {numr
 the Runge-Kutta solvers with the estimate `twoSteps` reach the accuracy of their constant steps for about the same
 CPU time, or less where the motion allows larger steps. Their errors decrease with the tolerance; the tolerance
 bounds the error of a step, so the relative error at the end lies 10 to 200 times above it. At the largest tolerances the step is limited by its maximum, a tenth of the simulated time,
-and the error no longer grows. On the spatial slider crank the error of `LobattoIIIA4` stays at about $10^{-7}$ for
-the tolerances below $10^{-6}$ (#3313). `TrapezoidalGGL`, with the estimate `oneStep`, lies on its own curve.
+and the error no longer grows. `TrapezoidalGGL`, with the estimate `oneStep`, lies on its own curve.
 Without constraints, the explicit `DOPRI5` is the most efficient solver as long as the step is not limited by
 stability, as on the kinematic tree.
 
