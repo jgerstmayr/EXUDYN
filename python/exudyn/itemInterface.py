@@ -15,9 +15,9 @@ from typing import Protocol, Union
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'CopyDictLevel1', 'IIDiagMatrix', 'CheckForValidUInt', 'CheckForValidPInt',
-    'CheckForValidUReal', 'CheckForValidPReal', 'IsValidNumber', 'CheckForValidNumpyArray',
-    'userFunctionArgsDict', 'NodeUserPositionUserFunction', 'NodeUserPositionJacobianUserFunction',
+    'IIDiagMatrix', 'CheckForValidUInt', 'CheckForValidPInt', 'CheckForValidUReal',
+    'CheckForValidPReal', 'IsValidNumber', 'CheckForValidNumpyArray', 'userFunctionArgsDict',
+    'NodeUserPositionUserFunction', 'NodeUserPositionJacobianUserFunction',
     'NodeUserRotationMatrixUserFunction', 'NodeUserRotationJacobianUserFunction',
     'ObjectGroundGraphicsDataUserFunction', 'ObjectRigidBodyGraphicsDataUserFunction',
     'ObjectRigidBody2DGraphicsDataUserFunction', 'ObjectGenericODE2ForceUserFunction',
@@ -153,16 +153,17 @@ __all__ = [
     ]
 
 
-#helper function for level-1 copy of dicts (for visualization default args!)
-#visualization dictionaries (which may be huge, are only flat copied, which is sufficient)
-def CopyDictLevel1(originalDict):
-    if isinstance(originalDict,dict): #copy only required if default dict is used
-        copyDict = {}
-        for key, value in originalDict.items():
-            copyDict[key] = copy.copy(value)
-        return copyDict
-    else:
-        return originalDict #fast track for everything else
+#helper function for the visualization of an item: None for the defaults, its VItem class, or a dict
+#with the parameters that differ from the defaults (#2342)
+def _ItemVisualization(visualization, visualizationClass):
+    if visualization is None:
+        return visualizationClass()
+    if isinstance(visualization, dict):
+        try:
+            return visualizationClass(**visualization)
+        except TypeError as error:
+            raise ValueError('visualization of ' + visualizationClass.__name__[1:] + ': ' + str(error)) from None
+    return visualization
 
 #helper function diagonal matrices, not needing numpy
 def IIDiagMatrix(rowsColumns, value):
@@ -2220,12 +2221,12 @@ class NodePoint:
         Node has/provides the following types: ``Position``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePoint)
 
     def __iter__(self):
         yield 'nodeType', 'Point'
@@ -2286,12 +2287,12 @@ class NodePoint2D:
         Node has/provides the following types: ``Position2D``, ``Position``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.], initialCoordinates = [0.,0.], initialVelocities = [0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.], initialCoordinates = [0.,0.], initialVelocities = [0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePoint2D)
 
     def __iter__(self):
         yield 'nodeType', 'Point2D'
@@ -2356,13 +2357,13 @@ class NodeRigidBodyEP:
         Node has/provides the following types: ``Position``, ``Orientation``, ``RigidBody``, ``RotationEulerParameters``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], addConstraintEquation = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], addConstraintEquation = True, visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
         self.addConstraintEquation = addConstraintEquation
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeRigidBodyEP)
 
     def __iter__(self):
         yield 'nodeType', 'RigidBodyEP'
@@ -2426,12 +2427,12 @@ class NodeRigidBodyRxyz:
         Node has/provides the following types: ``Position``, ``Orientation``, ``RigidBody``, ``RotationRxyz``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeRigidBodyRxyz)
 
     def __iter__(self):
         yield 'nodeType', 'RigidBodyRxyz'
@@ -2494,12 +2495,12 @@ class NodeRigidBodyRotVecLG:
         Node has/provides the following types: ``Position``, ``Orientation``, ``RigidBody``, ``RotationRotationVector``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeRigidBodyRotVecLG)
 
     def __iter__(self):
         yield 'nodeType', 'RigidBodyRotVecLG'
@@ -2562,12 +2563,12 @@ class NodeRigidBody2D:
         Node has/provides the following types: ``Position2D``, ``Orientation2D``, ``Position``, ``Orientation``, ``RigidBody``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeRigidBody2D)
 
     def __iter__(self):
         yield 'nodeType', 'RigidBody2D'
@@ -2617,12 +2618,12 @@ class Node1D:
         Node has/provides the following types: ``GenericODE2``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.], initialCoordinates = [0.], initialVelocities = [0.], visualization = {}):
+    def __init__(self, name = '', referenceCoordinates = [0.], initialCoordinates = [0.], initialVelocities = [0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNode1D)
 
     def __iter__(self):
         yield 'nodeType', '1D'
@@ -2678,12 +2679,12 @@ class NodePoint2DSlope1:
         Node has/provides the following types: ``Position2D``, ``Orientation2D``, ``Point2DSlope1``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePoint2DSlope1)
 
     def __iter__(self):
         yield 'nodeType', 'Point2DSlope1'
@@ -2744,12 +2745,12 @@ class NodePointSlope1:
         Node has/provides the following types: ``Position``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePointSlope1)
 
     def __iter__(self):
         yield 'nodeType', 'PointSlope1'
@@ -2806,12 +2807,12 @@ class NodePointSlope12:
         Node has/provides the following types: ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePointSlope12)
 
     def __iter__(self):
         yield 'nodeType', 'PointSlope12'
@@ -2868,12 +2869,12 @@ class NodePointSlope23:
         Node has/provides the following types: ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,0.,1.,0.,0.,0.,1.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,0.,1.,0.,0.,0.,1.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePointSlope23)
 
     def __iter__(self):
         yield 'nodeType', 'PointSlope23'
@@ -2921,13 +2922,13 @@ class NodeGenericODE2:
         Node has/provides the following types: ``GenericODE2``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], initialCoordinates_t = [], numberOfODE2Coordinates = 0, visualization = {}):
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], initialCoordinates_t = [], numberOfODE2Coordinates = 0, visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialCoordinates_t = np.array(initialCoordinates_t)
         self.numberOfODE2Coordinates = numberOfODE2Coordinates
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeGenericODE2)
 
     def __iter__(self):
         yield 'nodeType', 'GenericODE2'
@@ -2968,12 +2969,12 @@ class NodeGenericODE1:
         visualization: visualization data, see VNodeGenericODE1
 
     """
-    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = {}):
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.numberOfODE1Coordinates = numberOfODE1Coordinates
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeGenericODE1)
 
     def __iter__(self):
         yield 'nodeType', 'GenericODE1'
@@ -3013,12 +3014,12 @@ class NodeGenericAE:
         visualization: visualization data, see VNodeGenericAE
 
     """
-    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfAECoordinates = 0, visualization = {}):
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfAECoordinates = 0, visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.numberOfAECoordinates = numberOfAECoordinates
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeGenericAE)
 
     def __iter__(self):
         yield 'nodeType', 'GenericAE'
@@ -3059,11 +3060,11 @@ class NodeGenericData:
         Node has/provides the following types: ``GenericData``
 
     """
-    def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = {}):
+    def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = None):
         self.name = name
         self.initialCoordinates = np.array(initialCoordinates)
         self.numberOfDataCoordinates = numberOfDataCoordinates
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeGenericData)
 
     def __iter__(self):
         yield 'nodeType', 'GenericData'
@@ -3114,10 +3115,10 @@ class NodePointGround:
         Node has/provides the following types: ``Ground``, ``Position2D``, ``Position``, ``Orientation``, ``GenericODE2``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], visualization = None):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodePointGround)
 
     def __iter__(self):
         yield 'nodeType', 'PointGround'
@@ -3190,7 +3191,7 @@ class NodeUser:
         Node has/provides the following types: ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', numberOfODE2Coordinates = 0, referenceCoordinates = [], initialCoordinates = [], initialVelocities = [], parameters = [], positionUserFunction: Union[NodeUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[NodeUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[NodeUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[NodeUserRotationJacobianUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', numberOfODE2Coordinates = 0, referenceCoordinates = [], initialCoordinates = [], initialVelocities = [], parameters = [], positionUserFunction: Union[NodeUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[NodeUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[NodeUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[NodeUserRotationJacobianUserFunction, int] = 0, visualization = None):
         self.name = name
         self.numberOfODE2Coordinates = numberOfODE2Coordinates
         self.referenceCoordinates = np.array(referenceCoordinates)
@@ -3201,7 +3202,7 @@ class NodeUser:
         self.positionJacobianUserFunction = positionJacobianUserFunction
         self.rotationMatrixUserFunction = rotationMatrixUserFunction
         self.rotationJacobianUserFunction = rotationJacobianUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VNodeUser)
 
     def __iter__(self):
         yield 'nodeType', 'User'
@@ -3268,12 +3269,12 @@ class ObjectGround:
         Object has/provides the following types: ``Ground``, ``Body``
 
     """
-    def __init__(self, name = '', referencePosition = None, referenceRotation = None, referenceHT = None, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', referencePosition = None, referenceRotation = None, referenceHT = None, visualization = None):
         self.name = name
         self.referencePosition = None if referencePosition is None else np.array(referencePosition)
         self.referenceRotation = None if referenceRotation is None else np.array(referenceRotation)
         self.referenceHT = referenceHT
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectGround)
 
     def __iter__(self):
         yield 'objectType', 'Ground'
@@ -3328,12 +3329,12 @@ class ObjectMassPoint:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), physicsMass = None, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), physicsMass = None, visualization = None):
         self.name = name
         self.mass = mass
         self.nodeNumber = nodeNumber
         self.physicsMass = physicsMass
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectMassPoint)
 
     def __iter__(self):
         yield 'objectType', 'MassPoint'
@@ -3392,12 +3393,12 @@ class ObjectMassPoint2D:
         Requested Node type: ``Position2D`` + ``Position``
 
     """
-    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), physicsMass = None, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), physicsMass = None, visualization = None):
         self.name = name
         self.mass = mass
         self.nodeNumber = nodeNumber
         self.physicsMass = physicsMass
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectMassPoint2D)
 
     def __iter__(self):
         yield 'objectType', 'MassPoint2D'
@@ -3462,14 +3463,14 @@ class ObjectMass1D:
         Requested Node type: ``GenericODE2``
 
     """
-    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), physicsMass = None, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), physicsMass = None, visualization = None):
         self.name = name
         self.mass = mass
         self.nodeNumber = nodeNumber
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
         self.physicsMass = physicsMass
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectMass1D)
 
     def __iter__(self):
         yield 'objectType', 'Mass1D'
@@ -3534,14 +3535,14 @@ class ObjectRotationalMass1D:
         Requested Node type: ``GenericODE2``
 
     """
-    def __init__(self, name = '', inertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), physicsInertia = None, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', inertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), physicsInertia = None, visualization = None):
         self.name = name
         self.inertia = inertia
         self.nodeNumber = nodeNumber
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
         self.physicsInertia = physicsInertia
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectRotationalMass1D)
 
     def __iter__(self):
         yield 'objectType', 'RotationalMass1D'
@@ -3616,7 +3617,7 @@ class ObjectRigidBody:
         Requested Node type: ``Position`` + ``Orientation`` + ``RigidBody``
 
     """
-    def __init__(self, name = '', mass = 0., inertia = [0.,0.,0., 0.,0.,0.], centerOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., inertia = [0.,0.,0., 0.,0.,0.], centerOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, visualization = None):
         self.name = name
         self.mass = mass
         self.inertia = np.array(inertia)
@@ -3625,7 +3626,7 @@ class ObjectRigidBody:
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
         self.physicsCenterOfMass = physicsCenterOfMass
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectRigidBody)
 
     def __iter__(self):
         yield 'objectType', 'RigidBody'
@@ -3705,7 +3706,7 @@ class ObjectRigidBody2D:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', mass = 0., inertia = 0., centerOfMass = [0.,0.], nodeNumber = exudyn.InvalidIndex(), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., inertia = 0., centerOfMass = [0.,0.], nodeNumber = exudyn.InvalidIndex(), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, visualization = None):
         self.name = name
         self.mass = mass
         self.inertia = inertia
@@ -3714,7 +3715,7 @@ class ObjectRigidBody2D:
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
         self.physicsCenterOfMass = physicsCenterOfMass
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectRigidBody2D)
 
     def __iter__(self):
         yield 'objectType', 'RigidBody2D'
@@ -3802,7 +3803,7 @@ class ObjectGenericODE2:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = None, stiffnessMatrix = None, dampingMatrix = None, forceVector = [], forceUserFunction: Union[ObjectGenericODE2ForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectGenericODE2MassMatrixUserFunction, int] = 0, jacobianUserFunction: Union[ObjectGenericODE2JacobianUserFunction, int] = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = None, stiffnessMatrix = None, dampingMatrix = None, forceVector = [], forceUserFunction: Union[ObjectGenericODE2ForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectGenericODE2MassMatrixUserFunction, int] = 0, jacobianUserFunction: Union[ObjectGenericODE2JacobianUserFunction, int] = 0, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrix = massMatrix
@@ -3812,7 +3813,7 @@ class ObjectGenericODE2:
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
         self.jacobianUserFunction = jacobianUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectGenericODE2)
 
     def __iter__(self):
         yield 'objectType', 'GenericODE2'
@@ -3867,13 +3868,13 @@ class ObjectGenericODE1:
         Object has/provides the following types: ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], systemMatrix = [], rhsVector = [], rhsUserFunction: Union[ObjectGenericODE1RhsUserFunction, int] = 0, visualization = {}):
+    def __init__(self, name = '', nodeNumbers = [], systemMatrix = [], rhsVector = [], rhsUserFunction: Union[ObjectGenericODE1RhsUserFunction, int] = 0, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.systemMatrix = CheckForValidNumpyArray(systemMatrix)
         self.rhsVector = CheckForValidNumpyArray(rhsVector)
         self.rhsUserFunction = rhsUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectGenericODE1)
 
     def __iter__(self):
         yield 'objectType', 'GenericODE1'
@@ -3962,7 +3963,7 @@ class ObjectGenericDAE:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbersODE2 = [], nodeNumbersODE1 = [], nodeNumbersAE = [], nodeNumbersData = [], massMatrix = [], dampingMatrix = [], stiffnessMatrix = [], forceVector = [], couplingMatrixODE1 = [], systemMatrix = [], rhsVector = [], couplingMatrixODE2 = [], couplingMatrixODE2_t = [], constraintMatrixODE2 = [], constraintMatrixODE1 = [], constraintVector = [], parameters = [], forceUserFunction: Union[ObjectGenericDAEForceUserFunction, int] = 0, rhsUserFunction: Union[ObjectGenericDAERhsUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectGenericDAEMassMatrixUserFunction, int] = 0, constraintUserFunction: Union[ObjectGenericDAEConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectGenericDAEJacobianUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectGenericDAEPostNewtonStepUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumbersODE2 = [], nodeNumbersODE1 = [], nodeNumbersAE = [], nodeNumbersData = [], massMatrix = [], dampingMatrix = [], stiffnessMatrix = [], forceVector = [], couplingMatrixODE1 = [], systemMatrix = [], rhsVector = [], couplingMatrixODE2 = [], couplingMatrixODE2_t = [], constraintMatrixODE2 = [], constraintMatrixODE1 = [], constraintVector = [], parameters = [], forceUserFunction: Union[ObjectGenericDAEForceUserFunction, int] = 0, rhsUserFunction: Union[ObjectGenericDAERhsUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectGenericDAEMassMatrixUserFunction, int] = 0, constraintUserFunction: Union[ObjectGenericDAEConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectGenericDAEJacobianUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectGenericDAEPostNewtonStepUserFunction, int] = 0, visualization = None):
         self.name = name
         self.nodeNumbersODE2 = copy.copy(nodeNumbersODE2)
         self.nodeNumbersODE1 = copy.copy(nodeNumbersODE1)
@@ -3987,7 +3988,7 @@ class ObjectGenericDAE:
         self.constraintUserFunction = constraintUserFunction
         self.jacobianUserFunction = jacobianUserFunction
         self.postNewtonStepUserFunction = postNewtonStepUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectGenericDAE)
 
     def __iter__(self):
         yield 'objectType', 'GenericDAE'
@@ -4082,7 +4083,7 @@ class ObjectUserBody:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, massIntegralUserFunction: Union[ObjectUserBodyMassIntegralUserFunction, int] = 0, centerOfMass = [0.,0.,0.], forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsData': [], 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, massIntegralUserFunction: Union[ObjectUserBodyMassIntegralUserFunction, int] = 0, centerOfMass = [0.,0.,0.], forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.parameters = CheckForValidNumpyArray(parameters)
@@ -4096,7 +4097,7 @@ class ObjectUserBody:
         self.rotationMatrixUserFunction = rotationMatrixUserFunction
         self.rotationJacobianUserFunction = rotationJacobianUserFunction
         self.outputVariableUserFunction = outputVariableUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectUserBody)
 
     def __iter__(self):
         yield 'objectType', 'UserBody'
@@ -4208,7 +4209,7 @@ class ObjectKinematicTree:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jacobianMassMatrixDerivative = True, baseNodeNumber = exudyn.InvalidIndex(), jointTypes = [], linkParents = [], jointTransformations = None, jointOffsets = None, jointHTs = None, linkInertiasCOM = None, linkCOMs = None, linkMasses = [], linkForces = None, linkTorques = None, jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction: Union[ObjectKinematicTreeForceUserFunction, int] = 0, visualization = {'show': True, 'showLinks': True, 'showJoints': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsDataList': []}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jacobianMassMatrixDerivative = True, baseNodeNumber = exudyn.InvalidIndex(), jointTypes = [], linkParents = [], jointTransformations = None, jointOffsets = None, jointHTs = None, linkInertiasCOM = None, linkCOMs = None, linkMasses = [], linkForces = None, linkTorques = None, jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction: Union[ObjectKinematicTreeForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.gravity = np.array(gravity)
@@ -4231,7 +4232,7 @@ class ObjectKinematicTree:
         self.jointPControlVector = np.array(jointPControlVector)
         self.jointDControlVector = np.array(jointDControlVector)
         self.forceUserFunction = forceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectKinematicTree)
 
     def __iter__(self):
         yield 'objectType', 'KinematicTree'
@@ -4330,7 +4331,7 @@ class ObjectFFRF:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = None, stiffnessMatrixFF = None, dampingMatrixFF = None, forceVector = [], forceUserFunction: Union[ObjectFFRFForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFMassMatrixUserFunction, int] = 0, computeFFRFterms = True, objectIsInitialized = False, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = None, stiffnessMatrixFF = None, dampingMatrixFF = None, forceVector = [], forceUserFunction: Union[ObjectFFRFForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFMassMatrixUserFunction, int] = 0, computeFFRFterms = True, objectIsInitialized = False, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixFF = massMatrixFF
@@ -4341,7 +4342,7 @@ class ObjectFFRF:
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
         self.objectIsInitialized = objectIsInitialized
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectFFRF)
 
     def __iter__(self):
         yield 'objectType', 'FFRF'
@@ -4459,7 +4460,7 @@ class ObjectFFRFreducedOrder:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, numericalJacobian = False, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, numericalJacobian = False, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixReduced = massMatrixReduced
@@ -4488,7 +4489,7 @@ class ObjectFFRFreducedOrder:
         self.physicsInertia = physicsInertia
         self.physicsCenterOfMass = physicsCenterOfMass
         self.physicsCenterOfMassTilde = physicsCenterOfMassTilde
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectFFRFreducedOrder)
 
     def __iter__(self):
         yield 'objectType', 'FFRFreducedOrder'
@@ -4610,7 +4611,7 @@ class ObjectANCFCable:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', length = 0., massPerLength = 0., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsLength = None, physicsMassPerLength = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, visualization = {'show': True, 'radius': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', length = 0., massPerLength = 0., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsLength = None, physicsMassPerLength = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, visualization = None):
         self.name = name
         self.length = length
         self.massPerLength = massPerLength
@@ -4629,7 +4630,7 @@ class ObjectANCFCable:
         self.physicsBendingDamping = physicsBendingDamping
         self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectANCFCable)
 
     def __iter__(self):
         yield 'objectType', 'ANCFCable'
@@ -4749,7 +4750,7 @@ class ObjectANCFCable2D:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Point2DSlope1`` + ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', length = 0., massPerLength = 0., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., referenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, axialForceUserFunction: Union[ObjectANCFCable2DAxialForceUserFunction, int] = 0, bendingMomentUserFunction: Union[ObjectANCFCable2DBendingMomentUserFunction, int] = 0, physicsLength = None, physicsMassPerLength = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, physicsReferenceCurvature = None, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', length = 0., massPerLength = 0., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., referenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, axialForceUserFunction: Union[ObjectANCFCable2DAxialForceUserFunction, int] = 0, bendingMomentUserFunction: Union[ObjectANCFCable2DBendingMomentUserFunction, int] = 0, physicsLength = None, physicsMassPerLength = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, physicsReferenceCurvature = None, visualization = None):
         self.name = name
         self.length = length
         self.massPerLength = massPerLength
@@ -4772,7 +4773,7 @@ class ObjectANCFCable2D:
         self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectANCFCable2D)
 
     def __iter__(self):
         yield 'objectType', 'ANCFCable2D'
@@ -4902,7 +4903,7 @@ class ObjectALEANCFCable2D:
         visualization: visualization data, see VObjectALEANCFCable2D
 
     """
-    def __init__(self, name = '', length = 0., massPerLength = 0., movingMassFactor = 1., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., referenceCurvature = 0., useCouplingTerms = True, addALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., physicsLength = None, physicsMassPerLength = None, physicsMovingMassFactor = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, physicsReferenceCurvature = None, physicsUseCouplingTerms = None, physicsAddALEvariation = None, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', length = 0., massPerLength = 0., movingMassFactor = 1., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., referenceCurvature = 0., useCouplingTerms = True, addALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., physicsLength = None, physicsMassPerLength = None, physicsMovingMassFactor = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, physicsReferenceCurvature = None, physicsUseCouplingTerms = None, physicsAddALEvariation = None, visualization = None):
         self.name = name
         self.length = length
         self.massPerLength = massPerLength
@@ -4929,7 +4930,7 @@ class ObjectALEANCFCable2D:
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.physicsUseCouplingTerms = physicsUseCouplingTerms
         self.physicsAddALEvariation = physicsAddALEvariation
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectALEANCFCable2D)
 
     def __iter__(self):
         yield 'objectType', 'ALEANCFCable2D'
@@ -5033,7 +5034,7 @@ class ObjectANCFBeam:
         Requested Node type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], length = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], crossSectionDamping = [0.,0.,0.], physicsLength = None, visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], length = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], crossSectionDamping = [0.,0.,0.], physicsLength = None, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.length = length
@@ -5041,7 +5042,7 @@ class ObjectANCFBeam:
         self.crossSectionPenaltyFactor = np.array(crossSectionPenaltyFactor)
         self.crossSectionDamping = np.array(crossSectionDamping)
         self.physicsLength = physicsLength
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectANCFBeam)
 
     def __iter__(self):
         yield 'objectType', 'ANCFBeam'
@@ -5148,7 +5149,7 @@ class ObjectBeamGeometricallyExact2D:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], length = 0., massPerLength = 0., crossSectionInertia = 0., bendingStiffness = 0., axialStiffness = 0., shearStiffness = 0., bendingDamping = 0., axialDamping = 0., shearDamping = 0., referenceCurvature = 0., includeReferenceRotations = False, physicsLength = None, physicsMassPerLength = None, physicsCrossSectionInertia = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsShearStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsShearDamping = None, physicsReferenceCurvature = None, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [], length = 0., massPerLength = 0., crossSectionInertia = 0., bendingStiffness = 0., axialStiffness = 0., shearStiffness = 0., bendingDamping = 0., axialDamping = 0., shearDamping = 0., referenceCurvature = 0., includeReferenceRotations = False, physicsLength = None, physicsMassPerLength = None, physicsCrossSectionInertia = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsShearStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsShearDamping = None, physicsReferenceCurvature = None, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.length = length
@@ -5172,7 +5173,7 @@ class ObjectBeamGeometricallyExact2D:
         self.physicsAxialDamping = physicsAxialDamping
         self.physicsShearDamping = physicsShearDamping
         self.physicsReferenceCurvature = physicsReferenceCurvature
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectBeamGeometricallyExact2D)
 
     def __iter__(self):
         yield 'objectType', 'BeamGeometricallyExact2D'
@@ -5268,13 +5269,13 @@ class ObjectBeamGeometricallyExact:
         Requested Node type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], length = 0., sectionData = exudyn.BeamSection(), physicsLength = None, visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], length = 0., sectionData = exudyn.BeamSection(), physicsLength = None, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.length = length
         self.sectionData = sectionData
         self.physicsLength = physicsLength
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectBeamGeometricallyExact)
 
     def __iter__(self):
         yield 'objectType', 'BeamGeometricallyExact'
@@ -5363,7 +5364,7 @@ class ObjectANCFThinPlate:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., stiffnessProportionalDamping = 0., bendingStiffnessProportionalDamping = -1., strainCoefficients = None, curvatureCoefficients = None, slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., stiffnessProportionalDamping = 0., bendingStiffnessProportionalDamping = -1., strainCoefficients = None, curvatureCoefficients = None, slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = None):
         self.name = name
         self.thickness = CheckForValidNumpyArray(thickness)
         self.density = density
@@ -5381,7 +5382,7 @@ class ObjectANCFThinPlate:
         self.physicsMassProportionalDamping = physicsMassProportionalDamping
         self.physicsStrainCoefficients = physicsStrainCoefficients
         self.physicsCurvatureCoefficients = physicsCurvatureCoefficients
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectANCFThinPlate)
 
     def __iter__(self):
         yield 'objectType', 'ANCFThinPlate'
@@ -5467,7 +5468,7 @@ class ObjectConnectorSpringDamper:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorSpringDamperSpringForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.referenceLength = referenceLength
@@ -5477,7 +5478,7 @@ class ObjectConnectorSpringDamper:
         self.velocityOffset = velocityOffset
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorSpringDamper)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorSpringDamper'
@@ -5553,7 +5554,7 @@ class ObjectConnectorCartesianSpringDamper:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], velocityOffset = [0.,0.,0.], springForceUserFunction: Union[ObjectConnectorCartesianSpringDamperSpringForceUserFunction, int] = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], velocityOffset = [0.,0.,0.], springForceUserFunction: Union[ObjectConnectorCartesianSpringDamperSpringForceUserFunction, int] = 0, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = np.array(stiffness)
@@ -5562,7 +5563,7 @@ class ObjectConnectorCartesianSpringDamper:
         self.velocityOffset = np.array(velocityOffset)
         self.springForceUserFunction = springForceUserFunction
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorCartesianSpringDamper)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorCartesianSpringDamper'
@@ -5653,7 +5654,7 @@ class ObjectConnectorRigidBodySpringDamper:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], velocityOffset = [0.,0.,0.,0.,0.,0.], useIntrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction: Union[ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction, int] = 0, intrinsicFormulation = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], velocityOffset = [0.,0.,0.,0.,0.,0.], useIntrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction: Union[ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction, int] = 0, intrinsicFormulation = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -5668,7 +5669,7 @@ class ObjectConnectorRigidBodySpringDamper:
         self.springForceTorqueUserFunction = springForceTorqueUserFunction
         self.postNewtonStepUserFunction = postNewtonStepUserFunction
         self.intrinsicFormulation = intrinsicFormulation
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorRigidBodySpringDamper)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorRigidBodySpringDamper'
@@ -5760,7 +5761,7 @@ class ObjectConnectorLinearSpringDamper:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [1,0,0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorLinearSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'drawAsCylinder': False, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [1,0,0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorLinearSpringDamperSpringForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = stiffness
@@ -5771,7 +5772,7 @@ class ObjectConnectorLinearSpringDamper:
         self.force = force
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorLinearSpringDamper)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorLinearSpringDamper'
@@ -5861,7 +5862,7 @@ class ObjectConnectorTorsionalSpringDamper:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., velocityOffset = 0., torque = 0., activeConnector = True, springTorqueUserFunction: Union[ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., velocityOffset = 0., torque = 0., activeConnector = True, springTorqueUserFunction: Union[ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -5874,7 +5875,7 @@ class ObjectConnectorTorsionalSpringDamper:
         self.torque = torque
         self.activeConnector = activeConnector
         self.springTorqueUserFunction = springTorqueUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorTorsionalSpringDamper)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorTorsionalSpringDamper'
@@ -5955,7 +5956,7 @@ class ObjectConnectorCoordinateSpringDamper:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperSpringForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = stiffness
@@ -5964,7 +5965,7 @@ class ObjectConnectorCoordinateSpringDamper:
         self.velocityOffset = velocityOffset
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorCoordinateSpringDamper)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorCoordinateSpringDamper'
@@ -6079,7 +6080,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., dynamicFrictionForce = 0., staticFrictionOffsetForce = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 0.001, viscousFrictionFactor = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction, int] = 0, fDynamicFriction = None, fStaticFrictionOffset = None, fViscousFriction = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., dynamicFrictionForce = 0., staticFrictionOffsetForce = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 0.001, viscousFrictionFactor = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction, int] = 0, fDynamicFriction = None, fStaticFrictionOffset = None, fViscousFriction = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -6106,7 +6107,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
         self.fDynamicFriction = fDynamicFriction
         self.fStaticFrictionOffset = fStaticFrictionOffset
         self.fViscousFriction = fViscousFriction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorCoordinateSpringDamperExt)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorCoordinateSpringDamperExt'
@@ -6198,7 +6199,7 @@ class ObjectConnectorGravity:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], gravitationalConstant = 6.6743e-11, mass0 = 0., mass1 = 0., minDistanceRegularization = 0., activeConnector = True, visualization = {'show': False, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], gravitationalConstant = 6.6743e-11, mass0 = 0., mass1 = 0., minDistanceRegularization = 0., activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.gravitationalConstant = gravitationalConstant
@@ -6206,7 +6207,7 @@ class ObjectConnectorGravity:
         self.mass1 = mass1
         self.minDistanceRegularization = minDistanceRegularization
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorGravity)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorGravity'
@@ -6333,7 +6334,7 @@ class ObjectConnectorHydraulicActuatorSimple:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumbers = [], offsetLength = 0., strokeLength = 0., chamberCrossSection0 = 0., chamberCrossSection1 = 0., hoseVolume0 = 0., hoseVolume1 = 0., valveOpening0 = 0., valveOpening1 = 0., actuatorDamping = 0., oilBulkModulus = 0., cylinderBulkModulus = 0., hoseBulkModulus = 0., nominalFlow = 0., systemPressure = 0., tankPressure = 0., useChamberVolumeChange = False, activeConnector = True, visualization = {'show': True, 'cylinderRadius': 0.05, 'rodRadius': 0.03, 'pistonRadius': 0.04, 'pistonLength': 0.001, 'rodMountRadius': 0., 'baseMountRadius': 0., 'baseMountLength': 0., 'colorCylinder': [-1.,-1.,-1.,-1.], 'colorPiston': [0.8,0.8,0.8,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumbers = [], offsetLength = 0., strokeLength = 0., chamberCrossSection0 = 0., chamberCrossSection1 = 0., hoseVolume0 = 0., hoseVolume1 = 0., valveOpening0 = 0., valveOpening1 = 0., actuatorDamping = 0., oilBulkModulus = 0., cylinderBulkModulus = 0., hoseBulkModulus = 0., nominalFlow = 0., systemPressure = 0., tankPressure = 0., useChamberVolumeChange = False, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumbers = copy.copy(nodeNumbers)
@@ -6354,7 +6355,7 @@ class ObjectConnectorHydraulicActuatorSimple:
         self.tankPressure = tankPressure
         self.useChamberVolumeChange = useChamberVolumeChange
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorHydraulicActuatorSimple)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorHydraulicActuatorSimple'
@@ -6450,7 +6451,7 @@ class ObjectConnectorUser:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [], requestedMarkerType = exudyn.MarkerType._None, nodeNumber = exudyn.InvalidIndex(), parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, markerAccessUserFunction: Union[ObjectConnectorUserMarkerAccessUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorUserPostNewtonStepUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', markerNumbers = [], requestedMarkerType = exudyn.MarkerType._None, nodeNumber = exudyn.InvalidIndex(), parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, markerAccessUserFunction: Union[ObjectConnectorUserMarkerAccessUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorUserPostNewtonStepUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.requestedMarkerType = requestedMarkerType
@@ -6460,7 +6461,7 @@ class ObjectConnectorUser:
         self.forceUserFunction = forceUserFunction
         self.markerAccessUserFunction = markerAccessUserFunction
         self.postNewtonStepUserFunction = postNewtonStepUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorUser)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorUser'
@@ -6527,7 +6528,7 @@ class ObjectJointUser:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], numberOfConstraints = 1, parameters = [], activeConnector = True, constraintUserFunction: Union[ObjectJointUserConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectJointUserJacobianUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], numberOfConstraints = 1, parameters = [], activeConnector = True, constraintUserFunction: Union[ObjectJointUserConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectJointUserJacobianUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.numberOfConstraints = numberOfConstraints
@@ -6535,7 +6536,7 @@ class ObjectJointUser:
         self.activeConnector = activeConnector
         self.constraintUserFunction = constraintUserFunction
         self.jacobianUserFunction = jacobianUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointUser)
 
     def __iter__(self):
         yield 'objectType', 'JointUser'
@@ -6616,7 +6617,7 @@ class ObjectConnectorReevingSystemSprings:
         Requested Marker type: ``_None``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], hasCoordinateMarkers = False, coordinateFactors = [1,1], stiffnessPerLength = 0., dampingPerLength = 0., dampingTorsional = 0., dampingShear = 0., regularizationForce = 0.1, referenceLength = 0., sheavesAxes = None, sheavesRadii = [], activeConnector = True, visualization = {'show': True, 'ropeRadius': 0.001, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], hasCoordinateMarkers = False, coordinateFactors = [1,1], stiffnessPerLength = 0., dampingPerLength = 0., dampingTorsional = 0., dampingShear = 0., regularizationForce = 0.1, referenceLength = 0., sheavesAxes = None, sheavesRadii = [], activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.hasCoordinateMarkers = hasCoordinateMarkers
@@ -6630,7 +6631,7 @@ class ObjectConnectorReevingSystemSprings:
         self.sheavesAxes = sheavesAxes
         self.sheavesRadii = np.array(sheavesRadii)
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorReevingSystemSprings)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorReevingSystemSprings'
@@ -6702,12 +6703,12 @@ class ObjectConnectorDistance:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.distance = distance
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorDistance)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorDistance'
@@ -6782,7 +6783,7 @@ class ObjectConnectorCoordinate:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction: Union[ObjectConnectorCoordinateOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectConnectorCoordinateOffsetUserFunction_t, int] = 0, activeConnector = True, factorValue1 = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction: Union[ObjectConnectorCoordinateOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectConnectorCoordinateOffsetUserFunction_t, int] = 0, activeConnector = True, factorValue1 = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.offset = offset
@@ -6792,7 +6793,7 @@ class ObjectConnectorCoordinate:
         self.offsetUserFunction_t = offsetUserFunction_t
         self.activeConnector = activeConnector
         self.factorValue1 = factorValue1
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorCoordinate)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorCoordinate'
@@ -6864,7 +6865,7 @@ class ObjectConnectorCoordinateVector:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, constraintUserFunction: Union[ObjectConnectorCoordinateVectorConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectConnectorCoordinateVectorJacobianUserFunction, int] = 0, activeConnector = True, visualization = {}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, constraintUserFunction: Union[ObjectConnectorCoordinateVectorConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectConnectorCoordinateVectorJacobianUserFunction, int] = 0, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.scalingMarker0 = CheckForValidNumpyArray(scalingMarker0)
@@ -6876,7 +6877,7 @@ class ObjectConnectorCoordinateVector:
         self.constraintUserFunction = constraintUserFunction
         self.jacobianUserFunction = jacobianUserFunction
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorCoordinateVector)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorCoordinateVector'
@@ -6971,7 +6972,7 @@ class ObjectConnectorRollingDiscPenalty:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0., discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingViscousFriction = 0., useLinearProportionalZone = False, activeConnector = True, rollingFrictionViscous = None, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0., discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingViscousFriction = 0., useLinearProportionalZone = False, activeConnector = True, rollingFrictionViscous = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -6988,7 +6989,7 @@ class ObjectConnectorRollingDiscPenalty:
         self.useLinearProportionalZone = useLinearProportionalZone
         self.activeConnector = activeConnector
         self.rollingFrictionViscous = rollingFrictionViscous
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectConnectorRollingDiscPenalty)
 
     def __iter__(self):
         yield 'objectType', 'ConnectorRollingDiscPenalty'
@@ -7082,7 +7083,7 @@ class ObjectContactConvexRoll:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., staticFrictionOffset = 0., viscousFriction = 0., exponentialDecayStatic = 0.001, frictionProportionalZone = 0.001, rollLength = 0., coefficientsHull = [], activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., staticFrictionOffset = 0., viscousFriction = 0., exponentialDecayStatic = 0.001, frictionProportionalZone = 0.001, rollLength = 0., coefficientsHull = [], activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7096,7 +7097,7 @@ class ObjectContactConvexRoll:
         self.rollLength = rollLength
         self.coefficientsHull = CheckForValidNumpyArray(coefficientsHull)
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactConvexRoll)
 
     def __iter__(self):
         yield 'objectType', 'ContactConvexRoll'
@@ -7179,7 +7180,7 @@ class ObjectContactCoordinate:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, offset = 0., activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7191,7 +7192,7 @@ class ObjectContactCoordinate:
         self.impactModel = impactModel
         self.offset = offset
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactCoordinate)
 
     def __iter__(self):
         yield 'objectType', 'ContactCoordinate'
@@ -7273,7 +7274,7 @@ class ObjectContactCircleCable2D:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'showContactCircle': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7282,7 +7283,7 @@ class ObjectContactCircleCable2D:
         self.circleRadius = circleRadius
         self.offset = offset
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactCircleCable2D)
 
     def __iter__(self):
         yield 'objectType', 'ContactCircleCable2D'
@@ -7370,7 +7371,7 @@ class ObjectContactFrictionCircleCable2D:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., useSegmentNormals = True, activeConnector = True, visualization = {'show': True, 'showContactCircle': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., useSegmentNormals = True, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7383,7 +7384,7 @@ class ObjectContactFrictionCircleCable2D:
         self.circleRadius = circleRadius
         self.useSegmentNormals = useSegmentNormals
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactFrictionCircleCable2D)
 
     def __iter__(self):
         yield 'objectType', 'ContactFrictionCircleCable2D'
@@ -7479,7 +7480,7 @@ class ObjectContactSphereSphere:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), spheresRadii = [-1.,-1.], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., constantPullOffForce = 0., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), spheresRadii = [-1.,-1.], isHollowSphere1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., constantPullOffForce = 0., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7498,7 +7499,7 @@ class ObjectContactSphereSphere:
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactSphereSphere)
 
     def __iter__(self):
         yield 'objectType', 'ContactSphereSphere'
@@ -7596,7 +7597,7 @@ class ObjectContactSphereTorus:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., torusMajorRadius = 0., torusMinorRadius = 0., torusAxis = [0,0,0], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., torusMajorRadius = 0., torusMinorRadius = 0., torusAxis = [0,0,0], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, radiusSphere = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7614,7 +7615,7 @@ class ObjectContactSphereTorus:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.radiusSphere = radiusSphere
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactSphereTorus)
 
     def __iter__(self):
         yield 'objectType', 'ContactSphereTorus'
@@ -7714,7 +7715,7 @@ class ObjectContactSphereTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereTriangleContactForceUserFunction, int] = 0, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereTriangleContactForceUserFunction, int] = 0, radiusSphere = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7733,7 +7734,7 @@ class ObjectContactSphereTriangle:
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
         self.radiusSphere = radiusSphere
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactSphereTriangle)
 
     def __iter__(self):
         yield 'objectType', 'ContactSphereTriangle'
@@ -7830,7 +7831,7 @@ class ObjectContactSphereCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., cylinderRadius = 0., cylinderLength = 0., dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactSphereCylinderContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7847,7 +7848,7 @@ class ObjectContactSphereCylinder:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactSphereCylinder)
 
     def __iter__(self):
         yield 'objectType', 'ContactSphereCylinder'
@@ -7953,7 +7954,7 @@ class ObjectContactCylinderCylinder:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, isCapsule0 = False, isCapsule1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylindersRadii = [0.,0.], cylindersLengths = [0.,0.], isHollowCylinder1 = False, isCapsule0 = False, isCapsule1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderCylinderContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -7976,7 +7977,7 @@ class ObjectContactCylinderCylinder:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactCylinderCylinder)
 
     def __iter__(self):
         yield 'objectType', 'ContactCylinderCylinder'
@@ -8086,7 +8087,7 @@ class ObjectContactConeCone:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), conesRadii0 = [0.,0.], conesRadii1 = [0.,0.], conesLengths = [0.,0.], isHollowCone1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeConeContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), conesRadii0 = [0.,0.], conesRadii1 = [0.,0.], conesLengths = [0.,0.], isHollowCone1 = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeConeContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8108,7 +8109,7 @@ class ObjectContactConeCone:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactConeCone)
 
     def __iter__(self):
         yield 'objectType', 'ContactConeCone'
@@ -8217,7 +8218,7 @@ class ObjectContactConeTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), coneRadii = [0.,0.], coneLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), coneRadii = [0.,0.], coneLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConeTriangleContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8239,7 +8240,7 @@ class ObjectContactConeTriangle:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactConeTriangle)
 
     def __iter__(self):
         yield 'objectType', 'ContactConeTriangle'
@@ -8348,7 +8349,7 @@ class ObjectContactConvexConvex:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), points0 = [], triangles0 = [], points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConvexConvexContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), points0 = [], triangles0 = [], points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactConvexConvexContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8370,7 +8371,7 @@ class ObjectContactConvexConvex:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactConvexConvex)
 
     def __iter__(self):
         yield 'objectType', 'ContactConvexConvex'
@@ -8483,7 +8484,7 @@ class ObjectContactPrimitiveConvex:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), primitiveType = exudyn.ContactPrimitiveType.Sphere, radius = 0., radius1 = 0., length = 0., points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactPrimitiveConvexContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), primitiveType = exudyn.ContactPrimitiveType.Sphere, radius = 0., radius1 = 0., length = 0., points1 = [], triangles1 = [], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactPrimitiveConvexContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8507,7 +8508,7 @@ class ObjectContactPrimitiveConvex:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactPrimitiveConvex)
 
     def __iter__(self):
         yield 'objectType', 'ContactPrimitiveConvex'
@@ -8618,7 +8619,7 @@ class ObjectContactCylinderTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), cylinderRadius = 0., cylinderLength = 0., trianglePoints = None, infinitePlane = False, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., constantPullOffForce = 0., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = exudyn.ContactImpactModel.Linear, activeConnector = True, contactForceUserFunction: Union[ObjectContactCylinderTriangleContactForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8640,7 +8641,7 @@ class ObjectContactCylinderTriangle:
         self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.contactForceUserFunction = contactForceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactCylinderTriangle)
 
     def __iter__(self):
         yield 'objectType', 'ContactCylinderTriangle'
@@ -8727,7 +8728,7 @@ class ObjectJournalBearing:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], journalRadius = 0., bearingRadius = 0., bearingLength = 0., viscosity = 0., bearingModel = exudyn.JournalBearingModel.Short, maximumEccentricityRatio = 0.99, contactStiffness = 0., contactDamping = 0., activeConnector = True, forceUserFunction: Union[ObjectJournalBearingForceUserFunction, int] = 0, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], journalRadius = 0., bearingRadius = 0., bearingLength = 0., viscosity = 0., bearingModel = exudyn.JournalBearingModel.Short, maximumEccentricityRatio = 0.99, contactStiffness = 0., contactDamping = 0., activeConnector = True, forceUserFunction: Union[ObjectJournalBearingForceUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.journalRadius = journalRadius
@@ -8740,7 +8741,7 @@ class ObjectJournalBearing:
         self.contactDamping = contactDamping
         self.activeConnector = activeConnector
         self.forceUserFunction = forceUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJournalBearing)
 
     def __iter__(self):
         yield 'objectType', 'JournalBearing'
@@ -8822,7 +8823,7 @@ class ObjectContactCurveCircles:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -8835,7 +8836,7 @@ class ObjectContactCurveCircles:
         self.contactDamping = contactDamping
         self.contactModel = contactModel
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectContactCurveCircles)
 
     def __iter__(self):
         yield 'objectType', 'ContactCurveCircles'
@@ -8923,7 +8924,7 @@ class ObjectJointGeneric:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction: Union[ObjectJointGenericOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectJointGenericOffsetUserFunction_t, int] = 0, alternativeConstraints = False, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction: Union[ObjectJointGenericOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectJointGenericOffsetUserFunction_t, int] = 0, alternativeConstraints = False, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.constrainedAxes = copy.copy(constrainedAxes)
@@ -8934,7 +8935,7 @@ class ObjectJointGeneric:
         self.offsetUserFunction = offsetUserFunction
         self.offsetUserFunction_t = offsetUserFunction_t
         self.alternativeConstraints = alternativeConstraints
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointGeneric)
 
     def __iter__(self):
         yield 'objectType', 'JointGeneric'
@@ -9012,13 +9013,13 @@ class ObjectJointRevoluteZ:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = {'show': True, 'axisRadius': 0.1, 'axisLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.rotationMarker0 = np.array(rotationMarker0)
         self.rotationMarker1 = np.array(rotationMarker1)
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointRevoluteZ)
 
     def __iter__(self):
         yield 'objectType', 'JointRevoluteZ'
@@ -9091,13 +9092,13 @@ class ObjectJointPrismaticX:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = {'show': True, 'axisRadius': 0.1, 'axisLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.rotationMarker0 = np.array(rotationMarker0)
         self.rotationMarker1 = np.array(rotationMarker1)
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointPrismaticX)
 
     def __iter__(self):
         yield 'objectType', 'JointPrismaticX'
@@ -9162,12 +9163,12 @@ class ObjectJointSpherical:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, visualization = {'show': True, 'jointRadius': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.constrainedAxes = copy.copy(constrainedAxes)
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointSpherical)
 
     def __iter__(self):
         yield 'objectType', 'JointSpherical'
@@ -9238,7 +9239,7 @@ class ObjectJointRollingDisc:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.constrainedAxes = copy.copy(constrainedAxes)
@@ -9246,7 +9247,7 @@ class ObjectJointRollingDisc:
         self.discRadius = discRadius
         self.discAxis = np.array(discAxis)
         self.planeNormal = np.array(planeNormal)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointRollingDisc)
 
     def __iter__(self):
         yield 'objectType', 'JointRollingDisc'
@@ -9310,11 +9311,11 @@ class ObjectJointRevolute2D:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointRevolute2D)
 
     def __iter__(self):
         yield 'objectType', 'JointRevolute2D'
@@ -9380,14 +9381,14 @@ class ObjectJointPrismatic2D:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.axisMarker0 = np.array(axisMarker0)
         self.normalMarker1 = np.array(normalMarker1)
         self.constrainRotation = constrainRotation
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointPrismatic2D)
 
     def __iter__(self):
         yield 'objectType', 'JointPrismatic2D'
@@ -9464,7 +9465,7 @@ class ObjectJointSliding:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), constrainRotations = [1,1,1], constrainTranslations = [1,1,1], axialForce = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), constrainRotations = [1,1,1], constrainTranslations = [1,1,1], axialForce = 0, activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.slidingMarkerNumbers = copy.copy(slidingMarkerNumbers)
@@ -9474,7 +9475,7 @@ class ObjectJointSliding:
         self.constrainTranslations = copy.copy(constrainTranslations)
         self.axialForce = axialForce
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointSliding)
 
     def __iter__(self):
         yield 'objectType', 'JointSliding'
@@ -9556,7 +9557,7 @@ class ObjectJointSliding2D:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), useClassicalFormulation = True, constrainRotation = False, axialForce = 0, activeConnector = True, classicalFormulation = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), useClassicalFormulation = True, constrainRotation = False, axialForce = 0, activeConnector = True, classicalFormulation = None, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.slidingMarkerNumbers = copy.copy(slidingMarkerNumbers)
@@ -9567,7 +9568,7 @@ class ObjectJointSliding2D:
         self.axialForce = axialForce
         self.activeConnector = activeConnector
         self.classicalFormulation = classicalFormulation
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointSliding2D)
 
     def __iter__(self):
         yield 'objectType', 'JointSliding2D'
@@ -9647,7 +9648,7 @@ class ObjectJointALEMoving2D:
         Requested Marker type: ``_None``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], usePenaltyFormulation = False, penaltyStiffness = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], usePenaltyFormulation = False, penaltyStiffness = 0., activeConnector = True, visualization = None):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.slidingMarkerNumbers = copy.copy(slidingMarkerNumbers)
@@ -9657,7 +9658,7 @@ class ObjectJointALEMoving2D:
         self.usePenaltyFormulation = usePenaltyFormulation
         self.penaltyStiffness = penaltyStiffness
         self.activeConnector = activeConnector
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VObjectJointALEMoving2D)
 
     def __iter__(self):
         yield 'objectType', 'JointALEMoving2D'
@@ -9713,10 +9714,10 @@ class MarkerBodyMass:
         Marker has/provides the following types: ``Object``, ``Body``, ``BodyMass``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyMass)
 
     def __iter__(self):
         yield 'markerType', 'BodyMass'
@@ -9761,11 +9762,11 @@ class MarkerBodyPosition:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = np.array(localPosition)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyPosition)
 
     def __iter__(self):
         yield 'markerType', 'BodyPosition'
@@ -9813,12 +9814,12 @@ class MarkerBodyRigid:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = None, localHT = None, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = None, localHT = None, visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = None if localPosition is None else np.array(localPosition)
         self.localHT = localHT
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyRigid)
 
     def __iter__(self):
         yield 'markerType', 'BodyRigid'
@@ -9863,10 +9864,10 @@ class MarkerNodePosition:
         Marker has/provides the following types: ``Node``, ``Position``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerNodePosition)
 
     def __iter__(self):
         yield 'markerType', 'NodePosition'
@@ -9911,11 +9912,11 @@ class MarkerNodeRigid:
         Marker has/provides the following types: ``Node``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), localHT = None, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), localHT = None, visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.localHT = localHT
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerNodeRigid)
 
     def __iter__(self):
         yield 'markerType', 'NodeRigid'
@@ -9956,12 +9957,12 @@ class MarkerNodeCoordinate:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), includeReferenceCoordinate = False, visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), includeReferenceCoordinate = False, visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
         self.includeReferenceCoordinate = includeReferenceCoordinate
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerNodeCoordinate)
 
     def __iter__(self):
         yield 'markerType', 'NodeCoordinate'
@@ -10002,11 +10003,11 @@ class MarkerNodeCoordinates:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), includeReferenceCoordinates = True, visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), includeReferenceCoordinates = True, visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.includeReferenceCoordinates = includeReferenceCoordinates
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerNodeCoordinates)
 
     def __iter__(self):
         yield 'markerType', 'NodeCoordinates'
@@ -10046,12 +10047,12 @@ class MarkerNodeODE1Coordinate:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), includeReferenceCoordinate = False, visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), includeReferenceCoordinate = False, visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
         self.includeReferenceCoordinate = includeReferenceCoordinate
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerNodeODE1Coordinate)
 
     def __iter__(self):
         yield 'markerType', 'NodeODE1Coordinate'
@@ -10090,11 +10091,11 @@ class MarkerNodeRotationCoordinate:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.rotationCoordinate = rotationCoordinate
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerNodeRotationCoordinate)
 
     def __iter__(self):
         yield 'markerType', 'NodeRotationCoordinate'
@@ -10145,14 +10146,14 @@ class MarkerBodiesRelativeTranslationCoordinate:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], offset = 0., visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], offset = 0., visualization = None):
         self.name = name
         self.bodyNumbers = copy.copy(bodyNumbers)
         self.localPosition0 = np.array(localPosition0)
         self.localPosition1 = np.array(localPosition1)
         self.axis0 = np.array(axis0)
         self.offset = offset
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodiesRelativeTranslationCoordinate)
 
     def __iter__(self):
         yield 'markerType', 'BodiesRelativeTranslationCoordinate'
@@ -10213,7 +10214,7 @@ class MarkerBodiesRelativeRotationCoordinate:
         Marker has/provides the following types: ``Node``, ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], localRotation0 = IIDiagMatrix(rowsColumns=3,value=1), localRotation1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], localRotation0 = IIDiagMatrix(rowsColumns=3,value=1), localRotation1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., visualization = None):
         self.name = name
         self.bodyNumbers = copy.copy(bodyNumbers)
         self.nodeNumber = nodeNumber
@@ -10223,7 +10224,7 @@ class MarkerBodiesRelativeRotationCoordinate:
         self.localRotation0 = np.array(localRotation0)
         self.localRotation1 = np.array(localRotation1)
         self.offset = offset
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodiesRelativeRotationCoordinate)
 
     def __iter__(self):
         yield 'markerType', 'BodiesRelativeRotationCoordinate'
@@ -10281,12 +10282,12 @@ class MarkerSuperElementPosition:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumbers = [], weightingFactors = [], visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.meshNodeNumbers = copy.copy(meshNodeNumbers)
         self.weightingFactors = np.array(weightingFactors)
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerSuperElementPosition)
 
     def __iter__(self):
         yield 'markerType', 'SuperElementPosition'
@@ -10348,7 +10349,7 @@ class MarkerSuperElementRigid:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = None, localHT = None, meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, rotationsExponentialMap = 2, visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = None, localHT = None, meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, rotationsExponentialMap = 2, visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.offset = None if offset is None else np.array(offset)
@@ -10357,7 +10358,7 @@ class MarkerSuperElementRigid:
         self.weightingFactors = np.array(weightingFactors)
         self.useAlternativeApproach = useAlternativeApproach
         self.rotationsExponentialMap = rotationsExponentialMap
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerSuperElementRigid)
 
     def __iter__(self):
         yield 'markerType', 'SuperElementRigid'
@@ -10413,13 +10414,13 @@ class MarkerKinematicTreeRigid:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = None, localHT = None, visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = None, localHT = None, visualization = None):
         self.name = name
         self.objectNumber = objectNumber
         self.linkNumber = linkNumber
         self.localPosition = None if localPosition is None else np.array(localPosition)
         self.localHT = localHT
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerKinematicTreeRigid)
 
     def __iter__(self):
         yield 'markerType', 'KinematicTreeRigid'
@@ -10460,10 +10461,10 @@ class MarkerObjectODE2Coordinates:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), visualization = {}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), visualization = None):
         self.name = name
         self.objectNumber = objectNumber
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerObjectODE2Coordinates)
 
     def __iter__(self):
         yield 'markerType', 'ObjectODE2Coordinates'
@@ -10507,12 +10508,12 @@ class MarkerBodyCable2DShape:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), numberOfSegments = 3, verticalOffset = 0., visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), numberOfSegments = 3, verticalOffset = 0., visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.numberOfSegments = numberOfSegments
         self.verticalOffset = verticalOffset
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyCable2DShape)
 
     def __iter__(self):
         yield 'markerType', 'BodyCable2DShape'
@@ -10555,10 +10556,10 @@ class MarkerBodyCable2DCoordinates:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyCable2DCoordinates)
 
     def __iter__(self):
         yield 'markerType', 'BodyCable2DCoordinates'
@@ -10599,10 +10600,10 @@ class MarkerBodyBeamShape:
         Marker has/provides the following types: ``Object``, ``Body``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyBeamShape)
 
     def __iter__(self):
         yield 'markerType', 'BodyBeamShape'
@@ -10657,7 +10658,7 @@ class MarkerBodyUser:
         Marker has/provides the following types: ``Object``, ``Body``
 
     """
-    def __init__(self, name = '', bodyNumbers = [], providedMarkerType = exudyn.MarkerType.Position, parameters = [], positionUserFunction: Union[MarkerBodyUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[MarkerBodyUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[MarkerBodyUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[MarkerBodyUserRotationJacobianUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumbers = [], providedMarkerType = exudyn.MarkerType.Position, parameters = [], positionUserFunction: Union[MarkerBodyUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[MarkerBodyUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[MarkerBodyUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[MarkerBodyUserRotationJacobianUserFunction, int] = 0, visualization = None):
         self.name = name
         self.bodyNumbers = copy.copy(bodyNumbers)
         self.providedMarkerType = providedMarkerType
@@ -10666,7 +10667,7 @@ class MarkerBodyUser:
         self.positionJacobianUserFunction = positionJacobianUserFunction
         self.rotationMatrixUserFunction = rotationMatrixUserFunction
         self.rotationJacobianUserFunction = rotationJacobianUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VMarkerBodyUser)
 
     def __iter__(self):
         yield 'markerType', 'BodyUser'
@@ -10721,13 +10722,13 @@ class LoadForceVector:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction: Union[LoadForceVectorLoadVectorUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction: Union[LoadForceVectorLoadVectorUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = np.array(loadVector)
         self.bodyFixed = bodyFixed
         self.loadVectorUserFunction = loadVectorUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VLoadForceVector)
 
     def __iter__(self):
         yield 'loadType', 'ForceVector'
@@ -10781,13 +10782,13 @@ class LoadTorqueVector:
         Requested Marker type: ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction: Union[LoadTorqueVectorLoadVectorUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction: Union[LoadTorqueVectorLoadVectorUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = np.array(loadVector)
         self.bodyFixed = bodyFixed
         self.loadVectorUserFunction = loadVectorUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VLoadTorqueVector)
 
     def __iter__(self):
         yield 'loadType', 'TorqueVector'
@@ -10839,12 +10840,12 @@ class LoadMassProportional:
         Requested Marker type: ``Body`` + ``BodyMass``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], loadVectorUserFunction: Union[LoadMassProportionalLoadVectorUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], loadVectorUserFunction: Union[LoadMassProportionalLoadVectorUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = np.array(loadVector)
         self.loadVectorUserFunction = loadVectorUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VLoadMassProportional)
 
     def __iter__(self):
         yield 'loadType', 'MassProportional'
@@ -10890,12 +10891,12 @@ class LoadCoordinate:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction: Union[LoadCoordinateLoadUserFunction, int] = 0, visualization = {}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction: Union[LoadCoordinateLoadUserFunction, int] = 0, visualization = None):
         self.name = name
         self.markerNumber = markerNumber
         self.load = load
         self.loadUserFunction = loadUserFunction
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VLoadCoordinate)
 
     def __iter__(self):
         yield 'loadType', 'Coordinate'
@@ -10944,14 +10945,14 @@ class SensorNode:
         visualization: visualization data, see VSensorNode
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = None):
         self.name = name
         self.nodeNumber = nodeNumber
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorNode)
 
     def __iter__(self):
         yield 'sensorType', 'Node'
@@ -11001,14 +11002,14 @@ class SensorObject:
         visualization: visualization data, see VSensorObject
 
     """
-    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = None):
         self.name = name
         self.objectNumber = objectNumber
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorObject)
 
     def __iter__(self):
         yield 'sensorType', 'Object'
@@ -11060,7 +11061,7 @@ class SensorBody:
         visualization: visualization data, see VSensorBody
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = np.array(localPosition)
@@ -11068,7 +11069,7 @@ class SensorBody:
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorBody)
 
     def __iter__(self):
         yield 'sensorType', 'Body'
@@ -11121,7 +11122,7 @@ class SensorSuperElement:
         visualization: visualization data, see VSensorSuperElement
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = None):
         self.name = name
         self.bodyNumber = bodyNumber
         self.meshNodeNumber = meshNodeNumber
@@ -11129,7 +11130,7 @@ class SensorSuperElement:
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorSuperElement)
 
     def __iter__(self):
         yield 'sensorType', 'SuperElement'
@@ -11184,7 +11185,7 @@ class SensorKinematicTree:
         visualization: visualization data, see VSensorKinematicTree
 
     """
-    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = None):
         self.name = name
         self.objectNumber = objectNumber
         self.linkNumber = linkNumber
@@ -11193,7 +11194,7 @@ class SensorKinematicTree:
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorKinematicTree)
 
     def __iter__(self):
         yield 'sensorType', 'KinematicTree'
@@ -11245,14 +11246,14 @@ class SensorMarker:
         visualization: visualization data, see VSensorMarker
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = None):
         self.name = name
         self.markerNumber = markerNumber
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorMarker)
 
     def __iter__(self):
         yield 'sensorType', 'Marker'
@@ -11300,13 +11301,13 @@ class SensorLoad:
         visualization: visualization data, see VSensorLoad
 
     """
-    def __init__(self, name = '', loadNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', loadNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', storeInternal = False, visualization = None):
         self.name = name
         self.loadNumber = loadNumber
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorLoad)
 
     def __iter__(self):
         yield 'sensorType', 'Load'
@@ -11356,7 +11357,7 @@ class SensorUserFunction:
         visualization: visualization data, see VSensorUserFunction
 
     """
-    def __init__(self, name = '', sensorNumbers = [], itemNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = {}):
+    def __init__(self, name = '', sensorNumbers = [], itemNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = None):
         self.name = name
         self.sensorNumbers = copy.copy(sensorNumbers)
         self.itemNumbers = copy.copy(itemNumbers)
@@ -11365,7 +11366,7 @@ class SensorUserFunction:
         self.fileName = fileName
         self.sensorUserFunction = sensorUserFunction
         self.storeInternal = storeInternal
-        self.visualization = CopyDictLevel1(visualization)
+        self.visualization = _ItemVisualization(visualization, VSensorUserFunction)
 
     def __iter__(self):
         yield 'sensorType', 'UserFunction'

@@ -27,7 +27,7 @@ and they usually include some range or size check (e.g., `PReal` is checked for 
 - `ArrayIndex` $\ldots$ a list of integer numbers (either list or in some cases `numpy` arrays may be allowed)
 - `ArrayNodeIndex` $\ldots$ a list of node indices
 - `Bool` $\ldots$ a boolean parameter: either `True` or `False` ('`bool`' in Python)
-- `VObjectMassPoint`, `VObjectRigidBody`, `VObjectGround`, etc.  $\ldots$ represents the visualization object of the underlying object; 'V' is put in front of object name
+- `VObjectMassPoint`, `VObjectRigidBody`, `VObjectGround`, etc.  $\ldots$ represents the visualization object of the underlying object; 'V' is put in front of object name; the argument `visualization` of an item takes this class or a dictionary with only the parameters that differ from the defaults (#2342)
 - `BodyGraphicsData` $\ldots$ see {ref}`sec-graphicsdata`
 - `Vector2D` $\ldots$ a list or `numpy` array of 2 real numbers
 - `Vector3D` $\ldots$ a list or `numpy` array of 3 real numbers

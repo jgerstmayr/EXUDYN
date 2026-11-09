@@ -714,6 +714,9 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
 outcome: !InternalError !InternalError !InternalError !InternalError !RuntimeError !InternalError !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !RuntimeError
   ObjectContactConvexConvex: triangles0(class) triangles1(class)
   ObjectContactPrimitiveConvex: triangles1(class)
+  ObjectFFRF: VtriangleMesh(class)
+  ObjectFFRFreducedOrder: VtriangleMesh(class)
+  ObjectGenericODE2: VtriangleMesh(class)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   ObjectKinematicTree: jointTypes(class,dict,set)
@@ -1355,9 +1358,9 @@ outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !Value
 outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !RuntimeError numpy1x1i=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !RuntimeError
   ObjectContactConvexConvex: triangles0(dict) triangles1(dict)
   ObjectContactPrimitiveConvex: triangles1(dict)
-  ObjectFFRF: VtriangleMesh(class,dict)
-  ObjectFFRFreducedOrder: VtriangleMesh(class,dict)
-  ObjectGenericODE2: VtriangleMesh(class,dict)
+  ObjectFFRF: VtriangleMesh(dict)
+  ObjectFFRFreducedOrder: VtriangleMesh(dict)
+  ObjectGenericODE2: VtriangleMesh(dict)
 
 outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !ValueError numpy1x1i=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !TypeError
   ObjectContactConvexConvex: triangles0(set) triangles1(set)

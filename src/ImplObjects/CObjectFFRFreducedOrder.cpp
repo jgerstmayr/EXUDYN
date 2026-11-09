@@ -527,7 +527,10 @@ void CObjectFFRFreducedOrder::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer&
 	};
 
 	//by the rotation parameters and their velocities
-	ResizableVector f0(n), f1(n);
+	ResizableVector& f0 = tempQuadraticVelocity0;
+	ResizableVector& f1 = tempQuadraticVelocity1;
+	f0.SetNumberOfItems(n);
+	f1.SetNumberOfItems(n);
 	Frame(theta, theta_t);
 	f0.SetAll(0.);
 	ComputeQuadraticVelocityVector(A, Glocal, omega, zeta, zeta_t, f0);

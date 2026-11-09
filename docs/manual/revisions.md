@@ -17,6 +17,10 @@ that holds the measured facts and the decisions.
 (sec-revisions-after-1-13)=
 ## After version 1.13
 
+**The visualization of an item** is given as its `V` class or as a dictionary with only the parameters that differ from
+the defaults; a parameter the item does not have raises a `ValueError` instead of being ignored. `item.visualization`
+is always the `V` class (#2342).
+
 **Reproducible results on every platform.** The C++ code computes `sin`, `exp`, `atan2`, ... with its own portable
 functions instead of those of the platform's library, which round some results differently; `exudyn.cMath` gives the
 same functions to Python, and the test models use it for their initial values. The test models give the same results

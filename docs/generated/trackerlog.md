@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.515.dev1
+- Exudyn version = 1.13.518.dev1
 - last change = 2026-11-09
-- Number of issues = 3394
-- Number of resolved issues = 3292 (515 in current version)
+- Number of issues = 3395
+- Number of resolved issues = 3295 (518 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9052,9 +9052,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.
   - **remarks:** deferred until 2027-01-01 (Claude-JG, 2026-11-09): the arguments are deprecated with a warning by \#3386, one release before 2027 contains both, then they are removed
   - date raised: 2026-11-08
-- `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
-  - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.
-  - date raised: 2026-11-08
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` MarkerNodeUser: a marker on the coordinates of nodes by Python user functions (#3236)
   - description: CreateCoordinateConstraint of UserItemCreator and the built-in coordinate constraint use MarkerNodeCoordinate; a user marker on nodes, whose value and Jacobian are Python (and recordable) user functions of the coordinates of its nodes, lets the coordinate constraint and coordinate connectors be user items. Decided (maintainer 2026-11-04): MarkerNodeUser first, as a step of its own (revision2026c RG7.18); MarkerBodyUser with coordinates and user shapes for contact and flexible interfaces are not planned yet (\#3106 closed).
   - date raised: 2026-11-04
@@ -9115,10 +9112,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` the ROS examples were last tested in 2023 and nobody can run them (#2511)
   - description: ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
   - date raised: 2026-09-18
-- `EXTENSION` `MEDIUM EFF` itemInterface (#2342)
-  - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
-  - **remarks:** planned as revision2026b step RG12.44 (triage 2026-10-07)
-  - date raised: 2026-04-17
 - `EXTENSION` `HIGH EFF` Add ObjectJointSliding (#2317)
   - description: Add implementation and tests for SlidingJoint with thick ANCF beam
   - **remarks:** planned as revision2026b step RG4.22 (triage 2026-10-07)

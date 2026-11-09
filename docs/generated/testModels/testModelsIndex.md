@@ -140,6 +140,7 @@ initialAccelerationsTest
 initialConstraintsCheckTest
 inspectTest
 itemParameterRenamesTest
+itemVisualizationArgumentTest
 jointArgsTest
 journalBearingTest
 kinematicChainTest

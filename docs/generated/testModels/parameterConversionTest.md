@@ -108,11 +108,14 @@ def SetRangeChecks(active):
 def Record(key, row):
     records.setdefault(' '.join(row), []).append(key)
 
+def VisualizationDefaults(itemClass):
+    return dict(getattr(itemInterface, 'V' + itemClass.__name__)())
+
 def DefaultDict(itemClass, typeKey, itemType):
     d = {typeKey: itemType}
     for name, parameter in inspect.signature(itemClass).parameters.items():
         if name == 'visualization':
-            for vName, value in parameter.default.items():
+            for vName, value in VisualizationDefaults(itemClass).items():
                 d['V' + vName] = value
         elif name != 'name':
             d[name] = parameter.default
@@ -186,8 +189,8 @@ for className, itemClass in inspect.getmembers(itemInterface, inspect.isclass):
                         return GetParameter(mbs2, Add(mbs2, dict(defaults, **{member: probe})))
                 else:
                     def Run():
-                        if member[0] == 'V' and member[1:] in inspect.signature(itemClass).parameters['visualization'].default:
-                            visualization = dict(inspect.signature(itemClass).parameters['visualization'].default)
+                        if member[0] == 'V' and member[1:] in VisualizationDefaults(itemClass):
+                            visualization = VisualizationDefaults(itemClass)
                             visualization[member[1:]] = probe
                             item = itemClass(visualization=visualization, **classFixes)
                         else:

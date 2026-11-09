@@ -52,22 +52,12 @@ bool CSolverImplicitSecondOrderTimeInt::ReduceStepSize(CSystem& computationalSys
 			rungeKutta.rejectedByError = false;
 			return true;
 		}
-		rungeKutta.controller.rejectedLast = true; //no growth after the reduction
 	}
 
 	if (it.currentStepSize > it.minStepSize)
 	{
-		if (it.recommendedStepSize != -1.)
-		{
-			it.currentStepSize = EXUstd::Minimum(0.75*it.currentStepSize, it.recommendedStepSize); //0.75: enforce some reduction in step size, because otherwise iterations could get stuck
-		}
-		else
-		{
-			it.currentStepSize *= simulationSettings.timeIntegration.adaptiveStepDecrease;
-			//OLD: it.currentStepSize *= 0.5;
-		}
-
-		it.currentStepSize = EXUstd::Maximum(it.minStepSize, it.currentStepSize);
+		it.currentStepSize = EXUstd::Maximum(it.minStepSize, rungeKutta.controller.ReducedStepSize(it.currentStepSize,
+			it.recommendedStepSize, simulationSettings.timeIntegration.adaptiveStepDecrease));
 		return true;
 	}
 

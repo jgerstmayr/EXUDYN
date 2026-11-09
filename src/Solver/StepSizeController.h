@@ -7,6 +7,8 @@
 *				  the first accepted step and a rejected step by the elementary rule h safety (1/e)^(1/k)
 *				- after a rejection the step does not grow; at most maxIncrease times h and hMax, at least hMin, where
 *				  a step is accepted with a warning (minimumReached)
+*				- a step that the post-Newton step or the Newton iteration failed: ReducedStepSize, by the step size that
+*				  was recommended or else by the factor of the settings; no growth afterwards either
 *				- the Python version is _ErrorStepSize of exudyn.symbolics.advancedSolvers
 *
 * @author		Gerstmayr Johannes
@@ -64,6 +66,14 @@ public:
 		rejectedLast = false;
 		hNext = EXUstd::Minimum(EXUstd::Minimum(hMax, maxIncrease * h), EXUstd::Maximum(hMin, factor * h));
 		return true;
+	}
+
+	//! the step size to repeat a step h that was reduced outside of the error control; recommended = -1: none was given;
+	//! 0.75: a recommended step size enforces some reduction, because otherwise the iterations could get stuck
+	Real ReducedStepSize(Real h, Real recommended, Real decrease)
+	{
+		rejectedLast = true;
+		return (recommended != -1.) ? EXUstd::Minimum(0.75 * h, recommended) : decrease * h;
 	}
 };
 

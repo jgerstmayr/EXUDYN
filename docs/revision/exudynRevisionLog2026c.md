@@ -6431,6 +6431,27 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg20-8-4"></a>
+### RG20.8.4 — The reduction after a failed post-Newton step in the common controller (2026-11-09, #3394)
+
+`StepSizeController::ReducedStepSize` holds the rule of a step reduced outside of the error control (a recommended
+step size times at most 0.75, else `adaptiveStepDecrease`, no growth afterwards), used by generalized-alpha, the
+implicit Runge-Kutta solvers and ODE23/DOPRI5. The explicit solvers did not set the no-growth flag and used a fixed
+0.5. With this, RG20.8 is complete: the controllers of RG20.8.1 and RG20.8.2 already covered the rest.
+
+<a id="rg20-7-13"></a>
+### RG20.7.13 — ObjectFFRFreducedOrder without allocations per Jacobian (2026-11-09, #3351)
+
+The two local vectors of the quadratic velocity terms in `ComputeJacobianODE2_ODE2` are members now;
+`FFRFreducedOrder` is in `test_implicitRungeKuttaAllocations.py`.
+
+<a id="rg11-4-2"></a>
+### RG11.4.2 — The visualization of an item as its class or a dict (2026-11-09, #2342)
+
+The generated item classes take `visualization=None`, its `V` class or a dict with only the non-default parameters,
+through `_ItemVisualization`, which replaces `CopyDictLevel1`; `item.visualization` is always the `V` class, an unknown
+parameter is a `ValueError` naming the item. `itemVisualizationArgumentTest.py`.
+
 <a id="rg21-6-1"></a>
 ### RG21.6.1, RG21.6.2, RG19.14.5 - the examples of path planning, navigation and quadrupeds (2026-11-09, #3390, #3391, #3392)
 - Maintainer 2026-11-09: the motion of pathPlanningUR5 goes to an intermediate point far off the goal; check it; sensor traces, the planned trajectory with spheres at the end of each part, two more challenging scenes, shadow and the URDF graphics; the distance map and the planned trajectory in mobileRobotsNavigation, in the renderer and in matplotlib; ANYmal is drawn with only parts of its legs.

@@ -587,17 +587,9 @@ bool CSolverExplicitTimeInt::ReduceStepSize(CSystem& computationalSystem, const 
 	{
 		if (it.lastStepSize > it.minStepSize)
 		{
-			if (it.recommendedStepSize != -1.)
-			{
-				it.currentStepSize = EXUstd::Minimum(0.75*it.lastStepSize, it.recommendedStepSize); //0.75: enforce some reduction in step size, because otherwise iterations could get stuck
-			}
-			else
-			{
-				//if automatic stepsize control active, currentStepSize may have been reduced already for next trial
-				it.currentStepSize = EXUstd::Minimum(it.currentStepSize, 0.5*it.lastStepSize);
-			}
-
-			it.currentStepSize = EXUstd::Maximum(it.minStepSize, it.currentStepSize);
+			const Real reduced = controller.ReducedStepSize(it.lastStepSize, it.recommendedStepSize, simulationSettings.timeIntegration.adaptiveStepDecrease);
+			//without a recommendation, the automatic step size may have reduced currentStepSize already for the next trial
+			it.currentStepSize = EXUstd::Maximum(it.minStepSize, (it.recommendedStepSize != -1.) ? reduced : EXUstd::Minimum(it.currentStepSize, reduced));
 			return true;
 		}
 	}

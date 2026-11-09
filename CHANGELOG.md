@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 493 | 1.13.511 |
+| 1.13 | Newborn | 496 | 1.13.518 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.518** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The reduction of the step size after a failed post-Newton step in the common step size controller (#3394)
+  - description: ODE23 and DOPRI5 reduced a step after a failed post-Newton step by a fixed factor of 0.5 and allowed the next step to grow, unlike the implicit solvers. Decided: one rule in StepSizeController for all solvers: a recommended step size, limited to 0.75 times the step, otherwise timeIntegration.adaptiveStepDecrease, without growth after the reduction.
+  - **notes:** A step reduced after a failed post-Newton step follows one rule in all adaptive solvers, also with ODE23 and DOPRI5: no growth of the next step afterwards, and timeIntegration.adaptiveStepDecrease if no step size is recommended.
+  - date resolved: **2026-11-09 21:24**, date raised: 2026-11-09
+- **1.13.517** `CHECK` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Two memory allocations per Jacobian evaluation with ObjectFFRFreducedOrder (#3351)
+  - description: Found with \#3312: the system Jacobian of the model FFRFreducedOrder of modelLibrary.py (an ObjectFFRFreducedOrder on a generic joint) allocates 2 vectors per evaluation, with any factors of the positions and velocities; the implicit Runge-Kutta solvers evaluate it twice per step. To be located.
+  - **notes:** ObjectFFRFreducedOrder no longer allocates two vectors per evaluation of the system Jacobian.
+  - date resolved: **2026-11-09 21:24**, date raised: 2026-11-08
+- **1.13.516** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` itemInterface (#2342)
+  - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
+  - **notes:** The visualization of an item is given as its V class or as a dictionary with only the parameters that differ from the defaults; a parameter the item does not have raises a ValueError naming the item.
+  - date resolved: **2026-11-09 21:24**, date raised: 2026-04-17
 - **1.13.511** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` quadrupedsFloatingBase.py: ANYmal is drawn with only parts of its legs (#3392)
   - description: The legs of ANYmal in the example are drawn incompletely. To be located and fixed.
   - **notes:** quadrupedsFloatingBase.py draws all links and the body of ANYmal.

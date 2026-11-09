@@ -54,7 +54,7 @@ for name in types.ItemNames():
     #the class also takes the old names of renamed parameters, as its last keywords (#2589)
     Check(set(types.Parameters(name)) == set(signature) - {'visualization'} - set(info.get('deprecatedParameters', {})),
           name + ': parameters differ from itemInterface.py')
-    Check(set(info['visualization']) == set(signature['visualization'].default),
+    Check(set(info['visualization']) == set(inspect.signature(getattr(itemInterface, 'V' + name)).parameters),
           name + ': visualization parameters differ from itemInterface.py')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1,0 +1,16 @@
+{
+  "number": 3394,
+  "title": "The reduction of the step size after a failed post-Newton step in the common step size controller",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "ODE23 and DOPRI5 reduced a step after a failed post-Newton step by a fixed factor of 0.5 and allowed the next step to grow, unlike the implicit solvers. Decided: one rule in StepSizeController for all solvers: a recommended step size, limited to 0.75 times the step, otherwise timeIntegration.adaptiveStepDecrease, without growth after the reduction.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 21:24",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/StepSizeController.h",
+  "releaseNotes": "A step reduced after a failed post-Newton step follows one rule in all adaptive solvers, also with ODE23 and DOPRI5: no growth of the next step afterwards, and timeIntegration.adaptiveStepDecrease if no step size is recommended.",
+  "resolvedInVersion": "1.13.518"
+}

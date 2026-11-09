@@ -220,8 +220,6 @@ def ItemClasses(definition):
     vPythonClass += 'class V' + className + ':\n'
     if ADD_DOCSTRINGS: vPythonClass += renderer.render(dataDocstringV, indent=sIndent)+'\n'
     vPythonClass += sIndent+'def __init__(self'
-    vDefaultDict = '{'
-    vDefaultDictEmpty = True
 
     deprecatedPieces = [] #the renamed parameters, after all others (#2589)
     for member in definition['members']:
@@ -239,7 +237,6 @@ def ItemClasses(definition):
                 defaultValueStr = '[]'
 
             #write item interface class initialization, constructor and iterator doc:
-            tempVPythonDict = "'" + pythonName + "': "
             tempPythonClass = ', ' + pythonName
             #a parameter that is a user function is annotated with its Protocol, which is what makes
             #an editor complete the function being written. The 0 is in the annotation because it is
@@ -248,9 +245,6 @@ def ItemClasses(definition):
                 tempPythonClass += (': Union[' + ProtocolName(className, pythonName) + ', int]')
             if len(defaultValueStr) != 0:
                 tempPythonClass += ' = ' + defaultValueStr
-                tempVPythonDict += defaultValueStr
-            else:
-                tempVPythonDict += "None"
 
             #range checks are done in C++ on every write path
             parameterWithCheck = pythonName
@@ -281,7 +275,6 @@ def ItemClasses(definition):
             tempPythonIter = sIndent+sIndent+'yield ' + "'" + pythonName + "'" + ', self.' + pythonName + '\n'
             if im.IsDeprecatedItemParameter(member): #a renamed parameter: given only if used (#2589)
                 tempPythonClass = ', ' + pythonName + ' = None'
-                tempVPythonDict = "'" + pythonName + "': None"
                 tempPythonClassInit = sIndent+sIndent+'self.' + pythonName + ' = ' + pythonName + '\n'
                 tempPythonIter = (sIndent+sIndent+'if self.' + pythonName + ' is not None:\n'
                                   + sIndent*3+'yield ' + "'" + pythonName + "'" + ', self.' + pythonName + '\n')
@@ -292,11 +285,6 @@ def ItemClasses(definition):
                 vPythonClass += tempPythonClass
                 vPythonClassInit += tempPythonClassInit
                 vPythonIter += tempPythonIter
-                if not(vDefaultDictEmpty): #if already second dict entry added, also add a comma separator
-                    vDefaultDict += ", "
-
-                vDefaultDict += tempVPythonDict
-                vDefaultDictEmpty = False
                 sPythonIter += sIndent+sIndent+'yield ' + "'V" + pythonName + "'" + ', dict(self.visualization)["' + pythonName + '"]\n'
             else: #rest: computational or main
                 sPythonClass += tempPythonClass
@@ -307,9 +295,8 @@ def ItemClasses(definition):
         sPythonClass += tempPythonClass
         sPythonClassInit += tempPythonClassInit
         sPythonIter += tempPythonIter
-    vDefaultDict += '}'
-    sPythonClass += ', visualization = ' + vDefaultDict + '):\n' #add visualization structure (must always be there...)
-    sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = CopyDictLevel1(visualization)\n\n'
+    sPythonClass += ', visualization = None):\n'
+    sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = _ItemVisualization(visualization, V' + className + ')\n\n'
     sPythonClass += sIndent+'def __iter__(self):\n'
     sPythonClass += sPythonIter + '\n'
     sPythonClass += sIndent+'def __repr__(self):\n'
@@ -363,7 +350,7 @@ def EmitItemInterface(definitions):
                 s += ItemClasses(definition)
 
     #__all__ after the imports, from the same rule tools/checkAll.py checks
-    marker = '\n\n#helper function for level-1 copy of dicts'
+    marker = '\n\n#helper function for the visualization of an item'
     s = s.replace(marker, '\n\n' + publicApi.AllText(publicApi.PublicNames(s)) + marker, 1)
     return s
 
@@ -382,16 +369,17 @@ import numpy as np
 import copy
 from typing import Protocol, Union \n
 
-#helper function for level-1 copy of dicts (for visualization default args!)
-#visualization dictionaries (which may be huge, are only flat copied, which is sufficient)
-def CopyDictLevel1(originalDict):
-    if isinstance(originalDict,dict): #copy only required if default dict is used
-        copyDict = {}
-        for key, value in originalDict.items():
-            copyDict[key] = copy.copy(value)
-        return copyDict
-    else:
-        return originalDict #fast track for everything else
+#helper function for the visualization of an item: None for the defaults, its VItem class, or a dict
+#with the parameters that differ from the defaults (#2342)
+def _ItemVisualization(visualization, visualizationClass):
+    if visualization is None:
+        return visualizationClass()
+    if isinstance(visualization, dict):
+        try:
+            return visualizationClass(**visualization)
+        except TypeError as error:
+            raise ValueError('visualization of ' + visualizationClass.__name__[1:] + ': ' + str(error)) from None
+    return visualization
 
 #helper function diagonal matrices, not needing numpy
 def IIDiagMatrix(rowsColumns, value):

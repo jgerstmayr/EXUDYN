@@ -111,10 +111,13 @@ oDistance = mbs.CreatePrimitiveConvexContact(itemNumbers=[oGround, oGround], pri
 #the data node of 4 points; a radius of zero is refused
 nodeSize = lambda contact: mbs.GetNode(mbs.GetObject(contact)['nodeNumber'])['numberOfDataCoordinates']
 checks += [nodeSize(oDistance) == 12]
-try:
-    mbs.CreatePrimitiveConvexContact(itemNumbers=[oSphere, oGround], radius=0, points1=points1, triangles1=triangles1)
-    checks += [False]
-except ValueError:
+if not exu.__useExudynFast: #the fast module does not check arguments
+    try:
+        mbs.CreatePrimitiveConvexContact(itemNumbers=[oSphere, oGround], radius=0, points1=points1, triangles1=triangles1)
+        checks += [False]
+    except ValueError:
+        checks += [True]
+else:
     checks += [True]
 mbs.Assemble()
 checks += [abs(mbs.GetObjectOutput(oDistance, exu.OutputVariableType.Distance) - (0.5 - R)) < 1e-10]

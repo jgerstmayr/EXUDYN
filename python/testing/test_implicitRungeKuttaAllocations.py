@@ -42,7 +42,7 @@ def Allocations(model, solverType, steps, linearSolverType, automaticStepSize):
                                         exu.DynamicSolverType.Radau5])
 @pytest.mark.parametrize('linearSolverType', [exu.LinearSolverType.EXUdense, exu.LinearSolverType.EigenSparse])
 def testTheImplicitRungeKuttaSolversDoNotAllocatePerStep(solverType, linearSolverType):
-    for model in ['nPendulum', 'rigidBodyJoints', 'rigidBodySpringDampers']:
+    for model in ['nPendulum', 'rigidBodyJoints', 'rigidBodySpringDampers', 'FFRFreducedOrder']:
         counts100 = Allocations(model, solverType, 100, linearSolverType, False)
         counts400 = Allocations(model, solverType, 400, linearSolverType, False)
         #a few allocations more when a work array grows to a larger size

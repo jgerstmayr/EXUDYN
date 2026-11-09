@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  12:22:10 (last modified)
+* @date         2026-11-09  21:00:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,6 +119,8 @@ protected: // AUTO:
     mutable ResizableMatrix tempMatrix2;          //!< AUTO: second temporary matrix at several parts of computation MassMatrix, ODE2Lhs
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector at computation of ODE2Lhs
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector at computation of ODE2Lhs
+    mutable ResizableVector tempQuadraticVelocity0;//!< AUTO: temporary vector of the quadratic velocity terms at the Jacobian (#3351)
+    mutable ResizableVector tempQuadraticVelocity1;//!< AUTO: temporary vector of the perturbed quadratic velocity terms at the Jacobian (#3351)
 
 public: // AUTO:
     static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
@@ -142,6 +144,8 @@ public: // AUTO:
         tempMatrix2 = ResizableMatrix();
         tempVector = ResizableVector();
         tempVector2 = ResizableVector();
+        tempQuadraticVelocity0 = ResizableVector();
+        tempQuadraticVelocity1 = ResizableVector();
     };
 
     // AUTO: access functions
@@ -261,6 +265,20 @@ public: // AUTO:
     const ResizableVector& GetTempVector2() const { return tempVector2; }
     //! AUTO:  Read (Reference) access to:\f$\vv_{temp2}\f$second temporary vector at computation of ODE2Lhs
     ResizableVector& GetTempVector2() { return tempVector2; }
+
+    //! AUTO:  Write (Reference) access to:temporary vector of the quadratic velocity terms at the Jacobian (#3351)
+    void SetTempQuadraticVelocity0(const ResizableVector& value) { tempQuadraticVelocity0 = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the quadratic velocity terms at the Jacobian (#3351)
+    const ResizableVector& GetTempQuadraticVelocity0() const { return tempQuadraticVelocity0; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the quadratic velocity terms at the Jacobian (#3351)
+    ResizableVector& GetTempQuadraticVelocity0() { return tempQuadraticVelocity0; }
+
+    //! AUTO:  Write (Reference) access to:temporary vector of the perturbed quadratic velocity terms at the Jacobian (#3351)
+    void SetTempQuadraticVelocity1(const ResizableVector& value) { tempQuadraticVelocity1 = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the perturbed quadratic velocity terms at the Jacobian (#3351)
+    const ResizableVector& GetTempQuadraticVelocity1() const { return tempQuadraticVelocity1; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the perturbed quadratic velocity terms at the Jacobian (#3351)
+    ResizableVector& GetTempQuadraticVelocity1() { return tempQuadraticVelocity1; }
 
     //! AUTO:  no PotentialEnergy while a user function defines the force (#2202)
     virtual bool PotentialEnergyAvailable() const override
