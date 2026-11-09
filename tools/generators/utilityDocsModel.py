@@ -126,6 +126,7 @@ filesParsed=[
              'robotics/models.py',
              'robotics/mobile.py',
              'robotics/motion.py',
+             'robotics/navigation.py',
              'robotics/special.py',
              'robotics/utilities.py',
              'robotics/urdfImport.py',

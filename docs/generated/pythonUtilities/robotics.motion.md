@@ -219,10 +219,26 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
   - `jumpTolerance`: Add raises a ValueError if a profile starts at coordinates that differ by more than this from the end of the profile before, e.g. a Cartesian profile whose inverse kinematics starts in another solution (#3272)
 
 
+(sec-motion-trajectory-fromwaypoints)=
+### Class function: FromWaypoints
+
+[`FromWaypoints(cls, waypoints, maxVelocities, maxAccelerations, blend = 'auto', blendFactor = 1., initialTime = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L665)
+
+- **class function description**: A trajectory of point-to-point motions (ProfilePTP) through waypoints, blended so that the robot does not stop at each of them (#3383).
+- **input**:
+  - `waypoints`: the coordinates of the waypoints, one per row, at least two different ones; repeated waypoints are left out
+  - `maxVelocities`: the largest velocity per coordinate
+  - `maxAccelerations`: the largest acceleration per coordinate
+  - `blend`: blendTimeWithNext for all profiles, 'auto' or a time; see Add
+  - `blendFactor`: the blend times are multiplied by this factor; 0 stops at each waypoint
+  - `initialTime`: the time at the start
+- **output**: the Trajectory
+
+
 (sec-motion-trajectory-getfinalcoordinates)=
 ### Class function: GetFinalCoordinates
 
-[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L664)
+[`GetFinalCoordinates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L694)
 
 - **class function description**: returns the coordinates at the end of the (currently) Final profile
 
@@ -230,7 +246,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-add)=
 ### Class function: Add
 
-[`Add(self, profile, blendTimeWithNext = 0., blendSpace = 'joint')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L673)
+[`Add(self, profile, blendTimeWithNext = 0., blendSpace = 'joint')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L703)
 
 - **class function description**: add successively profiles, using MotionProfile class; raises a ValueError if the profile starts at other coordinates than the trajectory ends, by more than jumpTolerance
 - **input**:
@@ -242,7 +258,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-gettimes)=
 ### Class function: GetTimes
 
-[`GetTimes(self, enableBlending = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L776)
+[`GetTimes(self, enableBlending = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L806)
 
 - **class function description**: return vector of times of start/end of profiles; with blending (#3274), the start time and the times at which the profiles end, each earlier by the blend times of the profiles before it
 
@@ -250,7 +266,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-hasblending)=
 ### Class function: HasBlending
 
-[`HasBlending(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L785)
+[`HasBlending(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L815)
 
 - **class function description**: True if a profile, which has a next one, has a blendTimeWithNext
 
@@ -258,7 +274,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-initialize)=
 ### Class function: Initialize
 
-[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L789)
+[`Initialize(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L819)
 
 - **class function description**: initialize some parameters for faster evaluation
 
@@ -266,7 +282,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-evaluate)=
 ### Class function: Evaluate
 
-[`Evaluate(self, t, enableBlending = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L871)
+[`Evaluate(self, t, enableBlending = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L901)
 
 - **class function description**: return interpolation of trajectory for coordinates, velocities and accelerations at given time
 - **input**:
@@ -278,7 +294,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-evaluatecoordinate)=
 ### Class function: EvaluateCoordinate
 
-[`EvaluateCoordinate(self, t, coordinate, enableBlending = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L900)
+[`EvaluateCoordinate(self, t, coordinate, enableBlending = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L930)
 
 - **class function description**: return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
 - **input**:
@@ -292,7 +308,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory-getblendings)=
 ### Class function: GetBlendings
 
-[`GetBlendings(self, kinematicChain = None, numberOfSamples = 101)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L930)
+[`GetBlendings(self, kinematicChain = None, numberOfSamples = 101)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L960)
 
 - **class function description**: the blendings of the trajectory (#3274), one dict per profile with a blendTimeWithNext and a next profile: 'profile', its index; 'startTime' and 'endTime', the time in which the two profiles overlap; 'viaCoordinates', the end of the profile, which the blended trajectory passes near; 'startDistance', the distance (2-norm of the coordinates) from the via coordinates at which the blending starts; 'minDistance', the closest the blended trajectory comes to them; with a kinematicChain (Robot.GetKinematicChain()), also 'viaToolPosition', 'toolStartDistance' and 'toolMinDistance', the same for the position of the tool
 - **input**:
@@ -304,7 +320,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory---iter--)=
 ### Class function: __iter__
 
-[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L964)
+[`__iter__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L994)
 
 - **class function description**: iterator allows to use for x in trajectory: ... constructs
 
@@ -312,7 +328,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory---getitem--)=
 ### Class function: __getitem__
 
-[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L969)
+[`__getitem__(self, key)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L999)
 
 - **class function description**: access to profiles via operator [], allowing trajectory[0], etc.
 
@@ -320,7 +336,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory---len--)=
 ### Class function: __len__
 
-[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L974)
+[`__len__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L1004)
 
 - **class function description**: allow using len(trajectory)
 
@@ -328,7 +344,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCartes
 (sec-motion-trajectory---repr--)=
 ### Class function: __repr__
 
-[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L980)
+[`__repr__(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L1010)
 
 - **class function description**: representation of Trajectory is given a list of profiles, allowing easy inspection of data
 

@@ -418,6 +418,7 @@
         .def(py::init(&PyConvexShape::ForbidConstructor))
         .def(py::init<const STDstring&, Real, Real, const py::object&, const py::object&, Real>(), py::arg("shapeType"), py::arg("radius") = 0., py::arg("length") = 0., py::arg("size") = py::none(), py::arg("points") = py::none(), py::arg("radius1") = 0.)
         .def("ShapeType", &PyConvexShape::ShapeType, "the type of the shape, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'")
+        .def("BoundingRadius", &PyConvexShape::BoundingRadius, "the radius of a sphere about the origin of the local frame containing the shape")
         .def("__repr__", [](const PyConvexShape &item) {
             return item.ToString(); }, "the string representation of the ConvexShape")
         ; // end of ConvexShape pybind definitions

@@ -661,6 +661,36 @@ class Trajectory:
         if min(list(maxAccelerations)+[1]) <= 0:
             raise ValueError('Trajectory: maxAccelerations must by > 0')
 
+    @classmethod
+    def FromWaypoints(cls, waypoints, maxVelocities, maxAccelerations, blend='auto', blendFactor=1., initialTime=0.):
+        """A trajectory of point-to-point motions (ProfilePTP) through waypoints, blended so that the robot does not stop at each of them (#3383).
+
+        Args:
+            waypoints: the coordinates of the waypoints, one per row, at least two different ones; repeated waypoints are left out
+            maxVelocities: the largest velocity per coordinate
+            maxAccelerations: the largest acceleration per coordinate
+            blend: blendTimeWithNext for all profiles, 'auto' or a time; see Add
+            blendFactor: the blend times are multiplied by this factor; 0 stops at each waypoint
+            initialTime: the time at the start
+
+        Returns:
+            the Trajectory
+        """
+        points = []
+        for q in waypoints:
+            q = np.array(q, dtype=float)
+            if len(points) == 0 or np.any(q != points[-1]):
+                points += [q]
+        if len(points) < 2:
+            raise ValueError('Trajectory.FromWaypoints: at least two different waypoints are needed')
+        trajectory = cls(points[0], initialTime=initialTime, maxVelocities=maxVelocities, maxAccelerations=maxAccelerations)
+        for q in points[1:]:
+            trajectory.Add(ProfilePTP(q, syncAccTimes=False), blendTimeWithNext=blend)
+        if blendFactor != 1.:
+            trajectory.blendTimes = [b if b == 'auto' else b*blendFactor for b in trajectory.blendTimes]
+            trajectory.initialized = False
+        return trajectory
+
     def GetFinalCoordinates(self):
         """returns the coordinates at the end of the (currently) Final profile
         """

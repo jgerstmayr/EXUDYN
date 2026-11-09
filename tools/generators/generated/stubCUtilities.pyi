@@ -154,6 +154,9 @@ class ConvexShape:
     def ShapeType(self) -> str: 
         """The type of the shape, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'."""
         ...
+    def BoundingRadius(self) -> float: 
+        """The radius of a sphere about the origin of the local frame containing the shape."""
+        ...
     def __repr__(self) -> str: 
         """The string representation of the ConvexShape."""
         ...

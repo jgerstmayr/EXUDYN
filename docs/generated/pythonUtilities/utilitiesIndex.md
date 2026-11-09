@@ -51,6 +51,7 @@ robotics.rosInterface
 robotics.models
 robotics.mobile
 robotics.motion
+robotics.navigation
 robotics.special
 robotics.utilities
 robotics.urdfImport

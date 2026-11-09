@@ -21,6 +21,7 @@ without and with blending at the corners; raytraced, from the example staubliTX2
 | `exudyn.robotics` (roboticsCore) | `Robot` with `RobotLink`, `RobotBase`, `RobotTool`: the description of a robot, its models, its control, its sensors, saving and loading; `StdDH2HT`, `ModDHKK2HT` |
 | `exudyn.robotics.models` | the Puma560, UR5, Franka Emika Panda, Stäubli TX2-90L and a 3R manipulator as dictionaries, with masses, inertias, joint limits, named configurations and, where known, friction; `LinkDict2Robot` |
 | `exudyn.robotics.motion` | `Trajectory` and its profiles: point-to-point motions in joint space (constant acceleration, synchronized with limits, polynomials), and paths of the tool (linear, circular, screw, splines), blended |
+| `exudyn.robotics.navigation` | path planning among known obstacles: RRT-Connect for serial robots, an occupancy grid with A\* and pure pursuit for mobile robots, see {ref}`sec-robotics-planning` |
 | `exudyn.robotics.urdfImport` | robots and their meshes from URDF files, through the Robotics Toolbox for Python, and the meshes alone without it |
 | `exudyn.cUtilities.KinematicChain` | the kinematics of a robot in C++: forward kinematics, Jacobian, static torques, inverse dynamics, analytic and numerical inverse kinematics |
 | `exudyn.robotics.special` | manipulability measures: velocity, force, stiffness and dynamic manipulability |
@@ -127,6 +128,15 @@ their texture. The models of `robotics.models` run without the toolbox and witho
 link named by `toolLinkName` and, from the URDF file, the friction of its joints. The example serialRobotURDF.py builds
 robots this way. With `collision=True`, `GetURDFrobotData` also reads the `<collision>` elements (box, cylinder, sphere, mesh), and `RobotFromURDFdata` makes them the collision shapes of the links and of the base (#3382): a mesh is turned into up to two capsules by `FitCapsulesToMesh`, or into its convex hull. `robot.SaveToHDF5` keeps all of this, so that the robot loads without the toolbox; the test model urdfRobotHDF5Test.py loads a small robot of a URDF
 file read with `meshDensity` and `correctInertia` this way.
+
+(sec-robotics-planning)=
+## Path planning and navigation
+
+`exudyn.robotics.navigation` plans motions among known obstacles, on the collision check of `Robot.GetCollisionModel` in C++, a few microseconds per configuration. The shapes of neighboring links overlap by construction: `excludeCollidingAt=q` leaves out the pairs that overlap at a free configuration q.
+
+For a serial robot, `PlanJointPath` finds a path in joint space by RRT-Connect, `ShortcutPath` removes its detours, and `PlanToPose` takes a pose of the tool as the goal. `TrajectoryFromPath` turns the path into a `Trajectory` for `Robot.SetControl`: `Trajectory.FromWaypoints` runs it without stopping at the waypoints, and the blending, which cuts the corners, is reduced if the check finds a collision.
+
+For a mobile robot, an `OccupancyGrid` holds the map; after `Inflate` by the radius of the robot, `PlanGridPath` finds the shortest path of the cell centers by A\* and leaves out waypoints where the straight line is free. `PlanSE2Path` plans x, y and the rotation by RRT-Connect, for a robot which only passes a narrow space at the right angle. A mecanum-wheeled robot follows a `Trajectory` of x, y and phi; a differential drive follows `PathWithHeadings`, or the path by `PurePursuit`, with `DifferentialDriveWheelVelocities` for its wheels.
 
 (sec-robotics-ros)=
 ## ROS

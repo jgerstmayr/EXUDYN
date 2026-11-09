@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 477 | 1.13.494 |
+| 1.13 | Newborn | 479 | 1.13.496 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.496** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Occupancy grid, A\*, RRT-Connect in SE(2) and pure pursuit for mobile robots (#3384)
+  - description: robotics.navigation: OccupancyGrid with obstacles, DistanceTransform and Inflate, PlanGridPath by A\*, PlanSE2Path, PathWithHeadings, PurePursuit and DifferentialDriveWheelVelocities. Decided: grid A\* and RRT in SE(2), pure pursuit for a differential drive.
+  - **notes:** robotics.navigation: OccupancyGrid, PlanGridPath by A\*, PlanSE2Path, PathWithHeadings, PurePursuit and DifferentialDriveWheelVelocities.
+  - date resolved: **2026-11-09 08:28**, date raised: 2026-11-09
+- **1.13.495** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` RRT-Connect, shortcut smoothing and PlanToPose for serial robots, Trajectory.FromWaypoints (#3383)
+  - description: The module robotics.navigation plans a path in joint space on CollisionModel; TrajectoryFromPath makes it a Trajectory through the waypoints, checks it and reduces the blending if the check fails. Decided: RRT-Connect with shortcuts, the check in C++ only.
+  - **notes:** robotics.navigation: PlanJointPath by RRT-Connect, ShortcutPath, PlanToPose and TrajectoryFromPath; Trajectory.FromWaypoints.
+  - date resolved: **2026-11-09 08:28**, date raised: 2026-11-09
 - **1.13.494** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` The collision geometries of a URDF and up to two capsules per link (#3382)
   - description: GetURDFrobotData reads box, cylinder, sphere and mesh from the collision elements under the key collision and collisionBase; RobotFromURDFdata puts them into the shapes of the links and the base. Decided: a link holds up to two capsules, FitCapsulesToMesh divides the points by the distance to the axes, two capsules are taken where the union is smaller than one capsule.
   - **notes:** The collision elements of a URDF are read by GetURDFrobotData(collision=True) and become the shapes of the links and the base; FitCapsulesToMesh gives up to two capsules per link; CollisionModel.ExcludeCollidingPairs.

@@ -165,6 +165,7 @@ module.CppCode('        .def(py::init<const STDstring&, Real, Real, const py::ob
 module.AddDocuList(["ConvexShape(shapeType, radius=0., length=0., size=None, points=None, radius1=0.): shapeType 'Sphere' (radius), 'Capsule' (radius, length >= 0), 'Cylinder' (radius, length), 'Box' (size, the 3 edge lengths), 'Triangle' (points, 3 rows of 3 coordinates), 'Points' (points, n rows of 3 coordinates, their convex hull) or 'Cone' (a truncated cone along the local z axis, centered: radius at z = -length/2, radius1 at z = +length/2, one of them may be 0); a parameter that the type does not use, or a radius, length or size not positive, raises a ValueError"])
 module.DefPyFunctionAccess(cClass=classStr, pyName='ShapeType', cName='ShapeType', description="the type of the shape, 'Sphere', 'Capsule', 'Cylinder', 'Box', 'Triangle' or 'Points'",
                            returnType='str')
+module.DefPyFunctionAccess(cClass=classStr, pyName='BoundingRadius', cName='BoundingRadius', description='the radius of a sphere about the origin of the local frame containing the shape', returnType='float')
 module.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyConvexShape &item) {\n            return item.ToString(); }',
                            description='the string representation of the ConvexShape', returnType='str', isLambdaFunction=True)
 module.DefPyFinishClass('ConvexShape')

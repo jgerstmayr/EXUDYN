@@ -207,6 +207,8 @@ robotFrictionEndStopsTest
 robotFromURDFdataTest
 robotInverseDynamicsTest
 robotModelsTest
+robotNavigationTest
+robotPathPlanningTest
 robotTrajectoryProfilesTest
 rollingCoinPenaltyTest
 rollingCoinTest

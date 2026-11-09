@@ -1,0 +1,14 @@
+{
+  "number": 3383,
+  "title": "RRT-Connect, shortcut smoothing and PlanToPose for serial robots, Trajectory.FromWaypoints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "The module robotics.navigation plans a path in joint space on CollisionModel; TrajectoryFromPath makes it a Trajectory through the waypoints, checks it and reduces the blending if the check fails. Decided: RRT-Connect with shortcuts, the check in C++ only.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 08:28",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "robotics.navigation: PlanJointPath by RRT-Connect, ShortcutPath, PlanToPose and TrajectoryFromPath; Trajectory.FromWaypoints.",
+  "resolvedInVersion": "1.13.495"
+}

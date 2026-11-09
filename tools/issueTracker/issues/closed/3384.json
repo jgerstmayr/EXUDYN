@@ -1,0 +1,14 @@
+{
+  "number": 3384,
+  "title": "Occupancy grid, A*, RRT-Connect in SE(2) and pure pursuit for mobile robots",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "robotics.navigation: OccupancyGrid with obstacles, DistanceTransform and Inflate, PlanGridPath by A*, PlanSE2Path, PathWithHeadings, PurePursuit and DifferentialDriveWheelVelocities. Decided: grid A* and RRT in SE(2), pure pursuit for a differential drive.",
+  "dateRaised": "2026-11-09",
+  "deadline": "2027-05-08",
+  "dateResolved": "2026-11-09 08:28",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "robotics.navigation: OccupancyGrid, PlanGridPath by A*, PlanSE2Path, PathWithHeadings, PurePursuit and DifferentialDriveWheelVelocities.",
+  "resolvedInVersion": "1.13.496"
+}
