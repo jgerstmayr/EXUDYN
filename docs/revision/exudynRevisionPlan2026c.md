@@ -63,7 +63,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.1 Write a linear algebra micro-benchmark that every build carries (3 open sub-steps)
+  - RG5.1 Write a linear algebra micro-benchmark that every build carries (2 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
@@ -108,7 +108,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 10 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -510,9 +510,11 @@ CLOSED 2026-11-11 (#3405): a standalone benchmark with the options of setup.py, 
 
 From #707.
 
-#### **OPEN_RG5.1.3** Time CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG and optimize it
+#### **CLOSED_RG5.1.3** Time CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG and optimize it
 
 From #728.
+
+CLOSED 2026-11-11 (#3409): the rotation matrix computed once (G = A, Glocal = I), the coordinates read by pointer; a chain of 1000 bodies with RK44 and Lie group integration 0.725 s -> 0.571 s (-21 %), the results bitwise the same. [log](exudynRevisionLog2026c.md#rg5-1-3)
 
 #### **OPEN_RG5.1.4** Inline Vector::operator[] and ConstVector where the benchmark shows a gain
 
@@ -521,6 +523,12 @@ From #728.
 #### **CLOSED_RG5.1.5** Forbid the copy of LinkedDataVector
 
 CLOSED 2026-11-06 (#3302): the implicit copy constructor allocated through VectorBase and leaked, as the destructor never frees; deleted - the regular and the fast module compile without a single copy, so none was left after #3291. [log](exudynRevisionLog2026c.md#rg5-1-5)
+
+#### **CLOSED_RG5.1.6** Write exudyn.special.RunLinalgBenchmark
+
+The benchmark itself, src/Linalg/linalgBenchmark.h, from #3410.
+
+CLOSED 2026-11-11 (#3410): header-only, bound as exudyn.special.RunLinalgBenchmark(minimumTime, numberOfThreads); first results: Vector 1.4 to 2 times slower than ResizableVectorParallel single-threaded from 100 elements on (RG5.1.2, RG5.1.4), 4 threads 2.8 times faster at 10^6, Matrix*Vector 1.4 to 2 ns per multiply-add (RG5.2). [log](exudynRevisionLog2026c.md#rg5-1-6)
 
 ### **OPEN_RG5.2** Make the hot linear algebra vectorizable with compile-time sizes
 

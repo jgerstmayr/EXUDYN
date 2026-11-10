@@ -6431,6 +6431,57 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-1-3"></a>
+### RG5.1.3 — CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG: the rotation matrix once (2026-11-11, #3409)
+
+- The function collects, for every marker on a rigid body in every evaluation, $\Gm$, $\Gm_{loc}$, position, velocity,
+  $\Am$ and the local angular velocity. It called the six getters: `GetG` and `GetRotationMatrix` each computed $\Am$
+  from the rotation vector, `GetGlocal` copied the identity, and each getter read the coordinates through a
+  `LinkedDataVector` of its configuration.
+- Now it reads reference, current and velocity coordinates by pointer, computes $\Am$ once by
+  `RotationVector2RotationMatrix` with the same sums as `GetRotationParameters`, and sets $\Gm = \Am$,
+  $\Gm_{loc} = \Im$; the local angular velocity is the rotational velocity coordinates, as `CNodeRigidBodyEP` does.
+- Measured (scratch script rotVecTiming.py): a chain of 1000 rigid bodies, each joined to the last by a
+  `RigidBodySpringDamper` on two `MarkerBodyRigid`, RK44 with Lie group integration and the mass matrix inverted per
+  body, 200 steps, best of 3: **0.725 s before, 0.571 s after (-21 %)**, the sum of the coordinates
+  9.1621499927033 before and after; the same chain on Tait-Bryan nodes takes 0.75 s. (With the dense mass matrix of
+  6000 coordinates the run takes 79 s, the inverse dominates.)
+- Gates: see RG5.1.6; the test suite gives the same results (bitwise, all references unchanged).
+
+<a id="rg5-1-6"></a>
+### RG5.1.6 — exudyn.special.RunLinalgBenchmark: the linear algebra micro-benchmark of every build (2026-11-11, #3410)
+
+- `src/Linalg/linalgBenchmark.h` (header-only, included by `Pybind_manual_classes.cpp`, the pattern of
+  `symbolicCppDemo.h`): `RunLinalgBenchmark(minimumTime, numberOfThreads)` times each operation in batches doubling
+  until `minimumTime` has passed and returns operation, size, threads, ns per call and a check sum, which keeps the
+  compiler from removing the work. `exudyn.special.RunLinalgBenchmark` returns the list of dictionaries.
+- The operations: `Vector` +=, *= scalar and `MultAdd` at 3, 10, 100, 1000, 10000 and 1, 10, 50 times
+  `ResizableVectorParallelThreadingLimit` (20000); `ResizableVectorParallel` +=, `MultAdd` and `CopyFrom` at the same
+  sizes, with `numberOfThreads` > 1 also multithreaded from the limit on (the task manager entered and left as the
+  solvers do); `SlimVector<3>` + and cross product; `Matrix3D` times vector and matrix; `ConstSizeMatrix<36>` (6 x 6)
+  times vector and matrix; `HomogeneousTransformation` times vector, times transformation and inverse, with and without
+  rotation; `Matrix` times `Vector` at 10, 100, 1000.
+- First results (regular module, this laptop, `RunLinalgBenchmark(0.02, 4)`), ns per call:
+
+  | operation | 1000 | 20000 | 1000000 | 1000000, 4 threads |
+  |---|---|---|---|---|
+  | `Vector +=` | 236 | 4857 | 253165 | - |
+  | `ResizableVectorParallel +=` | 115 | 2649 | 143491 | 51976 |
+  | `Vector MultAdd` | 373 | 7933 | 396059 | - |
+  | `ResizableVectorParallel MultAdd` | 274 | 5702 | 294597 | 75336 |
+
+  `Matrix3D * Matrix3D` 21.7, `Matrix3D * Vector3D` 7.3, 6 x 6 times vector 31.7 and times matrix 118, HT times
+  vector 8.3, HT inverse 8.6; `Matrix * Vector` 65 ns at n = 10, 14.3 us at 100 (1.4 ns per multiply-add), 2.05 ms
+  at 1000 (2.0 ns).
+- What it shows for the open steps: `Vector` is 1.4 to 2 times slower than `ResizableVectorParallel` single-threaded
+  from 100 elements on, for the same operation - the case of RG5.1.2 (merge) and RG5.1.4 (operator[]); 4 threads
+  gain 1.8 times at the limit and 2.8 times at 10^6; the dense matrix-vector product runs at about one multiply-add
+  per 1.4 to 2 ns, against 0.1 to 0.4 ns per element of the vector operations - a candidate for RG5.2.
+- `python/testing/test_linalgBenchmark.py`: the entries and their keys, single- and multithreaded, the threads
+  released afterwards. The table of runs in `WORKFLOW.md` names it.
+- Gates: build ok; regeneration: the binding in `pybindModule.py`, the stubs and `Exudyn.md`; test suite and pytest
+  in the gate run of RG5.1.3 and RG5.1.6.
+
 <a id="rg9-6-2"></a>
 ### RG9.6.2 — the static_asserts of the required member functions; ObjectANCFBeam and ObjectBeamGeometricallyExact2D completed (2026-11-11, #2866, #3406)
 

@@ -98,12 +98,24 @@ void CNodeRigidBodyRotVecLG::CollectCurrentNodeData1(ConstSizeMatrix<maxRotation
 void CNodeRigidBodyRotVecLG::CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
 	Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const
 {
-	GetGlocal(Glocal);
-	GetG(G);
-	pos = GetPosition();
-	vel = GetVelocity();
-	A = GetRotationMatrix();
-	angularVelocityLocal = GetAngularVelocityLocal();
+	//time critical for every marker on the body: the rotation matrix is computed once, as G = A and Glocal = I;
+	//the coordinates are read directly, the arithmetic is the same as in GetPosition, GetRotationMatrix, ... (#3409)
+	const Real* pRef = parameters.referenceCoordinates.GetDataPointer();
+	const Real* u = GetCurrentCoordinateVector().GetDataPointer();
+	LinkedDataVector vLinked = GetCurrentCoordinateVector_t();
+	const Real* v = vLinked.GetDataPointer();
+
+	pos = Vector3D({ pRef[0] + u[0], pRef[1] + u[1], pRef[2] + u[2] });
+	vel = Vector3D({ v[0], v[1], v[2] });
+	//the velocity coordinates of the rotation are the local angular velocity
+	angularVelocityLocal = Vector3D({ v[nDisplacementCoordinates + 0], v[nDisplacementCoordinates + 1], v[nDisplacementCoordinates + 2] });
+
+	ConstSizeVector<maxRotationCoordinates> rot({ pRef[nDisplacementCoordinates + 0] + u[nDisplacementCoordinates + 0],
+		pRef[nDisplacementCoordinates + 1] + u[nDisplacementCoordinates + 1],
+		pRef[nDisplacementCoordinates + 2] + u[nDisplacementCoordinates + 2] });
+	A = RigidBodyMath::RotationVector2RotationMatrix(rot);
+	G.CopyFrom(A);
+	Glocal.CopyFrom(EXUmath::unitMatrix3D);
 }
 
 

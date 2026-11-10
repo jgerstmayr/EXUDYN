@@ -322,6 +322,13 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.InfoStat', cName='unused',
                         argTypes=[''],
                         returnType='List[int]',
                         )
+pb.DefPyFunctionAccess(cClass='', pyName='special.RunLinalgBenchmark', cName='unused',
+                        description='the linear algebra micro-benchmark of this build (#3410): the time per call in ns of Vector add, scale and MultAdd over a sweep of sizes across the threading limit, ResizableVectorParallel single- and multithreaded, the products of SlimVector, Matrix3D, ConstSizeMatrix and HomogeneousTransformation and of a Matrix with a Vector; returns a list of dictionaries with operation, size, threads, nsPerCall and checkSum; each operation runs for at least minimumTime seconds; numberOfThreads > 1 adds the multithreaded vectors above the threading limit; tools/benchmarks/avx2Benchmark.py is the counterpart on the level of the solvers',
+                        argList=['minimumTime', 'numberOfThreads'],
+                        defaultArgs=['0.05', '1'],
+                        argTypes=['', ''],
+                        returnType='List[dict]',
+                        )
 pb.EndCppWrittenByHand()
 
 pb.DefDataAccess('special.currentRendererSystemContainer',r'the `SystemContainer` the renderer is attached to, or `None`; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of `exudyn.misc.GUI` ask for; not intended for regular users',

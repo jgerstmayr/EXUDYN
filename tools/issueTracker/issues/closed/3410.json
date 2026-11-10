@@ -1,0 +1,16 @@
+{
+  "number": 3410,
+  "title": "a linear algebra micro-benchmark compiled into every build",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Successor of #2397, which made tools/benchmarks/avx2Benchmark.py the benchmark on the level of the solvers and left the micro-benchmark to a later step (revision2026c step RG5.1). The operations the solvers spend their time in - Vector add, scale and MultAdd over a sweep of sizes across ResizableVectorParallelThreadingLimit, ResizableVectorParallel single- and multithreaded, the products of SlimVector, Matrix3D, ConstSizeMatrix, HomogeneousTransformation and of a Matrix with a Vector - timed with the compiler options of the build, callable from Python as exudyn.special.RunLinalgBenchmark, so that the steps RG5.1.2, RG5.1.4 and RG5.2 can measure their gain.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 22:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/linalgBenchmark.h",
+  "releaseNotes": "exudyn.special.RunLinalgBenchmark(minimumTime, numberOfThreads): the linear algebra micro-benchmark compiled into every build - Vector and ResizableVectorParallel operations over sizes across the threading limit, single- and multithreaded, and the products of SlimVector, Matrix3D, ConstSizeMatrix, HomogeneousTransformation and Matrix with Vector, in ns per call (src/Linalg/linalgBenchmark.h).",
+  "resolvedInVersion": "1.13.546"
+}

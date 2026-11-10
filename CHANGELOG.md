@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 520 | 1.13.544 |
+| 1.13 | Newborn | 522 | 1.13.546 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.546** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a linear algebra micro-benchmark compiled into every build (#3410)
+  - description: Successor of \#2397, which made tools/benchmarks/avx2Benchmark.py the benchmark on the level of the solvers and left the micro-benchmark to a later step (revision2026c step RG5.1). The operations the solvers spend their time in - Vector add, scale and MultAdd over a sweep of sizes across ResizableVectorParallelThreadingLimit, ResizableVectorParallel single- and multithreaded, the products of SlimVector, Matrix3D, ConstSizeMatrix, HomogeneousTransformation and of a Matrix with a Vector - timed with the compiler options of the build, callable from Python as exudyn.special.RunLinalgBenchmark, so that the steps RG5.1.2, RG5.1.4 and RG5.2 can measure their gain.
+  - **notes:** exudyn.special.RunLinalgBenchmark(minimumTime, numberOfThreads): the linear algebra micro-benchmark compiled into every build - Vector and ResizableVectorParallel operations over sizes across the threading limit, single- and multithreaded, and the products of SlimVector, Matrix3D, ConstSizeMatrix, HomogeneousTransformation and Matrix with Vector, in ns per call (src/Linalg/linalgBenchmark.h).
+  - date resolved: **2026-11-10 22:19**, date raised: 2026-11-10
+- **1.13.545** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG computes the rotation matrix twice (#3409)
+  - description: Successor of \#728 (closed as superseded by revision2026c step RG5.1.3). CNodeRigidBodyRotVecLG::CollectCurrentNodeMarkerData, called for every marker on a rigid body in every evaluation, calls GetGlocal, GetG, GetPosition, GetVelocity, GetRotationMatrix and GetAngularVelocityLocal; GetG and GetRotationMatrix both compute the rotation matrix from the rotation vector, and each getter reads the coordinates through LinkedDataVector. Plan: compute A once, G = A, Glocal = I, read the coordinates directly as CNodeRigidBodyEP does; measured on a chain of rigid bodies with RK44 and Lie group integration, the results must stay bitwise the same.
+  - **notes:** CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG computes the rotation matrix once (G = A, Glocal = I) and reads the coordinates directly; a chain of 1000 rigid bodies with RK44 and Lie group integration runs 21 % faster (0.725 s to 0.571 s), with bitwise the same results.
+  - date resolved: **2026-11-10 22:19**, date raised: 2026-11-10
 - **1.13.544** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectBeamGeometricallyExact2D has no GetAngularVelocityLocal and ObjectANCFBeam no GetLocalCenterOfMass, although they declare the access functions that need them (#3406)
   - description: ObjectBeamGeometricallyExact2D declares AngularVelocity\_qt (it provides GetRotationJacobian) and inherits the throwing default of GetAngularVelocityLocal: a RigidBodySpringDamper on a MarkerBodyRigid of the beam stops at the first step with 'illegal call to CObjectBody::GetAngularVelocityLocal', and so does the output AngularVelocityLocal of the marker. ObjectANCFBeam declares DisplacementMassIntegral\_q (GetMassWeightedPositionJacobian) and inherits the throwing default of GetLocalCenterOfMass, which CMarkerBodyMass::GetPosition calls. Found by the table of revision2026c step RG9.6.1 (\#2866); fixed with the static\_asserts of RG9.6.2.
   - **notes:** ObjectANCFBeam provides GetLocalCenterOfMass (the middle of the beam axis) and ObjectBeamGeometricallyExact2D provides GetAngularVelocityLocal, as their access function types declare; a MarkerBodyMass on the ANCF beam and a RigidBodySpringDamper on a MarkerBodyRigid of the 2D beam raised 'illegal call' before. Test model beamMarkerAccessTest.py.

@@ -1,0 +1,16 @@
+{
+  "number": 3409,
+  "title": "CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG computes the rotation matrix twice",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Successor of #728 (closed as superseded by revision2026c step RG5.1.3). CNodeRigidBodyRotVecLG::CollectCurrentNodeMarkerData, called for every marker on a rigid body in every evaluation, calls GetGlocal, GetG, GetPosition, GetVelocity, GetRotationMatrix and GetAngularVelocityLocal; GetG and GetRotationMatrix both compute the rotation matrix from the rotation vector, and each getter reads the coordinates through LinkedDataVector. Plan: compute A once, G = A, Glocal = I, read the coordinates directly as CNodeRigidBodyEP does; measured on a chain of rigid bodies with RK44 and Lie group integration, the results must stay bitwise the same.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 22:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplNodes/CNodeRigidBodyRotVecLG.cpp",
+  "releaseNotes": "CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG computes the rotation matrix once (G = A, Glocal = I) and reads the coordinates directly; a chain of 1000 rigid bodies with RK44 and Lie group integration runs 21 % faster (0.725 s to 0.571 s), with bitwise the same results.",
+  "resolvedInVersion": "1.13.545"
+}

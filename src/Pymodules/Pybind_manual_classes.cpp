@@ -411,6 +411,7 @@ void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 #include "Pymodules/PyConvexShape.h"	//exudyn.cUtilities.ConvexShape and Distance (#3317)
 #include "Pymodules/PyCollisionModel.h"	//exudyn.cUtilities.CollisionModel (#3380)
 #include "Linalg/Symbolic.h"	//exudyn.cMath with a symbolic argument (#3114)
+#include "Linalg/linalgBenchmark.h"	//exudyn.special.RunLinalgBenchmark (#3410)
 PyExperimental pyExperimental;	//! for experimental things, not to be used by common user
 PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 bool EXUstd::ParameterRangeChecksActive() { return pySpecial.exceptions.parameterRangeChecks; }
@@ -782,6 +783,21 @@ void Init_Pybind_manual_classes(py::module& m) {
 			"the SystemContainer the renderer is attached to, or None; GLFW can hold one at a time, so this is module-wide. It is set when a SystemContainer attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of exudyn.misc.GUI ask for; not intended for regular users")
 		.def_property_readonly("overrideSettings", [](const PySpecial&) { return EPyUtils::OverrideSettings(); },
 			"the settings read from ~/.exudyn/config.json by 'import exudyn', as a dictionary with one key per section ('config', 'visualizationSettings', 'dialogs', 'resultsMonitor'); it is empty unless a user has stored something, and EXUDYN_NO_USER_SETTINGS=1 keeps it empty; the same dictionary is read by the C++ side; use exudyn.misc.overrideSettings for reading and writing the file")
+		.def_static("RunLinalgBenchmark", [](Real minimumTime, Index numberOfThreads) {
+			py::list list;
+			for (const LinalgBenchmarkResult& r : RunLinalgBenchmark(minimumTime, numberOfThreads))
+			{
+				py::dict d;
+				d["operation"] = r.operation;
+				d["size"] = r.size;
+				d["threads"] = r.threads;
+				d["nsPerCall"] = r.nsPerCall;
+				d["checkSum"] = r.checkSum;
+				list.append(d);
+			}
+			return list;
+			}, "the linear algebra micro-benchmark of this build: the time per call in ns of the vector operations over a sweep of sizes, single- and multithreaded, and of the small matrix, vector and homogeneous transformation products, as a list of dictionaries with operation, size, threads, nsPerCall and checkSum; each operation runs for at least minimumTime seconds; numberOfThreads > 1 adds the multithreaded vectors above the threading limit",
+			py::arg("minimumTime") = 0.05, py::arg("numberOfThreads") = 1)
 		.def_static("InfoStat", &PythonInfoStat, "Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag", py::arg("writeOutput") = true)
 
 #ifdef PERFORM_UNIT_TESTS
