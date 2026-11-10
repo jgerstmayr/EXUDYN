@@ -273,7 +273,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3 x 4 matrix GLocal, symbolic for exudyn.symbolic, else as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`objectFFRFforceVectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFforceVectorTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)
 
 
 (sec-kinematics-angularvelocity2eulerparameters-t)=

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.533.dev1
+- Exudyn version = 1.13.537.dev1
 - last change = 2026-11-10
-- Number of issues = 3403
-- Number of resolved issues = 3310 (533 in current version)
+- Number of issues = 3405
+- Number of resolved issues = 3314 (537 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9092,9 +9092,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: revision2026c step RG9.7 (docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
   - **remarks:** 2026-10-25 (\#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker).
   - date raised: 2026-10-12
-- `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
-  - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
-  - date raised: 2026-10-09
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` the member functions an item must provide, checked at compile time (#2866)
   - description: Successor of \#2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -\> required functions, generated static\_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.
   - date raised: 2026-10-05
@@ -9340,17 +9337,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add recommendedStepSize to ContactCoordinate element
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2021-03-20
-- `CHECK` `MEDIUM EFF` ObjectFFRF (#591)
-  - description: Check forceVector and gravity forces in comparison to paper
-  - **remarks:** planned as revision2026b step RG2.6 (triage 2026-10-07)
-  - date raised: 2021-02-21
 - `EXTENSION` `HIGH EFF` Gen alpha2 (#561)
   - description: setup new generalized alpha integrator with GGL
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
-  - date raised: 2021-01-26
-- `TESTING` `MEDIUM EFF` Lie group tests2 (#559)
-  - description: add Lie group integrator flybar governor
-  - **remarks:** planned as revision2026b step RG2.6 (triage 2026-10-07)
   - date raised: 2021-01-26
 - `EXTENSION` `MEDIUM EFF` item number textures (#517)
   - description: add special textures for item numbers
@@ -9383,3 +9372,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` ObjectFFRFinterface.AddObjectFFRF ignores its argument gravity (#3404)
+  - description: ObjectFFRFinterface.AddObjectFFRF of exudyn.FEM documents gravity as the gravity vector applied to the body, stores it in self.gravity and never applies it (the code in UFforceFFRF is commented out). Gravity on an ObjectFFRF needs the rotational part -G^T rf~^T A\_bd^T M Phi\_t g of Zwoelfer and Gerstmayr 2019, Eq. (14.88), which the forceVector of ObjectFFRF does not give (objectFFRFforceVectorTest.py, \#591); nodal loads at the mesh nodes give it exactly. Either apply it, e.g. by a LoadMassProportional or by nodal loads, or remove the argument.
+  - date raised: 2026-11-10

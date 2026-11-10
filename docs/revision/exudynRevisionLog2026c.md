@@ -6431,6 +6431,58 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg2-8"></a>
+### RG2.8, RG2.9.1, RG2.9.2, RG6.18.5 — a converged cable run, the flyball governor with the Lie group integrator, the forces of ObjectFFRF against the paper, Make mp4 (2026-11-10, #2914, #559, #591, #3403)
+*(Maintainer 2026-11-10: close RG2.12 and RG6.8; try RG2.8; do RG2.9.1 and RG2.9.2, the paper probably the one of 2019 in
+tmp/papers; Make mp4 of the SolutionViewer opens the folder images while the frames go elsewhere, and says completed
+without a video.)*
+
+- **RG2.12, RG6.8** closed: their sub-steps were done.
+- **RG2.8** (#2914): the cable of perfAccessFunctionsAD was 1 m of 200 elements (0.005 m each, bending stiffness 1,
+  axial 1000) with the initial velocity 0.1 sin(i), noise from node to node. The Newton iteration did not converge
+  in many steps: with a fixed step the solver stopped ("reduction of step size reached minimum step size"); the
+  adaptive step reduced it, so every Newton setting gave another sequence of steps (0.004663 modified, 0.005112 full,
+  0.005388 with relativeTolerance 1e-10). Measured (h = 1e-3, 200 steps, the sum of |q|):
+
+  | cable | modified | full | fixed step | h/2 | h/4 |
+  |---|---|---|---|---|---|
+  | 1 m, sin(i) | 0.004663 | 0.005112 | fails | | |
+  | 10 m, sin(i) | 0.296643 | 0.296643 | 0.296643 | 0.397277 | |
+  | 10 m, half sine | 0.1431328338 | 0.1431328337 | 0.1431328338 | 0.142810 | 0.142733 |
+
+  The run is the last: 10 m (elements of 0.05 m), the initial velocity 0.1 sin(pi i/200). relativeTolerance 1e-9 gives
+  0.14306 (modified) and 0.14304 (full) with some reduced steps; 1e-10 is below what the residual reaches and halves the
+  step thousands of times (0.1428 / 0.1447, 14 s) - a step size effect, not the Newton iteration. Reference
+  0.14313283378374353, 0.108 s instead of 0.57 s; runPerformanceTests.py: all 45 runs pass, 47.2 s. The entry of
+  AVX2ReferenceSolutionUpdate (drift 8.4e-7 of the old cable) is removed; no fast module is installed here, the
+  release run of `--fast-module` decides whether the new one needs an entry (RG20.7.9).
+- **RG2.9.1** (#559): stiffFlyballGovernor.py tests the Python Lie group RK4 of lieGroupIntegration on 20 steps;
+  flyballGovernorLieGroupTest.py takes the compliant flyball governor of stiffFlyballGovernor2.py on rotation vector
+  nodes with RK44 and `explicit.useLieGroupIntegration` for 0.2 s: h = 5e-5 within 5.0e-7 of the same model on
+  Tait-Bryan nodes at h = 1.25e-5 (no Lie group; Euler parameters are refused by the explicit solver for their
+  algebraic equation), 1.7e-8 at h = 2.5e-5 (ratio 29, order 4); the Python Lie group RK4 the same as the C++ one to
+  6.6e-14 over 0.01 s. h = 1e-4 is unstable (the torsion of the rods, about 14000 rad/s). The slider sinks from 0.5 to
+  0.355 m. 1.3 s.
+- **RG2.9.2** (#591): Zwoelfer and Gerstmayr 2019 (tmp/papers), the nodal-based FFRF: L = [Phi_t, -A_bd rf~ G, A_bd]
+  (14.25), the mass matrix L^T M L (14.84), the applied forces L^T f (14.88). objectFFRFforceVectorTest.py: 8 nodes
+  with lumped masses and bars between all of them, Euler parameters, translated, rotated, deformed (0.01), at rest;
+  the mass matrix and the right-hand side of the solver. Agree to 1e-10: the mass matrix with L^T M L, gravity by a
+  LoadForceVector per mesh node (MarkerSuperElementPosition) with L^T M Phi_t g. The forceVector [m g, 0, M Phi_t g]
+  gives L^T f without its rotational part -G^T rf~^T A_bd^T M Phi_t g: for the center of mass off the origin that part
+  is 71.1, for the center of mass at the origin only the deformation gives it (0.256). This is what the description of
+  forceVector says ("only ... for bodies with COM at the origin of the reference frame"); exact gravity is the nodal
+  loads. Found: `ObjectFFRFinterface.AddObjectFFRF(gravity=...)` of exudyn.FEM stores the gravity and never applies
+  it - #3404, RG2.9.4. (The 2021 and 2022 papers were not needed.)
+- **RG6.18.5** (#3403): the button Make mp4 opened InteractiveImages2Video with the fixed working directory `images`
+  while 'Record frames' writes to `exportImages.saveImageFileName` with `exudyn.config.outputDirectory`; with a wrong
+  folder ConvertImages2Video printed the error of ffmpeg and returned, and the dialog said "complete". Now
+  `ExportedImagesLocation(visualizationSettings)` gives [directory, pattern] as the renderer writes them
+  (`OutputFilePath`, `.png`/`.tga`), the dialog starts there (absolute path); ConvertImages2Video checks the first image
+  before ffmpeg (FileNotFoundError, ValueError for a pattern without a number field), raises RuntimeError with the last
+  line of ffmpeg instead of printing, and returns the path of the video, which the dialog shows. GUI.md: 'Record
+  frames' (the text said 'Record animation') and where the images go. imagesToVideoTest.py: the locations, the
+  refusals, and with ffmpeg three PNG frames written without an image library to a video (1639 bytes here).
+
 <a id="rg19-16"></a>
 ### RG6.22.1, RG19.16, RG11.4.7 — the column of WindowControls, the interactive robot on the controls, primitives and the order of the links in the URDF import (2026-11-10, #3402, #3362, #3393)
 *(Maintainer 2026-11-10: WindowControls with top=, the example simpler with it; the update rate of the graphics stays

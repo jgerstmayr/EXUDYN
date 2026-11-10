@@ -1,0 +1,140 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The Lie group integrator of the explicit solvers on the stiff flyball governor (IFToMM benchmark problem,
+#           https://www.iftomm-multibody.org/benchmark/problem/Stiff_flyball_governor/) with compliant joints (#559):
+#           shaft, slider and two rods on rotation vector nodes, integrated by RK44 with
+#           timeIntegration.explicit.useLieGroupIntegration. Checked: the same model on Tait-Bryan angle nodes at a
+#           quarter of the step size (no Lie group integration), the order 4 from two step sizes, and the Python Lie
+#           group RK4 of exudyn.lieGroupIntegration, which must give the same steps as the C++ one.
+#           The result is the number of checks that pass plus the height of the slider at the end.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-10
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+from exudyn.lieGroupIntegration import LieGroupExplicitRKInitialize, UserFunctionNewtonLieGroupRK4
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+testError = 0
+numberOfChecks = 0
+def Check(condition, message):
+    global testError, numberOfChecks
+    numberOfChecks += 1
+    if not condition:
+        exu.Print('flyballGovernorLieGroupTest: ' + message)
+        testError += 1
+
+#%%+++ the model of stiffFlyballGovernor2.py, compliant joints
+lengthShaft = 1; widthShaft = 0.01
+lengthRod = 1; widthRod = 0.01
+dimSlider = 0.1; sSlider = 0.5
+xAB = 0.1
+beta0 = 30/180*cMath.pi
+omega0 = [0., 0., 0.16*2*cMath.pi]
+density = 3000
+g = [0, 0, -9.81]
+
+iRod = InertiaCuboid(density=density, sideLengths=[lengthRod, widthRod, 0.01])
+iRodSum = iRod + InertiaMassPoint(mass=5).Translated([lengthRod/2, 0, 0])
+refRod = -iRodSum.com
+iRodSum = iRodSum.Translated(refRod)
+lRod = lengthRod/2 - refRod[0] #from the joint at the shaft to the reference point of a rod
+
+def BuildFlyball(mbs, nodeType):
+    """shaft, slider and rods AC and BD on rigid body nodes of nodeType; returns [nodes, bodies]"""
+    inertiaList = [InertiaCuboid(density=density, sideLengths=[widthShaft, widthShaft, lengthShaft]),
+                   InertiaCuboid(density=density, sideLengths=[dimSlider, dimSlider, dimSlider]), iRodSum, iRodSum]
+    positions = [[0, 0, lengthShaft/2], [0, 0, sSlider],
+                 [ xAB/2 + lRod*cMath.cos(beta0), 0, lengthShaft - lRod*cMath.sin(beta0)],
+                 [-xAB/2 - lRod*cMath.cos(beta0), 0, lengthShaft - lRod*cMath.sin(beta0)]]
+    velocities = [[0, 0, 0], [0, 0, 0], [0, omega0[2]*positions[2][0], 0], [0, omega0[2]*positions[3][0], 0]]
+    rotations = [np.eye(3), np.eye(3), RotationMatrixY(beta0), RotationMatrixY(-beta0)]
+    graphicsList = [graphics.Brick(size=[widthShaft, widthShaft, lengthShaft], color=graphics.color.grey),
+                    graphics.Brick(size=[dimSlider, dimSlider, dimSlider], color=graphics.color.red),
+                    graphics.Brick(centerPoint=[refRod[0], 0, 0], size=[lengthRod, widthRod, widthRod], color=graphics.color.blue),
+                    graphics.Brick(centerPoint=[-refRod[0], 0, 0], size=[lengthRod, widthRod, widthRod], color=graphics.color.blue)]
+    nodes = []; bodies = []
+    for i in range(4):
+        body = mbs.CreateRigidBody(referencePosition=positions[i], initialVelocity=velocities[i],
+                                   initialAngularVelocity=omega0, inertia=inertiaList[i], gravity=g, nodeType=nodeType,
+                                   referenceRotationMatrix=rotations[i], graphicsDataList=[graphicsList[i]], returnDict=True)
+        nodes += [body['nodeNumber']]; bodies += [body['bodyNumber']]
+
+    def M(body, position):
+        return mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=position))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround()), localPosition=[0, 0, 0]))
+    kj = 2e4; dj = 0.05*kj; kj2 = 0.05*kj; dj2 = 0.05*kj2 #joints as stiff springs, the rotations softer
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mGround, M(bodies[0], [0, 0, -lengthShaft/2])],
+                                        stiffness=np.diag([kj, kj, kj, kj2, kj2, 0]), damping=np.diag([dj, dj, dj, dj2, dj2, 0])))
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers=[M(bodies[0], [0, 0, 0]), M(bodies[1], [0, 0, 0])],
+                                        stiffness=np.diag([kj, kj, 0, kj2, kj2, kj2]), damping=np.zeros((6, 6))))
+    for (body, sign) in [(bodies[2], 1), (bodies[3], -1)]:
+        mbs.AddObject(RigidBodySpringDamper(markerNumbers=[M(bodies[0], [sign*xAB/2, 0, lengthShaft/2]), M(body, [-sign*lRod, 0, 0])],
+                                            stiffness=np.diag([kj, kj, kj, kj2, 0, kj2]), damping=np.zeros((6, 6))))
+        mbs.AddObject(SpringDamper(markerNumbers=[M(bodies[1], [sign*dimSlider/2, 0, 0]), M(body, [sign*refRod[0], 0, 0])],
+                                   stiffness=4000, damping=200, referenceLength=0.5))
+    return [nodes, bodies]
+
+def State(mbs, nodes):
+    """the position of the slider, the rotation matrix of rod AC, the angular velocity of the shaft"""
+    return np.hstack([mbs.GetNodeOutput(nodes[1], exu.OutputVariableType.Position),
+                      np.array(mbs.GetNodeOutput(nodes[2], exu.OutputVariableType.RotationMatrix)).flatten(),
+                      mbs.GetNodeOutput(nodes[0], exu.OutputVariableType.AngularVelocity)])
+
+def Run(nodeType, h, tEnd, pythonLieGroup=False, keep=False):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    [nodes, bodies] = BuildFlyball(mbs, nodeType)
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = int(round(tEnd/h))
+    simulationSettings.timeIntegration.endTime = tEnd
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.timeIntegration.explicit.useLieGroupIntegration = True
+    simulationSettings.solution.file.write = keep and not testIsActive
+    simulationSettings.solution.file.writePeriod = 0.005
+    if pythonLieGroup: #the Lie group RK4 of exudyn.lieGroupIntegration, as Newton function of the implicit solver
+        simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
+        dynamicSolver = exu.MainSolverImplicitSecondOrder()
+        LieGroupExplicitRKInitialize(mbs)
+        dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
+        dynamicSolver.SolveSystem(mbs, simulationSettings)
+    else:
+        mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+    return [State(mbs, nodes), SC, mbs]
+
+tEnd = 0.2
+[yLG, SC, mbs] = Run(exu.NodeType.RotationRotationVector, 5e-5, tEnd, keep=True)
+[yLG2, _, _] = Run(exu.NodeType.RotationRotationVector, 2.5e-5, tEnd)
+[yRxyz, _, _] = Run(exu.NodeType.RotationRxyz, 1.25e-5, tEnd)
+errorLG = cMath.norm(yLG - yRxyz)
+errorLG2 = cMath.norm(yLG2 - yRxyz)
+exu.Print('flyballGovernorLieGroupTest: Lie group h=5e-5 / 2.5e-5 against Tait-Bryan angles h=1.25e-5:', errorLG, errorLG2)
+Check(errorLG < 5e-6, 'the Lie group integration at h=5e-5 against the Tait-Bryan angles: ' + str(errorLG))
+Check(errorLG/errorLG2 > 8, 'the order of the Lie group RK44, the error ratio of h and h/2: ' + str(errorLG/errorLG2))
+Check(abs(yLG[2] - sSlider) > 1e-3, 'the slider moves: ' + str(yLG[2]))
+
+#the Python Lie group RK4 of exudyn.lieGroupIntegration: the same method
+[yPy, _, _] = Run(exu.NodeType.RotationRotationVector, 5e-5, 0.01, pythonLieGroup=True)
+[yCpp, _, _] = Run(exu.NodeType.RotationRotationVector, 5e-5, 0.01)
+errorPy = cMath.norm(yPy - yCpp)
+exu.Print('flyballGovernorLieGroupTest: Python against C++ Lie group RK4:', errorPy)
+Check(errorPy < 1e-10, 'the Python Lie group RK4 against the C++ one: ' + str(errorPy))
+
+if not testIsActive:
+    mbs.SolutionViewer()
+
+u = numberOfChecks - 10*testError + yLG[2]
+exu.Print('flyballGovernorLieGroupTest: errors', testError)
+exu.Print('solution of flyballGovernorLieGroupTest=', u)
+exu.sys['testResult'] = u

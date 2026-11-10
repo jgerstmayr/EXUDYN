@@ -47,6 +47,9 @@ def TestExamplesReferenceSolution():
         'trajectoryBlendingCartesianTest.py': 7.984211565491496, #new 2026-11-06: auto blend times, the velocity check, the blending in Cartesian space (#3283)
         'hdf5ExudynTypesTest.py': 31., #new 2026-11-09: #1892
         'rendererControlsTest.py': -0.5, #new 2026-11-10: #3400
+        'imagesToVideoTest.py': 6., #new 2026-11-10: #3403
+        'flyballGovernorLieGroupTest.py': 4.355437879974056, #new 2026-11-10: #559
+        'objectFFRFforceVectorTest.py': 10., #new 2026-11-10: #591
         'itemVisualizationArgumentTest.py': 8., #new 2026-11-09: #2342
         'explicitStepSizeControlTest.py': 25, #new 2026-11-06: the PI controller and the absolute values in the error scale of ODE23 and DOPRI5 (#3245)
         'generalizedAlphaODE1OrderTest.py': 3.3760530260735115, #2026-11-06: modified against full Newton (#3300), before 2.3760530260735115; new 2026-11-06: the order 2 of an ODE1 coordinate coupled to ODE2 coordinates in generalized-alpha (#3258)
@@ -764,7 +767,7 @@ def PerformanceTestsReferenceSolution():
         'perfAccessFunctionsAD:rigidRxyz-n100-implicit':         38.06977882602512, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 38.06978409054861
         'perfAccessFunctionsAD:rigidRxyz-n100-explicit':         39.70816787868968,
         'perfAccessFunctionsAD:rigid2D-n200-implicit':           333.2416865462153, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 333.2416865794323
-        'perfAccessFunctionsAD:cable-n200-implicit':             0.004663297110155585, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 0.005112208211437852
+        'perfAccessFunctionsAD:cable-n200-implicit':             0.14313283378374353, #2026-11-10: a cable of 10 m with a smooth initial velocity, which modified and full Newton give alike (#2914); before: 0.004663297110155585
         'perfAccessFunctionsAD:rigid2D-n200-explicit':           439.41627874357835,
         }
 
@@ -860,8 +863,6 @@ def AVX2ReferenceSolutionUpdate():
         'generalContactTriangleMomentumTest.py':   4.035299999516811,         #drift 7.0e-14
         'distanceSensor.py':                       1.7491018054920164,        #drift 5.8e-14
         'genericJointUserFunctionTest.py':         1.1922383980561477,        #drift 5.6e-14
-        #a single run of runPerformanceTests.py: its result moves by 20% with the Newton tolerance (#2914)
-        'perfAccessFunctionsAD:cable-n200-implicit': 0.004662459533372243,  #drift 8.4e-07
         }
 
     return refSolAVX2

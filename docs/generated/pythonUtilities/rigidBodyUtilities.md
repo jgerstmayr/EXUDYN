@@ -107,7 +107,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 - **output**: if v is a vector, output is (3*n x 3) skew matrix in np.array format; if v is a (3*n x m) matrix, the output is a (3*n x 3*m) skew matrix in np.array format; other shapes raise a ValueError
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFforceVectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFforceVectorTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM)
 
 
 (sec-rigidbodyutilities-eulerparameters2g)=
@@ -133,7 +133,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3x4 matrix G as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`objectFFRFforceVectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFforceVectorTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)
 
 
 (sec-rigidbodyutilities-eulerparameters2rotationmatrix)=
@@ -1035,7 +1035,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 - **class function description**: initialize inertia with mass of point
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`stiffFlyballGovernor2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`stiffFlyballGovernor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`stiffFlyballGovernor2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`flyballGovernorLieGroupTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/flyballGovernorLieGroupTest.py) (TM), [`stiffFlyballGovernor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py) (TM)
 
 
 (sec-module-rigidbodyutilities-class-inertiasphere(rigidbodyinertia))=

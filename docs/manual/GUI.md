@@ -538,8 +538,8 @@ The `SolutionViewer` adds a `tkinter` interactive dialog, which lets you interac
 - In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
 - In the 'Continuous run' mode, the player runs in an infinite loop
 - In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for **creating animations**, see {ref}`sec-overview-basics-animations` and works together with the visualization settings dialog.
-- In the 'Record animation' mode, the player records frames that are shown in the render window; before pressing on 'Record animation', press 'Stop' and switch to 'One cycle'. Then put the solution steps slider to the first frame and press 'Record animation', which stores images in the current subfolder 'images' as 'frame00001.png' with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.
-- The button 'Make mp4' allows to directly generate animation files, see next section.
+- With 'Record frames', the player records the frames shown in the render window; before pressing 'Record frames', press 'Stop' and switch to 'One cycle'. Then put the solution steps slider to the first frame and press 'Record frames', which stores the images at `exportImages.saveImageFileName` (default `images/frame`, in `exudyn.config.outputDirectory` if that is set) as 'frame00000.png' with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.
+- The button 'Make mp4' opens the dialog that converts the recorded images into a video, with the directory and the file pattern of the images that 'Record frames' writes (`exudyn.interactive.ExportedImagesLocation`); see next section.
 - The sliders follow the width of the window. `SolutionViewer(..., windowSize=[width, height])` gives
   the window a size; otherwise it opens at the size stored for it in `~/.exudyn/config.json` - by
   **store positions** of the settings dialog, or when it closes while
@@ -629,7 +629,9 @@ system (e.g. `apt install ffmpeg`, with `sudo`, or Homebrew on macOS) and the Py
 
 The images are written to `exportImages.saveImageFileName` (default `images/frame`), relative to the current
 directory of Python - in a terminal the directory the script was started from - or to
-`exudyn.config.outputDirectory` if that is set.
+`exudyn.config.outputDirectory` if that is set; `ExportedImagesLocation(SC.visualizationSettings)` gives that
+directory and the file pattern. `ConvertImages2Video` returns the path of the video and raises an error if the
+first image is not found or ffmpeg fails, which the dialog shows.
 See the {ref}`GUI chapter <sec-graphicsvisualization>` for the visualization settings that
 control image export.
 

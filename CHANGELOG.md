@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 509 | 1.13.533 |
+| 1.13 | Newborn | 513 | 1.13.537 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.537** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Make mp4 of the SolutionViewer opens on the folder images instead of the folder the frames are written to, and reports success without images (#3403)
+  - description: The button Make mp4 of the SolutionViewer opened InteractiveImages2Video with the fixed working directory images and pattern frame%05d.png, while Record frames writes to exportImages.saveImageFileName, with exudyn.config.outputDirectory. With a wrong folder, ConvertImages2Video printed the error of ffmpeg and returned, and the dialog said the conversion was complete although no video was written. The dialog now starts from the directory and pattern of the export settings (ExportedImagesLocation), shown as an absolute path; ConvertImages2Video raises FileNotFoundError if the first image does not exist and RuntimeError if ffmpeg fails, and returns the path of the video, which the dialog shows.
+  - **notes:** Make mp4 of the SolutionViewer opens on the directory and pattern of the recorded frames (exudyn.interactive.ExportedImagesLocation); ConvertImages2Video raises FileNotFoundError for a missing first image and RuntimeError if ffmpeg fails, and returns the path of the video
+  - date resolved: **2026-11-10 19:23**, date raised: 2026-11-10
+- **1.13.536** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
+  - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
+  - **notes:** perfAccessFunctionsAD: the cable is 10 m long with a half sine wave as initial velocity; modified and full Newton give the same result, reference and timing re-recorded
+  - date resolved: **2026-11-10 19:23**, date raised: 2026-10-09
+- **1.13.535** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` ObjectFFRF (#591)
+  - description: Check forceVector and gravity forces in comparison to paper
+  - **notes:** objectFFRFforceVectorTest.py: the mass matrix and the applied forces of ObjectFFRF against Zwoelfer and Gerstmayr 2019; gravity by nodal loads is exact, forceVector has no rotational part and gives gravity only for a body with its center of mass at the origin of its frame
+  - date resolved: **2026-11-10 19:23**, date raised: 2021-02-21
+- **1.13.534** `TESTING` `MEDIUM EFF` `resolved by: Claude-JG` Lie group tests2 (#559)
+  - description: add Lie group integrator flybar governor
+  - **notes:** flyballGovernorLieGroupTest.py: the compliant stiff flyball governor on rotation vector nodes with RK44 and explicit.useLieGroupIntegration, checked against the Tait-Bryan model at a quarter of the step, for order 4, and against the Python Lie group RK4 of exudyn.lieGroupIntegration
+  - date resolved: **2026-11-10 19:23**, date raised: 2021-01-26
 - **1.13.533** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` WindowControls: the column of elements starts below the texts of the renderer, top= sets it (#3402)
   - description: WindowControls placed the elements without location from the top of the window, over the texts which the renderer writes at the top left corner. Decided: the column starts at 0.25 of the window height, the argument top sets it; renderWindowControls.py uses it.
   - **notes:** exudyn.interactive.WindowControls places the elements without location below the texts of the renderer, from 0.25 of the window height; the argument top sets the upper edge of the column.

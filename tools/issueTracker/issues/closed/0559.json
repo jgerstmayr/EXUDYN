@@ -1,0 +1,15 @@
+{
+  "number": 559,
+  "title": "Lie group tests2",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "add Lie group integrator flybar governor",
+  "dateRaised": "2021-01-26",
+  "deadline": "2021-03-27",
+  "dateResolved": "2026-11-10 19:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "flyballGovernorLieGroupTest.py: the compliant stiff flyball governor on rotation vector nodes with RK44 and explicit.useLieGroupIntegration, checked against the Tait-Bryan model at a quarter of the step, for order 4, and against the Python Lie group RK4 of exudyn.lieGroupIntegration",
+  "resolvedInVersion": "1.13.534"
+}

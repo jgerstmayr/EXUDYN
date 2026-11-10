@@ -92,6 +92,7 @@ explicitSolversPostNewtonTest
 explicitStepSizeControlTest
 fileHeaderThreadsTest
 flexiblePendulumBeamComparison
+flyballGovernorLieGroupTest
 fourBarMechanismIftomm
 fourBarMechanismTest
 generalContactCylinderTest
@@ -132,6 +133,7 @@ homogeneousTransformationInterfaceTest
 homogeneousTransformationParameterTest
 homogeneousTransformationTest
 hydraulicActuatorSimpleTest
+imagesToVideoTest
 implicitRungeKuttaErrorEstimateTest
 implicitRungeKuttaLieGroupTest
 implicitRungeKuttaSmallStepTest
@@ -170,6 +172,7 @@ movingGroundRobotTest
 multithreadingUserFunctionTest
 NGsolveCMStest
 numericalInverseKinematicsTest
+objectFFRFforceVectorTest
 objectFFRFreducedOrderAccelerations
 objectFFRFreducedOrderTest
 objectFFRFTest

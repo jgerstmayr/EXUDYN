@@ -66,7 +66,7 @@ def ConfigureDialogColumns(tkWindow):
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'openDialogs', 'ConfigureDialogColumns', 'WindowControls', 'InteractiveDialog', 'AnimateModes',
-    'SolutionViewer', 'ShowImage', 'ConvertImages2Video', 'InteractiveImages2Video',
+    'SolutionViewer', 'ShowImage', 'ConvertImages2Video', 'ExportedImagesLocation', 'InteractiveImages2Video',
     ]
 
 class WindowControls:
@@ -1071,7 +1071,9 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
             messagebox.showinfo('Warning', 'FFMPEG is not installed, therefore mp4 files cannot be generated.\nUse: "conda install ffmpeg" and "pip install ffmpeg-python"')
             return
         
-        InteractiveImages2Video(closeAfterCreation=True) #goes back to SolutionViewer
+        #the images of 'Record frames', where the renderer writes them (#3403)
+        workingDir, inputPattern = ExportedImagesLocation(SC.visualizationSettings)
+        InteractiveImages2Video(closeAfterCreation=True, workingDir=workingDir, inputPattern=inputPattern) #goes back to SolutionViewer
         # res=messagebox.askquestion('Leave SolutionViewer', 'Do you like to leave SolutionViewer and create an mp4 video?')
         # if res == 'yes':
         #     # dialog.OnQuit() #this does not work
@@ -1270,7 +1272,8 @@ def ConvertImages2Video(workingDir='images',
             libx264 only
 
     Returns:
-        None; writes animation when finished
+        the path of the video written; raises FileNotFoundError if the first image, inputPattern with startNumber
+        in workingDir, does not exist, and RuntimeError with the last line of the message of ffmpeg if it fails
 
     Example:
         #after successful simulation, call:
@@ -1279,6 +1282,19 @@ def ConvertImages2Video(workingDir='images',
         ConvertImages2Video(workingDir='images', outputFile='test.mp4')
     """
     import os
+    if workingDir != '':
+        inputPattern = os.path.join(workingDir, inputPattern)
+        outputFile = os.path.join(workingDir, outputFile)
+
+    #ffmpeg reports a missing first image only in its error text (#3403)
+    try:
+        firstImage = inputPattern % startNumber
+    except (TypeError, ValueError):
+        raise ValueError('ConvertImages2Video: inputPattern "' + inputPattern + '" needs one number field such as %05d')
+    if not os.path.isfile(firstImage):
+        raise FileNotFoundError('ConvertImages2Video: no image "' + os.path.abspath(firstImage) + '"; check the working '
+                                'directory, the input pattern and the start frame')
+
     try:
         import ffmpeg
     except ImportError:
@@ -1287,10 +1303,6 @@ def ConvertImages2Video(workingDir='images',
     kwargs = {}
     if totalFrames is not None:
         kwargs['vframes'] = totalFrames
-
-    if workingDir != '':
-        inputPattern = os.path.join(workingDir, inputPattern)
-        outputFile = os.path.join(workingDir, outputFile)
 
     import sys
     if videoCodec is not None:
@@ -1312,19 +1324,52 @@ def ConvertImages2Video(workingDir='images',
             )
             if codec != codecs[0]:
                 exudyn.Print('ConvertImages2Video: ffmpeg has no encoder ' + codecs[0] + '; used ' + codec)
-            return
+            return outputFile
         except ffmpeg.Error as error: #ffmpeg ran and failed: try the next encoder
             errorText = error.stderr.decode('utf-8', 'replace') if error.stderr else str(error)
         except Exception as error: #ffmpeg could not be run at all
             errorText = str(error)
             break
-    exudyn.Print('ERROR in ConvertImages2Video: ffmpeg failed with the encoder(s) ' + ', '.join(codecs) + ':')
-    if errorText:
-        exudyn.Print(errorText.strip().splitlines()[-1])
-    exudyn.Print('make sure that ffmpeg can be executed from the currently used console by executing "ffmpeg"')
+    raise RuntimeError('ConvertImages2Video: ffmpeg failed with the encoder(s) ' + ', '.join(codecs) + ': '
+                       + (errorText.strip().splitlines()[-1] if errorText.strip() else 'no message')
+                       + '; make sure that ffmpeg can be executed from the currently used console by executing "ffmpeg"')
 
-def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
+
+def ExportedImagesLocation(visualizationSettings):
+    """the directory and the file pattern of the images the renderer writes with the export settings, as
+    ConvertImages2Video takes them
+
+    Args:
+        visualizationSettings: SC.visualizationSettings; exportImages.saveImageFileName and saveImageFormat are read
+
+    Returns:
+        [workingDir, inputPattern]: the directory, with exudyn.config.outputDirectory as the renderer writes there,
+        and the pattern such as 'frame%05d.png'
+
+    Example:
+        workingDir, inputPattern = ExportedImagesLocation(SC.visualizationSettings)
+        ConvertImages2Video(workingDir=workingDir, inputPattern=inputPattern)
+    """
+    import os
+    from exudyn.basicUtilities import OutputFilePath
+    exportImages = visualizationSettings.exportImages
+    fileName = OutputFilePath(exportImages.saveImageFileName, 'ExportedImagesLocation')
+    ending = '.png' if exportImages.saveImageFormat == 'PNG' else '.tga'
+    return [os.path.dirname(fileName), os.path.basename(fileName) + '%05d' + ending]
+
+
+def InteractiveImages2Video(closeAfterCreation=False, fontSize=11, workingDir='images', inputPattern='frame%05d.png'):
     """interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
+
+    Args:
+        closeAfterCreation: True: the dialog closes after the video is written
+        fontSize: the size of the font of the dialog
+        workingDir: the directory of the images shown first, as an absolute path; the SolutionViewer gives the
+            one of exportImages.saveImageFileName, see ExportedImagesLocation
+        inputPattern: the pattern of the images shown first
+
+    Returns:
+        None; the dialog writes the video
     """
     if UIWindowSuppressed('Dialogs', 'InteractiveImages2Video'): return
 
@@ -1337,8 +1382,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     except ImportError:
         raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
 
-    # from tkinter import ttk
-    #import os
+    import os
     
     try:
         import ffmpeg # noqa # pylint: disable=unused-import
@@ -1354,7 +1398,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
             else:
                 totalFrames = int(totalFrames)
             
-            ConvertImages2Video(
+            videoFile = ConvertImages2Video(
                 workingDir=dir_entry.get(),
                 outputFile=output_entry.get(),
                 inputPattern=input_pattern.get(),
@@ -1364,7 +1408,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
                 startNumber=int(start_frame.get()),
                 totalFrames=totalFrames,
             )
-            messagebox.showinfo("Success", "Video conversion complete!")
+            messagebox.showinfo("Success", "Video written to\n" + os.path.abspath(videoFile))
             if closeAfterCreation:
                 OnQuit()
 
@@ -1399,7 +1443,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     rowcnt = 0    
     tkinter.Label(tkWindow, text="Working directory", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
     dir_entry = tkinter.Entry(tkWindow, width=width, font=defaultFont)
-    dir_entry.insert(0, "images")
+    dir_entry.insert(0, os.path.abspath(workingDir))
     dir_entry.grid(row=rowcnt, column=1, sticky="ew")
     tkinter.Button(tkWindow, text="Browse", command=BrowseDirectory, font=defaultFont).grid(row=rowcnt, column=2, padx=10)
     
@@ -1412,7 +1456,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     rowcnt+=1
     tkinter.Label(tkWindow, text="Input pattern", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
     input_pattern = tkinter.Entry(tkWindow, width=width, font=defaultFont)
-    input_pattern.insert(0, "frame%05d.png")
+    input_pattern.insert(0, inputPattern)
     input_pattern.grid(row=rowcnt, column=1, sticky="ew")
     
     rowcnt+=1

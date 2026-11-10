@@ -1,0 +1,15 @@
+{
+  "number": 591,
+  "title": "ObjectFFRF",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Check forceVector and gravity forces in comparison to paper",
+  "dateRaised": "2021-02-21",
+  "deadline": "2021-04-22",
+  "dateResolved": "2026-11-10 19:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "objectFFRFforceVectorTest.py: the mass matrix and the applied forces of ObjectFFRF against Zwoelfer and Gerstmayr 2019; gravity by nodal loads is exact, forceVector has no rotational part and gives gravity only for a body with its center of mass at the origin of its frame",
+  "resolvedInVersion": "1.13.535"
+}

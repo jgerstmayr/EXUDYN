@@ -5,9 +5,10 @@
 #           Jacobians in every step - rigid bodies (Euler parameters and Tait-Bryan angles) joined by
 #           ObjectConnectorRigidBodySpringDamper on body markers at offset points (position and rotation
 #           Jacobians, and the derivative of the transposed Jacobian times the force in the implicit run),
-#           2D rigid bodies joined by spring-dampers, and an ANCF cable on an elastic foundation of spring-dampers
-#           at points off its axis, whose derivative of the transposed Jacobian times the force is computed by
-#           automatic differentiation of its position. The access functions by automatic differentiation of the
+#           2D rigid bodies joined by spring-dampers, and an ANCF cable of 10 m on an elastic foundation of
+#           spring-dampers at points off its axis, whose derivative of the transposed Jacobian times the force is
+#           computed by automatic differentiation of its position; its elements of 0.05 m and its smooth initial
+#           velocity give the same result with modified and full Newton (#2914). The access functions by automatic differentiation of the
 #           rigid bodies were measured against the hand-written ones here (revision2026b step RG9.3.5): the same
 #           results, 20-35 % slower implicit solves.
 #
@@ -64,10 +65,12 @@ def BuildRigid2DChain(mbs, nBodies):
 
 
 def BuildCable(mbs, nElements):
-    """an ANCF cable on an elastic foundation: per element a spring-damper from a point off the axis to the ground"""
+    """an ANCF cable of 10 m on an elastic foundation: per element a spring-damper from a point off the axis to the
+    ground; the initial velocity is a half sine wave"""
     oGround = mbs.AddObject(ObjectGround())
-    L = 1/nElements
-    nodes = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[i*L, 0, 1, 0], initialVelocities=[0, 0.1*np.sin(i), 0, 0]))
+    L = 10/nElements
+    nodes = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[i*L, 0, 1, 0],
+                                           initialVelocities=[0, 0.1*np.sin(np.pi*i/nElements), 0, 0]))
              for i in range(nElements+1)]
     for i in range(nElements):
         e = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], length=L, massPerLength=1,

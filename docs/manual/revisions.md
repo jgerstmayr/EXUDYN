@@ -17,6 +17,11 @@ that holds the measured facts and the decisions.
 (sec-revisions-after-1-13)=
 ## After version 1.13
 
+**Make mp4 of the SolutionViewer** opens on the directory and the file pattern of the images that 'Record frames'
+writes (`exportImages.saveImageFileName` with `exudyn.config.outputDirectory`, given by
+`exudyn.interactive.ExportedImagesLocation`). `ConvertImages2Video` raises a `FileNotFoundError` if the first image
+is missing and a `RuntimeError` if ffmpeg fails, instead of printing an error, and returns the path of the video (#3403).
+
 **The URDF import** draws the boxes, cylinders and spheres of the visual elements, which were left out, and
 `GetURDFrobotData` returns the names of the links fixed to the base in `baseLinkNames`; a child before its parent in the
 file is read after it (#3393).

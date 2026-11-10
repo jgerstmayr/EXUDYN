@@ -1,0 +1,16 @@
+{
+  "number": 3403,
+  "title": "Make mp4 of the SolutionViewer opens on the folder images instead of the folder the frames are written to, and reports success without images",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "The button Make mp4 of the SolutionViewer opened InteractiveImages2Video with the fixed working directory images and pattern frame%05d.png, while Record frames writes to exportImages.saveImageFileName, with exudyn.config.outputDirectory. With a wrong folder, ConvertImages2Video printed the error of ffmpeg and returned, and the dialog said the conversion was complete although no video was written. The dialog now starts from the directory and pattern of the export settings (ExportedImagesLocation), shown as an absolute path; ConvertImages2Video raises FileNotFoundError if the first image does not exist and RuntimeError if ffmpeg fails, and returns the path of the video, which the dialog shows.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 19:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/interactive.py",
+  "releaseNotes": "Make mp4 of the SolutionViewer opens on the directory and pattern of the recorded frames (exudyn.interactive.ExportedImagesLocation); ConvertImages2Video raises FileNotFoundError for a missing first image and RuntimeError if ffmpeg fails, and returns the path of the video",
+  "resolvedInVersion": "1.13.537"
+}

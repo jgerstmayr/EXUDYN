@@ -82,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-showimage)=
 ## Function: ShowImage
 
-[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1195)
+[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1197)
 
 - **function description**: the current scene as an image, rendered by the raytracer without a window, and shown with matplotlib; made for notebooks, where no render window opens, and for documentation images
 - **input**:
@@ -106,7 +106,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video
 
-[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1248)
+[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1250)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires the program ffmpeg and the package ffmpeg-python ("conda install ffmpeg", "pip install ffmpeg-python")
 - **input**:
@@ -119,7 +119,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
   - `startNumber`: start index of first frame chosen for animation
   - `totalFrames`: total number of frames (keep field empty to select all frames after startNumber)
   - `videoCodec`: the ffmpeg encoder, e.g. 'libx264'; None: libx264, and if that ffmpeg has no libx264 (as the one of conda-forge on macOS), h264_videotoolbox on macOS and mpeg4 on the other platforms; compressionCRF applies to libx264 only
-- **output**: None; writes animation when finished
+- **output**: the path of the video written; raises FileNotFoundError if the first image, inputPattern with startNumber in workingDir, does not exist, and RuntimeError with the last line of the message of ffmpeg if it fails
 
 *example*:
 
@@ -132,12 +132,43 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`imagesToVideoTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/imagesToVideoTest.py) (TM)
+
+
+(sec-interactive-exportedimageslocation)=
+## Function: ExportedImagesLocation
+
+[`ExportedImagesLocation(visualizationSettings)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1338)
+
+- **function description**: the directory and the file pattern of the images the renderer writes with the export settings, as ConvertImages2Video takes them
+- **input**:
+  - `visualizationSettings`: SC.visualizationSettings; exportImages.saveImageFileName and saveImageFormat are read
+- **output**: [workingDir, inputPattern]: the directory, with exudyn.config.outputDirectory as the renderer writes there, and the pattern such as 'frame%05d.png'
+
+*example*:
+
+```python
+  workingDir, inputPattern = ExportedImagesLocation(SC.visualizationSettings)
+  ConvertImages2Video(workingDir=workingDir, inputPattern=inputPattern)
+```
+
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`imagesToVideoTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/imagesToVideoTest.py) (TM)
+
+
 (sec-interactive-interactiveimages2video)=
 ## Function: InteractiveImages2Video
 
-[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1326)
+[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11, workingDir = 'images', inputPattern = 'frame%05d.png')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1361)
 
 - **function description**: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
+- **input**:
+  - `closeAfterCreation`: True: the dialog closes after the video is written
+  - `fontSize`: the size of the font of the dialog
+  - `workingDir`: the directory of the images shown first, as an absolute path; the SolutionViewer gives the one of exportImages.saveImageFileName, see ExportedImagesLocation
+  - `inputPattern`: the pattern of the images shown first
+- **output**: None; the dialog writes the video
 
 
 (sec-module-interactive-class-windowcontrols)=
