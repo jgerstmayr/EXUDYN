@@ -38,7 +38,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPe
 | **dryFriction** | Vector2D | 2 | [0,0] | (symbol: $[\mu_x,\mu_y]\tp$) dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$ |
 | **dryFrictionProportionalZone** | Real |  | 0. | (symbol: $v_\mu$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations) |
 | **viscousFriction** | Vector2D | 2 | [0,0] | (symbol: $[d_x, d_y]\tp$) viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity |
-| **rollingViscousFriction** | Real |  | 0. | (symbol: $\mu_r$) viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground! |
+| **rollingViscousFriction** | Real |  | 0. | (symbol: $\mu_r$) viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force, for any orientation of the disc axis; see Viscous rolling friction below |
 | **useLinearProportionalZone** | Bool |  | False | if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorRollingDiscPenalty |  |  | parameters for visualization of item |
@@ -254,6 +254,23 @@ $$
 \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
 $$
 
+### Viscous rolling friction
+
+The viscous rolling friction $\mu_r$ acts against the velocity of the trail, the motion of the contact point
+along the ground. It follows from the time derivative of $\LU{0}{\pv}_{C}$ with the rotation of the disc about
+its own axis left out, which only moves material through the contact point,
+
+$$
+\LU{0}{\vv}_{trail} = \LU{0}{\vv}_{m1} + r \cdot \LU{0}{\dot \wv}_3 - \left(\LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \LU{0}{\pv}_{C} \right)
+$$
+
+in which $\LU{0}{\dot \wv}_3$ follows from the rotation of the axis $\LU{0}{\wv}_1$ and of the plane normal;
+this holds for any orientation of the axis to the plane. The part in the plane,
+$\vv_{r} = \LU{0}{\vv}_{trail} - (\LU{0}{\vv}_{trail}\tp \LU{0}{\vv_{PN}}) \LU{0}{\vv_{PN}}$, gives the force
+$-\mu_r |f_n| \vv_{r}$ on the disc at its center, and the opposite force on marker $m0$ at
+$\LU{0}{\pv}_{C} - r \cdot \LU{0}{\wv}_3$, the center of the disc relative to $m0$. The output variable
+`Velocity` is $\LU{0}{\vv}_{trail}$.
+
 Note that if `activeConnector = False`, we replace {eq}`eq-connectorrollingdiscpenalty-forces` with
 
 $$
@@ -287,4 +304,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`leggedRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py) (Ex), [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`robotics/reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/reinforcementLearningRobot.py) (Ex), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM), [`rollingCoinPenaltyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingCoinPenaltyTest.py) (TM), [`rollingDiscTangentialForces.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingDiscTangentialForces.py) (TM), [`rotatingTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rotatingTableTest.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createRollingDiscPenaltyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`leggedRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py) (Ex), [`robotics/mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/mobileMecanumWheelRobotWithLidar.py) (Ex), [`robotics/reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/reinforcementLearningRobot.py) (Ex), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), [`laserScannerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py) (TM), [`mecanumWheelRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mecanumWheelRollingDiscTest.py) (TM), [`rollingCoinPenaltyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingCoinPenaltyTest.py) (TM), [`rollingDiscRollingFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingDiscRollingFrictionTest.py) (TM), [`rollingDiscTangentialForces.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingDiscTangentialForces.py) (TM), [`rotatingTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rotatingTableTest.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createRollingDiscPenaltyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py) (TM)

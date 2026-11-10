@@ -1032,7 +1032,8 @@ class ObjectFFRFinterface:
               eulerParametersRef: reference euler parameters of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
               initialVelocity: initial velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
               initialAngularVelocity: initial angular velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
-              gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+              gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise; it is a
+                LoadMassProportional on a MarkerBodyMass of the ObjectFFRF, 'loadGravity' in the returned dictionary
               constrainRigidBodyMotion: set True in order to add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes
               color: provided as list of 4 RGBA values
             add object to mbs as well as according nodes
@@ -1104,10 +1105,16 @@ class ObjectFFRFinterface:
             self.oRigidBodyConstraint = mbs.AddObject(eii.CoordinateVectorConstraint(markerNumbers=[mGroundCoordinate, mObjectCoordinates], 
                                                                                  scalingMarker1 = X1, offset=offset))
 
+        self.loadGravity = -1
+        if np.array(gravity) @ np.array(gravity) != 0.: #on all coordinates of the body (#3404)
+            mBody = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=self.oFFRF))
+            self.loadGravity = mbs.AddLoad(eii.LoadMassProportional(markerNumber=mBody, loadVector=list(gravity)))
+
         dictReturn = {'nRigidBody':self.nRigidBody,
                       'nodeList':self.nodeList,
                       'oFFRF':self.oFFRF,
-                      'oRigidBodyConstraint':self.oRigidBodyConstraint}
+                      'oRigidBodyConstraint':self.oRigidBodyConstraint,
+                      'loadGravity':self.loadGravity}
 
         return dictReturn
 

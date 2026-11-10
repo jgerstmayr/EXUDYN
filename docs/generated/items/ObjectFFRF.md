@@ -316,9 +316,12 @@ $$
 the finite element mesh, moved with the reference frame -, averaged with the weights of the marker;
 they are the markers for forces, connectors and joints on the flexible body. The general body markers
 `MarkerBodyPosition` and `MarkerBodyRigid` act on the **reference frame** only, the rigid body node 0,
-and not on the deformation. `MarkerBodyMass` applies a load proportional to the total mass at the
-center of mass `centerOfMass`, through the coordinates of the reference frame only: the
-flexible coordinates get no share of it.
+and not on the deformation. `MarkerBodyMass` applies a load proportional to the mass, such as gravity, to
+all nodes of the mesh: its Jacobian is $\tPhi\indt\tp \LU{b}{\Mm} \Lm$, the first three rows of the mass matrix,
+with the deformed nodal positions, so that the load acts on the coordinates of the reference frame and on the
+flexible coordinates as the loads of the mass matrix at the mesh nodes would; `centerOfMass` is the center of mass of
+the undeformed mesh. The `forceVector` has no rotational part and gives gravity only for a body with its center
+of mass at the origin of its frame.
 
 This object has no MiniExample, because it needs a finite element mesh; a complete model is
 `NGsolveFFRF.py`, with the mesh from NGsolve; it is in the examples below.

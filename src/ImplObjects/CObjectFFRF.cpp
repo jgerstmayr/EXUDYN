@@ -108,17 +108,6 @@ void CObjectFFRF::InitializeObject()
 
 	referencePositions = Vector(nODE2FF);
 
-	//compute center of mass //2021-03-25
-	centerOfMass.CopyFrom(PHItTM * referencePositions);
-	if (mass != 0.)
-	{
-		centerOfMass *= 1 / mass; //needed for application of force
-	}
-	else
-	{
-		PyWarning("CObjectFFRF::InitializeObject(): total mass is zero");
-	}
-
 	//xRefNodes = nodes.flatten() #node reference values in single vector(can be added then to q[7:])
 	//xRefTilde = ComputeSkewMatrix(xRefNodes) #rfTilde without q
 	Matrix xRefTilde(nODE2FF, ffrfNodeDim);
@@ -136,6 +125,17 @@ void CObjectFFRF::InitializeObject()
 		//LinkedDataVector xRefSub(xRefNodes, i * 3, 3);
 		//xRefSub.CopyFrom(x);
 		//LinkedDataVector(xRefNodes, i * 3, 3) = x; //works?
+	}
+
+	//the center of mass of the undeformed mesh, from the reference positions just filled in (#3404)
+	centerOfMass.CopyFrom(PHItTM * referencePositions);
+	if (mass != 0.)
+	{
+		centerOfMass *= 1 / mass;
+	}
+	else
+	{
+		PyWarning("CObjectFFRF::InitializeObject(): total mass is zero");
 	}
 
 	//inertiaLocal = xRefTilde.T @ massMatrix @ xRefTilde
@@ -486,49 +486,40 @@ void CObjectFFRF::GetRotationJacobian(const Vector3D& localPosition, Matrix& val
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
 void CObjectFFRF::GetMassWeightedPositionJacobian(Matrix& value) const
 {
-	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
+	//m * d(p_COM)/dq = PHIt^T M L = [m I, -A PHItTM rfTilde G, A PHItTM], the first three rows of the mass matrix,
+	//with the deformed nodal positions rf; Zwoelfer and Gerstmayr 2019, Eqs. (14.25), (14.84) (#3404)
+	Index nODE2 = GetODE2Size();
+	Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+	CNodeRigidBody* rigidNode = (CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
+	Index nODE2Rigid = rigidNode->GetNumberOfODE2Coordinates();
 
-	Real m = mass;
+	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, nODE2);
+	value.SetAll(0.);
+	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++) { value(i, i) = mass; }
 
-	if (centerOfMass == 0.)
-	{
-		for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
-		{
-			for (Index j = 0; j < GetODE2Size(); j++)
-			{
-				if (i != j) { value(i, j) = 0.; }
-				else { value(i, j) = m; } //only diagonal 3x3 term!
-			}
-		}
-	}
-	else
-	{
-		//gives m* \partial p_COM / \partial q
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
-		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
+	tempCoordinates.SetNumberOfItems(nODE2);
+	tempCoordinates_t.SetNumberOfItems(nODE2);
+	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
+	LinkedDataVector coordinatesFF(tempCoordinates, nODE2Rigid, nODE2FF);
+	coordinatesFF += referencePositions; //the local nodal positions rf
+	RigidBodyMath::ComputeSkewMatrix(coordinatesFF, tempRefPosSkew);
 
+	const Index GMaxSize = CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D;
+	ConstSizeMatrix<GMaxSize> Glocal;
+	rigidNode->GetGlocal(Glocal);
+	Matrix3D A = rigidNode->GetRotationMatrix();
 
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*centerOfMass); //negative sign in -A*uLocalTilde*Glocal
-		//uLocalTilde *= -1.;//moved into ((-m)*parameters.centerOfMass)
+	//-A PHItTM rfTilde G
+	Matrix3D X;
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempRefPosSkew, X);
+	X = -1.*A*X;
+	ConstSizeMatrix<GMaxSize> Jrot;
+	EXUmath::MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<GMaxSize>, ConstSizeMatrix<GMaxSize>>(X, Glocal, Jrot);
+	value.AddSubmatrix(Jrot, 0, ffrfNodeDim);
 
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
-		EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);
-		EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(), temp, Glocal); //Glocal=A*(-m*uLocalTilde)*Glocal
-
-		//unit matrix
-		value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = 0.;
-		value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = 0.;
-		value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = m;
-
-		//-A*uLocalTilde*Glocal part (=L in this case
-		for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
-		{
-			for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
-			{
-				value(i, CNodeRigidBody::nDim3D + j) = Glocal(i, j);
-			}
-		}
-	}
+	//A PHItTM
+	EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, Matrix>(A, PHItTM, tempMatrix);
+	value.AddSubmatrix(tempMatrix, 0, nODE2Rigid);
 }
 
 

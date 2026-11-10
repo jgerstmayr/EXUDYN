@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.537.dev1
+- Exudyn version = 1.13.540.dev1
 - last change = 2026-11-10
-- Number of issues = 3405
-- Number of resolved issues = 3314 (537 in current version)
+- Number of issues = 3407
+- Number of resolved issues = 3317 (540 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9094,6 +9094,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` the member functions an item must provide, checked at compile time (#2866)
   - description: Successor of \#2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -\> required functions, generated static\_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.
+  - **remarks:** revision2026c step RG9.6.1 done 2026-11-11: the table of declarations and required member functions is in the log (rg2-9-4); the scan found \#3406. Open: RG9.6.2, the static\_asserts.
   - date raised: 2026-10-05
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
@@ -9281,10 +9282,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` GeneralContact ANCF (#927)
   - description: test if 3 maxTangentialVelocities in 3-point Lobatto integration lead to better Newton performance
   - date raised: 2022-02-04
-- `EXTENSION` `MEDIUM EFF` RollingDiscPenalty (#926)
-  - description: rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation
-  - **remarks:** planned as revision2026b step RG4.24 (triage 2026-10-07)
-  - date raised: 2022-02-03
 - `CHANGE` `MEDIUM EFF` GeneralContact (#912)
   - description: add second CCactiveSetError mode, which computes error for given active set ==\> error for PostNewton computed (error in assumed conditions forces)
   - date raised: 2022-02-02
@@ -9372,6 +9369,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` ObjectFFRFinterface.AddObjectFFRF ignores its argument gravity (#3404)
-  - description: ObjectFFRFinterface.AddObjectFFRF of exudyn.FEM documents gravity as the gravity vector applied to the body, stores it in self.gravity and never applies it (the code in UFforceFFRF is commented out). Gravity on an ObjectFFRF needs the rotational part -G^T rf~^T A\_bd^T M Phi\_t g of Zwoelfer and Gerstmayr 2019, Eq. (14.88), which the forceVector of ObjectFFRF does not give (objectFFRFforceVectorTest.py, \#591); nodal loads at the mesh nodes give it exactly. Either apply it, e.g. by a LoadMassProportional or by nodal loads, or remove the argument.
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ObjectBeamGeometricallyExact2D has no GetAngularVelocityLocal and ObjectANCFBeam no GetLocalCenterOfMass, although they declare the access functions that need them (#3406)
+  - description: ObjectBeamGeometricallyExact2D declares AngularVelocity\_qt (it provides GetRotationJacobian) and inherits the throwing default of GetAngularVelocityLocal: a RigidBodySpringDamper on a MarkerBodyRigid of the beam stops at the first step with 'illegal call to CObjectBody::GetAngularVelocityLocal', and so does the output AngularVelocityLocal of the marker. ObjectANCFBeam declares DisplacementMassIntegral\_q (GetMassWeightedPositionJacobian) and inherits the throwing default of GetLocalCenterOfMass, which CMarkerBodyMass::GetPosition calls. Found by the table of revision2026c step RG9.6.1 (\#2866); fixed with the static\_asserts of RG9.6.2.
   - date raised: 2026-11-10

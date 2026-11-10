@@ -287,9 +287,9 @@
    "fingerprint": "5755fdb3a47a"
   },
   "ObjectConnectorRollingDiscPenalty": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "b894f56e5b78"
+   "fingerprint": "976a8e9ec44f"
   },
   "ObjectConnectorSpringDamper": {
    "checked": "2026-11-08",
@@ -352,9 +352,9 @@
    "fingerprint": "ed50aee078c3"
   },
   "ObjectFFRF": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "9f3e33e98cfc"
+   "fingerprint": "21b560f13999"
   },
   "ObjectFFRFreducedOrder": {
    "checked": "2026-11-09",

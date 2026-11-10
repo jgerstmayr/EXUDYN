@@ -3874,9 +3874,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     the finite element mesh, moved with the reference frame -, averaged with the weights of the marker;
     they are the markers for forces, connectors and joints on the flexible body. The general body markers
     `MarkerBodyPosition` and `MarkerBodyRigid` act on the **reference frame** only, the rigid body node 0,
-    and not on the deformation. `MarkerBodyMass` applies a load proportional to the total mass at the
-    center of mass `centerOfMass`, through the coordinates of the reference frame only: the
-    flexible coordinates get no share of it.
+    and not on the deformation. `MarkerBodyMass` applies a load proportional to the mass, such as gravity, to
+    all nodes of the mesh: its Jacobian is $\tPhi\indt\tp \LU{b}{\Mm} \Lm$, the first three rows of the mass matrix,
+    with the deformed nodal positions, so that the load acts on the coordinates of the reference frame and on the
+    flexible coordinates as the loads of the mass matrix at the mesh nodes would; `centerOfMass` is the center of mass of
+    the undeformed mesh. The `forceVector` has no rotational part and gives gravity only for a body with its center
+    of mass at the origin of its frame.
 
 
     This object has no MiniExample, because it needs a finite element mesh; a complete model is
@@ -11669,6 +11672,23 @@ definitions.append(ItemDefinition(
                         \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
                         $$
 
+    #### Viscous rolling friction
+
+    The viscous rolling friction $\mu_r$ acts against the velocity of the trail, the motion of the contact point
+    along the ground. It follows from the time derivative of $\LU{0}{\pv}_{C}$ with the rotation of the disc about
+    its own axis left out, which only moves material through the contact point,
+
+    $$
+                        \LU{0}{\vv}_{trail} = \LU{0}{\vv}_{m1} + r \cdot \LU{0}{\dot \wv}_3 - \left(\LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \LU{0}{\pv}_{C} \right)
+                        $$
+
+    in which $\LU{0}{\dot \wv}_3$ follows from the rotation of the axis $\LU{0}{\wv}_1$ and of the plane normal;
+    this holds for any orientation of the axis to the plane. The part in the plane,
+    $\vv_{r} = \LU{0}{\vv}_{trail} - (\LU{0}{\vv}_{trail}\tp \LU{0}{\vv_{PN}}) \LU{0}{\vv_{PN}}$, gives the force
+    $-\mu_r |f_n| \vv_{r}$ on the disc at its center, and the opposite force on marker $m0$ at
+    $\LU{0}{\pv}_{C} - r \cdot \LU{0}{\wv}_3$, the center of the disc relative to $m0$. The output variable
+    `Velocity` is $\LU{0}{\vv}_{trail}$.
+
     Note that if `activeConnector = False`, we replace {eq}`eq-connectorrollingdiscpenalty-forces` with
 
 
@@ -11739,7 +11759,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='rollingViscousFriction',
             defaultValue=0.,
-            description=r"""$\mu_r$viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground!"""),
+            description=r"""$\mu_r$viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force, for any orientation of the disc axis; see Viscous rolling friction below"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='rollingFrictionViscous',
             deprecated=Deprecated('1.12.258', 2031),

@@ -2,13 +2,17 @@
   "number": 3404,
   "title": "ObjectFFRFinterface.AddObjectFFRF ignores its argument gravity",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "LOW",
   "effort": "LOW",
   "description": "ObjectFFRFinterface.AddObjectFFRF of exudyn.FEM documents gravity as the gravity vector applied to the body, stores it in self.gravity and never applies it (the code in UFforceFFRF is commented out). Gravity on an ObjectFFRF needs the rotational part -G^T rf~^T A_bd^T M Phi_t g of Zwoelfer and Gerstmayr 2019, Eq. (14.88), which the forceVector of ObjectFFRF does not give (objectFFRFforceVectorTest.py, #591); nodal loads at the mesh nodes give it exactly. Either apply it, e.g. by a LoadMassProportional or by nodal loads, or remove the argument.",
   "dateRaised": "2026-11-10",
   "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 20:31",
+  "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/FEM.py",
-  "line": "1041"
+  "line": "1041",
+  "releaseNotes": "ObjectFFRFinterface.AddObjectFFRF applies gravity as a LoadMassProportional on a MarkerBodyMass; that load acts on all coordinates of an ObjectFFRF, with the deformed positions, and the center of mass of ObjectFFRF is computed from the reference positions",
+  "resolvedInVersion": "1.13.539"
 }

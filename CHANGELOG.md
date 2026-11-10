@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 513 | 1.13.537 |
+| 1.13 | Newborn | 516 | 1.13.540 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.540** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Measure the products of HomogeneousTransformation with and without the no-rotation flag; write Invert without reading the translation through a reference (#3405)
+  - description: A standalone benchmark of HomogeneousTransformationBase, compiled with the options of setup.py once with homogeneousTransformationUseIdentityFlag and once without, over arrays of 1024 transformations with rotation, translation only and mixed at random: H\*v, H1\*H2, GetInverse. The flag saves 44 % of H\*v and 36 % of H1\*H2 for a translation, is neutral for H\*v with rotation, costs 4 % for H1\*H2 with rotation and 41 % for H1\*H2 when rotation and translation alternate at random. Invert wrote p = -RotateVector(p), reading p through a reference while writing it: 2.5 ns without the flag and 3.2 to 7.7 ns with it; with the translation read into locals first it takes 1.0 ns in all cases, with the same arithmetic. revision2026c step RG5.1.1.
+  - **notes:** GetInverse of HomogeneousTransformation takes 1 ns instead of 2.5 to 7.7 ns, with the same results; the flag of a transformation without rotation is measured as a gain and kept
+  - date resolved: **2026-11-10 20:31**, date raised: 2026-11-10
+- **1.13.539** <span class="textred">`BUG`</span> `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRFinterface.AddObjectFFRF ignores its argument gravity (#3404)
+  - description: ObjectFFRFinterface.AddObjectFFRF of exudyn.FEM documents gravity as the gravity vector applied to the body, stores it in self.gravity and never applies it (the code in UFforceFFRF is commented out). Gravity on an ObjectFFRF needs the rotational part -G^T rf~^T A\_bd^T M Phi\_t g of Zwoelfer and Gerstmayr 2019, Eq. (14.88), which the forceVector of ObjectFFRF does not give (objectFFRFforceVectorTest.py, \#591); nodal loads at the mesh nodes give it exactly. Either apply it, e.g. by a LoadMassProportional or by nodal loads, or remove the argument.
+  - **notes:** ObjectFFRFinterface.AddObjectFFRF applies gravity as a LoadMassProportional on a MarkerBodyMass; that load acts on all coordinates of an ObjectFFRF, with the deformed positions, and the center of mass of ObjectFFRF is computed from the reference positions
+  - date resolved: **2026-11-10 20:31**, date raised: 2026-11-10
+- **1.13.538** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` RollingDiscPenalty (#926)
+  - description: rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation
+  - **notes:** The viscous rolling friction of ObjectConnectorRollingDiscPenalty acts against the velocity of the trail, the motion of the contact point, for any orientation of the disc axis, with its moment on a moving ground; the formula is in the description; rollingDiscRollingFrictionTest.py
+  - date resolved: **2026-11-10 20:31**, date raised: 2022-02-03
 - **1.13.537** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Make mp4 of the SolutionViewer opens on the folder images instead of the folder the frames are written to, and reports success without images (#3403)
   - description: The button Make mp4 of the SolutionViewer opened InteractiveImages2Video with the fixed working directory images and pattern frame%05d.png, while Record frames writes to exportImages.saveImageFileName, with exudyn.config.outputDirectory. With a wrong folder, ConvertImages2Video printed the error of ffmpeg and returned, and the dialog said the conversion was complete although no video was written. The dialog now starts from the directory and pattern of the export settings (ExportedImagesLocation), shown as an absolute path; ConvertImages2Video raises FileNotFoundError if the first image does not exist and RuntimeError if ffmpeg fails, and returns the path of the video, which the dialog shows.
   - **notes:** Make mp4 of the SolutionViewer opens on the directory and pattern of the recorded frames (exudyn.interactive.ExportedImagesLocation); ConvertImages2Video raises FileNotFoundError for a missing first image and RuntimeError if ffmpeg fails, and returns the path of the video

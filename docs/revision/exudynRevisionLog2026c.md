@@ -6431,6 +6431,89 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg2-9-4"></a>
+### RG2.9.4, RG4.24, RG9.6.1, RG5.1.1 — gravity on ObjectFFRF, the rolling friction of a tilted disc, the table of required member functions, the benchmark of HomogeneousTransformation (2026-11-11, #3404, #926, #2866, #3405)
+*(Maintainer 2026-11-11: do the next steps up to RG5.1.1 - RG2.9.4, RG4.24, RG9.6.1, RG5.1.1.)*
+
+- **RG2.9.4** (#3404): the way to apply the argument `gravity` of `ObjectFFRFinterface.AddObjectFFRF` was the
+  `LoadMassProportional` on a `MarkerBodyMass`, as `AddObjectFFRFreducedOrder` does. Measured against L^T f of the paper
+  (objectFFRFforceVectorTest.py): off by 41 of 113-134, in both cases. Two causes in `CObjectFFRF`:
+  `InitializeObject` computed `centerOfMass` from `referencePositions` before filling them, so it was always 0; and
+  `GetMassWeightedPositionJacobian` gave [m I, -A m chi~ G, 0] - no flexible columns and the undeformed center of mass.
+  It is now Phi_t^T M L = [m I, -A PHItTM rf~ G, A PHItTM], the first three rows of the mass matrix, computed as
+  `ComputeMassMatrix` computes them; centerOfMass is computed after the reference positions. The load equals L^T f to
+  1e-10 (two more checks in objectFFRFforceVectorTest.py, result 12). `AddObjectFFRF` adds the load if gravity is not
+  zero and returns it as `loadGravity`. The description of the marker interfaces of ObjectFFRF said the flexible
+  coordinates get no share of a MarkerBodyMass; it says what it does now. `ObjectFFRFreducedOrder` takes the
+  undeformed center of mass `chiU` in the rotational part as well (the reduced coordinates do not enter it) - not
+  changed here.
+- **RG4.24** (#926): `rollingViscousFriction` acted against the velocity of the disc center relative to the ground
+  point, in the plane; for an upright disc that is the velocity of the trail, for a tilted disc that turns about the
+  plane normal it is not (the coin of the test, tilted 0.4 rad, rolling at 1 m/s and turning at 3 rad/s: trail
+  1.0 m/s, center 0.77 m/s). The force now takes the velocity of the trail, the time derivative of the contact point
+  (which the spin about the disc axis does not move) - the function of the output `Velocity`, now one static function
+  for both; in the plane, at the center of the disc, and its moment about marker 0 is added to the ground (it was
+  missing). rollingDiscRollingFrictionTest.py: the trail velocity against a central difference of the contact point
+  (tilted and upright), the force -mu_r |f_n| v_r from the right-hand side of the solver, the upright disc unchanged,
+  and the tilted coin rolling 1 s slowed from 0.77 to 0.48 m/s. The description has the formula. The test models
+  with rolling friction (carRollingDiscTest.py, upright wheels) keep their results.
+- **RG9.6.1** (#2866): which declaration of a definition requires which member function - the functions the system
+  calls for it, whose base class default throws ("illegal call to ..."):
+
+  | kind | declaration | required member functions (throwing default in) |
+  |---|---|---|
+  | node | output variables | `GetOutputVariable` (CNode) |
+  | node | `Position` or `Position2D` | `GetPosition`, `GetVelocity`, `GetPositionJacobian` (CNodeODE2) |
+  | node | `Orientation` or `Orientation2D` | `GetRotationMatrix`, `GetAngularVelocity`, `GetAngularVelocityLocal`, `GetRotationJacobian` (CNodeODE2) |
+  | node | `RigidBody`, 3D | `GetNumberOfRotationCoordinates`, `GetG`, `GetGlocal`, `GetG_t`, `GetGlocal_t` (CNodeRigidBody) |
+  | node | AE coordinates (Euler parameters) | `ComputeAlgebraicEquations`, `ComputeJacobianAE` (CNodeODE2) |
+  | object | output variables | `GetOutputVariableBody` / `GetOutputVariableConnector` / `GetOutputVariable` (CObjectBody, CObjectConnector, CObject) |
+  | body | `TranslationalVelocity_qt` (`GetPositionJacobian`) | `GetPosition`, `GetVelocity`, `GetDisplacement` (CObjectBody) |
+  | body | `AngularVelocity_qt` (`GetRotationJacobian`) | `GetRotationMatrix`, `GetAngularVelocity`, `GetAngularVelocityLocal` (CObjectBody) |
+  | body | `DisplacementMassIntegral_q` (`GetMassWeightedPositionJacobian`) | `GetLocalCenterOfMass` (CObjectBody; CMarkerBodyMass::GetPosition) |
+  | body | `SuperElement` | `GetNumberOfMeshNodes`, `GetMeshNode`, `GetMeshNodeLocalPosition`/`Velocity`, `GetMeshNodePosition`/`Velocity`, `GetAccessFunctionSuperElement`, `GetOutputVariableTypesSuperElement`, `GetOutputVariableSuperElement` (CObjectBody) |
+  | body | ODE2 coordinates | `ComputeMassMatrix`, `HasConstantMassMatrix`, `ComputeODE2LHS` (CObjectBody, CObject) |
+  | object | Jacobian flags (`GetAvailableJacobians`) | `ComputeJacobianODE2_ODE2`, `ComputeJacobianAE`, ... per flag (CObject) |
+  | connector | penalty, not on the connector interface | `ComputeODE2LHS(..., markerData)`, `IsPenaltyConnector` (CObjectConnector) |
+  | connector | constraint, not on the connector interface | `ComputeAlgebraicEquations(..., markerData)`, `ComputeJacobianAE(..., markerData)` (CObjectConnector) |
+  | marker | `Position` | `GetPosition`, `GetVelocity`, `ComputeMarkerData` (CMarker) |
+  | marker | `Orientation` | `GetRotationMatrix`, `GetAngularVelocity`, `GetAngularVelocityLocal` (CMarker) |
+  | marker | `Coordinate`/`Coordinates` | `ComputeMarkerData` (CMarker) |
+  | marker | `JacobianDerivativeAvailable` | `ComputeMarkerDataJacobianDerivative` (CMarker) |
+  | marker | `HasPostNewton` | `PostNewtonStep` (CMarker) |
+  | load | vector / scalar (`IsVector`) | `GetLoadVector` / `GetLoadValue`, `GetRequestedMarkerType`, `GetMarkerNumber` (CLoad) |
+
+  Not required by a declaration: `GetAcceleration`, `GetAngularAcceleration` (only the output variables that a node
+  declares and computes itself), the G matrices of `NodeRigidBody2D` (not a CNodeRigidBody), the body rows for an
+  object with `OwnMarkersOnly` (ObjectGenericODE2, ObjectKinematicTree: the general body markers are refused).
+  A scan of the generated headers and their hand-written parents with the rows for nodes, bodies and markers (not yet
+  the connectors, Jacobian flags and loads, whose declarations the emitter reads from the definitions) finds two
+  items that declare and inherit the throwing default - #3406, for RG9.6.2: `ObjectBeamGeometricallyExact2D`
+  (`AngularVelocity_qt` without `GetAngularVelocityLocal`: a RigidBodySpringDamper on its MarkerBodyRigid stops with
+  "illegal call to CObjectBody::GetAngularVelocityLocal", reproduced) and `ObjectANCFBeam` (`DisplacementMassIntegral_q`
+  without `GetLocalCenterOfMass`). RG9.6.2 writes the table into itemHeaderEmitter.py, from the declarations of the
+  definitions.
+- **RG5.1.1** (#3405): no benchmark of RG5.1 exists yet, so a standalone one: htBenchmark.cpp including
+  `src/Linalg/HomogeneousTransformation.h`, compiled with the options of setup.py (/O2 /Ot /Oi /GL /fp:precise), once
+  as it is and once from a copy with `homogeneousTransformationUseIdentityFlag = false`; arrays of 1024
+  transformations (with rotation, translation only, mixed at random), 20000 repetitions, the best of 5; ns per
+  operation, three runs each, stable to 2 %:
+
+  | operation | flag on: rotation | translation | mixed | flag off: any |
+  |---|---|---|---|---|
+  | H*v | 2.39 | 1.34 | 1.87 | 2.42 |
+  | H1*H2 | 3.67 | 2.26 | 4.96 | 3.52 |
+  | H^-1 (GetInverse) | 3.16 | 7.70 | 4.93 | 2.48 |
+  | H^-1, Invert with locals | 1.00 | 0.99 | 1.00 | |
+
+  The flag saves 44 % (H*v) and 36 % (H1*H2) for a translation, is neutral for H*v with rotation and costs 4 % for
+  H1*H2 with rotation; alternating at random it costs 41 % in H1*H2 (branch prediction) - a pattern the markers and
+  joints do not have, as an item keeps its kind of frame. Kept. `Invert` wrote `p = -RotateVector(p)`: RotateVector
+  reads p through a reference while p is written - with the flag the copy of GetInverse plus that took 7.7 ns for a
+  translation, three times the flag off. Written with the translation read into locals first and the translation case
+  as a negation: 1.0 ns in all cases, the same arithmetic (the check sums equal); applied. The full test suite is the
+  check that results are bitwise the same.
+
 <a id="rg2-8"></a>
 ### RG2.8, RG2.9.1, RG2.9.2, RG6.18.5 — a converged cable run, the flyball governor with the Lie group integrator, the forces of ObjectFFRF against the paper, Make mp4 (2026-11-10, #2914, #559, #591, #3403)
 *(Maintainer 2026-11-10: close RG2.12 and RG6.8; try RG2.8; do RG2.9.1 and RG2.9.2, the paper probably the one of 2019 in

@@ -1,0 +1,16 @@
+{
+  "number": 3405,
+  "title": "Measure the products of HomogeneousTransformation with and without the no-rotation flag; write Invert without reading the translation through a reference",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "A standalone benchmark of HomogeneousTransformationBase, compiled with the options of setup.py once with homogeneousTransformationUseIdentityFlag and once without, over arrays of 1024 transformations with rotation, translation only and mixed at random: H*v, H1*H2, GetInverse. The flag saves 44 % of H*v and 36 % of H1*H2 for a translation, is neutral for H*v with rotation, costs 4 % for H1*H2 with rotation and 41 % for H1*H2 when rotation and translation alternate at random. Invert wrote p = -RotateVector(p), reading p through a reference while writing it: 2.5 ns without the flag and 3.2 to 7.7 ns with it; with the translation read into locals first it takes 1.0 ns in all cases, with the same arithmetic. revision2026c step RG5.1.1.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 20:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/HomogeneousTransformation.h",
+  "releaseNotes": "GetInverse of HomogeneousTransformation takes 1 ns instead of 2.5 to 7.7 ns, with the same results; the flag of a transformation without rotation is measured as a gain and kept",
+  "resolvedInVersion": "1.13.540"
+}

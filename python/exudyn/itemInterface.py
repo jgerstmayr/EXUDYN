@@ -6954,7 +6954,7 @@ class ObjectConnectorRollingDiscPenalty:
 
         viscousFriction: viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint :math:`J1` coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity; type: [float,float]
 
-        rollingViscousFriction: viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground!; type: float
+        rollingViscousFriction: viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force, for any orientation of the disc axis; see Viscous rolling friction below; type: float
 
         useLinearProportionalZone: if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case; type: bool
 

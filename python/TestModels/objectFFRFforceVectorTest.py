@@ -6,9 +6,10 @@
 #           a nodal-based approach, Eqs. (14.84) and (14.88)), #591: a body of 8 nodes with lumped masses and bars
 #           between all nodes, at a rotated and deformed state at rest. The generalized forces of global nodal forces f
 #           are L^T f = [Phi_t^T f, -G^T rf~^T A_bd^T f, A_bd^T f]; gravity applied by nodal loads gives them for
-#           f = M Phi_t g. The forceVector [f_r, f_f] gives f_r and A_bd^T f_f without a rotational part: gravity
-#           by forceVector is exact for a body whose center of mass is at the origin of its frame and stays there,
-#           and differs by the rotational part otherwise. The mass matrix of the solver is L^T M L.
+#           f = M Phi_t g, and so does a LoadMassProportional on a MarkerBodyMass (#3404). The forceVector [f_r, f_f]
+#           gives f_r and A_bd^T f_f without a rotational part: gravity by forceVector is exact for a body whose center
+#           of mass is at the origin of its frame and stays there, and differs by the rotational part otherwise. The
+#           mass matrix of the solver is L^T M L.
 #           The result is the number of checks that pass.
 #
 # Author:   Johannes Gerstmayr
@@ -60,7 +61,7 @@ ep = np.array(RotationMatrix2EulerParameters(A))
 random = np.random.default_rng(591)
 cf = 0.01*random.uniform(-1, 1, 24)
 
-def SystemTerms(x, M, K, forceVector=[], nodalForces=None):
+def SystemTerms(x, M, K, forceVector=[], nodalForces=None, massProportional=None):
     """the mass matrix and the right-hand side of the solver for the ObjectFFRF of the body at the state"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -70,6 +71,9 @@ def SystemTerms(x, M, K, forceVector=[], nodalForces=None):
     stiffnessMatrix = exu.MatrixContainer(); stiffnessMatrix.SetWithDenseMatrix(K, useDenseMatrix=False)
     oFFRF = mbs.AddObject(ObjectFFRF(nodeNumbers=[nRigid] + nodes, massMatrixFF=massMatrix,
                                      stiffnessMatrixFF=stiffnessMatrix, forceVector=forceVector))
+    if massProportional is not None: #gravity on the whole body
+        mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber=oFFRF))
+        mbs.AddLoad(LoadMassProportional(markerNumber=mBody, loadVector=list(massProportional)))
     if nodalForces is not None: #a load at each mesh node, in global coordinates
         for (i, f) in enumerate(nodalForces):
             m = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=oFFRF, meshNodeNumbers=[i], weightingFactors=[1]))
@@ -110,6 +114,7 @@ for (case, center) in [('center of mass off the origin', np.array([0.3, -0.1, 0.
 
     [Msystem, rhs0] = SystemTerms(x, M, K)
     [_, rhsNodal] = SystemTerms(x, M, K, nodalForces=fGravity.reshape((-1, 3)))
+    [_, rhsMassProportional] = SystemTerms(x, M, K, massProportional=g)
     [_, rhsForceVector] = SystemTerms(x, M, K, forceVector=list(mass*g) + [0]*4 + list(fGravity))
     Qpaper = L.T @ fGravity
     Qnodal = rhsNodal - rhs0
@@ -120,6 +125,9 @@ for (case, center) in [('center of mass off the origin', np.array([0.3, -0.1, 0.
           + str(cMath.norm(Msystem - Mpaper)))
     Check(cMath.norm(Qnodal - Qpaper) < 1e-10*cMath.norm(Qpaper), case + ': gravity by nodal loads against L^T f: '
           + str(cMath.norm(Qnodal - Qpaper)))
+    Qmass = rhsMassProportional - rhs0
+    Check(cMath.norm(Qmass - Qpaper) < 1e-10*cMath.norm(Qpaper), case + ': gravity by LoadMassProportional against L^T f: '
+          + str(cMath.norm(Qmass - Qpaper)))
     Check(cMath.norm(Qpaper[0:3] - mass*g) < 1e-12*mass*cMath.norm(g), case + ': the translational part m g')
     QwithoutRotation = Qpaper.copy(); QwithoutRotation[3:7] = 0
     Check(cMath.norm(QforceVector - QwithoutRotation) < 1e-10*cMath.norm(Qpaper),

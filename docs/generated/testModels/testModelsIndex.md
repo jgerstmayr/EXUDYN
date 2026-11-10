@@ -220,6 +220,7 @@ robotPathPlanningTest
 robotTrajectoryProfilesTest
 rollingCoinPenaltyTest
 rollingCoinTest
+rollingDiscRollingFrictionTest
 rollingDiscTangentialForces
 rotatingTableTest
 rotationMarkerDeprecationTest

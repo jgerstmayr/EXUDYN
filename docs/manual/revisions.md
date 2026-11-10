@@ -17,6 +17,15 @@ that holds the measured facts and the decisions.
 (sec-revisions-after-1-13)=
 ## After version 1.13
 
+**Gravity on an ObjectFFRF**: a `LoadMassProportional` on a `MarkerBodyMass` acts on all coordinates of the body as the
+loads of its mass matrix at the mesh nodes, with the deformed positions; before, only the coordinates of the reference
+frame got it, at a center of mass that was always computed as the origin. `ObjectFFRFinterface.AddObjectFFRF` applies its
+argument `gravity` this way and returns the load as `loadGravity`; before, the argument was ignored (#3404).
+
+**The viscous rolling friction** of `ObjectConnectorRollingDiscPenalty` acts against the velocity of the trail for any
+orientation of the disc axis; it used the velocity of the center of the disc, which is the same only for an axis
+parallel to the plane. On a moving ground body, the moment of this force is applied as well (#926).
+
 **Make mp4 of the SolutionViewer** opens on the directory and the file pattern of the images that 'Record frames'
 writes (`exportImages.saveImageFileName` with `exudyn.config.outputDirectory`, given by
 `exudyn.interactive.ExportedImagesLocation`). `ConvertImages2Video` raises a `FileNotFoundError` if the first image
