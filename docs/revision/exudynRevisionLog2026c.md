@@ -6431,6 +6431,111 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-1-7"></a>
+### RG5.1.7 — the linear algebra benchmark for small systems, regular and fast module, Eigen as reference (2026-11-11, #3414)
+*(Maintainer 2026-11-11: RG5.1 has to be done again, also with the fast module, so that both cases are known - a
+requirement for every repeated run. The linear algebra matters most for small systems, the local residuals and
+Jacobians of the objects; the largest gain is expected where the sizes are known and loops can be unrolled and
+vectorized; long vectors occur only in the time integration, matrix times vector only in the dense solver; focus below
+500, possibly on the assembly of the SparseTriplets handed to Eigen; Eigen's linear algebra as reference; local
+optimizations within the linalg classes first, global ones such as merging Vector second.)*
+
+- The survey of the computation functions (`src/ImplObjects`, `ImplMarkers`, `ImplNodes`, `System`, `Main`): the rigid
+  body and its markers on `Matrix3D` (hand-optimized for the EP and Lie group nodes), the connectors on $\Jm\tp\fv$ and
+  $\Jm_i\tp\frac{\partial\fv}{\partial\qv}\Jm_k$ with `ResizableMatrix` (n = 6 ... 24) and `AutoDiff<12>`, the beams on
+  `ConstSizeVector`/`ConstSizeMatrix` of run-time size, the numerical local Jacobian column by column, the assembly by
+  `AddSubmatrix` into triplets and `setFromTriplets`, the dense solver by `InvertSpecial` and the inverse times the
+  residual.
+- `RunLinalgBenchmark` extended (`group`, `library` in each entry): vectors 3 to 500 and across the threading limit,
+  Eigen `VectorXd` and `Matrix<n,1>`; `Matrix3D`, 6x6 against Eigen; $\Jm\tp\fv$ and $\Jm\tp\Km\Jm$ for n = 6, 7, 12, 14,
+  24 against Eigen dynamic and fixed; `AutoDiff<12>`; matrix times vector, `InvertSpecial` and the solve against
+  `PartialPivLU`; 12 x 12 local Jacobians of 10, 100, 1000 objects into `GeneralMatrixEigenSparse` with and without
+  `FinalizeMatrix`, against adding into a known pattern; `LinalgBenchmarkFixedMatrix`, a matrix of compile-time size with
+  plain loops, as the prototype. 228 entries; the fast module built by `exudev build --fast`.
+- Eigen 3.3.7 with MSVC is slow for some small fixed products - `Matrix3d * Matrix3d` 41 ns, 7 ns by `lazyProduct`;
+  $\Jm\tp\Km\Jm$ for n = 6, 7 420-740 ns -, confirmed by a standalone program with the options of `setup.py`, with and
+  without `/arch:AVX2` (scratch eigencheck.cpp); for small fixed products the prototype is the reference.
+- Results and causes in `docs/dev/design/linalgBenchmark.md`; the main ones (fast module): below 12 elements every
+  vector operation costs the call, 2.2-2.8 ns, compile-time sizes 0.7-0.9 ns; the range checks are not the cost of the
+  small kernels, but 2.8 times of `AddSubmatrix`; `MultMatrixVectorTemplate` adds into `result[i]` instead of a local
+  sum - 8 times Eigen at n = 24, 27 times at 500, the solve of the dense solver; `VectorBase::MultAdd` 0.36 ns per
+  element against 0.08 of `ResizableVectorParallel`; `MultMatrixTransposedMatrixTemplate` 2.6 times the prototype;
+  `SlimVector<3> +` 7 times Eigen; `setFromTriplets` 77 % of the sparse assembly, a known pattern 12 times faster;
+  `InvertSpecial` as fast as Eigen's LU up to n = 200; 16 threads at the limit of 20000 elements 2.5 times slower than
+  one.
+- Recommendations: local L1-L6 (the three loops, `SlimVector` and `Matrix3D`, the triplets from the data pointer) as
+  RG5.1.8-RG5.1.10; global G1-G6, first the measurement of the share of `FinalizeMatrix` in the Newton step (RG5.1.11)
+  before a pattern mode of `GeneralMatrix`; compile-time sizes (RG5.2), the merge (RG5.1.2), the threading limit, the
+  dense solver, Eigen 3.4 after.
+- `test_linalgBenchmark.py`: the groups and libraries. RG5.1 states the requirement of both modules.
+
+<a id="rg9-14-1"></a>
+### RG9.14.1 — helical joints: the analysis (2026-11-11, #3415)
+*(Maintainer 2026-11-11: a helical/screw joint as a regular C++ joint like GenericJoint, which also works for a motion
+on a screw curve with a radial offset to the axis, and so on a circle; the parts lockable separately; check the
+constraint formulation and the options, one or two joints, a good name; a new step, its first sub-step the analysis
+with a design file.)*
+
+- `docs/dev/design/helicalJoint.md` (written by a subagent from the joints on the relative frame, the connector
+  interface and the user screw of `userJointTest.py`, #3100; reviewed): **two joints**, as the two sets of equations
+  share no row - the turn angle from the rotation in the screw, from the position in the point joint - and the radius
+  is meaningless in the one and required in the other.
+- **ObjectJointHelicalZ**: 4 equations of `JointRelativeFrameEquations` and the coupling
+  $g_c = d_z - h\tilde\varphi$, $\tilde\varphi$ the angle on the branch nearest $d_z/h$, i.e.
+  $-h\,\mathrm{atan2}(\sin(\varphi - d_z/h), \cos(\varphi - d_z/h))$: no state (the translation counts the turns), one
+  root (the periodic form of #3100 also vanishes half a turn off), $h = 0$ the revolute joint, $\lambda_c$ the axial
+  force; 5 lockable equations (coupling off: cylindrical; $h = 0$ with the radial ones off: planar). With the frame
+  following, a radius only moves marker 1, so the rigid joint has none.
+- **ObjectJointPointOnHelixZ**: $\rho - r = 0$, $d_z - h\tilde\theta = 0$ with $\theta = \mathrm{atan2}(d_y, d_x)$; $r > 0$;
+  $h = 0$ the circle; [radial, path] lockable (cylinder, helicoid); a fixed orientation by an added ObjectJointGeneric.
+  Two rigid markers in the first version, as the connector interface has no mixed kind.
+- Tests and sub-steps proposed in the note; they wait for the maintainer's decision. The analysis found two text errors
+  of the joint descriptions (#3413).
+
+<a id="rg14-6-1"></a>
+### RG14.6.1 — built-in items as symbolic user items: the evaluation (2026-11-11, #3200)
+*(Maintainer 2026-11-11: user items, evaluate first, in a new design file userItems2.md to be merged into
+internals/userItems.md when finished; beyond #3200 the contact primitives sphere-triangle, cylinder-triangle,
+cylinder-cylinder, cylinder-sphere, the 3D geometrically exact beam, the kinematic tree - challenging, but very valuable
+- and the rolling disc penalty connector; a proposal for each with limitations, approaches and simplifications.)*
+
+- `docs/dev/design/userItems2.md` (written by a subagent from userItems.py, the internals and design notes of the
+  symbolic system and the uniform evaluation, and the C++ of each item; reviewed): the rules a recording must satisfy
+  (fixed structure and variants, branches as selects with guarded denominators, iterations unrolled, no exceptions, no
+  mbs, the Jacobians, the comparison), the interfaces at hand, one section per item, five interface extensions and the
+  order.
+- Without extension (LOW-MEDIUM): ObjectConnectorRollingDiscPenalty (ObjectConnectorUser on two rigid markers, a data
+  node of 3, the post-Newton step) first; ObjectJointGeneric as ObjectJointUser of the constrained axes, a variant per
+  pattern; one contact law of the user contacts, then sphere-cylinder and sphere-triangle by closed forms,
+  cylinder-triangle on the infinite plane and capsule-capsule with a fixed 4 points; the geometrically exact beam as
+  ObjectUserBody on two rigid nodes with a symbolic inverse tangent operator of SE(3).
+- With extensions: the hydraulic actuator (E1, ODE1 coordinates of ObjectConnectorUser), the reeving system (E2, a
+  forceUserFunction of n markers), the kinematic tree (E3, MarkerBodyUser recorded and assembled by SymbolicSystem;
+  the most valuable), the reduced-order FFRF body (E3, E5 matrix leaves of the parameters, last). Finite cylinder
+  contacts and cylinder-cylinder depend on GJK/EPA, not recordable as built - not now.
+- Found: `CommonTangentOf2Circles` normalizes nB by the length of nA and miscounts its Newton iterations (#3412); a
+  latent use of an unfilled vector in `CObjectKinematicTree::AddJointForces` (not active today, noted in the design
+  file); a stale row of userItems.md (#3413).
+
+<a id="rg21-6-8"></a>
+### RG21.6.8 — pathPlanningUR5.py: a closed pocket, a narrower plate over the turn, the part as a sphere (2026-11-11, #3416)
+*(Maintainer 2026-11-11: the model looks very good already; the top plate hides the scene too much - a quarter as wide
+in y, shorter in x with a smaller max(x); the hole of the red blocks closed, the blocks at max/min y shortened in y; the
+red part on the tool looks strange and touches the obstacles - a sphere, smaller or with twice the distance to the
+obstacles, in particular at the hole and at the target.)*
+
+- The plate 1.3 x 0.2 m (before 1.8 x 0.8 m), x from -0.9 to 0.4 m (before 0.9 m). At its old place (y 0.45-0.65) the
+  arm turned beside it, at y 0.37; the plate is over the turn now (y 0.28-0.48), the lamp at its edge: 225 sampled
+  joint frames of the trajectory within its footprint are beneath it, none above.
+- The pocket: the blocks in front and behind over the full width, the side blocks 0.1 m thick and 0.36 m long between
+  them, closed at the corners; 0.40 m between the side blocks - at 0.35 m and twice the margin there is no free
+  configuration at the pick.
+- The part: a sphere of radius 0.02 m, 0.03 m below the tool, a collision shape of the last link of a second planning
+  robot (`collisionShapes` with an HT in the frame of the last link), so that the planner keeps it away from the
+  obstacles; the second robot keeps twice the margin, 0.02 m, also at the pick and above the column (the place 0.03 m
+  higher). Smallest distance in the simulation 0.0216 m; 87 waypoints, 8 after the shortcuts, seed 2 kept.
+- The warning of #3411 is printed by this example as well.
+
 <a id="rg5-1-3"></a>
 ### RG5.1.3 — CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG: the rotation matrix once (2026-11-11, #3409)
 

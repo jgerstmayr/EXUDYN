@@ -788,6 +788,8 @@ void Init_Pybind_manual_classes(py::module& m) {
 			for (const LinalgBenchmarkResult& r : RunLinalgBenchmark(minimumTime, numberOfThreads))
 			{
 				py::dict d;
+				d["group"] = r.group;
+				d["library"] = r.library;
 				d["operation"] = r.operation;
 				d["size"] = r.size;
 				d["threads"] = r.threads;
@@ -796,7 +798,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 				list.append(d);
 			}
 			return list;
-			}, "the linear algebra micro-benchmark of this build: the time per call in ns of the vector operations over a sweep of sizes, single- and multithreaded, and of the small matrix, vector and homogeneous transformation products, as a list of dictionaries with operation, size, threads, nsPerCall and checkSum; each operation runs for at least minimumTime seconds; numberOfThreads > 1 adds the multithreaded vectors above the threading limit",
+			}, "the linear algebra micro-benchmark of this build (#3410): the time per call in ns of the operations of the computation functions of objects, markers and connectors and of the assembly, with Eigen as the reference: vector add, scale and MultAdd over sizes 3 to 500 and across the threading limit (group vector), Matrix3D, 6 x 6 and transformations (small), J^T f and J^T K J of a 3 x n Jacobian (jacobian), matrix times vector and the dense factorization and solve (dense), local Jacobians into the sparse triplets (assembly), AutoDiff<12> (autodiff), and a matrix of compile-time size as prototype; returns a list of dictionaries with group, library, operation, size, threads, nsPerCall and checkSum; each operation runs for at least minimumTime seconds; numberOfThreads > 1 adds the multithreaded vectors above the threading limit",
 			py::arg("minimumTime") = 0.05, py::arg("numberOfThreads") = 1)
 		.def_static("InfoStat", &PythonInfoStat, "Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag", py::arg("writeOutput") = true)
 

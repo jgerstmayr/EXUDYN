@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 522 | 1.13.546 |
+| 1.13 | Newborn | 524 | 1.13.548 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.548** `EXAMPLE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pathPlanningUR5.py: a closed pocket, a narrower plate over the turn, the part as a sphere in the collision model (#3416)
+  - description: Follow-up of \#3408 after review: the plate above the turn of the second UR5 hid the scene; it is a quarter as wide (0.2 m) and shorter in x (-0.9 to 0.4 m), placed over the path of the turn so that the arm still passes beneath it, the lamp at its edge; the pocket is closed at its corners (front and back blocks over the full width, the side blocks 0.1 m thick, 0.40 m between them); the carried part, a cube that touched the obstacles, is a sphere of radius 0.02 m and a collision shape of the last link of the planning robot, and the second robot keeps twice the margin (0.02 m), also at the pick and above the column.
+  - **notes:** pathPlanningUR5.py: the plate over the turn of the second UR5 a quarter as wide and shorter, the pocket closed, the carried part a sphere in the collision model of the last link, the second robot with twice the margin.
+  - date resolved: **2026-11-11 00:31**, date raised: 2026-11-11
+- **1.13.547** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The linear algebra benchmark for small systems, in the regular and the fast module, with Eigen as reference (#3414)
+  - description: Successor of \#3410. The linear algebra that costs time is that of small sizes - the local residuals and Jacobians of objects, markers and connectors, and the hand-over of the local Jacobians to the sparse solvers - while long vectors occur in the time integration and matrix times vector in the dense solver only. RunLinalgBenchmark gets sizes 3 to 500, Eigen as reference (dynamic and fixed sizes), a prototype matrix of compile-time size, the Jacobian kernels J^T f and J^T K J of a connector, AutoDiff\<12\>, the dense solver (InvertSpecial against PartialPivLU) and the assembly of local Jacobians into the sparse triplets against a known pattern; run with the regular and the fast module, evaluated with the causes in the code and recommendations, local first (inside the linalg classes) and global second (docs/dev/design/linalgBenchmark.md).
+  - **notes:** exudyn.special.RunLinalgBenchmark measures the linear algebra of small systems - vectors of 3 to 500, Matrix3D and 6x6, the connector kernels J^T f and J^T K J, AutoDiff\<12\>, the dense solver, the assembly of local Jacobians into the sparse triplets - with Eigen as reference and a matrix of compile-time size as prototype, in the regular and the fast module; results, causes and recommendations in docs/dev/design/linalgBenchmark.md.
+  - date resolved: **2026-11-11 00:31**, date raised: 2026-11-11
 - **1.13.546** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a linear algebra micro-benchmark compiled into every build (#3410)
   - description: Successor of \#2397, which made tools/benchmarks/avx2Benchmark.py the benchmark on the level of the solvers and left the micro-benchmark to a later step (revision2026c step RG5.1). The operations the solvers spend their time in - Vector add, scale and MultAdd over a sweep of sizes across ResizableVectorParallelThreadingLimit, ResizableVectorParallel single- and multithreaded, the products of SlimVector, Matrix3D, ConstSizeMatrix, HomogeneousTransformation and of a Matrix with a Vector - timed with the compiler options of the build, callable from Python as exudyn.special.RunLinalgBenchmark, so that the steps RG5.1.2, RG5.1.4 and RG5.2 can measure their gain.
   - **notes:** exudyn.special.RunLinalgBenchmark(minimumTime, numberOfThreads): the linear algebra micro-benchmark compiled into every build - Vector and ResizableVectorParallel operations over sizes across the threading limit, single- and multithreaded, and the products of SlimVector, Matrix3D, ConstSizeMatrix, HomogeneousTransformation and Matrix with Vector, in ns per call (src/Linalg/linalgBenchmark.h).

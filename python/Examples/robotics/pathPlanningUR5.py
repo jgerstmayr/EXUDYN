@@ -2,8 +2,9 @@
 # This is an EXUDYN example
 #
 # Details:  Two UR5 plan and run collision-free motions. The first moves between two poses of its tool in one of three scenes - around a wall, between the compartments of a
-#           shelf, through a window to a goal behind a wall. The second picks a part from a pocket between four blocks in front of it, turns by 180 degrees beneath a
-#           plate, between a lamp, a cone and a pyramid, and places the part on a column behind it; its obstacles use all kinds of convex shapes of the collision check:
+#           shelf, through a window to a goal behind a wall. The second picks a part from a pocket closed by four blocks in front of it, turns by 180 degrees beneath a
+#           plate, between a lamp, a cone and a pyramid, and places the part on a column behind it; the part, a sphere, is a collision shape of its last link, and
+#           this robot keeps twice the margin to the obstacles. Its obstacles use all kinds of convex shapes of the collision check:
 #           boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points. The planning steps: the collision check of the capsules of the robot in C++,
 #           RRT-Connect in joint space, shortcuts of the path, a blended trajectory through the waypoints; then the simulation of the kinematic trees with PD control
 #           of the joints. The planned path of each tool is drawn on the ground with a sphere at the end of each part, the simulated path as sensor trace; the
@@ -88,22 +89,28 @@ obstacles1 = [Obstacle('Box', position, graphics.color.lightgrey if size[2] > 0.
 pyramid = [[-0.12, -0.12, 0], [0.12, -0.12, 0], [0.12, 0.12, 0], [-0.12, 0.12, 0], [0, 0, 0.3]]
 obstacles2 = [
     Obstacle('Box', [0, 0, -0.15], graphics.color.grey, size=[2.4, 2.4, 0.1]),                  #floor
-    Obstacle('Box', [0.55, 0.3, 0.15], graphics.color.brown, size=[0.25, 0.25, 0.3]),           #the pocket: two blocks at the sides,
-    Obstacle('Box', [0.55, -0.3, 0.15], graphics.color.brown, size=[0.25, 0.25, 0.3]),
-    Obstacle('Box', [0.35, 0., 0.09], graphics.color.brown, size=[0.06, 0.35, 0.18]),           #a lower one in front and
-    Obstacle('Box', [0.77, 0., 0.15], graphics.color.brown, size=[0.06, 0.35, 0.3]),            #one behind
+    Obstacle('Box', [0.56, 0.25, 0.15], graphics.color.brown, size=[0.36, 0.1, 0.3]),          #the pocket, closed around: two blocks at the sides,
+    Obstacle('Box', [0.56, -0.25, 0.15], graphics.color.brown, size=[0.36, 0.1, 0.3]),
+    Obstacle('Box', [0.35, 0., 0.09], graphics.color.brown, size=[0.06, 0.6, 0.18]),           #a lower one in front and
+    Obstacle('Box', [0.77, 0., 0.15], graphics.color.brown, size=[0.06, 0.6, 0.3]),            #one behind, both over the width of the side blocks
     Obstacle('Cylinder', [-0.55, 0., 0.225], graphics.color.steelblue, radius=0.12, length=0.45), #the column, the part is placed on top
-    Obstacle('Box', [0., 0.6, 0.7], graphics.color.lightgrey[:3] + [0.5], size=[1.8, 0.8, 0.04]), #the plate above the side +y
+    Obstacle('Box', [-0.25, 0.38, 0.7], graphics.color.lightgrey[:3] + [0.5], size=[1.3, 0.2, 0.04]), #the plate above the side +y
     Obstacle('Box', [0., -0.35, 0.5], graphics.color.lightgrey[:3] + [0.5], size=[1.8, 0.05, 1.2]), #the wall at the side -y
-    Obstacle('Capsule', [-0.2, 0.55, 0.62], graphics.color.black, radius=0.01, length=0.12),   #the cord of the lamp,
-    Obstacle('Sphere', [-0.2, 0.55, 0.52], graphics.color.yellow, radius=0.07),               #the lamp
+    Obstacle('Capsule', [-0.2, 0.45, 0.62], graphics.color.black, radius=0.01, length=0.12),   #the cord of the lamp,
+    Obstacle('Sphere', [-0.2, 0.45, 0.52], graphics.color.yellow, radius=0.07),               #the lamp
     Obstacle('Cone', [0.25, 0.6, 0.175], graphics.color.orange, radius=0.12, radius1=0.02, length=0.35),
     Obstacle('Points', [-0.3, 0.6, 0.], graphics.color.dodgerblue, points=pyramid),           #a pyramid: the convex hull of 5 points
     ]
-#the tool points down (its z axis along -z); at the pick the part is turned by 90 degrees, so that the wrist fits between the blocks at the sides
+#the part is a sphere below the tool, carried from the pocket to the column; it is a collision shape of the last link, so that the planner keeps it away
+#from the obstacles, and the second robot keeps twice the margin
+partRadius = 0.02
+partOffset = 0.03           #the center of the part below the tool, along the z axis of the tool
+margin2 = 2*margin
+#the tool points down (its z axis along -z); at the pick the part is turned by 90 degrees, so that the wrist fits between the blocks at the sides;
+#at the place the part is held above the column by the margin
 down = np.diag([1., -1., -1.])
 HTpick = exu.HT(rotation=RotationMatrixZ(0.5*np.pi) @ down, translation=[0.55, 0., 0.15])
-HTplace = exu.HT(rotation=RotationMatrixZ(np.pi) @ down, translation=[-0.55, 0., 0.5])
+HTplace = exu.HT(rotation=RotationMatrixZ(np.pi) @ down, translation=[-0.55, 0., 0.45 + partOffset + partRadius + 1.5*margin2])
 
 #%%+++ the robots: their joint frames are those of the URDF, whose visual meshes are stored in the HDF5 file of the repository CommonData_git
 ur5File = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn', 'robotics', 'RobotHDF5', 'ur5Data.h5')
@@ -134,7 +141,12 @@ limits = JointLimits(planningRobot)
 #Capsules of neighboring links overlap by construction: the pairs closer than the margin in a free configuration of the arm are never checked.
 qFree = [0, -1.2, 1.2, -1.5, -1.57, 0]
 model1 = planningRobot.GetCollisionModel(obstacles=[o[0:2] for o in obstacles1], excludeCollidingAt=qFree, excludeMargin=margin)
-model2 = planningRobot.GetCollisionModel(obstacles=[o[0:2] for o in obstacles2], excludeCollidingAt=qFree, excludeMargin=margin)
+#the second robot carries the part: a sphere on its last link, at the place below the tool
+planningRobot2 = LinkDict2Robot(ManipulatorUR5(), initialConfiguration='model')
+toolHT = planningRobot2.tool.HT
+partInLastLink = np.array(toolHT.translation) + np.array(toolHT.rotation) @ np.array([0., 0., partOffset])
+planningRobot2.links[-1].collisionShapes = list(planningRobot2.links[-1].collisionShapes) + [{'type': 'sphere', 'radius': partRadius, 'HT': exu.HT(translation=list(partInLastLink))}]
+model2 = planningRobot2.GetCollisionModel(obstacles=[o[0:2] for o in obstacles2], excludeCollidingAt=qFree, excludeMargin=margin2)
 
 #%%+++ planning of the first robot: the goal is a pose of the tool
 qStart1 = np.array(scenes[scene]['qStart'])
@@ -152,14 +164,14 @@ exu.Print('robot 1, scene', scene, ': planned in', round(time.time() - t0, 3), '
 def FreeConfiguration(HT, qReference):
     """the free solution of the analytic inverse kinematics within the joint limits, nearest to qReference"""
     for q in chain.InverseKinematicsAnalytic(HT, qReference=qReference):
-        if model2.IsFree(q, margin) and np.all(q >= limits[:, 0]) and np.all(q <= limits[:, 1]):
+        if model2.IsFree(q, margin2) and np.all(q >= limits[:, 0]) and np.all(q <= limits[:, 1]):
             return q
     raise ValueError('no free configuration for ' + str(HT))
 qPick = FreeConfiguration(HTpick, np.array(qFree))
 qPlace = FreeConfiguration(HTplace, np.array([np.pi] + qFree[1:]))
 t0 = time.time()
-path2 = PlanJointPath(model2, qPick, qPlace, limits, margin=margin, seed=2)
-short2 = ShortcutPath(model2, path2, margin=margin, seed=2)
+path2 = PlanJointPath(model2, qPick, qPlace, limits, margin=margin2, seed=2)
+short2 = ShortcutPath(model2, path2, margin=margin2, seed=2)
 exu.Print('robot 2, pick and place: planned in', round(time.time() - t0, 3), 's:', len(path2), 'waypoints, after shortcuts', len(short2))
 
 #%%+++ the trajectories
@@ -168,7 +180,7 @@ exu.Print('robot 2, pick and place: planned in', round(time.time() - t0, 3), 's:
 #the obstacles than the margin, the rounding is made smaller. blendRadius=1 is the largest rounding; 0 runs the path itself, stopping at each corner.
 blendRadius = 1.
 trajectory1 = TrajectoryFromPath(model1, short1, maxVelocities, maxAccelerations, margin=margin, blendRadius=blendRadius)
-trajectory2 = TrajectoryFromPath(model2, short2, maxVelocities, maxAccelerations, margin=margin, blendRadius=blendRadius)
+trajectory2 = TrajectoryFromPath(model2, short2, maxVelocities, maxAccelerations, margin=margin2, blendRadius=blendRadius)
 
 #%%+++ the two robots in one model, side by side; the obstacles and the planned paths drawn on a ground object
 offsets = [np.array([0., 0., 0.]), np.array([0., 2.8, 0.])]
@@ -205,13 +217,13 @@ for (robot, (obstacles, short, trajectory, model, qStart)) in zip(robots, plans)
                                                       localPosition=list(robot.tool.HT.translation), storeInternal=True,
                                                       outputVariableType=exu.OutputVariableType.Position))]
 
-#the part of the second robot: a cube below its tool, drawn from the joint coordinates of the drawn state; it is carried from the pocket to the column
+#the part of the second robot: the sphere below its tool, drawn from the joint coordinates of the drawn state, where the collision model has it
 def PartGraphics(mbs, objectNumber):
     q = mbs.GetNodeOutput(nodesJoints[1], exu.OutputVariableType.Coordinates, configuration=exu.ConfigurationType.Visualization)
     HT = chain.ToolHT(q)
     A = np.array(HT.rotation)
-    center = np.array(HT.translation) + offsets[1] + A @ np.array([0, 0, 0.03])
-    return [graphics.Brick(centerPoint=list(center), size=[0.05, 0.05, 0.05], color=graphics.color.red)]
+    center = np.array(HT.translation) + offsets[1] + A @ np.array([0, 0, partOffset])
+    return [graphics.Sphere(point=list(center), radius=partRadius, color=graphics.color.red, nTiles=16)]
 mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=PartGraphics)))
 
 minimumDistances = [np.inf, np.inf]

@@ -1,0 +1,16 @@
+{
+  "number": 3416,
+  "title": "pathPlanningUR5.py: a closed pocket, a narrower plate over the turn, the part as a sphere in the collision model",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "LOW",
+  "description": "Follow-up of #3408 after review: the plate above the turn of the second UR5 hid the scene; it is a quarter as wide (0.2 m) and shorter in x (-0.9 to 0.4 m), placed over the path of the turn so that the arm still passes beneath it, the lamp at its edge; the pocket is closed at its corners (front and back blocks over the full width, the side blocks 0.1 m thick, 0.40 m between them); the carried part, a cube that touched the obstacles, is a sphere of radius 0.02 m and a collision shape of the last link of the planning robot, and the second robot keeps twice the margin (0.02 m), also at the pick and above the column.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 00:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/robotics/pathPlanningUR5.py",
+  "releaseNotes": "pathPlanningUR5.py: the plate over the turn of the second UR5 a quarter as wide and shorter, the pocket closed, the carried part a sphere in the collision model of the last link, the second robot with twice the margin.",
+  "resolvedInVersion": "1.13.548"
+}

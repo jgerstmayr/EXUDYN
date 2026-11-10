@@ -1,0 +1,12 @@
+{
+  "number": 3413,
+  "title": "Three text errors in item descriptions and in userItems.md",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "(1) definitions/itemDefsObjects.py, ObjectJointSpherical, constrainedAxes: the description speaks of translation (0,1,2) and rotation (3,4,5) axes, the array has three entries. (2) ObjectJointGeneric, detailedDescription, the table of joint J1 orientation vectors: a stray v in v\\tv_{z1}, which should be \\LU{0}{\\tv_{z1}} as the other two. (3) docs/dev/internals/userItems.md, section 7, the table row of CreateRigidBody: Euler parameter nodes are said to be refused, while userItems.py supports NodeRigidBodyEP (#3238). Found in the analyses of revision2026c steps RG9.14.1 and RG14.6.1.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "file": "definitions/itemDefsObjects.py"
+}

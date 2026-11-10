@@ -1,109 +1,219 @@
-# Linear algebra benchmark: results (revision2026c step RG5.1)
+# Linear algebra benchmark: results and recommendations (revision2026c step RG5.1)
 
 A design note of open steps: the measurements of `exudyn.special.RunLinalgBenchmark` (#3410) that steer the open
-sub-steps of RG5.1 (RG5.1.2 merge `ResizableVector` into `Vector`, RG5.1.4 inline `Vector::operator[]`) and RG5.2
-(compile-time sizes, vectorization). It leaves the repository when the steps close (WORKFLOW.md §8.4); a step that
-changes `src/Linalg` adds its run before and after here.
+sub-steps of RG5.1 and RG5.2, the causes found in the code, and the recommendations. It leaves the repository when the
+steps close (WORKFLOW.md §8.4); a step that changes `src/Linalg` adds its run before and after here, **always with the
+regular and the fast module**.
 
-## 1. How to run it
+## 1. What matters: small systems
+
+The linear algebra that costs time is that of small sizes: the local residuals and Jacobians of objects, markers and
+connectors, evaluated per item and per step. Long vectors occur in the time integration only (`ResizableVectorParallel`,
+the system vectors), the dense matrix times vector in the dense solver only. The benchmark therefore concentrates on
+sizes below 500, and on the hand-over of the local Jacobians to Eigen's sparse solvers.
+
+What the computation functions use (a survey of `src/ImplObjects`, `src/ImplMarkers`, `src/ImplNodes`, `src/System`,
+`src/Main`):
+
+| where | operations | types |
+|---|---|---|
+| rigid body, `ComputeODE2LHS`, mass matrix | $\Gm^T(\tomega\times\Jm\tomega)$, 3x3 and 6x6/7x7 blocks | `Matrix3D`, `ConstSizeMatrix<...>`, hand-written for `CNodeRigidBodyEP`/`RotVecLG` (`CollectCurrentNodeMarkerData`, #3409) |
+| body markers, `ComputeMarkerData` | position, rotation, $\Jm_{pos}$, $\Jm_{rot}$ (3 x n) | `Matrix3D`, `ResizableMatrix`, `LinkedDataVector` |
+| connectors, `ComputeODE2LHS` | $\fv_{gen} = \Jm\tp\fv$ | `MultMatrixTransposedVectorTemplate` into `ResizableVector` |
+| connector Jacobians (`CObjectConnector.cpp`, #2884) | $\Jm_i\tp \frac{\partial \fv}{\partial \qv} \Jm_k$, `AutoDiff<12>` of the frame variations | `MultMatrixMatrixTemplate`, `MultMatrixTransposedMatrixTemplate` on `ResizableMatrix`, n = 6 ... 24 |
+| beams, ANCF, FFRF | Gauss loops over shape function vectors and their outer products | `ConstSizeVector<n>`, `ConstSizeMatrix<n*m>` with run-time sizes |
+| numerical local Jacobian (`CSystemJacobians.cpp`, `ComputeLocalJacobianODE2`) | n evaluations of the local LHS, column differences | `ResizableVector`, `ResizableMatrix` |
+| assembly | `AddSubmatrix` of each local Jacobian into the triplets, `FinalizeMatrix` = `setFromTriplets` | `GeneralMatrixEigenSparse`, `SparseTripletVector` |
+| dense solver of small systems | `InvertSpecial` (the inverse), then inverse times residual in every Newton step | `GeneralMatrixEXUdense`, `Matrix` |
+
+Counted over `src/ImplObjects`: `CopyFrom` 384, `Matrix3D` 280, `LinkedDataVector` 270, `ConstSizeMatrix<` 138,
+`SetNumberOfRowsAndColumns` 100, `MultMatrixVector` 83, `GetTransposed` 65, `MultMatrixTransposedVector` 51,
+`MultMatrixMatrix` 24, `AddSubmatrix` 21.
+
+## 2. How to run it
 
 ```python
 import exudyn as exu
-results = exu.special.RunLinalgBenchmark(minimumTime=0.05, numberOfThreads=4)  #list of dicts:
-#operation, size, threads, nsPerCall, checkSum
+results = exu.special.RunLinalgBenchmark(minimumTime=0.05, numberOfThreads=16)
+#list of dicts: group, library, operation, size, threads, nsPerCall, checkSum
 ```
 
-- Each operation runs in batches that double until `minimumTime` has passed; the result is the time per call in ns.
-  The check sum keeps the compiler from removing the work.
-- `numberOfThreads > 1` adds the `ResizableVectorParallel` operations multithreaded for sizes from
-  `ResizableVectorParallelThreadingLimit` (20000) on; the task manager is entered and left as in the solvers.
-- `EXUDYN_MODULE=fast` measures the fast module (`exudev build --fast` first).
-- The source is `src/Linalg/linalgBenchmark.h`; the solver-level counterpart is `tools/benchmarks/avx2Benchmark.py`.
+and the same with `EXUDYN_MODULE=fast` (`exudev build --fast` first). Each operation runs in batches that double until
+`minimumTime` has passed. Groups: `vector`, `small`, `jacobian`, `dense`, `assembly`, `autodiff`; libraries: `Exudyn`,
+`Eigen` (the reference), `prototype` (a row-major matrix of compile-time size, `LinalgBenchmarkFixedMatrix`, with plain
+loops: the evidence for what known sizes gain without changing an Exudyn class). The source is
+`src/Linalg/linalgBenchmark.h`; `tools/benchmarks/avx2Benchmark.py` is the counterpart on the level of the solvers.
 
-## 2. Results 2026-11-11
+## 3. Results 2026-11-11
 
-Machine: AMD Ryzen 9 9950X (16 cores, 32 threads), Windows 11, MSVC 14.44 with the options of `setup.py`, regular
-module (with range checks), Exudyn 1.13.546.dev1; `RunLinalgBenchmark(0.05, 4)` and `(0.05, 16)`. `RVP` is
-`ResizableVectorParallel`. Times in ns unless marked us or ms.
+The workstation of the development: AMD Ryzen 9 9950X (16 cores, 32 threads), Windows 11, MSVC 14.44 with the options of
+`setup.py`; Exudyn 1.13.546.dev1; Eigen 3.3.7 (`include/Eigen`). `RunLinalgBenchmark(0.05, 16)`. Each cell: **regular
+module / fast module** (no range checks, AVX2), ns per call; `u` = us. `RVP` = `ResizableVectorParallel`.
 
-### 2.1 Vectors, single-threaded: ns per call
+### 3.1 Vectors
 
-| n | `Vector +=` | `Vector *=` | `Vector MultAdd` | `RVP +=` | `RVP MultAdd` | `RVP CopyFrom` |
+| n | `Vector +=` | `RVP +=` | Eigen `+=` | `Vector MultAdd` | `RVP MultAdd` | Eigen MultAdd | `Vector *=` | Eigen `*=` |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 3 | 2.4 / 2.2 | 2.3 / 2.7 | 2.3 / 4.2 | 2.3 / 2.2 | 2.4 / 2.5 | 2.3 / 2.3 | 2.4 / 2.3 | 2.4 / 2.4 |
+| 6 | 2.5 / 2.4 | 2.6 / 2.6 | 2.3 / 2.3 | 2.8 / 2.4 | 2.8 / 2.6 | 2.4 / 2.3 | 2.5 / 2.3 | 2.4 / 2.4 |
+| 12 | 4.0 / 3.3 | 3.2 / 2.4 | 3.0 / 2.3 | 5.2 / 3.5 | 4.4 / 2.5 | 3.5 / 2.3 | 2.9 / 2.9 | 3.9 / 2.4 |
+| 24 | 6.5 / 5.3 | 4.6 / 3.0 | 5.0 / 2.8 | 9.8 / 6.5 | 7.6 / 3.3 | 5.5 / 3.7 | 3.8 / 2.9 | 5.7 / 2.5 |
+| 48 | 14.5 / 8.9 | 9.4 / 4.8 | 12.0 / 5.1 | 32.1 / 13.0 | 17.5 / 5.5 | 14.1 / 6.5 | 6.5 / 3.0 | 12.0 / 4.9 |
+| 100 | 47.9 / 20.0 | 17.5 / 7.3 | 24.2 / 8.7 | 64.0 / 28.9 | 35.4 / 9.3 | 29.5 / 11.8 | 12.2 / 4.8 | 31.8 / 7.0 |
+| 200 | 103 / 43.3 | 31.8 / 12.2 | 46.1 / 15.8 | 144 / 72.7 | 66.8 / 16.8 | 60.0 / 22.3 | 21.9 / 7.3 | 42.6 / 12.2 |
+| 500 | 223 / 99.0 | 58.8 / 28.7 | 97.9 / 47.1 | 348 / 179 | 140 / 40.5 | 104 / 49.9 | 55.2 / 16.2 | 80.8 / 31.1 |
+| 1000 | 246 / 189 | 117 / 118 | 169 / 87.7 | 409 / 362 | 283 / 80.1 | 202 / 151 | 99.4 / 30.8 | 144 / 92.7 |
+| 20000 | 5503 / 3984 | 2725 / 1343 | 3380 / 1895 | 8564 / 7674 | 5821 / 1721 | 4055 / 2191 | 1885 / 787 | 2699 / 1456 |
+| 200000 | 56.4u / 42.8u | 29.2u / 23.9u | 35.4u / 24.5u | 86.2u / 56.9u | 64.8u / 23.9u | 43.3u / 24.6u | 19.4u / 10.6u | 27.5u / 16.3u |
+
+Sizes known at compile time:
+
+| n | `ConstSizeVector +=` | Eigen `Matrix<n,1> +=` | prototype `fixed +=` |
+|---:|---:|---:|---:|
+| 6 | 2.5 / 2.4 | 0.9 / 0.9 | 0.8 / 0.7 |
+| 12 | 4.6 / 3.7 | 4.3 / 0.9 | 2.3 / 2.2 |
+| 24 | 5.6 / 5.1 | 4.6 / 3.2 | 3.4 / 2.3 |
+
+Multithreaded, fast module, 1 / 16 threads:
+
+| n | `RVP +=` | `RVP MultAdd` | `RVP CopyFrom` |
+|---:|---:|---:|---:|
+| 20000 | 1343 / 3438 | 1721 / 3296 | 1302 / 3203 |
+| 200000 | 23.9u / 11.1u | 23.9u / 12.5u | 23.2u / 12.6u |
+
+### 3.2 Small fixed-size types
+
+| operation | Exudyn | Eigen | prototype |
+|---|---:|---:|---:|
+| `SlimVector<3> +` (`v = v + w*s`) | 5.5 / 5.7 | 0.8 / 0.8 | |
+| `SlimVector<3>` cross product | 10.1 / 10.0 | 4.2 / 4.3 | |
+| `Matrix3D * Vector3D` | 7.2 / 3.9 | 3.5 / 3.5 | |
+| `Matrix3D^T * Vector3D` by `GetTransposed()` | 9.8 / 5.1 | 3.9 / 3.9 | |
+| `Matrix3D^T * Vector3D` by `MultMatrixTransposedVectorTemplate` | 7.1 / 7.6 | | |
+| `Matrix3D * Matrix3D` | 21.3 / 17.9 | 41.0 / 41.6 (`lazyProduct` 7) | 8.2 / 8.1 |
+| 6x6 times vector (`ConstSizeMatrix<36>`) | 25.0 / 18.8 | 7.4 / 6.3 | |
+| 6x6 times 6x6 | 92.8 / 91.0 | 29.8 / 26.3 | 42.9 / 43.0 |
+| HT * v, HT * HT, HT inverse (rotation) | 8.4, 13.9, 8.7 / 8.2, 14.0, 8.7 | | |
+
+### 3.3 Jacobian kernels of a connector, 3 x n Jacobian
+
+| n | $\Jm\tp\fv$ Exudyn | Eigen dyn. / fixed | prototype | $\Jm\tp\Km\Jm$ Exudyn | Eigen dyn. / fixed | prototype |
 |---:|---:|---:|---:|---:|---:|---:|
-| 3 | 2.7 | 2.5 | 2.3 | 2.3 | 2.3 | 3.4 |
-| 10 | 3.2 | 2.9 | 4.4 | 2.7 | 3.9 | 4.7 |
-| 100 | 22.9 | 7.6 | 38.1 | 12.4 | 28.0 | 19.6 |
-| 1000 | 240 | 64.7 | 382 | 115 | 274 | 215 |
-| 10000 | 2440 | 741 | 3925 | 1324 | 2845 | 2363 |
-| 20000 | 4863 | 1481 | 7758 | 2696 | 5627 | 4732 |
-| 200000 | 52.2 us | 15.9 us | 87.6 us | 27.9 us | 57.0 us | 93.0 us |
-| 1000000 | 254.1 us | 78.1 us | 397.8 us | 138.2 us | 289.2 us | 465.9 us |
+| 6 | 7.9 / 7.5 | 8.4 / 6.6 | 5.0 | 90.7 / 101 | 422 / 558 | 34.8 |
+| 7 | 8.0 / 7.9 | 8.6 / 7.0 | 5.3 | 121 / 131 | 561 / 738 | 43.1 |
+| 12 | 10.4 / 14.4 | 9.8 / 9.5 | 7.4 | 298 / 350 | 323 / 101 | 114 |
+| 14 | 11.7 / 11.8 | 10.7 / 10.3 | 8.5 | 391 / 442 | 264 / 136 | 152 |
+| 24 | 19.3 / 19.1 | 15.0 / 12.5 | 14.5 | 1054 / 1189 | 431 / 301 | 412 |
 
-### 2.2 Vectors, single-threaded: ns per element
+(Exudyn: regular / fast; Eigen and prototype: regular, the fast module within a few percent.) `AutoDiff<12>`: a dot
+product of 3 takes 13.2 ns against 2.5 ns in `Real` - 5 times for 13 values.
 
-| n | `Vector +=` | `Vector *=` | `Vector MultAdd` | `RVP +=` | `RVP MultAdd` | `RVP CopyFrom` |
+### 3.4 Dense: matrix times vector, the dense solver
+
+| n | `Matrix * Vector` | Eigen | `InvertSpecial` | Eigen `PartialPivLU` | solve: inverse * rhs | Eigen LU solve |
 |---:|---:|---:|---:|---:|---:|---:|
-| 3 | 0.888 | 0.826 | 0.753 | 0.760 | 0.778 | 1.121 |
-| 10 | 0.318 | 0.289 | 0.444 | 0.271 | 0.387 | 0.473 |
-| 100 | 0.229 | 0.076 | 0.381 | 0.124 | 0.280 | 0.196 |
-| 1000 | 0.240 | 0.065 | 0.382 | 0.115 | 0.274 | 0.215 |
-| 10000 | 0.244 | 0.074 | 0.393 | 0.132 | 0.285 | 0.236 |
-| 20000 | 0.243 | 0.074 | 0.388 | 0.135 | 0.281 | 0.237 |
-| 200000 | 0.261 | 0.080 | 0.438 | 0.140 | 0.285 | 0.465 |
-| 1000000 | 0.254 | 0.078 | 0.398 | 0.138 | 0.289 | 0.466 |
+| 6 | 23.9 / 19.3 | 14.2 / 14.4 | 164 / 148 | 327 / 359 | 23.8 / 20.8 | 65.8 / 68.1 |
+| 12 | 115 / 72.8 | 24.4 / 17.2 | 701 / 703 | 945 / 973 | 106 / 72.2 | 147 / 140 |
+| 24 | 518 / 366 | 61.2 / 41.1 | 2910 / 2896 | 2614 / 2946 | 518 / 376 | 322 / 295 |
+| 48 | 2779 / 2260 | 193 / 120 | 12.0u / 11.5u | 9.1u / 10.6u | 2731 / 2236 | 682 / 620 |
+| 100 | 14.5u / 14.3u | 783 / 528 | 54.0u / 53.0u | 48.8u / 62.8u | 14.5u / 14.2u | 1759 / 1464 |
+| 200 | 72.6u / 70.7u | 2894 / 1965 | 219u / 216u | 286u / 386u | 73.4u / 71.0u | 5231 / 4200 |
+| 500 | 512u / 505u | 18.9u / 14.8u | 1.54 ms / 1.35 ms | 4.79 ms / 5.57 ms | 536u / 496u | 34.4u / 21.5u |
 
-### 2.3 ResizableVectorParallel, multithreaded: ns per call
+### 3.5 Assembly: local 12 x 12 Jacobians of a chain into the sparse system matrix
 
-| n | `RVP +=` 1 | 4 | 16 | `RVP MultAdd` 1 | 4 | 16 | `RVP CopyFrom` 1 | 4 | 16 |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 20000 | 2696 | 1816 | 2406 | 5627 | 2290 | 2691 | 4732 | 1671 | 2176 |
-| 200000 | 27.9 us | 20.7 us | 9128 | 57.0 us | 30.4 us | 11.9 us | 93.0 us | 18.8 us | 9983 |
-| 1000000 | 138.2 us | 103.5 us | 45.8 us | 289.2 us | 149.7 us | 52.8 us | 465.9 us | 86.2 us | 42.8 us |
+| objects | `AddSubmatrix` into triplets | + `FinalizeMatrix` (`setFromTriplets`) | into a known pattern |
+|---:|---:|---:|---:|
+| 10 | 4135 / 1481 | 9242 / 6612 | 537 / 547 |
+| 100 | 34.2u / 14.8u | 87.7u / 66.8u | 5.5u / 5.9u |
+| 1000 | 350u / 159u | 1.24 ms / 1.06 ms | 55.9u / 58.3u |
 
-The threaded times scatter between runs: a first run with 4 threads (`minimumTime=0.02`) gave 52.0 us for `RVP +=`
-at 10^6 and 1501 ns at 20000, against 103.5 us and 1816 ns here. Compare threaded runs only within one session.
+Per object (fast module): 148 ns to append the 144 triplets, 510 ns of `setFromTriplets`, 55 ns to add the 144 values
+into a pattern whose positions are known.
 
-### 2.4 Small fixed-size types, transformations, matrix times vector
+## 4. Eigen as the reference
 
-| operation | size | ns per call |
-|---|---:|---:|
-| `SlimVector<3> +` | 3 | 5.6 |
-| `SlimVector<3> cross product` | 3 | 9.8 |
-| `Matrix3D * Vector3D` | 3 | 7.5 |
-| `Matrix3D * Matrix3D` | 3 | 20.5 |
-| `ConstSizeMatrix<36> * ConstSizeVector<6>` | 6 | 42.5 |
-| `ConstSizeMatrix<36> * ConstSizeMatrix<36>` | 6 | 125 |
-| `HT * v, rotation` | 3 | 8.3 |
-| `HT * v, translation` | 3 | 10.0 |
-| `HT * HT, rotation` | 3 | 13.4 |
-| `HT * HT, translation` | 3 | 11.6 |
-| `HT inverse, rotation` | 3 | 8.5 |
-| `HT inverse, translation` | 3 | 9.0 |
-| `Matrix * Vector` | 10 | 66.1 |
-| `Matrix * Vector` | 100 | 14.5 us |
-| `Matrix * Vector` | 1000 | 2.08 ms |
+Eigen 3.3.7 compiled by MSVC is not a reference for every small product: `Matrix3d * Matrix3d` takes 41 ns with
+`operator*` and 7 ns with `lazyProduct`, and $\Jm\tp\Km\Jm$ for n = 6, 7 takes 420-740 ns on every path, also in a
+standalone program with the options of `setup.py`, with and without `/arch:AVX2` (scratch check eigencheck.cpp). For the
+products of small fixed sizes the **prototype** - plain loops of compile-time bounds - is the better reference: it is as
+fast as or faster than Eigen up to n = 12 and within 40 % at n = 24. Eigen is the reference for the vectors, for
+matrix times vector, for the dense LU solve and for products from n = 12 on.
 
-The translation cases of `HT * v` and `HT * HT` contain a scaling by 0.5 more than the rotation cases, which keeps the
-values bounded; they are not a measure of the no-rotation flag (that is RG5.1.1, #3405).
+## 5. What the results say
 
-## 3. What the results say for the open steps
+1. **Below 12 elements the call dominates**: every vector operation of 3 or 6 elements takes 2.2-2.8 ns, whatever the
+   class or the module; Eigen's `VectorXd` the same. Only compile-time sizes go below it: `Matrix<6,1> +=` and the
+   prototype 0.7-0.9 ns, 3 times faster. `ConstSizeVector<n>` carries its size at run time and is as slow as `Vector`.
+2. **The range checks are not the cost of the small kernels**: the fast module gains 0-45 % on small vectors and
+   `Matrix3D * Vector3D` (7.2 to 3.9 ns), nothing on `Matrix3D * Matrix3D`, `J^T K J` or the 6x6 products. It gains
+   2.8 times on `AddSubmatrix` into triplets (4135 to 1481 ns for 10 objects): the checked element access of the local
+   matrix and of the triplet array.
+3. **The loops of a few Exudyn kernels cost 2-30 times**, in both modules:
+   - `MultMatrixVectorTemplate` (`Matrix.h`) adds every term into `result[i]` - through `operator[]` and memory - instead
+     of a local sum: 1.45-2 ns per multiply-add against 0.05-0.1 ns of Eigen; 8 times at n = 24, 27 times at n = 500. It is
+     the solve of the dense solver in every Newton step (`GeneralMatrixEXUdense::Solve`, inverse times residual) and every
+     `MultMatrixVector` of the objects (83 uses).
+   - `VectorBase::MultAdd` and `VectorBase::operator+=` (`Vector.h`) read the other vector through its `operator[]` and
+     an iterator; the compiler does not vectorize them: `Vector MultAdd` 0.36 ns per element against 0.08 of
+     `ResizableVectorParallel`, which has its own loops, and 0.1 of Eigen; `Vector *=` (own data only) is the fastest of
+     all.
+   - `MultMatrixTransposedMatrixTemplate` runs the 3 rows innermost, strided, through `operator()`: $\Jm\tp\Km\Jm$ 2.6
+     times the prototype at n = 6 and 12, which updates rank 1 per row.
+   - `Matrix3D` (a `ConstSizeMatrix<9>` with run-time size): `Matrix3D * Matrix3D` 2.2 times the prototype; 6x6 times 6x6
+     2.2 times the prototype and 3 times Eigen; `SlimVector<3>` `+` 7 times and the cross product 2.4 times Eigen's
+     `Vector3d`, although its size is known - the loops over iterators and the construction from an initializer list.
+4. **Assembly**: `setFromTriplets` is 77 % of the sparse assembly (fast module); adding the values into a known
+   pattern is 12 times faster than triplets plus `setFromTriplets` (55 against 661 ns per object, 58 us against 1.06 ms
+   for 1000 objects per Jacobian). The pattern of the system Jacobian changes only with the structure (assembly,
+   contact, a switched joint).
+5. **The dense solver of small systems**: `InvertSpecial` is as fast as Eigen's `PartialPivLU` up to n = 200 and 3 times
+   faster at 500 (Eigen 3.3.7 / MSVC); the solve by the inverse is fast for n <= 12 and slow from 24 on, because of
+   `MultMatrixVectorTemplate` (item 3).
+6. **Threads**: 16 threads at the limit of 20000 elements are 2.5 times *slower* than one thread; at 200000 they gain
+   2 times. The limit `ResizableVectorParallelThreadingLimit` is too low for 16 threads (RG5.1.2 decides with the merge).
+7. **`AutoDiff<12>`** costs 5 times `Real` for 13 values - no gain to be had in the class itself.
 
-- **RG5.1.2, RG5.1.4**: `Vector` is slower than `ResizableVectorParallel` for the same operation from 100 elements
-  on, single-threaded: += 1.8 to 1.9 times, `MultAdd` 1.4 times. Below 10 elements both are at the cost of the call
-  (2-5 ns). The loops differ: `VectorBase::operator+=` iterates over the other vector and adds by `GetUnsafe`, one
-  element at a time; `ResizableVectorParallelBase::operator+=` works in blocks of the AVX width
-  (`nItems >> AVXRealShift`). The merge would give `Vector` the block loops; the fast module (AVX2) shows how much
-  more the blocks gain there.
-- **`CopyFrom`** of `ResizableVectorParallel` costs 0.47 ns per element from 200000 elements on, twice as much as below
-  and three times `+=`, which reads two vectors and writes one; not explained yet.
-- **Threads**: at the limit of 20000 elements 4 threads gain 1.5 to 2.8 times, 16 threads less than 4; at 10^6, 16
-  threads gain 3 to 11 times. A higher limit, or a number of threads that depends on the size, would fit these
-  numbers; RG5.1.2 decides together with the merge.
-- **RG5.2**: the dense `Matrix * Vector` costs 0.66 ns per multiply-add at n = 10, 1.45 ns at 100 and 2.1 ns at 1000,
-  against 0.1 to 0.4 ns per element of the vector operations; 6 x 6 times 6 x 6 (216 multiply-adds) takes 125 ns,
-  `Matrix3D * Matrix3D` (27) 20.5 ns. These are the candidates for compile-time sizes and vectorization.
+## 6. Recommendations
 
-## 4. Open runs
+### 6.1 Local - inside the linalg classes, no change of an interface or of a caller
 
-- The fast module (`EXUDYN_MODULE=fast`, AVX2, no range checks), for the block loops of 2.1 with the wider AVX.
-- Linux (gcc) and macOS (clang), for the same table.
+Each one is measured by this benchmark before and after, and checked by the test suite (bitwise or to the tolerance
+of the references).
+
+| # | change | where | evidence (fast module) | expected |
+|---|---|---|---|---|
+| L1 | `MultMatrixVectorTemplate`: sum into a local, write once; pointer access | `Matrix.h` | 0.66-2 ns/term vs Eigen 0.05-0.1 | 5-20 times from n = 12; the dense solve, 83 calls in objects |
+| L2 | `VectorBase::MultAdd`, `operator+=`, `operator-=`: loops over the raw pointers of both vectors, as `ResizableVectorParallel` | `Vector.h` | 0.36 vs 0.08 ns/elem | 2-4 times from n = 24 on; `Vector`, `ResizableVector`, `ConstSizeVector` at once |
+| L3 | `MultMatrixTransposedMatrixTemplate` (and the Add variant): rank-1 updates row by row, `GetUnsafe`/pointers | `Matrix.h` | 298 vs 114 ns at n = 12 | 2.5 times for the connector Jacobians |
+| L4 | `SlimVector<n>` operators `+ - *` and the constructor: plain index loops over `dataSize` (unrolled by the compiler) | `SlimVector.h` | 5.5 vs 0.8 ns | up to 5 times for every `Vector3D` expression |
+| L5 | `Matrix3D` (`typedef ConstSizeMatrix<9>`, `BasicLinalg.h`) products: unrolled 3x3 for `Matrix3D * Matrix3D` and `Matrix3D * Vector3D`; `v * A` (= $\Am\tp\vv$, `SlimVector.h`) instead of `A.GetTransposed() * v` in the item code where it is hot | `ConstSizeMatrix.h`, `SlimVector.h` | 21 vs 8 ns; 9.8 vs 3.9 ns | 2-2.5 times |
+| L6 | `GeneralMatrixEigenSparse::AddSubmatrix`: the triplets appended from the data pointer of the local matrix, without checked access | `LinearSolver.cpp` | regular 4135 vs fast 1481 ns | 2.8 times in the regular module |
+
+L1-L3 are the ones with the clearest evidence; L4/L5 touch the most-used types and need the most careful check of the
+results (the order of the sums must stay where the test references are bitwise).
+
+### 6.2 Global - changes of classes or interfaces, second
+
+| # | change | evidence | note |
+|---|---|---|---|
+| G1 | keep the pattern of the sparse system Jacobian: per object the positions of its entries in the CSC arrays, computed at the first evaluation; values added directly; triplets and `setFromTriplets` only when the pattern changes | 12 times for the assembly (3.5) | the largest single gain for implicit solvers of many small objects; the solver interface (`GeneralMatrix`) gets a pattern mode; contact and switched constraints need a fallback |
+| G2 | compile-time sizes for the local matrices of the items (Matrix of `<rows, columns>` with fixed loops, like the prototype) - RG5.2 | prototype 2-3 times faster than the run-time sized classes for n <= 12 | the classes and the item code change; per item, where the sizes are fixed (rigid bodies, joints, beams) |
+| G3 | merge `ResizableVector` into `Vector` (RG5.1.2) | after L2 the difference is gone | only if L2 does not close it |
+| G4 | the threading limit per number of threads, or 100000 | 16 threads 2.5 times slower at 20000 | RG5.1.2 |
+| G5 | the dense solver by Eigen's LU from n ~ 24 on, or keep the inverse and L1 | after L1 the inverse times rhs is as fast as the LU solve | decide after L1 |
+| G6 | Eigen 3.4 (or later) instead of 3.3.7 | 3.3.7/MSVC small products slow (§4) | the vendored headers; a check of the sparse solvers' results first |
+
+### 6.3 Tests that give the evidence for the next decisions
+
+- The benchmark after each of L1-L6 (both modules), and the solver-level effect by `exudev perf` on the performance
+  tests with small systems (rigid body chains, the dense solver) - the micro gain must show in the solver timers.
+- For G1: the share of `FinalizeMatrix` in the Newton step of a sparse model of many rigid bodies (the solver timers of
+  `avx2Benchmark.py`), before deciding the interface.
+- For G2: the prototype applied to one item (e.g. the connector Jacobian of `RigidBodySpringDamper`) in a branch,
+  timed with the chain of rotVecTiming.py (RG5.1.3).
+
+## 7. Open
+
+- The same tables on Linux (gcc) and macOS (clang).
+- The cause of the slow small products of Eigen 3.3.7 with MSVC (§4).

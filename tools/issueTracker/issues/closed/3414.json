@@ -1,0 +1,16 @@
+{
+  "number": 3414,
+  "title": "The linear algebra benchmark for small systems, in the regular and the fast module, with Eigen as reference",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Successor of #3410. The linear algebra that costs time is that of small sizes - the local residuals and Jacobians of objects, markers and connectors, and the hand-over of the local Jacobians to the sparse solvers - while long vectors occur in the time integration and matrix times vector in the dense solver only. RunLinalgBenchmark gets sizes 3 to 500, Eigen as reference (dynamic and fixed sizes), a prototype matrix of compile-time size, the Jacobian kernels J^T f and J^T K J of a connector, AutoDiff<12>, the dense solver (InvertSpecial against PartialPivLU) and the assembly of local Jacobians into the sparse triplets against a known pattern; run with the regular and the fast module, evaluated with the causes in the code and recommendations, local first (inside the linalg classes) and global second (docs/dev/design/linalgBenchmark.md).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 00:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/linalgBenchmark.h",
+  "releaseNotes": "exudyn.special.RunLinalgBenchmark measures the linear algebra of small systems - vectors of 3 to 500, Matrix3D and 6x6, the connector kernels J^T f and J^T K J, AutoDiff<12>, the dense solver, the assembly of local Jacobians into the sparse triplets - with Eigen as reference and a matrix of compile-time size as prototype, in the regular and the fast module; results, causes and recommendations in docs/dev/design/linalgBenchmark.md.",
+  "resolvedInVersion": "1.13.547"
+}

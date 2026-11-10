@@ -8,5 +8,6 @@
   "effort": "HIGH",
   "description": "For the advanced tests of the uniform evaluation on the GPU (revision2026c group RG14): user items of exudyn.symbolics.userItems that reproduce ObjectJointGeneric (free axes, so equations lambda = 0), ObjectConnectorHydraulicActuatorSimple (ODE1 pressures coupled with the ODE2 coordinates), ObjectConnectorReevingSystemSprings (a rope over several sheaves of rigid markers) and ObjectFFRFreducedOrder (modal coordinates, a large constant mass matrix and the quadratic velocity vector), each checked against the built-in item. Decided: low priority, after the symbolic core features; not a next step.",
   "dateRaised": "2026-11-01",
-  "deadline": "2027-04-30"
+  "deadline": "2027-04-30",
+  "workingRemarks": "revision2026c step RG14.6.1 (2026-11-11): the evaluation of the user items, extended to the contact primitives sphere-triangle, cylinder-triangle, cylinder-cylinder and cylinder-sphere, the 3D geometrically exact beam, the kinematic tree and ObjectConnectorRollingDiscPenalty, in docs/dev/design/userItems2.md: per item the user item kind, the needed interface extension, effort and order."
 }

@@ -1,10 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  The linear algebra micro-benchmark that every build carries, exudyn.special.RunLinalgBenchmark (#2397):
+# Details:  The linear algebra micro-benchmark that every build carries, exudyn.special.RunLinalgBenchmark (#3410):
 #           it runs with a short minimum time, single- and multithreaded, and returns one entry per operation and
 #           size with a positive time per call and a finite check sum; the multithreaded entries are those of
-#           ResizableVectorParallel at and above the threading limit. The times themselves are not checked.
+#           ResizableVectorParallel at and above the threading limit; the groups and the libraries (Exudyn, Eigen as
+#           the reference, the prototype of compile-time size) are all present. The times themselves are not checked.
 #
 # Usage:    pytest python/testing/test_linalgBenchmark.py
 #
@@ -23,17 +24,20 @@ def test_singleThreaded():
     results = exu.special.RunLinalgBenchmark(minimumTime=1e-4)
     operations = set(r['operation'] for r in results)
     for name in ['Vector +=', 'Vector MultAdd', 'ResizableVectorParallel MultAdd', 'Matrix3D * Matrix3D',
-                 'ConstSizeMatrix<36> * ConstSizeVector<6>', 'HT inverse, rotation', 'Matrix * Vector']:
+                 'ConstSizeMatrix<36> * ConstSizeVector<6>', 'HT inverse, rotation', 'Matrix * Vector',
+                 'J^T K J, ResizableMatrix', 'dense factorize (InvertSpecial)', 'AddSubmatrix + FinalizeMatrix (setFromTriplets)']:
         assert name in operations
+    assert set(r['group'] for r in results) == {'vector', 'small', 'jacobian', 'autodiff', 'dense', 'assembly'}
+    assert set(r['library'] for r in results) == {'Exudyn', 'Eigen', 'prototype'}
     for r in results:
-        assert set(r.keys()) == {'operation', 'size', 'threads', 'nsPerCall', 'checkSum'}
+        assert set(r.keys()) == {'group', 'library', 'operation', 'size', 'threads', 'nsPerCall', 'checkSum'}
         assert r['threads'] == 1
-        assert r['size'] >= 3
+        assert r['size'] >= 1
         assert r['nsPerCall'] > 0
         assert math.isfinite(r['checkSum'])
     #the sweep of the vector sizes reaches across the threading limit
     sizes = sorted(set(r['size'] for r in results if r['operation'] == 'Vector +='))
-    assert sizes[0] == 3 and sizes[-1] >= 1000000
+    assert sizes[0] == 3 and sizes[-1] >= 100000
 
 
 def test_multiThreaded():
