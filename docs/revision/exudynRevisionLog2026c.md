@@ -6431,6 +6431,23 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg2-12-4"></a>
+### RG2.12.4 — robotPathPlanningTest.py shows the planned paths (2026-11-11, #3407)
+*(Maintainer 2026-11-11: robotPathPlanningTest.py has no visualization; run as in Spyder it shall show what happens,
+with the graphics when testIsActive is False; the planned path on a ground object; possibly three robots in one scene
+with their collision objects, paths and robots shifted on the ground; more structure and comments.)*
+
+- The checks are in sections (#%%+++: robot, obstacles and collision model; planning; the trajectory; the goal as pose
+  of the tool; what the planner refuses), with a comment per check group and docstrings for the helpers; wall and
+  table are given by size and position, so that the scene reuses them. The checks are the same, the result 24.
+- Run directly: three UR5 at y = -2.5, 0, 2.5 m follow the path of RRT-Connect (47 waypoints), the shortened path
+  (10) and the path to the tool pose, each by `TrajectoryFromPath` and `SetControl(..., compensation='static')` on its
+  own kinematic tree, the base moved by `robot.base.HT`; per robot its table and (transparent) wall, the tool path of
+  the trajectory as a line in the color of the scene, the waypoints as spheres (blue the start, red the goal), a label
+  with the number of waypoints. The meshes come from ur5Data.h5 of CommonData_git, otherwise the collision capsules
+  are drawn (as pathPlanningUR5.py). Without a window: all three at the goal (joint error 9e-16, 7e-16, 5e-10),
+  1.6 s of simulation. The view is for the maintainer to check.
+
 <a id="rg2-9-4"></a>
 ### RG2.9.4, RG4.24, RG9.6.1, RG5.1.1 — gravity on ObjectFFRF, the rolling friction of a tilted disc, the table of required member functions, the benchmark of HomogeneousTransformation (2026-11-11, #3404, #926, #2866, #3405)
 *(Maintainer 2026-11-11: do the next steps up to RG5.1.1 - RG2.9.4, RG4.24, RG9.6.1, RG5.1.1.)*

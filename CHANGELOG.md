@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 516 | 1.13.540 |
+| 1.13 | Newborn | 517 | 1.13.541 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.541** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotPathPlanningTest.py shows the planned paths when run directly (#3407)
+  - description: robotPathPlanningTest.py checked the planner without any visualization. Run directly (testIsActive False), three UR5 side by side follow the path of RRT-Connect, the shortened path and the path to a goal given as pose of the tool, by SetControl, each with its wall and table; the planned path of each tool is drawn on the ground as a line with the waypoints, then the SolutionViewer opens. The code has sections and comments; the checks and the result are unchanged.
+  - **notes:** robotPathPlanningTest.py run directly shows three UR5 side by side following the path of RRT-Connect, the shortened path and the path to a goal given as pose of the tool, with their obstacles and the planned tool paths drawn on the ground
+  - date resolved: **2026-11-10 21:00**, date raised: 2026-11-10
 - **1.13.540** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Measure the products of HomogeneousTransformation with and without the no-rotation flag; write Invert without reading the translation through a reference (#3405)
   - description: A standalone benchmark of HomogeneousTransformationBase, compiled with the options of setup.py once with homogeneousTransformationUseIdentityFlag and once without, over arrays of 1024 transformations with rotation, translation only and mixed at random: H\*v, H1\*H2, GetInverse. The flag saves 44 % of H\*v and 36 % of H1\*H2 for a translation, is neutral for H\*v with rotation, costs 4 % for H1\*H2 with rotation and 41 % for H1\*H2 when rotation and translation alternate at random. Invert wrote p = -RotateVector(p), reading p through a reference while writing it: 2.5 ns without the flag and 3.2 to 7.7 ns with it; with the translation read into locals first it takes 1.0 ns in all cases, with the same arithmetic. revision2026c step RG5.1.1.
   - **notes:** GetInverse of HomogeneousTransformation takes 1 ns instead of 2.5 to 7.7 ns, with the same results; the flag of a transformation without rotation is measured as a gain and kept

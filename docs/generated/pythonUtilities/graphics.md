@@ -139,7 +139,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 - **notes**: text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`NGsolveGeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveGeometry.py) (Ex), [`raytracerNOGLFWtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`NGsolveGeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveGeometry.py) (Ex), [`raytracerNOGLFWtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py) (TM), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-graphics-cuboid)=
@@ -302,7 +302,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotics/quadrupedsFloatingBase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/quadrupedsFloatingBase.py) (Ex), [`robotics/serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInteractiveLimits.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotics/quadrupedsFloatingBase.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/quadrupedsFloatingBase.py) (Ex), [`robotics/serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInteractiveLimits.py) (Ex), [`capsulePrimitiveContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/capsulePrimitiveContactTest.py) (TM), [`robotCollisionModelTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotCollisionModelTest.py) (TM), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-graphics-solidofrevolution)=

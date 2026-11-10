@@ -206,6 +206,10 @@ CLOSED 2026-11-07 (#3322): the maintainer approved the recommendation; 43 of the
 
 CLOSED 2026-11-07 (#3326): the maintainer saw nothing of contactDistanceOutputTest.py and no cylinder in sphereCylinderContactTest.py - the contact items keep the default show=False of their visualization, which the contact.show... settings need. The four contact test models set show=True; the descriptions of the settings and WORKFLOW.md say so. [log](exudynRevisionLog2026c.md#rg2-12-3)
 
+#### **CLOSED_RG2.12.4** Show the planned paths of robotPathPlanningTest.py when run directly
+
+CLOSED 2026-11-11 (#3407; maintainer: like in Spyder, three robots in one scene with their obstacles and paths shifted on the ground): run directly, three UR5 follow the path of RRT-Connect, the shortened path and the path to the pose of the tool, each with its wall and table, the planned tool path on the ground; sections and comments; the result 24 unchanged. [log](exudynRevisionLog2026c.md#rg2-12-4)
+
 ## **CLOSED_RG3** Docs
 
 What the documentation still gets wrong or does not say.
