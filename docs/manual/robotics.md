@@ -165,8 +165,11 @@ construction: `excludeCollidingAt=q` leaves out the pairs that overlap at a free
   margin (#3397). `Trajectory.FromWaypoints` instead blends point-to-point motions, which accelerate and decelerate
   on each edge.
 
-The straight lines in joint space are curves of the tool. The example `pathPlanningUR5.py` plans the UR5 past a wall,
-out of a shelf into another compartment, and through a window.
+The straight lines in joint space are curves of the tool. The example `pathPlanningUR5.py` plans one UR5 past a wall,
+out of a shelf into another compartment, or through a window, and a second one beside it from a pocket in front of it,
+beneath a plate, onto a column behind it; its obstacles are boxes, a cylinder, a capsule, a sphere, a cone and the
+convex hull of points - every `ConvexShape` can be an obstacle. The configurations of pick and place come from the
+analytic inverse kinematics, the free one nearest to a reference (#3408).
 
 ```{figure} /docs/figures/robotPathPlanningUR5.png
 :width: 500px
@@ -224,6 +227,6 @@ there is no Python 2 support for Exudyn.
 | serialRobotURDF.py | robots read from URDF files |
 | spotReinforcementLearning.py | learning to walk with the quadruped Spot |
 | mobileMecanumWheelRobotWithLidar.py | a mobile robot on mecanum wheels with a lidar |
-| pathPlanningUR5.py | the UR5 in three scenes (wall, shelf, window): collision check, RRT-Connect, a blended trajectory and its simulation, with the planned path and the sensor trace drawn |
+| pathPlanningUR5.py | the UR5 in three scenes (wall, shelf, window), and a second UR5 picking from a pocket and placing on a column beneath a plate, among obstacles of all convex shapes: collision check, RRT-Connect, a blended trajectory and its simulation, with the planned paths and the sensor traces drawn |
 | mobileRobotsNavigation.py | a mecanum-wheeled robot and a differential drive through a room, by A\* and pure pursuit, with the distance map and the planned paths in the renderer and in matplotlib |
 | quadrupedsFloatingBase.py | ANYmal and Spot on floating bases, standing on contact spheres |

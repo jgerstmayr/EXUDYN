@@ -1,0 +1,16 @@
+{
+  "number": 3408,
+  "title": "pathPlanningUR5.py with a second robot: pick in a pocket, place on a column, beneath a plate, among obstacles of all convex shapes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "LOW",
+  "description": "A second UR5 beside the first picks a part from a pocket of four blocks in front of it and places it on a column behind it, turning by 180 degrees beneath a plate, past a lamp, a cone and a pyramid, with a wall on the other side; the obstacles are boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points (Obstacle(...) gives the ConvexShape and its drawing at one place); pick and place from the analytic inverse kinematics, the part drawn below the tool by a graphicsDataUserFunction. The first robot keeps its three scenes.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 21:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/robotics/pathPlanningUR5.py",
+  "releaseNotes": "pathPlanningUR5.py has a second UR5 that picks a part from a pocket in front of it and places it on a column behind it, beneath a plate, among obstacles of all convex shapes: boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points",
+  "resolvedInVersion": "1.13.542"
+}

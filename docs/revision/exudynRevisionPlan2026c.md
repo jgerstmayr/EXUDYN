@@ -4106,3 +4106,7 @@ CLOSED 2026-11-10 (maintainer 2026-11-09): docs/figures/robotNavigation.png and 
 #3399. Found with RG21.6.5: regenerate.py reports python/Examples/notebooks/*.py as drift outside both tiers when a notebook changes.
 
 CLOSED 2026-11-10 (#3399 resolved): python/Examples/notebooks in Tier 2 of regenerate.py, as their pages; WORKFLOW.md. [log](exudynRevisionLog2026c.md#rg6-22)
+
+#### **CLOSED_RG21.6.7** pathPlanningUR5.py: a second robot picks in a pocket and places on a column beneath a plate, among obstacles of all convex shapes
+
+CLOSED 2026-11-11 (#3408; maintainer: a much more complicated task with more obstacles - pick in a hole between two boxes in front, place on a high column behind, a high obstacle to pass beneath; other shapes than boxes if possible): the pocket of four boxes, the column a cylinder, the plate on one side and a wall on the other, a lamp (capsule, sphere), a cone and a pyramid (convex hull of points); pick and place from the analytic inverse kinematics; the part drawn below the tool. [log](exudynRevisionLog2026c.md#rg21-6-7)

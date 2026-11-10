@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 517 | 1.13.541 |
+| 1.13 | Newborn | 518 | 1.13.542 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.542** `EXAMPLE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pathPlanningUR5.py with a second robot: pick in a pocket, place on a column, beneath a plate, among obstacles of all convex shapes (#3408)
+  - description: A second UR5 beside the first picks a part from a pocket of four blocks in front of it and places it on a column behind it, turning by 180 degrees beneath a plate, past a lamp, a cone and a pyramid, with a wall on the other side; the obstacles are boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points (Obstacle(...) gives the ConvexShape and its drawing at one place); pick and place from the analytic inverse kinematics, the part drawn below the tool by a graphicsDataUserFunction. The first robot keeps its three scenes.
+  - **notes:** pathPlanningUR5.py has a second UR5 that picks a part from a pocket in front of it and places it on a column behind it, beneath a plate, among obstacles of all convex shapes: boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points
+  - date resolved: **2026-11-10 21:38**, date raised: 2026-11-10
 - **1.13.541** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` robotPathPlanningTest.py shows the planned paths when run directly (#3407)
   - description: robotPathPlanningTest.py checked the planner without any visualization. Run directly (testIsActive False), three UR5 side by side follow the path of RRT-Connect, the shortened path and the path to a goal given as pose of the tool, by SetControl, each with its wall and table; the planned path of each tool is drawn on the ground as a line with the waypoints, then the SolutionViewer opens. The code has sections and comments; the checks and the result are unchanged.
   - **notes:** robotPathPlanningTest.py run directly shows three UR5 side by side following the path of RRT-Connect, the shortened path and the path to a goal given as pose of the tool, with their obstacles and the planned tool paths drawn on the ground

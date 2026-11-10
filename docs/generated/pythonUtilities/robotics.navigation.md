@@ -45,7 +45,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pa
 - **output**: array of the waypoints, one per row, from qStart to qGoal
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pathPlanningUR5.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/pathPlanningUR5.py) (Ex), [`robotPathPlanningTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/robotPathPlanningTest.py) (TM)
 
 
 (sec-navigation-shortcutpath)=

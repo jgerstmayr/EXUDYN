@@ -6431,6 +6431,35 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg21-6-7"></a>
+### RG21.6.7 — pathPlanningUR5.py: pick and place with a second robot among obstacles of all convex shapes (2026-11-11, #3408)
+*(Maintainer 2026-11-11: extend pathPlanningUR5 by a second robot with a much more complicated task and more obstacles -
+"virtually" picking something inside a hole, like between two boxes, in front, and placing it on a high table or column
+behind, so that it turns by 180 degrees, with an obstacle at a higher position to pass beneath; other collision objects
+than boxes, if possible.)*
+
+- `ConvexShape` has Sphere, Capsule, Cylinder, Box, Triangle, Points (convex hull) and Cone, all usable as obstacles of
+  the collision model; the example uses all but the triangle. `Obstacle(kind, position, color, rotation, **parameters)`
+  gives the ConvexShape, its HT and its drawing (Brick, Cylinder, Capsule, Sphere, SolidOfRevolution for the cone,
+  FromPointsAndTrigs for the pyramid) at one place, so that drawing and collision check cannot differ.
+- The scene, found by trial in a scratch script (pickPlace.py): a pocket of four boxes in front (0.55 m), open at the
+  top only - the wrist needs 0.35 m between the side blocks and the tool turned by 90 degrees about z, at a height of
+  0.15 m (deeper, or narrower, has no free configuration); the column a cylinder of 0.45 m behind; a plate at 0.7 m
+  over the side +y and a wall at the side -y, so that the arm turns via +y beneath the plate (at 0.65 m the arm passes
+  above the plate, at 0.55 m no path is found); under the plate a lamp (capsule and sphere), a cone and a pyramid.
+  Over seeds 1-6, RRT-Connect finds the path in about 1 s with 80-160 waypoints, 7-8 after shortcuts; the highest link
+  origin beneath the plate 0.56-0.59 m, except seed 6 (0.81 m, over the edge of the plate); seed 2 is used (5.0 s of
+  motion).
+- Pick and place are poses of the tool; `FreeConfiguration` takes the free solution of
+  `KinematicChain.InverseKinematicsAnalytic` nearest to a reference (the arm in front, resp. turned by pi), and
+  `PlanJointPath` plans between them. The part is a cube below the tool, drawn by a `graphicsDataUserFunction` of a
+  ground object from the joint coordinates of the drawn state, so also in the SolutionViewer.
+- The example is restructured: obstacles, scenes, robots (`CreateRobot`: meshes or capsules, base at an offset), the
+  planning in the frame of the base by one planning robot for both, trajectories, one model with both kinematic trees,
+  their traces and the smallest distance each. Without a window, all three scenes of the first robot with the second:
+  both at the end of their path (2e-15 / 3e-10), smallest distances 0.0110-0.0117 m for the margin 0.01 m. The view is
+  for the maintainer to check; the figure of the robotics chapter shows the first robot only.
+
 <a id="rg2-12-4"></a>
 ### RG2.12.4 — robotPathPlanningTest.py shows the planned paths (2026-11-11, #3407)
 *(Maintainer 2026-11-11: robotPathPlanningTest.py has no visualization; run as in Spyder it shall show what happens,
