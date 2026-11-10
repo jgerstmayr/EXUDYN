@@ -74,23 +74,25 @@ class WindowControls:
     user function of SC.renderer (SetControlUserFunction) and calls the function of the element that changed, with its
     state - 0 or 1 for a button, the value of a slider. The functions are called in the main thread while a simulation
     runs or in SC.renderer.DoIdleTasks. An element without a location is placed in a column at the left side of the
-    window, one below the other.
+    window, one below the other, starting below the texts which the renderer writes at the top left corner (#3402).
 
     Args:
         systemContainer: the SystemContainer whose render window shows the elements
         columnWidth: the width of the column of the elements without location, relative to the window width
         rowHeight: the height of each of them, relative to the window height
+        top: the upper edge of the column, relative to the window height from its top
 
     Example:
         controls = WindowControls(SC)
         controls.Button('reset', function=lambda state: mbs.systemData.SetODE2Coordinates(q0))
         controls.Slider('stiffness', minMax=[100, 1000], value=500, function=lambda value: mbs.SetObjectParameter(oSpring, 'stiffness', value))
     """
-    def __init__(self, systemContainer, columnWidth=0.22, rowHeight=0.055):
+    def __init__(self, systemContainer, columnWidth=0.22, rowHeight=0.055, top=0.25):
         self.systemContainer = systemContainer
         self.functions = {}  #the function of each element by its ID
         self.columnWidth = columnWidth
         self.rowHeight = rowHeight
+        self.top = top
         self.nextRow = 0  #the row of the next element without location
         systemContainer.renderer.SetControlUserFunction(self._UserFunction)
 
@@ -102,7 +104,7 @@ class WindowControls:
     def _Location(self, location):
         if location is not None:
             return location
-        y0 = 0.01 + self.nextRow*(self.rowHeight + 0.01)
+        y0 = self.top + self.nextRow*(self.rowHeight + 0.01)
         self.nextRow += 1
         return [[0.01, y0], [0.01 + self.columnWidth, y0 + self.rowHeight]]
 

@@ -6431,6 +6431,38 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg19-16"></a>
+### RG6.22.1, RG19.16, RG11.4.7 — the column of WindowControls, the interactive robot on the controls, primitives and the order of the links in the URDF import (2026-11-10, #3402, #3362, #3393)
+*(Maintainer 2026-11-10: WindowControls with top=, the example simpler with it; the update rate of the graphics stays
+low by default; RG19.16 with a URDF visualization of a nicer robot (Staeubli or UR5); RG11.4.7.)*
+
+- **RG6.22.1** (#3402): the maintainer found the elements of renderWindowControls.py over the texts of the renderer at
+  the top left; `WindowControls` began its column at 0.01 of the window height. It begins at `top`, 0.25 by default;
+  the example gives `top=0.3` and the column size instead of a location per element, and keeps the maintainer's
+  `graphicsUpdateInterval = 0.025`. rendererControlsTest.py checks the new start.
+- **RG19.16** (#3362): serialRobotInteractiveLimits.py is the TX2-90L of `robotics.models` with the meshes of its
+  URDF (`AddURDFgraphics`, the capsules without CommonData_git), on the kinematic tree with gravity and
+  `SetControl(..., compensation='static')`. The trajectory of SetControl is a small class whose `Evaluate(t)` moves
+  the commanded angles towards the slider values at half the maximum joint velocities of the model, so a jump of a
+  slider is no step of the PD control. `WindowControls`: a slider per joint over its joint limits, end stops at
+  the limits; the toggle 'mouse drag', the push button 'reset'. The drag: at the first step after the toggle the
+  mouse (`GetState()['openGLcoordinates']`, which needs no running renderer) and the tool frame are stored; then
+  the tool goes to its frame plus the mouse motion turned by `modelRotation` (the mapping of the former example),
+  the joint targets from `KinematicChain.InverseKinematicsAnalytic` with the arm configuration of the current
+  target, the first solution within the joint limits; the sliders follow by `SetState` without their functions.
+  The pose of the tool is `general.renderWindowString`. InteractiveDialog and the redundant coordinates are gone.
+  Without a window the script sets the slider of joint 1 to 0.5 and lifts the tool by 0.2 m at t = 1 s: reached,
+  the tool at z = 0.839 m (0.639 m before). The view, the drag direction and the feel are for the maintainer to check.
+- **RG11.4.7** (#3393): `GetURDFrobotData` draws the visual boxes (`Brick` of the size), cylinders (`Cylinder` along z,
+  centered) and spheres of the toolbox (`stype` cuboid, cylinder, sphere) in the color of the URDF, placed as the
+  meshes; a mesh without pymeshlab is still left out. `baseLinkNames`: the links fixed to the base. The links are
+  taken in a stable order with each parent before its children: the toolbox keeps the order of the file when the
+  joints have explicit indices, and a fixed link before its joint link then lost its mass and graphics to the base;
+  `jointNumber` stays the index of the toolbox, a loop of parents is a ValueError. Checked: a stub robot with a
+  child before its parent and the three primitives (test_urdfRobotData.py); a URDF with the three primitives through
+  the toolbox 1.5 (venvP313rtb, the local wheel installed there); test_urdfRobotData.py and
+  test_robotModelsAgainstURDF.py with the toolbox all pass, testRobot.h5 unchanged (its URDF has meshes only).
+
 <a id="rg6-22"></a>
 ### RG6.22, RG6.23, RG21.6.6 — buttons and sliders in the render window, the zoom of the scopes, the notebook scripts in Tier 2 (2026-11-10, #3400, #3401, #3399)
 *(Maintainer 2026-11-10: RG6.22 as recommended, except: the renderer thread does not take the GIL, it queues the

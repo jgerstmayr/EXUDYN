@@ -18,7 +18,6 @@ The steps of the first request are done (section 4). What remains are the steps 
 | RG19.14.1 | #3359 | a floating base for `Robot` by the one of `ObjectKinematicTree` (#1549) | - |
 | RG19.14.2 | #3360 | spotModel.py on the floating base and `RobotFromURDFdata`; ANYmal and the Mars rover imported the same way | RG19.14.1 |
 | RG19.15.2 | #3361 | when the deprecation period of `jointLoadUserFunctionList` and `createJointTorqueLoads` of `CreateRedundantCoordinateMBS` ends: remove them | the deprecation period |
-| RG19.16 | #3362 | serialRobotInteractiveLimits.py adapted to new features of the renderer and checked by hand (sliders, mouse drag, end stops); it has run only without windows so far | the renderer features |
 
 ### 1.2 Open decisions of the maintainer
 
@@ -259,3 +258,4 @@ Decided 2026-11-08 (maintainer): (a) and (b) as above, with Spot, ANYmal, the Ma
 | RG19.10.1 | #3352 | the URDF of the TX2-90, UR5 and Panda in CommonData_git, found by the examples |
 | RG19.11.1 | #3354 | the Spot examples and their data in Examples/robotics |
 | RG19.12.1 | #3356 | RobotFromURDFdata, Robot.SaveToHDF5 and LoadFromHDF5; the friction read from the URDF file, as the toolbox does not |
+| RG19.16 | #3362 | serialRobotInteractiveLimits.py on the TX2-90L with its URDF meshes, the buttons and sliders of the render window, the mouse drag by the analytic IK (2026-11-10; to be checked by hand) |

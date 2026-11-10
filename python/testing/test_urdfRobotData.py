@@ -101,6 +101,39 @@ def testFixedLinksAndFlippedJointsHaveTheFramesAndMassOfTheToolbox():
     assert abs(mass - 5.) < 1e-14 and np.max(np.abs(com - comStub)) < 1e-14
     assert all(link['inertiaProblems'] == [] for link in links)
 
+class _Shape:
+    """a visual primitive of the toolbox: stype, the frame T in the link, and scale, radius, length as it has them"""
+    def __init__(self, stype, T, color=None, **kwargs):
+        (self.stype, self.T, self.color) = (stype, T, color)
+        for (key, value) in kwargs.items():
+            setattr(self, key, value)
+
+def testVisualPrimitivesBaseLinksAndAChildBeforeItsParent():
+    ##3393: the links of the stub with link2 and the fixed link before their parents; boxes, cylinders and spheres as visuals
+    stub = _StubRobot()
+    (base, link1, fixed, link2, tool) = stub.links
+    base.geometry = [_Shape('cuboid', HT(translation=[0, 0, 0.1]), color=(0.5, 0.5, 0.5, 1.), scale=np.array([0.2, 0.2, 0.2]))]
+    fixed.geometry = [_Shape('cylinder', HT(translation=[0.1, 0, 0]), radius=0.03, length=0.2)]
+    tool.geometry = [_Shape('sphere', HT(), radius=0.02)]
+    reordered = _Robot([base, tool, link2, fixed, link1]) #the joint indices of the toolbox: link2 0, link1 1
+    data = GetURDFrobotData(reordered, verbose=0, returnStaticGraphicsList=True)
+    links = data['linkList']
+    assert [link['name'] for link in links] == ['link1', 'link2'] and [link['jointNumber'] for link in links] == [1, 0]
+    assert [link['parentName'] for link in links] == ['None', 'link1']
+    assert data['baseLinkNames'] == ['base']
+    assert abs(links[0]['mass'] - 3.) < 1e-14 and abs(links[1]['mass'] - 2.) < 1e-14 #the fixed links with their joint links
+    assert len(data['graphicsBaseList']) == 1 and len(links[0]['graphicsDataList']) == 1 and len(links[1]['graphicsDataList']) == 1
+    assert len(data['staticGraphicsList']) == 3
+    #the box of the base: its center at z = 0.1, its color from the URDF
+    points = np.array(data['graphicsBaseList'][0]['points']).reshape(-1, 3)
+    assert np.allclose(points.mean(axis=0), [0, 0, 0.1]) and np.allclose(points.max(axis=0) - points.min(axis=0), [0.2, 0.2, 0.2])
+    assert np.allclose(data['graphicsBaseList'][0]['colors'][:4], [0.5, 0.5, 0.5, 1.])
+    #the cylinder of the fixed link, in the frame of link1 (times flipHT): its axis along z of the fixed link
+    points = np.array(links[0]['graphicsDataList'][0]['points']).reshape(-1, 3)
+    H = links[0]['flipHT'] @ fixed.Ts @ HT(translation=[0.1, 0, 0])
+    local = (points - H[:3, 3]) @ H[:3, :3]
+    assert np.allclose([local[:, 2].min(), local[:, 2].max()], [-0.1, 0.1]) and abs(np.max(np.hypot(local[:, 0], local[:, 1])) - 0.03) < 1e-12
+
 def testTheInertiaIsCheckedAndCorrected():
     assert _InertiaProblems(0., np.eye(3)) == ['mass 0.0']
     assert _InertiaProblems(1., np.diag([1., 1., 1.])) == []

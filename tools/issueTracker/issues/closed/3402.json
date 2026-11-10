@@ -1,0 +1,16 @@
+{
+  "number": 3402,
+  "title": "WindowControls: the column of elements starts below the texts of the renderer, top= sets it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "WindowControls placed the elements without location from the top of the window, over the texts which the renderer writes at the top left corner. Decided: the column starts at 0.25 of the window height, the argument top sets it; renderWindowControls.py uses it.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 15:39",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/interactive.py",
+  "releaseNotes": "exudyn.interactive.WindowControls places the elements without location below the texts of the renderer, from 0.25 of the window height; the argument top sets the upper edge of the column.",
+  "resolvedInVersion": "1.13.533"
+}

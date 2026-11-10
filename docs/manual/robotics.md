@@ -120,7 +120,9 @@ is read through the Robotics Toolbox for Python 1.5 (`pip install roboticstoolbo
 meshes): `GetRoboticsToolboxInternalModel('Puma560')` for the URDF models of the toolbox, `LoadURDFrobot(file,
 packagePath)` for a URDF or xacro file of a ROS package, and `GetURDFrobotData` for the links as `Robot` needs them; the
 links of fixed joints are added to the joint link above them, and a flipped joint keeps its coordinate in a link
-frame turned by `flipHT`. The import gives the kinematics of the toolbox for the robots of its data and of the robot
+frame turned by `flipHT`. The visuals are the meshes and the boxes, cylinders and spheres of the URDF; `baseLinkNames`
+names the links fixed to the base; the links are taken with each parent before its children, whatever their order in
+the file (#3393). The import gives the kinematics of the toolbox for the robots of its data and of the robot
 data sets tried (KUKA, Stäubli, ANYmal, Spot, a Mars rover). Many URDF files have no masses or inertias, which a
 dynamic model needs: every link reports the problems of its mass and inertia, `densityForInertiaEstimation` gives a link without inertial data those of the solid of its meshes, with one overall density of about 1000 kg/m^3 as a mesh tells nothing of the interior, and `CompleteInertiasFromMeshes` completes partly given data as an estimate and makes it physical. Textured meshes (.dae, .obj) are drawn with
 their texture. The models of `robotics.models` run without the toolbox and without files: `ManipulatorUR5`, `ManipulatorFrankaEmikaPanda`, `ManipulatorUR10`,
@@ -215,7 +217,7 @@ there is no Python 2 support for Exudyn.
 | serialRobotKinematicTree.py, serialRobotTSD.py | the Puma560 in both models, with control, sensors and plots |
 | staubliTX2trajectories.py, staubliTX2blending.py | the TX2-90L with its meshes: profiles of the joints and of the tool, the dynamic compensation, blending, saving the robot as HDF5 |
 | serialRobotInverseKinematics.py, InverseKinematicsNumericalExample.py | the tool on a path by the inverse kinematics in every step; the numerical and analytic inverse kinematics |
-| serialRobotInteractiveLimits.py | moving a robot by sliders and the mouse, with end stops |
+| serialRobotInteractiveLimits.py | the TX2-90L with its meshes moved by the sliders and buttons of the render window and by the mouse through the analytic inverse kinematics, with end stops |
 | serialRobotFlexible.py | a robot on a flexible base of finite elements |
 | serialRobotKinematicTreeDigging.py | a robot digging in particles |
 | humanRobotInteraction.py | a robot touching an articulated dummy |

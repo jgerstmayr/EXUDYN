@@ -88,8 +88,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`urdfComplet
   - `densityForInertiaEstimation`: None, or the overall density of the volume enclosed by the meshes in kg/m^3, around 1000: a joint link without any inertial data gets the mass, center of mass and inertia of that solid; a mesh that does not close gives an estimate only; for partly given data see CompleteInertiasFromMeshes (#3357). Every link reports the problems of its mass and inertia in 'inertiaProblems', and they are printed with verbose > 0 (#3282)
   - `toolLinkName`: if not None, the name of the link of the tool frame; the frame of this link relative to the last joint link is returned in 'toolHT', for RobotFromURDFdata (#3356)
   - `collision`: if True, each joint link gets 'collision' and the dict the key 'collisionBase' for the links fixed to the base: a list of the collision geometries of the URDF in the frame of the link, also those of the links fixed to it: {'type': 'box', 'size': ..., 'HT': ...}, {'type': 'cylinder', 'radius': ..., 'length': ..., 'HT': ...}, {'type': 'sphere', 'radius': ..., 'HT': ...} and {'type': 'mesh', 'points': ..., 'triangles': ...}; the box and the axis of the cylinder are centered in HT, a 4x4 matrix; RobotFromURDFdata puts them into the collision shapes of the robot; a mesh needs pymeshlab (#3382)
-- **output**: returns dictionary with items linkList (the joint links, each with its name, jointName, preHT relative to the joint link above, its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints, graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282)
-- **notes**: requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
+- **output**: returns dictionary with items linkList (the joint links, each with its name, jointName, jointNumber (the index of the joint in the toolbox, as in staticJointValues), preHT relative to the joint link above, its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList; a parent before its children, else in the order of the links of the toolbox), numberOfJoints, baseLinkNames (the names of the links fixed to the base), graphicsBaseList (the graphics of the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282); the visuals of the URDF are its meshes and its boxes, cylinders and spheres (#3393)
+- **notes**: requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and the meshes are ignored
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotURDF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotURDF.py) (Ex)
@@ -98,7 +98,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 (sec-urdfimport-reduceurdfrobotdata)=
 ## Function: ReduceURDFrobotData
 
-[`ReduceURDFrobotData(robotData, lockedJoints = None, removedLinks = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L627)
+[`ReduceURDFrobotData(robotData, lockedJoints = None, removedLinks = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L669)
 
 - **function description**: Leave out joints and links in the data of GetURDFrobotData, for example the fingers of a gripper (#3372); needs neither the Robotics Toolbox nor a file.
 - **input**:
@@ -123,7 +123,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`reduceURDFr
 (sec-urdfimport-robotmodeldictfromdata)=
 ## Function: RobotModelDictFromData
 
-[`RobotModelDictFromData(robotData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L724)
+[`RobotModelDictFromData(robotData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L766)
 
 - **function description**: The part of a model of robotics.models given by a URDF, as Python text, from the data of GetURDFrobotData (#3373): the links in the joint frames of the URDF, for dhMode 'jointFrames'; what a URDF does not give is added by hand to the dict.
 - **input**:
@@ -134,7 +134,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`reduceURDFr
 (sec-urdfimport-fitcapsuletopoints)=
 ## Function: FitCapsuleToPoints
 
-[`FitCapsuleToPoints(points)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L766)
+[`FitCapsuleToPoints(points)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L808)
 
 - **function description**: A small capsule that contains all given points, the simple collision shape of a link (#3374).
 - **input**:
@@ -145,7 +145,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`reduceURDFr
 (sec-urdfimport-fitcapsulestomesh)=
 ## Function: FitCapsulesToMesh
 
-[`FitCapsulesToMesh(points, triangles = None, numberOfCapsules = 2, minimumGain = 1.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L831)
+[`FitCapsulesToMesh(points, triangles = None, numberOfCapsules = 2, minimumGain = 1.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L873)
 
 - **function description**: Small capsules that together contain a mesh, for the collision shapes of a link: for a link that is bent, several capsules are much closer to it than one (#3382). The points are divided by their distance to the axes of the capsules, which are fitted again; all points on the surface are in one of the capsules.
 - **input**:
@@ -162,7 +162,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCollis
 (sec-urdfimport-collisionshapesfromgeometry)=
 ## Function: CollisionShapesFromGeometry
 
-[`CollisionShapesFromGeometry(geometry, meshesAs = 'capsules', numberOfCapsules = 2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L870)
+[`CollisionShapesFromGeometry(geometry, meshesAs = 'capsules', numberOfCapsules = 2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L912)
 
 - **function description**: The collision shapes of a RobotLink from the collision geometries of GetURDFrobotData (#3382).
 - **input**:
@@ -178,7 +178,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCollis
 (sec-urdfimport-convexhullofmesh)=
 ## Function: ConvexHullOfMesh
 
-[`ConvexHullOfMesh(points, triangles, name = '', verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L895)
+[`ConvexHullOfMesh(points, triangles, name = '', verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L937)
 
 - **function description**: The convex hull of a triangle mesh, as the contacts of polytopes need it, and how convex the mesh is (#3374).
 - **input**:
@@ -193,7 +193,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotCollis
 (sec-urdfimport-robotfromurdfdata)=
 ## Function: RobotFromURDFdata
 
-[`RobotFromURDFdata(robotData, gravity = [0, 0, -9.81], baseHT = None, toolHT = None, PDcontrol = (None, None), urdfFile = None, enableEndStops = False, collisionMeshesAs = 'capsules')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L942)
+[`RobotFromURDFdata(robotData, gravity = [0, 0, -9.81], baseHT = None, toolHT = None, PDcontrol = (None, None), urdfFile = None, enableEndStops = False, collisionMeshesAs = 'capsules')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L984)
 
 - **function description**: Create a Robot from the data of GetURDFrobotData (or of a dict of it loaded from a file): the links with their parents, masses, inertias, joint limits and graphics, the base graphics and the tool frame (#3356). A Robot is saved with its graphics by Robot.SaveToHDF5, and loaded without the packages that read the URDF.
 - **input**:
@@ -223,7 +223,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 (sec-urdfimport-makecorkerobot)=
 ## Function: MakeCorkeRobot
 
-[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L1005)
+[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L1047)
 
 - **function description**: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
 - **input**:
@@ -236,7 +236,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 (sec-urdfimport-loadurdfgraphics)=
 ## Function: LoadURDFgraphics
 
-[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L1062)
+[`LoadURDFgraphics(urdfFile, packagePath = None, color = None, invertTriangles = False, orientTriangles = True, smoothNormals = True, smoothingAngle = 0.25*np.pi, addEdges = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L1104)
 
 - **function description**: the visual meshes of the links of a URDF file as Exudyn graphics, without the Robotics Toolbox (#3263): for each <link> its <visual> elements with a mesh of an STL file (binary or text, read by graphics.FromSTLfile), their <origin> and scale, and the color of their <material>; meshes of other formats and the shapes box, cylinder, sphere are skipped with a warning. The triangles of STL files are often not oriented consistently, and their normals are those of the triangles: the options invert them, orient them (graphics.OrientTriangles) and smoothen the normals (graphics.AddEdgesAndSmoothenNormals), as the meshes of a URDF need
 - **input**:
@@ -254,7 +254,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
 (sec-urdfimport-addurdfgraphics)=
 ## Function: AddURDFgraphics
 
-[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L1136)
+[`AddURDFgraphics(robot, urdfFile, linkNames, baseLinkName = None, packagePath = None, color = None, **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/urdfImport.py#L1178)
 
 - **function description**: the graphics of a Robot from the visual meshes of a URDF file (#3263), for a robot whose link frames are the frames of the URDF links, as the models of exudyn.robotics.models with dhMode 'jointFrames' (e.g. ManipulatorStaubliTX2_90L, whose dict names the URDF and its links in 'urdfGraphics'); the joint and COM graphics of the links switched off; further keyword arguments go to LoadURDFgraphics (invertTriangles, orientTriangles, smoothNormals, smoothingAngle, addEdges)
 - **input**:
@@ -266,4 +266,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/se
   - `color`: as LoadURDFgraphics
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/staubliTX2blending.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/staubliTX2blending.py) (Ex), [`robotics/staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/staubliTX2trajectories.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInteractiveLimits.py) (Ex), [`robotics/staubliTX2blending.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/staubliTX2blending.py) (Ex), [`robotics/staubliTX2trajectories.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/staubliTX2trajectories.py) (Ex)

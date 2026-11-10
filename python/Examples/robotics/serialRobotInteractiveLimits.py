@@ -1,191 +1,164 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The Puma560 of exudyn.robotics.models without gravity in redundant coordinates, moved interactively: the
-#           sliders of a dialog set the joint angles of the PD control, or ('Mouse drag') the tool follows the mouse
-#           by a spring with the first three joints free; the joint limits are end stops of the model
-#           (Robot.SetEndStops).
+# Details:  The Staeubli TX2-90L of exudyn.robotics.models with the meshes of its URDF, moved interactively by the
+#           buttons and sliders of the render window (exudyn.interactive.WindowControls, #3400): a slider per joint
+#           sets the angle the PD control drives the joint to, within its joint limits, at which end stops act
+#           (Robot.SetEndStops); with the button 'mouse drag' the tool follows the mouse in the plane of the view,
+#           by the analytic inverse kinematics with the orientation of the tool and the configuration of the arm
+#           kept, and the sliders follow the joints; 'reset' drives the robot back to its initial configuration.
+#           Gravity acts, the static torques of gravity are compensated. The pose of the tool is shown in the
+#           render window. The meshes come from the repository CommonData_git beside this one; without it the
+#           collision capsules are drawn.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-02-16
-# Revised:  2023-03-22
+# Revised:  2026-11-10
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
 import exudyn as exu
-#a local run must not open a plot window when windows are suppressed (#2477)
-if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
-from exudyn.itemInterface import ObjectGround, MarkerBodyRigid, MarkerBodyPosition, CartesianSpringDamper, VCartesianSpringDamper
-from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ
 import exudyn.graphics as graphics
-from exudyn.robotics import Robot, RobotBase, VRobotBase, RobotTool, VRobotTool, VRobotLink
-from exudyn.robotics.models import ManipulatorPuma560, LinkDict2Robot
-from exudyn.interactive import InteractiveDialog
-
+from exudyn.robotics import VRobotBase, VRobotLink
+from exudyn.robotics.models import ManipulatorStaubliTX2_90L, LinkDict2Robot
+from exudyn.robotics.urdfImport import AddURDFgraphics
+from exudyn.rigidBodyUtilities import RotationMatrix2RotXYZ, RotationMatrixX, RotationMatrixZ
+from exudyn.interactive import WindowControls
 import numpy as np
-from math import pi
+import os
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
+useRenderer = not exu.special.userInterface.suppressRenderer #without a window, the controls are changed by the script
 
-mbs.variables['controlActive'] = 1 #0: mouse drag, 1: control on, 2: reset
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++ the robot with the meshes of its URDF, or with its collision capsules
+robotDict = ManipulatorStaubliTX2_90L()
+robot = LinkDict2Robot(robotDict, initialConfiguration='model')
+urdf = robotDict['urdfGraphics']
+urdfFile = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'CommonData_git', 'data', 'Exudyn',
+                        'robotics', 'URDF', urdf['file'])
+if os.path.exists(urdfFile):
+    AddURDFgraphics(robot, urdfFile, urdf['links'], baseLinkName=urdf['baseLink'])
+else:
+    exu.Print(urdfFile, 'not found; the collision capsules are drawn instead')
+    for (i, link) in enumerate(robot.links):
+        capsules = [graphics.Capsule(pAxis=shape['pAxis'], vAxis=shape['vAxis'], radius=shape['radius'], color=graphics.colorList[i % 8])
+                    for shape in link.collisionShapes]
+        link.visualization = VRobotLink(graphicsData=capsules, showMBSjoint=False, showCOM=False)
+    robot.base.visualization = VRobotBase(graphicsData=[graphics.Cylinder([0, 0, 0], [0, 0, 0.3], 0.15, graphics.color.grey)])
+robot.SetEndStops(stiffness=1e5, damping=1e3) #outside of the joint limits
 
-graphicsBaseList = [graphics.Brick([0,0,-0.4], [0.12*1,0.12*1,0.6], graphics.color.grey)]
-graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
-graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
-graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
-graphicsBaseList +=[graphics.Cylinder([0,0,-0.1], [0,0,0.1], 0.05, graphics.color.blue)]
-graphicsBaseList +=[graphics.CheckerBoard([0,0,-0.7], [0,0,1], size=2)]
+q0 = np.array(robot.q0)
+limits = np.array([link.jointLimits for link in robot.links])
+maxVelocity = 0.5*np.array([link['maxVelocity'] for link in robotDict['links']]) #the speed at which the control follows a slider
+chain = robot.GetKinematicChain()
 
-ty = 0.03
-tz = 0.04
-zOff = -0.05
-toolSize= [0.05,0.5*ty,0.06]
-graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
-graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
-graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+#%%+++ the control: the joint angles the PD control drives to, approached at maxVelocity
+class JointTarget:
+    """the trajectory of Robot.SetControl: Evaluate(t) moves the commanded angles q towards qTarget"""
+    def __init__(self, q):
+        self.qTarget = np.array(q, dtype=float)
+        self.q = np.array(q, dtype=float)
+        self.t = 0.
+    def Evaluate(self, t):
+        dt = max(t - self.t, 0.)
+        self.t = t
+        step = np.clip(self.qTarget - self.q, -maxVelocity*dt, maxVelocity*dt)
+        self.q = self.q + step
+        return [self.q.copy(), step/dt if dt > 0 else np.zeros(len(self.q)), np.zeros(len(self.q))]
 
+target = JointTarget(q0)
+kinematicTree = robot.CreateKinematicTree(mbs)
+mbs.SetNodeParameter(kinematicTree['nodeGeneric'], 'initialCoordinates', q0)
+robot.SetControl(target, compensation='static')
 
-#the Puma560 without gravity, hanging from its base
-robot = LinkDict2Robot(ManipulatorPuma560(),
-                       robotClass=Robot(gravity=[0,0,0],
-                                        base=RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                                        tool=RobotTool(HT=exu.HT(translation=[0,0,0.1]),
-                                                       visualization=VRobotTool(graphicsData=graphicsToolList))))
-#the PD control; the joint limits with end stops
-Pcontrol = np.array([4000, 4000, 4000, 1000, 1000, 100])
-Dcontrol = np.array([400,   400,   100,   10,   10,   1])
-limits = [[-0.75*pi,0.75*pi], [0.0*pi,1.0*pi], [-1.0*pi,0.4*pi], [-0.5*pi,0.5*pi], [-0.5*pi,0.5*pi], [-0.5*pi,0.5*pi]]
-for (i, link) in enumerate(robot.links):
-    link.SetPDcontrol(Pcontrol[i], Dcontrol[i])
-    link.jointLimits = limits[i]
-    color = list(graphics.colorList[i])
-    color[3] = 0.75 #transparent
-    link.visualization = VRobotLink(jointRadius=0.06, jointWidth=0.08, showMBSjoint=True, linkWidth=0.05,
-                                    linkColor=color, showCOM=False)
-robot.SetEndStops(stiffness=1e4, damping=1e2)
+graphicsFloor = graphics.CheckerBoard(point=[0, 0, -0.001], size=2.5, nTiles=10)
+mbs.CreateGround(graphicsDataList=[graphicsFloor])
 
-q0 = [0,0,0,0,0,0]
-objectGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0]))
-baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
-robotDict = robot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
-springDampers = robotDict['springDamperList'] #the PD control of the joints
+#%%+++ the buttons and sliders in a column at the left, below the texts of the renderer
+controls = WindowControls(SC, columnWidth=0.25, rowHeight=0.05, top=0.25)
+def SetJoint(i, value):
+    target.qTarget[i] = value
+sliders = [controls.Slider('joint {}'.format(i + 1), minMax=list(limits[i]), value=q0[i], format='= {:.2f} rad',
+                           function=lambda value, i=i: SetJoint(i, value)) for i in range(len(q0))]
 
-#a CartesianSpringDamper for the mouse drag
-gripperBody = robotDict['bodyList'][-1]
-gripperLength = 0.1 #in z-direction
-markerGripper = mbs.AddMarker(MarkerBodyPosition(bodyNumber=gripperBody, localPosition=[0,0,gripperLength]))
-markerGround0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=objectGround))
-kSD = 5000
-dSD = kSD*0.01
-gripperSD = mbs.AddObject(CartesianSpringDamper(markerNumbers=[markerGround0, markerGripper],
-                                                stiffness=[kSD,kSD,kSD], damping=[dSD,dSD,dSD],
-                                                visualization=VCartesianSpringDamper(show=False)))
+drag = {'active': False, 'start': None, 'reached': None} #the mouse and the tool frame when the drag started
+def SetDrag(state):
+    drag['active'] = bool(state)
+    drag['start'] = None
+bDrag = controls.Button('mouse drag', toggle=True, function=SetDrag)
+
+def Reset(state):
+    controls.SetState(bDrag, 0, callFunction=True)
+    for (i, slider) in enumerate(sliders):
+        controls.SetState(slider, q0[i], callFunction=True)
+controls.Button('reset', function=Reset, backgroundColor=[1, 0.8, 0.6, 0.8])
+
+def DragTool(offset):
+    """the tool moved by offset, a vector in the global frame, from where the drag started; the joint targets from the
+    analytic inverse kinematics nearest to the current target, within the joint limits; returns True if reached"""
+    HT0 = drag['start'][1]
+    HT = exu.HT(rotation=np.array(HT0.rotation), translation=np.array(HT0.translation) + offset)
+    solutions = chain.InverseKinematicsAnalytic(HT, qReference=target.qTarget, configuration=chain.ArmConfiguration(target.qTarget))
+    for q in solutions:
+        if np.all(q >= limits[:, 0]) and np.all(q <= limits[:, 1]):
+            target.qTarget = np.array(q)
+            for (i, slider) in enumerate(sliders):
+                controls.SetState(slider, q[i]) #the sliders follow, without calling their functions
+            return True
+    return False #out of reach: the robot stays
 
 def PreStepUF(mbs, t):
-    if not mbs.variables['controlActive']: #the tool follows the mouse
-        p = SC.renderer.GetMouseCoordinates(True) #True=OpenGL coordinates; 2D
-        A = np.array(SC.renderer.GetState()['modelRotation'])
-        mbs.SetObjectParameter(gripperSD, 'offset', A@np.array([p[0],p[1],0.]))
-        mbs.SetObjectParameter(gripperSD, 'activeConnector', True)
-    else:
-        mbs.SetObjectParameter(gripperSD, 'activeConnector', False)
+    if not useRenderer and t >= 1 and drag['reached'] is None: #without a window: the tool lifted by 0.2 m
+        drag['start'] = (None, chain.ToolHT(target.qTarget))
+        drag['reached'] = DragTool(np.array([0., 0., 0.2]))
+    if drag['active']:
+        state = SC.renderer.GetState()
+        mouse = np.array(state['openGLcoordinates'])
+        if drag['start'] is None:
+            drag['start'] = (mouse, chain.ToolHT(target.qTarget))
+        else:
+            #the motion of the mouse in the plane of the view, in global coordinates
+            A = np.array(state['modelRotation'])
+            DragTool(A @ np.array([mouse[0] - drag['start'][0][0], mouse[1] - drag['start'][0][1], 0.]))
+    robot.PreStepControl(mbs, t)
 
-    for i in range(len(springDampers)):
-        if mbs.variables['controlActive'] or i>=3:
-            mbs.SetObjectParameter(springDampers[i], 'stiffness', Pcontrol[i])
-            mbs.SetObjectParameter(springDampers[i], 'damping', Dcontrol[i])
-        else: #the first three joints free, with a small damping for the drag
-            mbs.SetObjectParameter(springDampers[i], 'stiffness', 0)
-            mbs.SetObjectParameter(springDampers[i], 'damping', Dcontrol[i]*0.1)
+    HT = chain.ToolHT(mbs.GetNodeOutput(kinematicTree['nodeGeneric'], exu.OutputVariableType.Coordinates))
+    SC.visualizationSettings.general.renderWindowString = ('tool: x = [{:.3f}, {:.3f}, {:.3f}] m\n'.format(*HT.translation)
+        + '      phi = [{:.3f}, {:.3f}, {:.3f}] rad'.format(*RotationMatrix2RotXYZ(np.array(HT.rotation))))
     return True
-
 mbs.SetPreStepUserFunction(PreStepUF)
-
-for i in range(6):
-    mbs.variables['q{}Current'.format(i)] = q0[i]
-
-def GetPoseString(q):
-    HT = robot.GetGlobalToolHT(q)
-    t = np.round(HT.translation, 4)
-    phi = np.round(RotationMatrix2RotXYZ(np.array(HT.rotation)), 3)
-    strx = '   x = [{},\t{},\t{}]'.format(*t)
-    strphi = 'phi = [{},\t{},\t{}]'.format(*phi)
-    n = max(len(strx), len(strphi))
-    return strx.ljust(n) + '\n' + strphi.ljust(n)
-
-#the items of the dialog
-fAngle = 2.
-dialogItems = []
-for i in range(6):
-    dialogItems += [{'type':'label', 'text':'Angle {}:'.format(i+1), 'grid':(i,0)},
-                    {'type':'slider', 'range': (-fAngle*3.14, fAngle*3.14), 'value':q0[i], 'steps':628,
-                     'variable':'q{}Current'.format(i), 'grid':(i,1)}]
-dialogItems += [{'type': 'label', 'text': 'Position:', 'grid': (6,0)},
-                {'type': 'label', 'text': '{}'.format(GetPoseString(q0)), 'grid': (6,1)},
-                {'type':'radio', 'textValueList':[('Mouse drag',0),('Control on',1),('Reset',2)], 'value':1, 'variable':'controlActive',
-                 'grid': [(7,0),(7,1),(7,2)]}]
 
 mbs.Assemble()
 
-SC.visualizationSettings.connectors.showJointAxes = True
-SC.visualizationSettings.connectors.jointAxesLength = 0.02
-SC.visualizationSettings.connectors.jointAxesRadius = 0.002
-SC.visualizationSettings.nodes.showBasis = True
-SC.visualizationSettings.nodes.basisSize = 0.1
+SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.light0.shadow = 0.3
-SC.visualizationSettings.view0.camera.perspective = 0.7
-SC.visualizationSettings.view0.window.renderWindowSize = [1920,1200]
-SC.visualizationSettings.general.graphicsUpdateInterval = 0.005
+SC.visualizationSettings.view0.window.renderWindowSize = [1600, 1000]
+SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
+SC.visualizationSettings.openGL.advanced.initialModelRotation = RotationMatrixZ(0.6 + np.pi) @ RotationMatrixX(0.5*np.pi - 0.45) #view from the side of the robot
 
-tEnd = 1.25
-h = 0.0005
+h = 0.002
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solution.file.information = 'Hanging Robot Interactive Example'
-simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
-simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solution.file.writePeriod = h
-simulationSettings.solution.sensors.writePeriod = h*10
-simulationSettings.solution.file.binary = True
-simulationSettings.solution.file.writeInitialValues = False
+simulationSettings.timeIntegration.endTime = 3600 if useRenderer else 2 #until the render window is closed (Q or ESC)
+simulationSettings.timeIntegration.numberOfSteps = int(simulationSettings.timeIntegration.endTime/h)
+simulationSettings.timeIntegration.realtime.active = useRenderer
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.timeIntegration.newton.useModifiedNewton = True
+simulationSettings.solution.file.write = False
+if not useRenderer:
+    controls.SetState(sliders[0], 0.5, callFunction=True)
 
-#called by the dialog: the slider angles to the offsets of the PD control
-def SimulationUF(mbs, dialog):
-    q = []
-    for i in range(6):
-        mbs.SetObjectParameter(springDampers[i], 'offset', mbs.variables['q{}Current'.format(i)])
-        q += [mbs.GetObjectOutput(springDampers[i], exu.OutputVariableType.Rotation)] #the current rotation
-
-    if mbs.variables['controlActive'] == 2: #reset
-        for i in range(6):
-            q[i] = 0
-            mbs.variables['q{}Current'.format(i)] = 0
-            dialog.widgets[2*i+1].set(q[i])
-
-    dialog.labelStringVariables[-1].set(GetPoseString(q))
-
-    if not mbs.variables['controlActive']: #the sliders follow the dragged robot
-        for i in range(6):
-            dialog.widgets[2*i+1].set(q[i])
-
-SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-SC.renderer.Start()
-SC.renderer.RestoreSavedState()
-
-InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
-                  simulationFunction=SimulationUF,
-                  title='Interactive window',
-                  dialogItems=dialogItems, period=0.01, realtimeFactor=4, #realtime only approximately
-                  runOnStart=True,
-                  addLabelStringVariables=True,
-                  )
-
-SC.renderer.Stop()
+if useRenderer:
+    SC.renderer.Start()
+    SC.renderer.DoIdleTasks()
+mbs.SolveDynamic(simulationSettings)
+if useRenderer:
+    SC.renderer.Stop()
+else:
+    #without a window: the slider of joint 1 set at the start, the tool lifted at t = 1 s
+    q = mbs.GetNodeOutput(kinematicTree['nodeGeneric'], exu.OutputVariableType.Coordinates)
+    exu.Print('drag reached:', drag['reached'], ', joint angles:', np.round(q, 4))
+    exu.Print(SC.visualizationSettings.general.renderWindowString)

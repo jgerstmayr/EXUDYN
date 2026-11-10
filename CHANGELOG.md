@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 506 | 1.13.530 |
+| 1.13 | Newborn | 509 | 1.13.533 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.533** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` WindowControls: the column of elements starts below the texts of the renderer, top= sets it (#3402)
+  - description: WindowControls placed the elements without location from the top of the window, over the texts which the renderer writes at the top left corner. Decided: the column starts at 0.25 of the window height, the argument top sets it; renderWindowControls.py uses it.
+  - **notes:** exudyn.interactive.WindowControls places the elements without location below the texts of the renderer, from 0.25 of the window height; the argument top sets the upper edge of the column.
+  - date resolved: **2026-11-10 15:39**, date raised: 2026-11-10
+- **1.13.532** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GetURDFrobotData: visual primitives, the names of the base links, the order of the links (#3393)
+  - description: GetURDFrobotData reads only meshes as visual geometry, so boxes, cylinders and spheres in the visual elements of a URDF are left out; the names of the links fixed to the base are not stored; whether a parent always precedes its children in the link list is not checked. Decided: read the primitives as graphics, store the base link names, reorder or refuse an order with a child before its parent.
+  - **notes:** GetURDFrobotData draws the boxes, cylinders and spheres of the visual elements of a URDF, returns the names of the links fixed to the base in baseLinkNames, and takes the links with each parent before its children, so that a fixed link listed before its joint link keeps its mass and graphics.
+  - date resolved: **2026-11-10 15:39**, date raised: 2026-11-09
+- **1.13.531** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
+  - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.
+  - **notes:** serialRobotInteractiveLimits.py moves the Staeubli TX2-90L with the meshes of its URDF by the buttons and sliders of the render window: a slider per joint within its limits, with end stops; 'mouse drag', where the tool follows the mouse by the analytic inverse kinematics and the sliders follow the joints; 'reset'; the pose of the tool in the render window.
+  - date resolved: **2026-11-10 15:39**, date raised: 2026-11-08
 - **1.13.530** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` zoom and drag of the scopes while the simulation is idle (#3401)
   - description: While no solver runs, or the solver or the solution viewer is paused, the mouse wheel zooms the scope under the cursor (SHIFT only x, CTRL only y) and the left button drags its lines; a double click, the simulation continuing or a change of the scope settings resets it. The ranges are kept as an override in the render state, not in the settings. revision2026c step RG6.23
   - **notes:** While the simulation is paused or finished, the mouse wheel over a scope zooms it about the mouse (SHIFT: only the horizontal axis, CTRL: only the vertical one), dragging with the left mouse button moves its lines, and a double click, a new state of the simulation or a change of its settings shows the ranges of its settings again.

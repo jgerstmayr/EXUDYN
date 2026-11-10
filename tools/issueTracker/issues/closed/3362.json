@@ -1,0 +1,17 @@
+{
+  "number": 3362,
+  "title": "serialRobotInteractiveLimits.py with the new renderer features, checked by hand",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.",
+  "dateRaised": "2026-11-08",
+  "deadline": "2027-05-07",
+  "dateResolved": "2026-11-10 15:39",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/serialRobotInteractiveLimits.py",
+  "releaseNotes": "serialRobotInteractiveLimits.py moves the Staeubli TX2-90L with the meshes of its URDF by the buttons and sliders of the render window: a slider per joint within its limits, with end stops; 'mouse drag', where the tool follows the mouse by the analytic inverse kinematics and the sliders follow the joints; 'reset'; the pose of the tool in the render window.",
+  "resolvedInVersion": "1.13.531"
+}

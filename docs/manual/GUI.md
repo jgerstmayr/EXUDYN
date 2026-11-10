@@ -215,7 +215,8 @@ model, so that a click on a button never rotates the model. The elements are not
 images and into `RedrawAndGetImage`; the scopes have their own switch, `window.showScopes`.
 
 `exudyn.interactive.WindowControls` gives each element its own Python function and places the elements without a
-location in a column at the left side of the window:
+location in a column at the left side of the window, below the texts of the renderer; its argument `top` sets the
+upper edge of the column, relative to the window height (#3402):
 
 ```python
 from exudyn.interactive import WindowControls
@@ -226,7 +227,7 @@ controls.Button('gravity', toggle=True, state=1,
                 function=lambda state: mbs.SetLoadParameter(lGravity, 'loadVector', [0, -9.81*mass*state, 0]))
 ```
 
-`renderWindowControls.py` changes a pendulum with sliders and buttons while it is simulated.
+`renderWindowControls.py` changes a mass on a spring-damper with sliders and buttons while it is simulated.
 
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog

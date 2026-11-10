@@ -106,7 +106,7 @@ sStiffness = windowControls.Slider('stiffness', minMax=[50, 2000], value=400.,
 bGravity = windowControls.Button('gravity', toggle=True, state=1,
                                  function=lambda state: mbs.SetLoadParameter(lGravity, 'loadVector', [0, -9.81*mass*state, 0]))
 locations = [c['location'] for c in renderer.GetControls()]
-Check(abs(locations[0][0][1] - 0.01) < 1e-12 and abs(locations[1][0][1] - (0.01 + 0.055 + 0.01)) < 1e-12
+Check(abs(locations[0][0][1] - 0.25) < 1e-12 and abs(locations[1][0][1] - (0.25 + 0.055 + 0.01)) < 1e-12
       and locations[0][0][0] == locations[1][0][0], 'the column of elements: ' + str(locations))
 windowControls.SetState(sStiffness, 1000., callFunction=True)
 windowControls.SetState(bGravity, 0, callFunction=True)

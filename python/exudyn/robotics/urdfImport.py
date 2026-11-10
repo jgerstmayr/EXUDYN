@@ -351,15 +351,18 @@ def GetURDFrobotData(robot,
             RobotFromURDFdata puts them into the collision shapes of the robot; a mesh needs pymeshlab (#3382)
 
     Returns:
-        returns dictionary with items linkList (the joint links, each with its name, jointName, preHT relative to the joint link above,
-        its parentName, mass, com, inertiaCOM, jointType, jointLimits and graphicsDataList), numberOfJoints,
-        graphicsBaseList (the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint
+        returns dictionary with items linkList (the joint links, each with its name, jointName, jointNumber (the index of
+        the joint in the toolbox, as in staticJointValues), preHT relative to the joint link above, its parentName, mass,
+        com, inertiaCOM, jointType, jointLimits and graphicsDataList; a parent before its children, else in the order of
+        the links of the toolbox), numberOfJoints, baseLinkNames (the names of the links fixed to the base),
+        graphicsBaseList (the graphics of the links fixed to the base), graphicsToolList (empty: the links fixed after the last joint
         are in the graphics of that link), staticJointValues and staticGraphicsList; a link of the URDF without joint
         (a fixed joint) moves with the joint link above it, which gets its graphics and its mass (#3280); a flipped joint
-        (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282)
+        (axis -1 in the URDF) has the same joint coordinate in a link frame turned by pi, flipHT of the link (#3282); the
+        visuals of the URDF are its meshes and its boxes, cylinders and spheres (#3393)
 
     Note:
-        requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored
+        requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and the meshes are ignored
     """
     hasPymeshlab = False
     try:
@@ -414,9 +417,29 @@ def GetURDFrobotData(robot,
             link = link.parent
         return link, FlipHT(link) @ HT
 
+    #the links with each parent before its children, else in the order of the toolbox; the fixed links below need the
+    #joint link above them (#3393)
+    indexOfLink = {id(link): i for (i, link) in enumerate(robot.links)}
+    orderedLinks = []
+    placed = set()
+    remaining = list(robot.links)
+    while len(remaining) != 0:
+        rest = []
+        for link in remaining:
+            if link.parent is None or id(link.parent) not in indexOfLink or id(link.parent) in placed:
+                orderedLinks.append(link)
+                placed.add(id(link))
+            else:
+                rest.append(link)
+        if len(rest) == len(remaining):
+            raise ValueError('GetURDFrobotData: the parents of the links ' + str([link.name for link in rest]) + ' form a loop')
+        remaining = rest
+
     linkDictOfName = {}
+    baseLinkNames = [] #the links fixed to the base
     texturesAdded = []
-    for i, link in enumerate(robot.links):
+    for link in orderedLinks:
+        i = indexOfLink[id(link)]
         #the frame of the link at staticJointValues
         if link.parent is None:
             staticHT = np.array(robot.base) @ LinkTs(link)
@@ -426,6 +449,8 @@ def GetURDFrobotData(robot,
         jointIndex = link.jindex
         (ancestor, HTancestor) = (link, FlipHT(link)) if link.isjoint else JointAncestor(link)
         linkDict = None if ancestor is None else linkDictOfName.get(ancestor.name) #None: the base
+        if ancestor is None:
+            baseLinkNames.append(link.name)
         if link.isjoint:
             if jointIndex is None: raise ValueError('inconsistent joint index / isjoint in robot structure')
             (parent, HTparent) = JointAncestor(link.parent)
@@ -535,16 +560,32 @@ def GetURDFrobotData(robot,
                             vertexColors[vertex,:] = color
                     gData['colors'] = np.array(vertexColors).flatten()
 
-                visualHT = np.array(scene.T) #the origin of the visual in the link frame
-                totalHT = staticHT@visualHT
-                if linkDict is not None: #in the frame of the joint link it moves with
-                    localHT = HTancestor@visualHT
-                    linkDict['graphicsDataList'] += [graphics.Move(gData, HT2translation(localHT), HT2rotationMatrix(localHT))]
-                else: #fixed to the base
-                    graphicsBaseList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT))]
-                
-                if returnStaticGraphicsList :
-                    staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
+            elif scene.stype in ['cuboid', 'cylinder', 'sphere']: #a primitive as visual (#3393)
+                color = graphics.colorList[i%16]
+                if linkColorList is not None:
+                    color = linkColorList[i]
+                elif getattr(scene, 'color', None) is not None:
+                    color = list(scene.color)
+                if scene.stype == 'cuboid':
+                    gData = graphics.Brick(size=list(scene.scale), color=color)
+                elif scene.stype == 'cylinder': #its axis is z, centered at the origin
+                    gData = graphics.Cylinder(pAxis=[0, 0, -0.5*scene.length], vAxis=[0, 0, scene.length], radius=scene.radius,
+                                              color=color, nTiles=32)
+                else:
+                    gData = graphics.Sphere(radius=scene.radius, color=color, nTiles=16)
+            else:
+                continue #a mesh without pymeshlab, or a shape that the URDF does not define
+
+            visualHT = np.array(scene.T) #the origin of the visual in the link frame
+            totalHT = staticHT@visualHT
+            if linkDict is not None: #in the frame of the joint link it moves with
+                localHT = HTancestor@visualHT
+                linkDict['graphicsDataList'] += [graphics.Move(gData, HT2translation(localHT), HT2rotationMatrix(localHT))]
+            else: #fixed to the base
+                graphicsBaseList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT))]
+            
+            if returnStaticGraphicsList :
+                staticGraphicsList += [graphics.Move(gData, HT2translation(totalHT), HT2rotationMatrix(totalHT) )]
 
     collisionBase = []
     if collision:
@@ -582,6 +623,7 @@ def GetURDFrobotData(robot,
             exudyn.Print('WARNING: GetURDFrobotData: link', linkDict['name'] + ':', '; '.join(problems))
 
     robotData = {'linkList': linkList,
+            'baseLinkNames': baseLinkNames,
             'numberOfJoints': numberOfJoints,
             'graphicsBaseList': graphicsBaseList,
             'graphicsToolList': graphicsToolList,

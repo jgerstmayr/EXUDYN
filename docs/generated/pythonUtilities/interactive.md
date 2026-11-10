@@ -19,7 +19,7 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 (sec-interactive-animatemodes)=
 ## Function: AnimateModes
 
-[`AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = '', runOnStart = False, runMode = 0, scaleAmplitude = 1, title = '', fontSize = 12, checkRenderEngineStopFlag = True, systemEigenVectors = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L789)
+[`AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = '', runOnStart = False, runMode = 0, scaleAmplitude = 1, title = '', fontSize = 12, checkRenderEngineStopFlag = True, systemEigenVectors = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L791)
 
 - **function description**: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record frames' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 - **input**:
@@ -47,7 +47,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-solutionviewer)=
 ## Function: SolutionViewer
 
-[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None, callPreStepUserFunction = False) -> None`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L989)
+[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None, callPreStepUserFunction = False) -> None`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L991)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
 - **input**:
@@ -82,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-showimage)=
 ## Function: ShowImage
 
-[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1193)
+[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1195)
 
 - **function description**: the current scene as an image, rendered by the raytracer without a window, and shown with matplotlib; made for notebooks, where no render window opens, and for documentation images
 - **input**:
@@ -106,7 +106,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video
 
-[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1246)
+[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1248)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires the program ffmpeg and the package ffmpeg-python ("conda install ffmpeg", "pip install ffmpeg-python")
 - **input**:
@@ -135,7 +135,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactiveimages2video)=
 ## Function: InteractiveImages2Video
 
-[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1324)
+[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1326)
 
 - **function description**: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 
@@ -143,12 +143,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-module-interactive-class-windowcontrols)=
 ## CLASS WindowControls (in module interactive)
 
-**class description**: The buttons and sliders of the render window, each with its own Python function (#3400): the class sets the one user function of SC.renderer (SetControlUserFunction) and calls the function of the element that changed, with its state - 0 or 1 for a button, the value of a slider. The functions are called in the main thread while a simulation runs or in SC.renderer.DoIdleTasks. An element without a location is placed in a column at the left side of the window, one below the other.
+**class description**: The buttons and sliders of the render window, each with its own Python function (#3400): the class sets the one user function of SC.renderer (SetControlUserFunction) and calls the function of the element that changed, with its state - 0 or 1 for a button, the value of a slider. The functions are called in the main thread while a simulation runs or in SC.renderer.DoIdleTasks. An element without a location is placed in a column at the left side of the window, one below the other, starting below the texts which the renderer writes at the top left corner (#3402).
 
 - **input**:
   - `systemContainer`: the SystemContainer whose render window shows the elements
   - `columnWidth`: the width of the column of the elements without location, relative to the window width
   - `rowHeight`: the height of each of them, relative to the window height
+  - `top`: the upper edge of the column, relative to the window height from its top
 
 *example*:
 
@@ -162,7 +163,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-windowcontrols-button)=
 ### Class function: Button
 
-[`Button(self, text, location = None, function = None, toggle = False, state = 0, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L109)
+[`Button(self, text, location = None, function = None, toggle = False, state = 0, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L111)
 
 - **class function description**: Add a button (SC.renderer.AddButton; fontSize, color, backgroundColor and view as keyword arguments as there); function(state) is called when it is released: with 1 for a push button, with the new state 0 or 1 for a toggle button
 - **input**:
@@ -177,7 +178,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-windowcontrols-slider)=
 ### Class function: Slider
 
-[`Slider(self, text, location = None, function = None, minMax = [0., 1.], value = None, format, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L128)
+[`Slider(self, text, location = None, function = None, minMax = [0., 1.], value = None, format, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L130)
 
 - **class function description**: Add a slider (SC.renderer.AddSlider; fontSize, color, backgroundColor and view as keyword arguments as there); function(value) is called with each new value
 - **input**:
@@ -193,7 +194,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-windowcontrols-state)=
 ### Class function: State
 
-[`State(self, controlID)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L148)
+[`State(self, controlID)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L150)
 
 - **class function description**: the state of a button, 0 or 1, or the value of a slider
 
@@ -201,7 +202,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-windowcontrols-setstate)=
 ### Class function: SetState
 
-[`SetState(self, controlID, state, callFunction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L152)
+[`SetState(self, controlID, state, callFunction = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L154)
 
 - **class function description**: set the state of a button or the value of a slider; with callFunction, its function is called as a click would
 
@@ -209,7 +210,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-windowcontrols-delete)=
 ### Class function: Delete
 
-[`Delete(self, controlID)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L156)
+[`Delete(self, controlID)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L158)
 
 - **class function description**: remove an element and its function
 
@@ -217,12 +218,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-windowcontrols-clear)=
 ### Class function: Clear
 
-[`Clear(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L161)
+[`Clear(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L163)
 
 - **class function description**: remove all elements and their functions; the next element without location is in the first row again
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindowControls.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/renderWindowControls.py) (Ex), [`rendererControlsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rendererControlsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindowControls.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/renderWindowControls.py) (Ex), [`robotics/serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInteractiveLimits.py) (Ex), [`rendererControlsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rendererControlsTest.py) (TM)
 
 
 (sec-module-interactive-class-interactivedialog)=
@@ -287,7 +288,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog---init--)=
 ### Class function: __init__
 
-[`__init__(self, mbs, simulationSettings, simulationFunction, dialogItems, plots = None, period = 0.04, realtimeFactor = 1, userStartSimulation = None, title = '', showTime = False, fontSize = 12, doTimeIntegration = True, runOnStart = False, addLabelStringVariables = False, addSliderVariables = False, checkRenderEngineStopFlag = True, userOnChange = None, useSysVariables = False, windowSize = None, userSpaceKey = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L222)
+[`__init__(self, mbs, simulationSettings, simulationFunction, dialogItems, plots = None, period = 0.04, realtimeFactor = 1, userStartSimulation = None, title = '', showTime = False, fontSize = 12, doTimeIntegration = True, runOnStart = False, addLabelStringVariables = False, addSliderVariables = False, checkRenderEngineStopFlag = True, userOnChange = None, useSysVariables = False, windowSize = None, userSpaceKey = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L224)
 
 - **class function description**: initialize an InteractiveDialog
 - **input**:
@@ -317,7 +318,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-onquit)=
 ### Class function: OnQuit
 
-[`OnQuit(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L532)
+[`OnQuit(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L534)
 
 - **class function description**: function called when pressing escape or closing dialog
 
@@ -325,7 +326,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-onspacekey)=
 ### Class function: OnSpaceKey
 
-[`OnSpaceKey(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L560)
+[`OnSpaceKey(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L562)
 
 - **class function description**: the space key starts or stops, as the button does - or does what userSpaceKey says
 
@@ -333,7 +334,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-startsimulation)=
 ### Class function: StartSimulation
 
-[`StartSimulation(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L567)
+[`StartSimulation(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L569)
 
 - **class function description**: function called on button 'Run'
 
@@ -341,7 +342,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-processwidgetstates)=
 ### Class function: ProcessWidgetStates
 
-[`ProcessWidgetStates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L581)
+[`ProcessWidgetStates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L583)
 
 - **class function description**: assign current values of radio buttons and sliders to mbs.variables or mbs.sys
 
@@ -349,7 +350,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-continuousrunfunction)=
 ### Class function: ContinuousRunFunction
 
-[`ContinuousRunFunction(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L597)
+[`ContinuousRunFunction(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L599)
 
 - **class function description**: function which is repeatedly called when button 'Run' is pressed
 
@@ -357,7 +358,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-initializeplots)=
 ### Class function: InitializePlots
 
-[`InitializePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L616)
+[`InitializePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L618)
 
 - **class function description**: initialize figure and subplots for plots structure
 
@@ -365,7 +366,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-updateplots)=
 ### Class function: UpdatePlots
 
-[`UpdatePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L664)
+[`UpdatePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L666)
 
 - **class function description**: update all subplots with current sensor values
 
@@ -373,7 +374,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-initializesolver)=
 ### Class function: InitializeSolver
 
-[`InitializeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L721)
+[`InitializeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L723)
 
 - **class function description**: function to initialize solver for repeated calls
 
@@ -381,7 +382,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-finalizesolver)=
 ### Class function: FinalizeSolver
 
-[`FinalizeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L728)
+[`FinalizeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L730)
 
 - **class function description**: stop solver (finalize correctly)
 
@@ -389,9 +390,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`renderWindo
 (sec-interactive-interactivedialog-runsimulationperiod)=
 ### Class function: RunSimulationPeriod
 
-[`RunSimulationPeriod(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L735)
+[`RunSimulationPeriod(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L737)
 
 - **class function description**: function which performs short simulation for given period
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`massSpringFrictionInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/massSpringFrictionInteractive.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`simulateInteractively.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py) (Ex), [`robotics/serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInteractiveLimits.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`massSpringFrictionInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/massSpringFrictionInteractive.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`simulateInteractively.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py) (Ex)

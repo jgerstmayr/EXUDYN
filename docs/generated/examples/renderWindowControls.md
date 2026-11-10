@@ -52,8 +52,8 @@ sHeight = mbs.AddSensor(SensorBody(bodyNumber=oMass, outputVariableType=exu.Outp
                                    name='mass.Pos'))
 mbs.Assemble()
 
-#the elements without location are placed in a column at the left side of the window
-controls = WindowControls(SC)
+#the elements without location are placed in a column at the left side of the window, from top downwards
+controls = WindowControls(SC, columnWidth=0.3, rowHeight=0.07, top=0.3)
 sStiffness = controls.Slider('stiffness', minMax=[50, 2000], value=stiffness, format='= {:.0f} N/m',
                 function=lambda value: mbs.SetObjectParameter(oSpring, 'stiffness', value))
 controls.Slider('damping', minMax=[0, 20], value=damping, format='= {:.1f} Ns/m',
@@ -68,6 +68,7 @@ SC.visualizationSettings.view0.window.showScopes = True
 SC.visualizationSettings.view0.window.scope0.sensors = [[sHeight, 1]]
 SC.visualizationSettings.view0.window.scope0.timeHistory = 5
 SC.visualizationSettings.view0.window.scope0.yLabel = 'height (m)'
+SC.visualizationSettings.general.graphicsUpdateInterval = 0.025
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.endTime = 60 if not exu.special.userInterface.suppressRenderer else 1

@@ -17,6 +17,10 @@ that holds the measured facts and the decisions.
 (sec-revisions-after-1-13)=
 ## After version 1.13
 
+**The URDF import** draws the boxes, cylinders and spheres of the visual elements, which were left out, and
+`GetURDFrobotData` returns the names of the links fixed to the base in `baseLinkNames`; a child before its parent in the
+file is read after it (#3393).
+
 **The visualization of an item** is given as its `V` class or as a dictionary with only the parameters that differ from
 the defaults; a parameter the item does not have raises a `ValueError` instead of being ignored. `item.visualization`
 is always the `V` class (#2342).
@@ -24,7 +28,8 @@ is always the `V` class (#2342).
 **Buttons and sliders in the render window** (#3400): `SC.renderer.AddButton` and `AddSlider`, with one user function
 `SC.renderer.SetControlUserFunction(f)`, `f(controlID, data)`, and `exudyn.interactive.WindowControls` with one
 function per element; `visualizationSettings.general.iconBarAndControlsInImages` puts them and the icon bar into saved
-images. See {ref}`sec-gui-controls`.
+images. See {ref}`sec-gui-controls`. serialRobotInteractiveLimits.py moves the Staeubli TX2-90L by them and by the
+mouse (#3362).
 
 **Zoom and move a scope** while the simulation is paused or finished: the mouse wheel over a scope zooms it, dragging
 moves its lines, a double click resets it (#3401).

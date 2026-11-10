@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.530.dev1
+- Exudyn version = 1.13.533.dev1
 - last change = 2026-11-10
-- Number of issues = 3402
-- Number of resolved issues = 3307 (530 in current version)
+- Number of issues = 3403
+- Number of resolved issues = 3310 (533 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,15 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` GetURDFrobotData: visual primitives, the names of the base links, the order of the links (#3393)
-  - description: GetURDFrobotData reads only meshes as visual geometry, so boxes, cylinders and spheres in the visual elements of a URDF are left out; the names of the links fixed to the base are not stored; whether a parent always precedes its children in the link list is not checked. Decided: read the primitives as graphics, store the base link names, reorder or refuse an order with a child before its parent.
-  - date raised: 2026-11-09
 - `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
   - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.
   - date raised: 2026-11-09
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` serialRobotInteractiveLimits.py with the new renderer features, checked by hand (#3362)
-  - description: The example (sliders, mouse drag, end stops) has run only without windows. Decided: adapted later with new features of the renderer.
-  - date raised: 2026-11-08
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Remove the deprecated joint torque loads of CreateRedundantCoordinateMBS at the end of their deprecation period (#3361)
   - description: jointLoadUserFunctionList and createJointTorqueLoads are tested by serialRobotTest.py and movingGroundRobotTest.py. Decided: when the deprecation period ends they are removed and the two test models move to SetControl.
   - **remarks:** deferred until 2027-01-01 (Claude-JG, 2026-11-09): the arguments are deprecated with a warning by \#3386, one release before 2027 contains both, then they are removed
