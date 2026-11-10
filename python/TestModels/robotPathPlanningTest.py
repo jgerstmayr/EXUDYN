@@ -17,7 +17,7 @@ from exudyn.utilities import *
 from exudyn.cUtilities import ConvexShape
 from exudyn.robotics.models import ManipulatorUR5, LinkDict2Robot
 from exudyn.robotics.navigation import JointLimits, PlanJointPath, ShortcutPath, PlanToPose, TrajectoryFromPath
-from exudyn.robotics.motion import Trajectory
+from exudyn.robotics.motion import Trajectory, ProfileJointPath
 import numpy as np
 import time
 
@@ -58,6 +58,21 @@ qEnd = trajectory.Evaluate(times[-1])[0]
 velocities = np.array([trajectory.Evaluate(t)[1] for t in np.linspace(times[0], times[-1], 500)])
 checks += [np.max(np.abs(np.array(qEnd) - qGoal)) < 1e-8, np.max(np.abs(velocities)) <= 2.*(1. + 1e-6)]
 checks += [all(model.IsFree(trajectory.Evaluate(t)[0]) for t in np.linspace(times[0], times[-1], 2000))]
+#ProfileJointPath (#3397): the accelerations within about 2 % of the limits, the velocities continuous, no stop on the way
+samples = np.linspace(times[0], times[-1], 4001)
+evaluated = [trajectory.Evaluate(t) for t in samples]
+accelerations = np.array([e[2] for e in evaluated])
+speeds = np.array([np.max(np.abs(e[1])) for e in evaluated])
+velocityJumps = np.max(np.abs(np.diff(np.array([e[1] for e in evaluated]), axis=0)))
+exu.Print('trajectory: duration', times[-1], ', largest acceleration', np.max(np.abs(accelerations)), ', largest change of a velocity between samples', velocityJumps)
+checks += [np.max(np.abs(accelerations)) <= 8.*1.03, velocityJumps <= 8.*1.03*(samples[1] - samples[0])*1.01, np.min(speeds[200:-200]) > 0.05]
+#without rounding, the motion stops at the corner
+corner = Trajectory(qStart, maxVelocities=maxVelocities, maxAccelerations=maxAccelerations)
+qCorner = qStart + np.array([0.5, 0, 0, 0, 0, 0])
+corner.Add(ProfileJointPath([qStart, qCorner, qCorner + np.array([0, 0.5, 0, 0, 0, 0])], blendRadius=0.))
+(t0, t1) = (corner.GetTimes()[0], corner.GetTimes()[-1])
+cornerSpeeds = [np.max(np.abs(corner.Evaluate(t)[1])) for t in np.linspace(t0, t1, 2001)[100:-100]]
+checks += [min(cornerSpeeds) < 8.*1.05*(t1 - t0)/2000]
 
 #the waypoints without blending: the robot stops at each of them
 stops = Trajectory.FromWaypoints([qStart, 0.5*(qStart + qGoal), qGoal], maxVelocities, maxAccelerations, blendFactor=0.)

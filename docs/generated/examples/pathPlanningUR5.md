@@ -94,9 +94,11 @@ path = PlanToPose(model, robot, qStart, HTgoal, JointLimits(robot), margin=margi
 #What remains is what the obstacles require: at the wall, the tool moves up and towards the base, because the extended arm cannot turn past the wall.
 short = ShortcutPath(model, path, margin=margin, seed=seed)
 exu.Print('planned in', round(time.time() - t0, 3), 's:', len(path), 'waypoints, after shortcuts', len(short))
-#The waypoints are connected by straight lines in joint space, so the tool moves on curves. The Trajectory runs through them within the limits of velocity and acceleration of the joints
-#without stopping: parabolic blends cut the corners, so the trajectory is checked for collisions, and the blends are reduced if needed.
-trajectory = TrajectoryFromPath(model, short, [1.5]*6, [4.]*6, margin=margin)
+#The waypoints are connected by straight lines in joint space, so the tool moves on curves. TrajectoryFromPath rounds the corners of the path by curves (ProfileJointPath)
+#and moves along it as fast as the limits of velocity and acceleration of the joints allow, without stopping at the waypoints; where a rounded corner comes closer to
+#the obstacles than the margin, the rounding is made smaller. blendRadius=1 is the largest rounding; 0 runs the path itself, stopping at each corner.
+blendRadius = 1.
+trajectory = TrajectoryFromPath(model, short, [1.5]*6, [4.]*6, margin=margin, blendRadius=blendRadius)
 times = trajectory.GetTimes()
 
 #%%+++ the planned path of the tool: a line along the trajectory and a sphere at the end of each part; blue: the start, red: the goal

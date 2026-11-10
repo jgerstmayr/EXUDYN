@@ -69,7 +69,7 @@ cells on the path: 213 , waypoints after the smoothing: 7
 ```
 
 ```text
-<matplotlib.legend.Legend object at 0x0000024967CDB380>
+<matplotlib.legend.Legend object at 0x0000019224E0FA10>
 ```
 
 ```{image} images/tutorialPathPlanning_1.png
@@ -110,12 +110,12 @@ print('largest joint motion along the path: %.2f rad, after the shortcuts: %.2f 
 ```
 
 ```text
-waypoints of RRT-Connect: 40 , after the shortcuts: 5
-largest joint motion along the path: 3.81 rad, after the shortcuts: 2.66 rad
+waypoints of RRT-Connect: 40 , after the shortcuts: 9
+largest joint motion along the path: 3.81 rad, after the shortcuts: 2.01 rad
 ```
 
-`TrajectoryFromPath` makes a trajectory through the waypoints within the limits of the joints, blended where the
-blending stays free. `robot.SetControl(trajectory)` then runs it on a model of the robot, see the example `pathPlanningUR5.py`;
+`TrajectoryFromPath` makes a trajectory along the path within the limits of the joints: its corners are rounded by
+curves, as large as `blendRadius` allows and the obstacles permit, and the robot does not stop at the waypoints. `robot.SetControl(trajectory)` then runs it on a model of the robot, see the example `pathPlanningUR5.py`;
 `mobileRobotsNavigation.py` drives a mecanum-wheeled robot and a differential drive.
 
 ```python

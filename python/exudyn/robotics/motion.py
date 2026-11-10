@@ -23,7 +23,7 @@ import exudyn.rigidBodyUtilities as erb
 __all__ = [
     'BasicProfile', 'ProfileConstantAcceleration', 'ProfileLinearAccelerationsList', 'ProfilePTP',
     'ProfilePolynomial5', 'ProfileCartesianLinear', 'ProfileCartesianCircular', 'ProfileCartesianScrew',
-    'ProfileCartesianSpline', 'Trajectory', 'BasicProfileLinearAcceleration',
+    'ProfileCartesianSpline', 'ProfileJointPath', 'Trajectory', 'BasicProfileLinearAcceleration',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -636,6 +636,172 @@ def _TangentOperator(r):
     if angle < 1e-6: #the series, to its second order
         return np.eye(3) + 0.5*rTilde + rTilde @ rTilde/6.
     return np.eye(3) + (1. - cMath.cos(angle))/angle**2*rTilde + (angle - cMath.sin(angle))/angle**3*(rTilde @ rTilde)
+
+
+class ProfileJointPath:
+    """a motion along a path of waypoints in joint space which does not stop at the waypoints (#3397): straight lines
+    between the waypoints, whose corners are rounded by a quadratic Bezier curve in the plane of the two edges; the
+    velocity along the path is the largest one which the limits of the velocities and accelerations of the joints
+    allow, from rest to rest (a time-optimal parametrization of the path, computed at numberOfPoints points per edge
+    and per curve, between which the acceleration along the path is constant); it slows down where the path is
+    curved, and stops at a corner which is not rounded. The joint velocities are continuous; the accelerations jump,
+    as those of ProfilePTP, and exceed the limits by about 1 to 2 percent with the default numberOfPoints
+
+    Args:
+        waypoints: the coordinates of the waypoints, one per row; the first one is where the trajectory is
+        blendRadius: the size of the rounding of each corner, relative to the shorter adjacent edge: the curve starts
+            and ends at blendRadius/2 times its length before and after the waypoint; 1: the curves of the two corners
+            of the shorter edge meet in its middle; 0: no rounding, the motion stops at each corner
+        maxVelocities: the largest velocity per joint; empty: those of Trajectory
+        maxAccelerations: the largest acceleration per joint; empty: those of Trajectory
+        numberOfPoints: the points per edge and per curve at which the velocity along the path is computed; more
+            points keep the limits closer and take longer to compute
+
+    Example:
+        trajectory = Trajectory(path[0], maxVelocities=[1.5]*6, maxAccelerations=[4]*6)
+        trajectory.Add(ProfileJointPath(path, blendRadius=1))
+    """
+    def __init__(self, waypoints, blendRadius=1., maxVelocities=[], maxAccelerations=[], numberOfPoints=100):
+        if not 0. <= blendRadius <= 1.:
+            raise ValueError('ProfileJointPath: blendRadius must be in [0, 1], not ' + str(blendRadius))
+        points = []
+        for q in waypoints:
+            q = np.array(q, dtype=float)
+            if len(points) == 0 or np.any(q != points[-1]):
+                points += [q]
+        if len(points) < 2:
+            raise ValueError('ProfileJointPath: at least two different waypoints are needed')
+        self.waypoints = points
+        self.blendRadius = float(blendRadius)
+        self.maxVelocities = maxVelocities
+        self.maxAccelerations = maxAccelerations
+        self.numberOfPoints = max(int(numberOfPoints), 4)
+
+    def _Segments(self):
+        """the pieces of the path: ('line', q0, q1) or ('curve', A, P, C), the Bezier curve from A to C with control point P"""
+        P = self.waypoints
+        corners = [] #per interior waypoint: the start and the end of its curve
+        for k in range(1, len(P) - 1):
+            (eIn, eOut) = (P[k] - P[k - 1], P[k + 1] - P[k])
+            (lIn, lOut) = (float(cMath.norm(eIn)), float(cMath.norm(eOut)))
+            r = 0.5*self.blendRadius*min(lIn, lOut)
+            corners += [(P[k] - r/lIn*eIn, P[k] + r/lOut*eOut) if r > 0. else None]
+        segments = []
+        start = P[0]
+        for k in range(1, len(P)):
+            corner = corners[k - 1] if k < len(P) - 1 else None
+            end = corner[0] if corner is not None else P[k]
+            if np.any(end != start):
+                segments += [('line', start, end)]
+            if corner is not None:
+                segments += [('curve', corner[0], P[k], corner[1])]
+                start = corner[1]
+            else:
+                start = P[k]
+        return segments
+
+    @staticmethod
+    def _Derivatives(segment, u):
+        """q, dq/du and d2q/du2 of a segment at its parameter u in [0, 1]"""
+        if segment[0] == 'line':
+            (q0, q1) = segment[1:]
+            return (q0 + u*(q1 - q0), q1 - q0, 0.*q0)
+        (A, P, C) = segment[1:]
+        return ((1. - u)**2*A + 2.*u*(1. - u)*P + u**2*C, 2.*(1. - u)*(P - A) + 2.*u*(C - P), 2.*(A - 2.*P + C))
+
+    def GetBasicProfile(self, initialTime, initialCoordinates, globalMaxVelocities, globalMaxAccelerations):
+        """the profile in Trajectory"""
+        vMax = np.array(self.maxVelocities if len(self.maxVelocities) else globalMaxVelocities, dtype=float)
+        aMax = np.array(self.maxAccelerations if len(self.maxAccelerations) else globalMaxAccelerations, dtype=float)
+        if len(vMax) == 0 or len(aMax) == 0:
+            raise ValueError('ProfileJointPath: maxVelocities and maxAccelerations are needed, of the profile or of Trajectory')
+        segments = self._Segments()
+        n = self.numberOfPoints
+        #the path parameter p: segment i for p in [starts[i], starts[i] + lengths[i]], with |dq/dp| = 1 at the ends of
+        #each segment, so that the joint velocities are continuous where two segments meet
+        lengths = [float(cMath.norm(seg[2] - seg[1]))*(1. if seg[0] == 'line' else 2.) for seg in segments]
+        starts = np.concatenate([[0.], np.cumsum(lengths)])
+        def Derivatives(i, pLocal):
+            """q, dq/dp and d2q/dp2 in segment i at p = starts[i] + pLocal"""
+            (q, q_u, q_uu) = self._Derivatives(segments[i], pLocal/lengths[i])
+            return (q, q_u/lengths[i], q_uu/lengths[i]**2)
+        p, Qu, Quu, corners = [], [], [], []
+        for (i, segment) in enumerate(segments):
+            for u in np.linspace(0., 1., n + 1)[(0 if i == 0 else 1):]:
+                (q, q_u, q_uu) = Derivatives(i, u*lengths[i])
+                if u == 1. and i + 1 < len(segments): #a point between two segments must suit the derivatives of both
+                    (q, q_u1, q_uu1) = Derivatives(i + 1, 0.)
+                    (q_u, q_uu) = (np.concatenate([q_u, q_u1]), np.concatenate([q_uu, q_uu1]))
+                    if segment[0] == 'line' and segments[i + 1][0] == 'line': #a corner without a curve
+                        corners += [len(p)]
+                else:
+                    (q_u, q_uu) = (np.concatenate([q_u, q_u]), np.concatenate([q_uu, q_uu]))
+                p += [starts[i] + u*lengths[i]]
+                Qu += [q_u]
+                Quu += [q_uu]
+        (p, Qu, Quu) = (np.array(p), np.array(Qu), np.array(Quu))
+        (vMax2, aMax2) = (np.concatenate([vMax, vMax]), np.concatenate([aMax, aMax]))
+        moving = np.abs(Qu) > 1e-12
+
+        def Bounds(k, x):
+            """the smallest and the largest d2p/dt2 at point k for x = (dp/dt)^2 which keep every joint within its
+            acceleration: |q_uu x + q_u pDDot| <= aMax; None if there is none"""
+            if np.any(np.abs(Quu[k][~moving[k]])*x > aMax2[~moving[k]]*(1. + 1e-12)):
+                return None
+            (qu, quu, a) = (Qu[k][moving[k]], Quu[k][moving[k]], aMax2[moving[k]])
+            if len(qu) == 0:
+                return (-np.inf, np.inf)
+            (b0, b1) = ((-a - quu*x)/qu, (a - quu*x)/qu)
+            (lower, upper) = (np.max(np.minimum(b0, b1)), np.min(np.maximum(b0, b1)))
+            return (lower, upper) if lower <= upper*(1. + 1e-12) + 1e-12 else None
+
+        #the largest x at each point: the velocities of the joints, and the accelerations, by bisection
+        xMax = np.min((vMax2/np.maximum(np.abs(Qu), 1e-14))**2, axis=1)
+        for k in range(len(p)):
+            if Bounds(k, xMax[k]) is None:
+                (x0, x1) = (0., xMax[k])
+                for iteration in range(40):
+                    x = 0.5*(x0 + x1)
+                    (x0, x1) = (x, x1) if Bounds(k, x) is not None else (x0, x)
+                xMax[k] = x0
+        xMax[corners] = 0. #the direction changes at a corner without a curve: the motion stops
+        x = xMax.copy()
+        (x[0], x[-1]) = (0., 0.)
+        def Largest(i, j, xKnown, yLimit, unknownAtI):
+            """the largest x of the unknown end of the interval [p_i, p_j], at most yLimit, for which the constant
+            acceleration d2p/dt2 = (x_j - x_i)/(2 (p_j - p_i)) keeps all joints within their accelerations at both
+            ends: |q_uu x + q_u d2p/dt2| <= aMax at p_i and at p_j, each linear in the unknown x"""
+            h = 2.*(p[j] - p[i])
+            (lower, upper) = (0., yLimit)
+            for (k, atK) in [(i, unknownAtI), (j, not unknownAtI)]:
+                #pDDot = (x_j - x_i)/h = sign*y/h + offset, with y the unknown
+                (sign, offset) = (-1./h, xKnown/h) if unknownAtI else (1./h, -xKnown/h)
+                alpha = Qu[k]*sign + (Quu[k] if atK else 0.)
+                beta = Qu[k]*offset + (0. if atK else Quu[k]*xKnown)
+                for (al, be, a) in zip(alpha, beta, aMax2):
+                    if abs(al) < 1e-14:
+                        continue
+                    (b0, b1) = ((-a - be)/al, (a - be)/al)
+                    (lower, upper) = (max(lower, min(b0, b1)), min(upper, max(b0, b1)))
+            return max(min(upper, yLimit), 0.) if lower <= upper else max(min(lower, yLimit), 0.)
+        for k in range(len(p) - 1): #forward with the largest, backward with the smallest acceleration
+            x[k + 1] = Largest(k, k + 1, x[k], x[k + 1], False)
+        for k in range(len(p) - 1, 0, -1):
+            x[k - 1] = Largest(k - 1, k, x[k], x[k - 1], True)
+        pDot = np.sqrt(x)
+        dt = 2.*np.diff(p)/np.maximum(pDot[:-1] + pDot[1:], 1e-14)
+        times = initialTime + np.concatenate([[0.], np.cumsum(dt)])
+        pDDot = (pDot[1:]**2 - pDot[:-1]**2)/(2.*np.diff(p)) #constant in each interval
+
+        def Function(t):
+            k = int(min(max(np.searchsorted(times, t, side='right') - 1, 0), len(dt) - 1))
+            tau = t - times[k]
+            pp = min(p[k] + pDot[k]*tau + 0.5*pDDot[k]*tau**2, p[k + 1])
+            pd = max(pDot[k] + pDDot[k]*tau, 0.)
+            i = int(min(max(np.searchsorted(starts, pp, side='right') - 1, 0), len(segments) - 1))
+            (q, q_u, q_uu) = Derivatives(i, min(pp - starts[i], lengths[i]))
+            return [q, q_u*pd, q_uu*pd**2 + q_u*pDDot[k]]
+        return _BasicProfileTimeLaw(self.waypoints[0], self.waypoints[-1], initialTime, times[-1], Function)
 
 
 class Trajectory:

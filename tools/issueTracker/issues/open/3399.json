@@ -1,0 +1,12 @@
+{
+  "number": 3399,
+  "title": "The scripts generated from the notebooks are not in the manifest of the regeneration",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "tools/regenerate.py reports python/Examples/notebooks/*.py, which notebookEmitter.py writes from python/Notebooks/*.ipynb, as drift outside both tiers (unexpected) when a notebook changes. To be checked: add them to the manifest, probably as tier 2 like the generated notebook pages.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "file": "tools/regenerate.py"
+}

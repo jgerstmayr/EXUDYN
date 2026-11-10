@@ -17,7 +17,7 @@ import heapq
 import numpy as np
 import exudyn
 import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
-from exudyn.robotics.motion import Trajectory
+from exudyn.robotics.motion import Trajectory, ProfileJointPath
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -209,8 +209,8 @@ def PlanToPose(collisionModel, robot, qStart, HTgoal, jointLimits=None, margin=0
     return PlanJointPath(collisionModel, start, candidates[0], limits, margin, seed=seed, **options)
 
 
-def TrajectoryFromPath(collisionModel, path, maxVelocities, maxAccelerations, margin=0., edgeStep=0.02):
-    """A Trajectory through the waypoints of a path, as fast as the limits allow and without stopping at the waypoints where this is free: blending lets the motion cut the corners, so that it is checked and the blend times are reduced if needed; without blending the motion is the path, which is free.
+def TrajectoryFromPath(collisionModel, path, maxVelocities, maxAccelerations, margin=0., edgeStep=0.02, blendRadius=1.):
+    """A Trajectory along the waypoints of a path which does not stop at them, as fast as the limits of the joints allow: ProfileJointPath rounds the corners by curves, which are checked for collisions and made smaller where needed; without rounding the motion is the path, which is free.
 
     Args:
         collisionModel: the exudyn.cUtilities.CollisionModel of the robot and its environment
@@ -219,16 +219,19 @@ def TrajectoryFromPath(collisionModel, path, maxVelocities, maxAccelerations, ma
         maxAccelerations: the largest acceleration per joint
         margin: the distance which the shapes keep
         edgeStep: the largest change of a joint coordinate between two checks
+        blendRadius: the size of the rounding of the corners, relative to the shorter edge at a corner, see ProfileJointPath; it is halved until the trajectory is free, then 0
 
     Returns:
         the Trajectory, for Robot.SetControl or Trajectory.Evaluate
     """
-    for blendFactor in [1., 0.5, 0.25, 0.]:
-        trajectory = Trajectory.FromWaypoints(path, maxVelocities, maxAccelerations, blendFactor=blendFactor)
-        if blendFactor == 0.:
+    for factor in [1., 0.5, 0.25, 0.125, 0.]:
+        trajectory = Trajectory(path[0], maxVelocities=maxVelocities, maxAccelerations=maxAccelerations)
+        trajectory.Add(ProfileJointPath(path, blendRadius=blendRadius*factor))
+        if factor == 0. or blendRadius == 0.:
             break
         times = trajectory.GetTimes()
-        points = 4*int(np.ceil((times[-1] - times[0])*np.max(maxVelocities)/edgeStep)) + 1 #finer than a path, as a blend is curved and its corners are close to the obstacles
+        length = sum(float(cMath.norm(np.array(b, dtype=float) - np.array(a, dtype=float))) for (a, b) in zip(path[:-1], path[1:]))
+        points = 4*int(np.ceil(length/edgeStep)) + 1 #finer than a path, as a curve is close to the obstacles at its corner
         if all(collisionModel.IsFree(trajectory.Evaluate(t)[0], margin + 1e-3) for t in np.linspace(times[0], times[-1], points)):
             break
     return trajectory

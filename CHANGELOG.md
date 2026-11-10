@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 499 | 1.13.522 |
+| 1.13 | Newborn | 501 | 1.13.524 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.524** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The URDF import loses the colors of the materials of Collada meshes (#3398)
+  - description: GetURDFrobotData reads the meshes by pymeshlab, which merges the parts of a Collada (.dae) file and drops the diffuse colors of their materials; the UR5 of ur\_description, whose meshes have dark grey, light grey and blue parts, was drawn in the one grey of its URDF material. Decided: a small Collada reader (ReadColladaMesh, xml of the standard library) gives the triangles with the colors of their materials, used for a .dae mesh without a texture.
+  - **notes:** The URDF import keeps the colors of the materials of Collada (.dae) meshes without texture, read by the new function ReadColladaMesh.
+  - date resolved: **2026-11-10 00:44**, date raised: 2026-11-10
+- **1.13.523** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A trajectory along a planned path which rounds its corners and keeps the limits of the joints (#3397)
+  - description: TrajectoryFromPath blended point-to-point profiles: each one accelerated and decelerated, so that the motion along a path of many waypoints braked and accelerated often (the wall scene of pathPlanningUR5.py stopped seven times), the blending could not be adjusted, and the blend could exceed the acceleration limits. Decided: ProfileJointPath, straight edges whose corners are rounded by curves of an adjustable size (blendRadius), with the largest velocity along the path that the velocity and acceleration limits of the joints allow; TrajectoryFromPath uses it and reduces the rounding where the check finds a collision.
+  - **notes:** ProfileJointPath moves along a path of waypoints in joint space with corners rounded by curves of an adjustable size (blendRadius), as fast as the velocity and acceleration limits of the joints allow and without stopping at the waypoints; TrajectoryFromPath uses it and reduces the rounding where it would collide.
+  - date resolved: **2026-11-10 00:44**, date raised: 2026-11-10
 - **1.13.522** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The icon bar is shown for some seconds when the render window opens (#3396)
   - description: A new user does not know that the icon bar folds in at the right border of the render window. Decided: the bar is shown when the window opens and folds out after general.iconBarStartTime milliseconds, default 5000; it is drawn after the frame is saved, so it is not on saved or raytraced images.
   - **notes:** The icon bar is shown for visualizationSettings.general.iconBarStartTime milliseconds, 5000 by default, when the render window opens, so that a new user sees where it is; it is not on saved or raytraced images.

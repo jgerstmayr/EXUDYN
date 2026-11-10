@@ -22,8 +22,10 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'CompleteInertiasFromMeshes', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData', 'FitCapsuleToPoints', 'FitCapsulesToMesh', 'CollisionShapesFromGeometry', 'ConvexHullOfMesh', 'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics',
-    'AddURDFgraphics',
+    'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'CompleteInertiasFromMeshes',
+    'ReadColladaMesh', 'GetURDFrobotData', 'ReduceURDFrobotData', 'RobotModelDictFromData',
+    'FitCapsuleToPoints', 'FitCapsulesToMesh', 'CollisionShapesFromGeometry', 'ConvexHullOfMesh',
+    'RobotFromURDFdata', 'MakeCorkeRobot', 'LoadURDFgraphics', 'AddURDFgraphics',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -194,6 +196,129 @@ def CompleteInertiasFromMeshes(robotData, density=1000., verbose=1):
         link['inertiaProblems'] = problems
     return result
 
+def ReadColladaMesh(fileName):
+    """The triangles of a Collada (.dae) file with the diffuse colors of their materials, which pymeshlab does not keep (#3398); the transformations of the nodes, the unit and the up axis are applied, and the polygons of a polylist are split into triangles.
+
+    Args:
+        fileName: the .dae file
+
+    Returns:
+        a dict with 'points', 'normals' and 'colors' (RGBA), one per row, and 'triangles', the indices of their points, or None if a material has a texture or the file has no triangles
+    """
+    import xml.etree.ElementTree as ET
+    root = ET.parse(fileName).getroot()
+    ns = root.tag[:root.tag.index('}') + 1] if root.tag.startswith('{') else ''
+    def All(element, path):
+        return element.findall('/'.join(ns + part for part in path.split('/')))
+    def One(element, path):
+        return element.find('/'.join(ns + part for part in path.split('/')))
+
+    (scale, upAxis) = (1., 'Z_UP')
+    asset = One(root, 'asset')
+    if asset is not None:
+        unit = One(asset, 'unit')
+        if unit is not None and unit.get('meter') is not None:
+            scale = float(unit.get('meter'))
+        up = One(asset, 'up_axis')
+        if up is not None and up.text:
+            upAxis = up.text.strip()
+
+    effectColor = {} #the diffuse color of each effect, and of each material by its effect
+    for effect in All(root, 'library_effects/effect'):
+        diffuse = next(effect.iter(ns + 'diffuse'), None)
+        if diffuse is None:
+            continue
+        if One(diffuse, 'texture') is not None:
+            return None
+        color = One(diffuse, 'color')
+        if color is not None:
+            effectColor[effect.get('id')] = [float(v) for v in color.text.split()][:4]
+    materialColor = {}
+    for material in All(root, 'library_materials/material'):
+        instance = One(material, 'instance_effect')
+        if instance is not None:
+            materialColor[material.get('id')] = effectColor.get(instance.get('url', '#')[1:])
+
+    geometries = {g.get('id'): g for g in All(root, 'library_geometries/geometry')}
+    (points, normals, colors) = ([], [], [])
+
+    def AddGeometry(geometry, HT, bindings):
+        mesh = One(geometry, 'mesh')
+        if mesh is None:
+            return
+        sources = {}
+        for source in All(mesh, 'source'):
+            (array, accessor) = (One(source, 'float_array'), One(source, 'technique_common/accessor'))
+            if array is not None and accessor is not None and array.text:
+                sources[source.get('id')] = np.array(array.text.split(), dtype=float).reshape(-1, int(accessor.get('stride', '1')))
+        vertices = {}
+        for v in All(mesh, 'vertices'):
+            for inp in All(v, 'input'):
+                if inp.get('semantic') == 'POSITION':
+                    vertices[v.get('id')] = sources[inp.get('source')[1:]]
+        for kind in ('triangles', 'polylist'):
+            for primitive in All(mesh, kind):
+                inputs = All(primitive, 'input')
+                p = One(primitive, 'p')
+                if p is None or not p.text:
+                    continue
+                indices = np.array(p.text.split(), dtype=int).reshape(-1, 1 + max(int(inp.get('offset', '0')) for inp in inputs))
+                if kind == 'polylist': #a fan of triangles per polygon
+                    (corners, start) = ([], 0)
+                    for n in np.array(One(primitive, 'vcount').text.split(), dtype=int):
+                        for k in range(1, n - 1):
+                            corners += [start, start + k, start + k + 1]
+                        start += n
+                    indices = indices[corners]
+                (position, normal) = (None, None)
+                for inp in inputs:
+                    offset = int(inp.get('offset', '0'))
+                    if inp.get('semantic') == 'VERTEX':
+                        position = vertices[inp.get('source')[1:]][indices[:, offset]]
+                    elif inp.get('semantic') == 'NORMAL':
+                        normal = sources[inp.get('source')[1:]][indices[:, offset]]
+                if position is None:
+                    continue
+                position = position @ HT[:3, :3].T + HT[:3, 3]
+                if normal is None: #the normals of the triangles
+                    corners3 = position.reshape(-1, 3, 3)
+                    normal = np.repeat(np.cross(corners3[:, 1] - corners3[:, 0], corners3[:, 2] - corners3[:, 0]), 3, axis=0)
+                else:
+                    normal = normal @ HT[:3, :3].T
+                normal = normal/np.maximum(np.linalg.norm(normal, axis=1), 1e-30)[:, None]
+                color = materialColor.get(bindings.get(primitive.get('material'), primitive.get('material')))
+                color = [0.7, 0.7, 0.7, 1.] if color is None else (color + [1.])[:4]
+                points.append(position)
+                normals.append(normal)
+                colors.append(np.tile(color, (len(position), 1)))
+
+    def Visit(node, HT):
+        matrix = One(node, 'matrix')
+        if matrix is not None:
+            HT = HT @ np.array(matrix.text.split(), dtype=float).reshape(4, 4)
+        for instance in All(node, 'instance_geometry'):
+            bindings = {m.get('symbol'): m.get('target', '#')[1:] for m in instance.iter(ns + 'instance_material')}
+            geometry = geometries.get(instance.get('url', '#')[1:])
+            if geometry is not None:
+                AddGeometry(geometry, HT, bindings)
+        for child in All(node, 'node'):
+            Visit(child, HT)
+
+    HT0 = np.diag([scale, scale, scale, 1.])
+    if upAxis == 'Y_UP':
+        HT0 = np.array([[1., 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) @ HT0
+    elif upAxis == 'X_UP':
+        HT0 = np.array([[0., -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) @ HT0
+    for scene in All(root, 'library_visual_scenes/visual_scene'):
+        for node in All(scene, 'node'):
+            Visit(node, HT0)
+    if len(points) == 0:
+        return None
+    corners = np.hstack([np.vstack(points), np.vstack(normals), np.vstack(colors)]) #corners of the same point, normal and color are one point
+    (unique, index) = np.unique(corners, axis=0, return_inverse=True)
+    return {'points': unique[:, :3], 'triangles': np.array(index).reshape(-1, 3), 'normals': unique[:, 3:6], 'colors': unique[:, 6:]}
+
+
 def GetURDFrobotData(robot, 
                      urdf=None, 
                      linkColorList = None,
@@ -209,7 +334,7 @@ def GetURDFrobotData(robot,
     Args:
         robot: a RTB Robot (class) model, as returned e.g. by LoadURDFrobot
         urdf: not used: the visuals and their origins are those of the links of robot (#3280)
-        linkColorList: if not None, this can contain a list of RGBA color lists for each link to prescribe colors instead of using internally stored colors or general color information (.obj files); set linkColorList=[graphics.color.red]*8 to set 8 link colors red; links are counted as in the urdf file and may be different from the number of joints
+        linkColorList: if not None, this can contain a list of RGBA color lists for each link to prescribe colors instead of using internally stored colors or general color information (.obj files, the materials of .dae files, see ReadColladaMesh); set linkColorList=[graphics.color.red]*8 to set 8 link colors red; links are counted as in the urdf file and may be different from the number of joints
         staticJointValues: if not None, has to be a list of joint angles (or displacements) for computing the static graphics list
         returnStaticGraphicsList: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)
         exportMesh: if True, the returned dict also contains a meshSetList which refers to the MeshSet in pymeshlab, which can be used for debugging purposes
@@ -383,11 +508,20 @@ def GetURDFrobotData(robot,
                     gData['texture'] = textureName
                     gData['textureCoordinates'] = np.array(mesh.wedge_tex_coord_matrix(), dtype=float).flatten()
                 else:
-                    gData = graphics.FromPointsAndTrigs(points = mesh.vertex_matrix() * scene.scale,
-                                                        triangles = mesh.face_matrix(),
-                                                        normals = mesh.vertex_normal_matrix(),
-                                                        color = color,
-                                                        )
+                    collada = None
+                    if scene.filename.lower().endswith('.dae') and linkColorList is None:
+                        collada = ReadColladaMesh(scene.filename) #the colors of its materials, which pymeshlab drops (#3398)
+                    if collada is not None:
+                        gData = graphics.FromPointsAndTrigs(points = collada['points'] * scene.scale,
+                                                            triangles = collada['triangles'],
+                                                            normals = collada['normals'],
+                                                            color = collada['colors'], orientTriangles = False)
+                    else:
+                        gData = graphics.FromPointsAndTrigs(points = mesh.vertex_matrix() * scene.scale,
+                                                            triangles = mesh.face_matrix(),
+                                                            normals = mesh.vertex_normal_matrix(),
+                                                            color = color,
+                                                            )
 
                 #if mesh has face colors (.obj files), read them and store in gData:
                 if mesh.has_face_color() and (linkColorList is None) and 'texture' not in gData:

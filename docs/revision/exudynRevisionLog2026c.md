@@ -6431,6 +6431,40 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg21-6-3"></a>
+### RG21.6.3 to RG21.6.5 — the trajectory along a path, the colors of the UR5, the figures (2026-11-10, #3397, #3398)
+*(Maintainer 2026-11-09: the trajectory of PlanToPose, ShortcutPath and TrajectoryFromPath has many intermediate points,
+brakes and accelerates a lot, and its blending cannot be adjusted; a larger blending for parts of almost the same
+direction; the UR5 has no colors; a raytraced view of the navigation (texture three times finer, shadows, perspective,
+no checkerboard) and of the UR5 in the docs; more details on navigation and planning; more comments in the notebooks.)*
+
+- **ProfileJointPath** (#3397, motion.py): straight edges, each corner rounded by a quadratic Bezier curve from
+  blendRadius/2 times the shorter edge before to after the waypoint; the path parameter is scaled per piece so that
+  |dq/dp| = 1 at its ends (otherwise the joint velocities jump where a line meets a curve - they did in the first
+  version); the velocity along the path by a time-optimal parametrization on numberOfPoints points per piece: the
+  largest (dp/dt)^2 from the velocity limits and, by bisection, from |q_pp x + q_p pDDot| <= aMax; a forward pass with
+  the largest and a backward pass with the smallest constant acceleration per interval which suits the limits at both
+  of its ends, solved as linear inequalities in the unknown end. Measured on the three scenes of pathPlanningUR5.py
+  (limits 1.5 rad/s, 4 rad/s^2): durations 4.73 -> 2.77 s (wall), 2.19 -> 1.78 s (shelf), 2.54 -> 1.98 s (window) for
+  blendRadius 1 (0.5: 2.77, 1.88, 2.17 s); the old blended PTP stopped seven times at the wall and exceeded the
+  acceleration limit at the shelf (6.3 rad/s^2); the new one never stops on the way. Its accelerations exceed the
+  limit by 1/numberOfPoints roughly: 10 % at 20 points, 4 % at 40, 1.5 % at 100 (the default), 0.5 % at 200; 0.3 s to
+  compute at 100. Tried and not taken: a uniform cubic B-spline with the waypoints as control points (subdivided
+  where it collides) - slower than the rounded corners at the same limits. TrajectoryFromPath(blendRadius=1) halves
+  the rounding until the check is free, then runs the path itself; robotPathPlanningTest.py checks the limits, the
+  continuity of the velocities, no stop on the way, and the stop at a corner without rounding.
+- **Collada colors** (#3398, urdfImport.py): pymeshlab merges the parts of a .dae file and drops their materials;
+  ReadColladaMesh reads the triangles with the diffuse colors of their materials (nodes, unit, up axis, polylists),
+  identical in geometry to pymeshlab on the seven meshes of the UR5 (bounding boxes to 1e-6); corners of equal point,
+  normal and color are merged. GetURDFrobotData uses it for a .dae mesh without texture. ur5Data.h5 of CommonData_git
+  written again by createUR5Data.py in venvP313rtb (3.3 MB, before 2.6 MB).
+- **Figures**: docs/figures/robotNavigation.png and robotPathPlanningUR5.png, raytraced without a window;
+  mobileRobotsNavigation.py with the distance map at 1/3 of the planning cell (mapCellSize), no checkerboard, a
+  perspective of 0.5, a directional light with shadows, seen obliquely. robotics.md: the collision check, RRT-Connect,
+  the shortcuts, PlanToPose, TrajectoryFromPath, the grid, A*, the SE(2) planner and the controllers of the mobile
+  robots in more detail. tutorialRobotics.ipynb with more explanation of the trajectories, the control and the
+  sensors (by a subagent, checked); both notebooks run again.
+
 <a id="rg6-21"></a>
 ### RG6.21 — the icon bar at the start; RG11.5.1, RG4.27, RG6.22, RG6.23 (2026-11-10, #3396, #3395, #904)
 *(Maintainer 2026-11-09: the icon bar open for 5 seconds at the start; plan the buttons and sliders and the zoom of

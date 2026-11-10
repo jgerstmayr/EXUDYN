@@ -91,9 +91,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pa
 (sec-navigation-trajectoryfrompath)=
 ## Function: TrajectoryFromPath
 
-[`TrajectoryFromPath(collisionModel, path, maxVelocities, maxAccelerations, margin = 0., edgeStep = 0.02)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L212)
+[`TrajectoryFromPath(collisionModel, path, maxVelocities, maxAccelerations, margin = 0., edgeStep = 0.02, blendRadius = 1.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L212)
 
-- **function description**: A Trajectory through the waypoints of a path, as fast as the limits allow and without stopping at the waypoints where this is free: blending lets the motion cut the corners, so that it is checked and the blend times are reduced if needed; without blending the motion is the path, which is free.
+- **function description**: A Trajectory along the waypoints of a path which does not stop at them, as fast as the limits of the joints allow: ProfileJointPath rounds the corners by curves, which are checked for collisions and made smaller where needed; without rounding the motion is the path, which is free.
 - **input**:
   - `collisionModel`: the exudyn.cUtilities.CollisionModel of the robot and its environment
   - `path`: the waypoints, one per row
@@ -101,6 +101,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pa
   - `maxAccelerations`: the largest acceleration per joint
   - `margin`: the distance which the shapes keep
   - `edgeStep`: the largest change of a joint coordinate between two checks
+  - `blendRadius`: the size of the rounding of the corners, relative to the shorter edge at a corner, see ProfileJointPath; it is halved until the trajectory is free, then 0
 - **output**: the Trajectory, for Robot.SetControl or Trajectory.Evaluate
 
 
@@ -110,7 +111,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/pa
 (sec-navigation-plangridpath)=
 ## Function: PlanGridPath
 
-[`PlanGridPath(grid, start, goal, connectivity = 8, clearanceWeight = 0., smooth = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L370)
+[`PlanGridPath(grid, start, goal, connectivity = 8, clearanceWeight = 0., smooth = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L373)
 
 - **function description**: The shortest path on the cells of an occupancy grid by A*. Inflate the grid by the radius of the robot before.
 - **input**:
@@ -129,7 +130,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-planse2path)=
 ## Function: PlanSE2Path
 
-[`PlanSE2Path(shapes, obstacles, start, goal, xRange, yRange, phiRange = (-2*np.pi, 2*np.pi), margin = 0., **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L436)
+[`PlanSE2Path(shapes, obstacles, start, goal, xRange, yRange, phiRange = (-2*np.pi, 2*np.pi), margin = 0., **options)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L439)
 
 - **function description**: A path of a robot in the plane in the coordinates x, y and the rotation phi by RRT-Connect, for narrow spaces in which the shape of the robot matters and a grid with the radius of the robot would be closed; further keyword arguments go to PlanJointPath, e.g. maxStep and seed.
 - **input**:
@@ -150,7 +151,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNaviga
 (sec-navigation-pathwithheadings)=
 ## Function: PathWithHeadings
 
-[`PathWithHeadings(path, initialHeading = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L462)
+[`PathWithHeadings(path, initialHeading = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L465)
 
 - **function description**: The poses of a differential drive along a path in the plane, which turns on the spot at each waypoint: the waypoints twice, with the heading of the segment before and after; a coordinate is a Trajectory waypoint.
 - **input**:
@@ -165,7 +166,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotNaviga
 (sec-navigation-differentialdrivewheelvelocities)=
 ## Function: DifferentialDriveWheelVelocities
 
-[`DifferentialDriveWheelVelocities(v, omega, wheelRadius, trackWidth)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L555)
+[`DifferentialDriveWheelVelocities(v, omega, wheelRadius, trackWidth)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L558)
 
 - **function description**: The velocities of the two wheels of a differential drive.
 - **input**:
@@ -199,7 +200,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid---init--)=
 ### Class function: __init__
 
-[`__init__(self, xRange, yRange, cellSize)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L251)
+[`__init__(self, xRange, yRange, cellSize)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L254)
 
 - **class function description**: create an empty grid
 - **input**:
@@ -211,7 +212,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-cellofpoint)=
 ### Class function: CellOfPoint
 
-[`CellOfPoint(self, point)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L269)
+[`CellOfPoint(self, point)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L272)
 
 - **class function description**: the indices (i, j) of the cell with the point; a ValueError if it is outside the grid
 
@@ -219,7 +220,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-centerofcell)=
 ### Class function: CenterOfCell
 
-[`CenterOfCell(self, cell)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L276)
+[`CenterOfCell(self, cell)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L279)
 
 - **class function description**: the position of the center of the cell (i, j)
 
@@ -227,7 +228,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-addcircle)=
 ### Class function: AddCircle
 
-[`AddCircle(self, center, radius)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L280)
+[`AddCircle(self, center, radius)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L283)
 
 - **class function description**: mark the cells whose centers are in a circle as occupied
 
@@ -235,7 +236,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-addrectangle)=
 ### Class function: AddRectangle
 
-[`AddRectangle(self, center, size, angle = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L285)
+[`AddRectangle(self, center, size, angle = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L288)
 
 - **class function description**: mark the cells whose centers are in a rectangle as occupied
 - **input**:
@@ -247,7 +248,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-addobstacles)=
 ### Class function: AddObstacles
 
-[`AddObstacles(self, obstacles, zRange = (0., 1.), numberOfLayers = 5)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L298)
+[`AddObstacles(self, obstacles, zRange = (0., 1.), numberOfLayers = 5)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L301)
 
 - **class function description**: mark the cells in which a shape is within a range of heights as occupied
 - **input**:
@@ -259,7 +260,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-distancetransform)=
 ### Class function: DistanceTransform
 
-[`DistanceTransform(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L319)
+[`DistanceTransform(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L322)
 
 - **class function description**: the distance of the center of each cell to the center of the nearest occupied cell
 - **output**: array of the shape of occupied; zero for occupied cells, inf if the grid has no occupied cell
@@ -268,7 +269,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-inflate)=
 ### Class function: Inflate
 
-[`Inflate(self, radius)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L343)
+[`Inflate(self, radius)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L346)
 
 - **class function description**: occupy all cells within the distance radius of an occupied cell: a robot of this radius is then planned as a point
 
@@ -276,7 +277,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-occupancygrid-issegmentfree)=
 ### Class function: IsSegmentFree
 
-[`IsSegmentFree(self, p0, p1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L347)
+[`IsSegmentFree(self, p0, p1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L350)
 
 - **class function description**: True if the straight line between two points only passes free cells inside the grid
 
@@ -301,7 +302,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-purepursuit---init--)=
 ### Class function: __init__
 
-[`__init__(self, path, lookAhead, speed, goalTolerance = 0.02, maxTurnRate = np.inf)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L491)
+[`__init__(self, path, lookAhead, speed, goalTolerance = 0.02, maxTurnRate = np.inf)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L494)
 
 - **class function description**: create the controller
 - **input**:
@@ -315,7 +316,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/mo
 (sec-navigation-purepursuit-control)=
 ### Class function: Control
 
-[`Control(self, pose)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L529)
+[`Control(self, pose)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/navigation.py#L532)
 
 - **class function description**: the velocities of the robot at a pose
 - **input**:

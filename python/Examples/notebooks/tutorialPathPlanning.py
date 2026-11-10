@@ -82,8 +82,8 @@ print('waypoints of RRT-Connect:', len(path), ', after the shortcuts:', len(shor
 print('largest joint motion along the path: %.2f rad, after the shortcuts: %.2f rad' % (np.sum(np.max(np.abs(np.diff(path, axis=0)), axis=1)), np.sum(np.max(np.abs(np.diff(short, axis=0)), axis=1))))
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# `TrajectoryFromPath` makes a trajectory through the waypoints within the limits of the joints, blended where the
-# blending stays free. `robot.SetControl(trajectory)` then runs it on a model of the robot, see the example `pathPlanningUR5.py`;
+# `TrajectoryFromPath` makes a trajectory along the path within the limits of the joints: its corners are rounded by
+# curves, as large as `blendRadius` allows and the obstacles permit, and the robot does not stop at the waypoints. `robot.SetControl(trajectory)` then runs it on a model of the robot, see the example `pathPlanningUR5.py`;
 # `mobileRobotsNavigation.py` drives a mecanum-wheeled robot and a differential drive.
 trajectory = TrajectoryFromPath(model, short, [1.5]*6, [4.]*6)
 times = np.linspace(0, trajectory.GetTimes()[-1], 400)

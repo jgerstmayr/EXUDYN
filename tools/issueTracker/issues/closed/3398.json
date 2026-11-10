@@ -1,0 +1,16 @@
+{
+  "number": 3398,
+  "title": "The URDF import loses the colors of the materials of Collada meshes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "GetURDFrobotData reads the meshes by pymeshlab, which merges the parts of a Collada (.dae) file and drops the diffuse colors of their materials; the UR5 of ur_description, whose meshes have dark grey, light grey and blue parts, was drawn in the one grey of its URDF material. Decided: a small Collada reader (ReadColladaMesh, xml of the standard library) gives the triangles with the colors of their materials, used for a .dae mesh without a texture.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 00:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/urdfImport.py",
+  "releaseNotes": "The URDF import keeps the colors of the materials of Collada (.dae) meshes without texture, read by the new function ReadColladaMesh.",
+  "resolvedInVersion": "1.13.524"
+}

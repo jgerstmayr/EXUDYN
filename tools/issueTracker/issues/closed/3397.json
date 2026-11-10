@@ -1,0 +1,16 @@
+{
+  "number": 3397,
+  "title": "A trajectory along a planned path which rounds its corners and keeps the limits of the joints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "TrajectoryFromPath blended point-to-point profiles: each one accelerated and decelerated, so that the motion along a path of many waypoints braked and accelerated often (the wall scene of pathPlanningUR5.py stopped seven times), the blending could not be adjusted, and the blend could exceed the acceleration limits. Decided: ProfileJointPath, straight edges whose corners are rounded by curves of an adjustable size (blendRadius), with the largest velocity along the path that the velocity and acceleration limits of the joints allow; TrajectoryFromPath uses it and reduces the rounding where the check finds a collision.",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 00:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/motion.py",
+  "releaseNotes": "ProfileJointPath moves along a path of waypoints in joint space with corners rounded by curves of an adjustable size (blendRadius), as fast as the velocity and acceleration limits of the joints allow and without stopping at the waypoints; TrajectoryFromPath uses it and reduces the rounding where it would collide.",
+  "resolvedInVersion": "1.13.523"
+}

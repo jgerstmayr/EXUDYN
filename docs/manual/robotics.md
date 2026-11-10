@@ -132,11 +132,72 @@ file read with `densityForInertiaEstimation` and `CompleteInertiasFromMeshes` th
 (sec-robotics-planning)=
 ## Path planning and navigation
 
-`exudyn.robotics.navigation` plans motions among known obstacles, on the collision check of `Robot.GetCollisionModel` in C++, a few microseconds per configuration. The shapes of neighboring links overlap by construction: `excludeCollidingAt=q` leaves out the pairs that overlap at a free configuration q.
+`exudyn.robotics.navigation` plans motions among known obstacles. Planning means finding a motion from a start to a
+goal which keeps a distance `margin` from the obstacles; it does not simulate anything, and the planned motion is then
+run on a model of the robot by its joint control (`Robot.SetControl`).
 
-For a serial robot, `PlanJointPath` finds a path in joint space by RRT-Connect, `ShortcutPath` removes its detours, and `PlanToPose` takes a pose of the tool as the goal. `TrajectoryFromPath` turns the path into a `Trajectory` for `Robot.SetControl`: `Trajectory.FromWaypoints` runs it without stopping at the waypoints, and the blending, which cuts the corners, is reduced if the check finds a collision.
+**The collision check.** `Robot.GetCollisionModel(obstacles)` holds the collision shapes of the links (capsules,
+boxes, convex hulls) and the obstacles, each a `ConvexShape` of `exudyn.cUtilities` with its frame. For joint
+coordinates q it places the shapes by the kinematics in C++ and answers `IsFree(q, margin)` and `MinimumDistance(q)`,
+a few microseconds per configuration, and `IsEdgeFree(q0, q1, margin, edgeStep)` for the straight motion between two
+configurations, checked at steps of at most `edgeStep` in every joint. The shapes of neighboring links overlap by
+construction: `excludeCollidingAt=q` leaves out the pairs that overlap at a free configuration q.
 
-For a mobile robot, an `OccupancyGrid` holds the map; after `Inflate` by the radius of the robot, `PlanGridPath` finds the shortest path of the cell centers by A\* and leaves out waypoints where the straight line is free. `PlanSE2Path` plans x, y and the rotation by RRT-Connect, for a robot which only passes a narrow space at the right angle. A mecanum-wheeled robot follows a `Trajectory` of x, y and phi; a differential drive follows `PathWithHeadings`, or the path by `PurePursuit`, with `DifferentialDriveWheelVelocities` for its wheels. The notebook {doc}`tutorialPathPlanning </docs/generated/notebooks/tutorialPathPlanning>` goes through both.
+**A serial robot.** The planning happens in joint space, where every configuration of the arm is one point:
+
+- `PlanJointPath` finds a path by RRT-Connect: one tree of free configurations grows from the start and one from the
+  goal; each step adds a random configuration to one tree, as far as it is free and at most `maxStep` per joint, and
+  the other tree grows towards it until it is blocked or the trees connect (with probability `goalBias` towards the
+  other tree directly). It needs no grid of the joint space, and works for any number of joints, but its path is a
+  zigzag that depends on the random numbers (`seed`); a narrow passage may need many points (`maxIterations`).
+- `ShortcutPath` connects random points anywhere on the path directly, where the straight motion is free
+  (`iterations` pairs), and then leaves out each waypoint whose neighbors see each other. What remains are the corners
+  that the obstacles require.
+- `PlanToPose` takes a pose of the tool as the goal: it tries the free solutions of the inverse kinematics, the one
+  nearest to the start first, and plans to it by `PlanJointPath`.
+- `TrajectoryFromPath` turns the path into a `Trajectory` for `Robot.SetControl`, by `ProfileJointPath`: the corners
+  of the path are rounded by curves in joint space, whose size `blendRadius` sets relative to the edges, and the
+  velocity along the path is the largest one that the velocity and acceleration limits of the joints allow - slower in
+  the curves, without stopping at the waypoints (a time-optimal parametrization of the path). The rounded path leaves
+  the checked edges, so it is checked again, and the rounding is made smaller where it would come closer than the
+  margin (#3397). `Trajectory.FromWaypoints` instead blends point-to-point motions, which accelerate and decelerate
+  on each edge.
+
+The straight lines in joint space are curves of the tool. The example `pathPlanningUR5.py` plans the UR5 past a wall,
+out of a shelf into another compartment, and through a window.
+
+```{figure} /docs/figures/robotPathPlanningUR5.png
+:width: 500px
+
+The UR5 at the goal behind a wall, after the planned motion: the spheres are the tool positions of the waypoints after
+`ShortcutPath`, the green line is the tool path of the trajectory; raytraced, from the example pathPlanningUR5.py.
+```
+
+**A mobile robot.** A robot on the floor is planned in the plane:
+
+- An `OccupancyGrid` holds the map in square cells, free or occupied, filled by `AddRectangle`, `AddCircle` or the
+  obstacles of a collision model (`AddObstacles`, over a range of heights). `DistanceTransform` gives the distance of
+  each cell to the nearest obstacle. `Inflate(radius)` marks the cells closer than the radius of the robot as
+  occupied, so that the robot can then be planned as a point.
+- `PlanGridPath` finds the shortest path of the cell centers by A\*, with 4 or 8 neighbors; `clearanceWeight` makes
+  cells close to the obstacles more expensive, and with `smooth=True` it leaves out waypoints where the straight line
+  between the others is free.
+- `PlanSE2Path` plans x, y and the rotation by RRT-Connect, with the shapes of the robot, for a robot which only
+  passes a narrow space at the right angle.
+- A mecanum-wheeled robot follows a `Trajectory` of x, y and phi. A differential drive cannot move sideways: it follows
+  `PathWithHeadings`, which turns on the spot at each waypoint, or the path by `PurePursuit`, which steers on the arc
+  through the point of the path at the distance `lookAhead` ahead; `DifferentialDriveWheelVelocities` gives the
+  velocities of its wheels.
+
+```{figure} /docs/figures/robotNavigation.png
+:width: 600px
+
+A mecanum-wheeled robot (blue) and a differential drive (orange) in a room: the floor shows the distance map of the
+obstacles, with lines every 0.5 m, and the region not available to the larger robot in salmon; the planned paths with their waypoints and the
+simulated paths; raytraced, from the example mobileRobotsNavigation.py.
+```
+
+The notebook {doc}`tutorialPathPlanning </docs/generated/notebooks/tutorialPathPlanning>` goes through both.
 
 (sec-robotics-ros)=
 ## ROS

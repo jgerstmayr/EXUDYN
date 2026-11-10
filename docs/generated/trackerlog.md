@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.522.dev1
+- Exudyn version = 1.13.524.dev1
 - last change = 2026-11-10
-- Number of issues = 3397
-- Number of resolved issues = 3299 (522 in current version)
+- Number of issues = 3400
+- Number of resolved issues = 3301 (524 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `LOW EFF` `raised by: Claude-JG` The scripts generated from the notebooks are not in the manifest of the regeneration (#3399)
+  - description: tools/regenerate.py reports python/Examples/notebooks/\*.py, which notebookEmitter.py writes from python/Notebooks/\*.ipynb, as drift outside both tiers (unexpected) when a notebook changes. To be checked: add them to the manifest, probably as tier 2 like the generated notebook pages.
+  - date raised: 2026-11-10
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` GetURDFrobotData: visual primitives, the names of the base links, the order of the links (#3393)
   - description: GetURDFrobotData reads only meshes as visual geometry, so boxes, cylinders and spheres in the visual elements of a URDF are left out; the names of the links fixed to the base are not stored; whether a parent always precedes its children in the link list is not checked. Decided: read the primitives as graphics, store the base link names, reorder or refuse an order with a child before its parent.
   - date raised: 2026-11-09

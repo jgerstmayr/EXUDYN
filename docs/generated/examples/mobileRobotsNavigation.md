@@ -41,13 +41,12 @@ boxes = [([0.2, 2.6], [3, 1.3]), ([0.2, 2.6], [6.5, 1.3]), ([0.2, 3.4], [4.5, 5.
 cylinders = [(0.5, [7.5, 5]), (0.4, [1.8, 4.5])]
 height = 0.5
 
-graphicsRoom = [graphics.CheckerBoard([5, 3.5, -0.005], size=11, nTiles=11)]
-graphicsRoom += [graphics.Brick(centerPoint=[c[0], c[1], 0.5*height], size=[s[0], s[1], height], color=graphics.color.grey) for (s, c) in boxes]
+graphicsRoom = [graphics.Brick(centerPoint=[c[0], c[1], 0.5*height], size=[s[0], s[1], height], color=graphics.color.grey) for (s, c) in boxes]
 graphicsRoom += [graphics.Cylinder(pAxis=[c[0], c[1], 0], vAxis=[0, 0, height], radius=r, color=graphics.color.lightgrey, nTiles=32) for (r, c) in cylinders]
 
-def Grid(robotRadius):
+def Grid(robotRadius, cellSize=0.05):
     """the map for a robot of this radius, which is then planned as a point"""
-    grid = OccupancyGrid([0, 10], [0, 7], 0.05)
+    grid = OccupancyGrid([0, 10], [0, 7], cellSize)
     for (s, c) in boxes:
         grid.AddRectangle(c, s)
     for (r, c) in cylinders:
@@ -58,7 +57,8 @@ def Grid(robotRadius):
 
 #%%+++ the distance map: for each cell of the grid, the distance to the nearest obstacle. Inflating the obstacles by the radius of a robot marks the cells closer than this radius as occupied,
 #so that the robot can be planned as a point; a clearanceWeight of PlanGridPath would also use the distance to keep away from the obstacles.
-mapCellDistances = Grid(0.).DistanceTransform() #indices x, y
+mapCellSize = 0.05/3                            #three times finer than the grid of the planning, for the texture of the floor
+mapCellDistances = Grid(0., cellSize=mapCellSize).DistanceTransform() #indices x, y
 inflation = 0.4                                 #the radius of the larger robot
 dMax = float(mapCellDistances.max())
 image = np.zeros(mapCellDistances.T.shape + (3,), dtype=np.uint8)
@@ -170,6 +170,11 @@ simulationSettings.solution.file.writePeriod = 0.05
 simulationSettings.solution.sensors.writePeriod = 0.05
 SC.visualizationSettings.general.autoFitScene = True
 SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.view0.camera.perspective = 0.5
+SC.visualizationSettings.openGL.light0.position = [2, -3, 6, 0] #a directional light from above, casting the shadows
+SC.visualizationSettings.openGL.light0.shadow = 0.4
+SC.visualizationSettings.openGL.light0.lightRadius = 0.1 #soft shadows in the raytracer
+SC.visualizationSettings.openGL.advanced.initialModelRotation = RotationMatrixX(0.6) #seen obliquely from the side of small y
 SC.visualizationSettings.sensors.traces.listOfPositionSensors = sensors
 SC.visualizationSettings.sensors.traces.showPositionTrace = True
 SC.visualizationSettings.sensors.traces.showPast = True
@@ -186,7 +191,7 @@ import matplotlib.pyplot as plt
 plt.figure()
 plt.imshow(mapCellDistances.T, origin='lower', extent=[0, 10, 0, 7], cmap='viridis')
 plt.colorbar(label='distance to the nearest obstacle [m]')
-plt.contour(np.linspace(0.025, 9.975, mapCellDistances.shape[0]), np.linspace(0.025, 6.975, mapCellDistances.shape[1]), mapCellDistances.T, levels=[0.25, 0.4], colors=['white', 'orange'])
+plt.contour(np.linspace(0.5*mapCellSize, 10 - 0.5*mapCellSize, mapCellDistances.shape[0]), np.linspace(0.5*mapCellSize, 7 - 0.5*mapCellSize, mapCellDistances.shape[1]), mapCellDistances.T, levels=[0.25, 0.4], colors=['white', 'orange'])
 for (path, sensor, name, color) in [(pathMecanum, sensors[0], 'mecanum robot', 'C0'), (pathDrive, sensors[1], 'differential drive', 'C3')]:
     plt.plot(path[:, 0], path[:, 1], 'o--', color=color, label=name + ', planned')
     data = mbs.GetSensorStoredData(sensor)
