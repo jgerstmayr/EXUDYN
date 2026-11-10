@@ -6482,6 +6482,10 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 - Gates: build ok; regeneration: the binding in `pybindModule.py`, the stubs and `Exudyn.md`; test suite and pytest
   in the gate run of RG5.1.3 and RG5.1.6.
 
+*Note 2026-11-11:* the machine of these results is a desktop, AMD Ryzen 9 9950X (16 cores), not a laptop. The full
+tables, a second run with 4 and 16 threads and what they say for RG5.1.2, RG5.1.4 and RG5.2 are in
+docs/dev/design/linalgBenchmark.md.
+
 <a id="rg9-6-2"></a>
 ### RG9.6.2 — the static_asserts of the required member functions; ObjectANCFBeam and ObjectBeamGeometricallyExact2D completed (2026-11-11, #2866, #3406)
 

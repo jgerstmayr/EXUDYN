@@ -500,6 +500,8 @@ Remark (2026-11-10, #2884): the 3D joints have analytic derivatives since revisi
 `ResizableVectorParallelThreadingLimit`, single- and multithreaded, compiled into every build (pattern:
 `src/Linalg/symbolicCppDemo.h`). `tools/benchmarks/avx2Benchmark.py` stays the solver-level counterpart. From #2397.
 
+The results of the benchmark, and a run before and after each step that changes src/Linalg: docs/dev/design/linalgBenchmark.md.
+
 #### **CLOSED_RG5.1.1** Measure the products of HomogeneousTransformation with and without the no-rotation flag
 
 $\Hm\vv$, $\Hm_1\Hm_2$, $\Hm^{-1}$, `HasNoRotation` (since #2810): is skipping the rotation a gain or does the branch cost more.
