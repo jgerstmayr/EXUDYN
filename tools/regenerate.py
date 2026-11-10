@@ -57,6 +57,8 @@ tier2Paths = [
     #the emitter output; the .tex and .rst pages it replaces are gone,
     #and until this line was written nothing compared the Markdown against the commit
     'docs/generated',
+    #the scripts of the notebooks, written by notebookEmitter.py with their pages (#3399)
+    'python/Examples/notebooks',
     ]
 
 #written by issueTracker.py, not by the generators; excluded from both tiers so that a version

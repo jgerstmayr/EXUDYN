@@ -1,0 +1,16 @@
+{
+  "number": 3400,
+  "title": "buttons and sliders in the render window with one Python callback",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "Buttons and sliders drawn in the render window like the icon bar, each with a centered text, a font size, colors with transparency and a location relative to the window; SC.renderer.AddButton, AddSlider, SetControlState, GetControlState, DeleteControl, ClearControls and SetControlUserFunction, one user function f(id, data) with data = [state, 0, 0], called in the main thread from a queue as the key press function; the elements in GetDictionary/SetDictionary; general.iconBarAndControlsInImages puts them and the icon bar into saved images; a helper class in exudyn.interactive. revision2026c step RG6.22",
+  "dateRaised": "2026-11-10",
+  "deadline": "2027-05-09",
+  "dateResolved": "2026-11-10 09:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/RendererControls.h",
+  "releaseNotes": "Buttons and sliders in the render window: SC.renderer.AddButton and AddSlider with a location relative to the window, a centered text, a font size and colors with transparency; one user function SC.renderer.SetControlUserFunction(f), f(controlID, data) with data = [state, 0, 0], called in the main thread; SetControlState, GetControlState, GetControls, DeleteControl, ClearControls, and the elements in GetDictionary/SetDictionary; visualizationSettings.general.iconBarAndControlsInImages puts them and the icon bar into saved images; exudyn.interactive.WindowControls with one function per element; the example renderWindowControls.py.",
+  "resolvedInVersion": "1.13.529"
+}

@@ -125,6 +125,7 @@ reevingSystem
 reevingSystemOpen
 reinforcementLearningRobot
 rendererNOGLFWexample
+renderWindowControls
 rigid3Dexample
 rigidBodyIMUtest
 rigidPendulum

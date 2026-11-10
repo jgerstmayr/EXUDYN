@@ -17,6 +17,7 @@
 #include "Graphics/GlfwClientBase.h" //part which does not require GLFW and OpenGL
 
 #include "Main/rendererPythonInterface.h"
+#include "Graphics/RendererControls.h"
 
 #ifdef USE_GLFW_GRAPHICS
 
@@ -459,6 +460,18 @@ public:
 	//! check if separate thread used:
 	static bool UseMultiThreadedRendering() { return useMultiThreadedRendering; }
 
+	//! the user function of the buttons and sliders of the attached SystemContainer (#3400); empty if there is none
+	static std::function<void(Index, std::vector<Real>)> GetControlUserFunction()
+	{
+		std::function<void(Index, std::vector<Real>)> function;
+		if (basicVisualizationSystemContainer == nullptr) { return function; }
+		RendererControls::ControlList& controls = basicVisualizationSystemContainer->GetRendererControls();
+		EXUstd::WaitAndLockSemaphore(controls.lock);
+		function = controls.userFunction;
+		EXUstd::ReleaseSemaphore(controls.lock);
+		return function;
+	}
+
 	//! access keypress user function from current SC; only available if SC linked:
 	static std::function<bool(int, int, int)> GetKeyPressUserFunction() 
 	{ 
@@ -732,6 +745,33 @@ public:
 	static bool IconBarMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods);
 	static void IconBarZoomToRegion(Index viewID, double x0, double y0, double x1, double y1);
 	static void DrawIconBar(GLFWwindow* window, Index viewID, int width, int height);
+	//! the buttons and sliders of the render window (#3400), see GlfwClientExtended.cpp
+	static Index ControlIndexAt(const RendererControls::ControlList& controls, Index viewID, int width, int height, double x, double y);
+	static bool ControlsMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods);
+	static bool ControlsCursor(GLFWwindow* window, Index viewID);
+	static bool ControlsScroll(GLFWwindow* window, Index viewID, double yoffset);
+	static void DrawControls(GLFWwindow* window, Index viewID, int width, int height);
+
+	//! the zoom and drag of the scopes while the simulation is idle (#3401), see GlfwClientExtended.cpp
+	struct ScopeMouseState
+	{
+		Index dragScope = -1;			//!< the scope whose lines are dragged, -1 for none
+		std::array<Real, 4> dragRange = { 0., 1., 0., 1. };	//!< its ranges when the drag began
+		std::array<float, 4> dragBox = {};	//!< its plot area when the drag began
+		Index lastClickScope = -1;		//!< the scope of the last click, for a double click
+		double lastClickTime = -1.;
+		double lastClickX = 0.;
+		double lastClickY = 0.;
+		uint64_t lastCounter = 0;		//!< the update counter of the states at the last check
+		double lastCounterChange = 0.;	//!< the time it changed
+	};
+	static ScopeMouseState scopeMouseStates[MAX_VIEWS_GLFW];
+	static constexpr double scopeIdleTime = 0.3; //!< seconds without a new state after which the simulation is idle
+	static bool ScopesIdle(Index viewID);
+	static Index ScopeAt(Index viewID, int height, double x, double y);
+	static bool ScopesMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods);
+	static bool ScopesCursor(GLFWwindow* window, Index viewID);
+	static bool ScopesScroll(GLFWwindow* window, Index viewID, double yoffset);
 
 	//! upload the textures of the TextureStore that changed since the last frame; in the render thread (#3032)
 	static void UpdateSceneTextures();

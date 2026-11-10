@@ -1,0 +1,15 @@
+{
+  "number": 904,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force",
+  "dateRaised": "2022-01-31",
+  "deadline": "2022-04-01",
+  "dateResolved": "2026-11-10 09:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix: a contact keeps switching by its gap, not by the sign of its force, so that it behaves as the linear spring-damper between the two bodies; the damping may give a negative contact force at the end of a contact, which the general section of the contacts (Damping and the end of a contact) explains together with the restitution-based impact models HuntCrossley and GonthierCarvalhoMartins as the alternative; every contactDamping refers to it",
+  "resolvedInVersion": "1.13.527"
+}

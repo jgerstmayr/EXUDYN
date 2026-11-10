@@ -57,6 +57,17 @@ mouseBindings = [
     KeyBinding('mouse wheel', 'zoom',
                "use the mouse wheel to zoom (on touch screens 'pinch-to-zoom' might work as "
                'well)'),
+    KeyBinding('left button, wheel', 'buttons and sliders',
+               'a button acts when released over it, a slider follows the mouse while it is dragged, '
+               'and the mouse wheel over a slider changes it by 1/100 of its range (with CTRL 1/1000); '
+               'over a button or slider, the mouse does not move or zoom the model',
+               'click a button, drag a slider or turn the wheel over it'),
+    KeyBinding('wheel, left button', 'zoom and move a scope',
+               'while the simulation is paused or finished, the mouse wheel over a scope zooms it about the '
+               'mouse (with SHIFT only the horizontal axis, with CTRL only the vertical one) and dragging '
+               'with the left mouse button moves its lines; a double click, or the simulation continuing, '
+               'shows the ranges of its settings again',
+               'while paused: wheel zooms (SHIFT: x, CTRL: y), drag moves, double click resets'),
     ]
 
 keyBindings = [

@@ -1067,6 +1067,392 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 }
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the buttons and sliders of the render window (#3400): drawn as the icon bar in pixels of the frame buffer, the mouse
+//after the icon bar and before the scopes and the view; a change of a state goes to PyQueueRendererControl, which the
+//main thread passes to the user function
+
+namespace
+{
+	//! the pixel rectangle of an element, x0 < x1, y0 < y1 from the top left
+	void ControlRectangle(const RendererControls::Control& control, int width, int height, float& x0, float& y0, float& x1, float& y1)
+	{
+		x0 = (float)control.location[0][0] * (float)width;
+		x1 = (float)control.location[1][0] * (float)width;
+		y0 = (float)control.location[0][1] * (float)height;
+		y1 = (float)control.location[1][1] * (float)height;
+		if (x1 < x0) { std::swap(x0, x1); }
+		if (y1 < y0) { std::swap(y0, y1); }
+	}
+
+	//! the track of a slider in pixels: from xa to xb at the height yTrack, and the half width of its knob
+	void SliderTrack(float x0, float y0, float x1, float y1, float& xa, float& xb, float& yTrack, float& knob)
+	{
+		float h = y1 - y0;
+		knob = EXUstd::Maximum(3.f, EXUstd::Minimum(0.12f * h, 0.05f * (x1 - x0)));
+		xa = x0 + knob + 0.02f * h;
+		xb = x1 - knob - 0.02f * h;
+		if (xb < xa) { xb = xa; }
+		yTrack = y0 + 0.75f * h;
+	}
+
+	//! the value of a slider at the mouse position x
+	Real SliderValueAt(const RendererControls::Control& control, int width, int height, double x)
+	{
+		float x0, y0, x1, y1, xa, xb, yTrack, knob;
+		ControlRectangle(control, width, height, x0, y0, x1, y1);
+		SliderTrack(x0, y0, x1, y1, xa, xb, yTrack, knob);
+		return control.SliderValue(xb > xa ? ((Real)x - xa) / (Real)(xb - xa) : 0.);
+	}
+}
+
+//! the index of the element at a mouse position in pixels of the frame buffer, the last added on top; -1 for none; the
+//! caller holds the lock of the list
+Index GlfwRenderer::ControlIndexAt(const RendererControls::ControlList& controls, Index viewID, int width, int height, double x, double y)
+{
+	for (Index i = (Index)controls.items.size() - 1; i >= 0; i--)
+	{
+		const RendererControls::Control& control = controls.items[i];
+		if (control.view != viewID) { continue; }
+		float x0, y0, x1, y1;
+		ControlRectangle(control, width, height, x0, y0, x1, y1);
+		if (x >= x0 && x <= x1 && y >= y0 && y <= y1) { return i; }
+	}
+	return -1;
+}
+
+//! a press on an element starts it, the release ends it: a button sends its state when released over it, a slider its
+//! value while it is dragged; true if the mouse acted on an element
+bool GlfwRenderer::ControlsMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods)
+{
+	if (basicVisualizationSystemContainer == nullptr) { return false; }
+	RendererControls::ControlList& controls = basicVisualizationSystemContainer->GetRendererControls();
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	bool used = false;
+	Index queueID = -1;
+	Real queueState = 0.;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	if (action == GLFW_RELEASE)
+	{
+		Index i = controls.Find(controls.activeID);
+		if (i >= 0)
+		{
+			RendererControls::Control& control = controls.items[i];
+			control.pressed = false;
+			if (control.type == RendererControls::ControlType::Button && ControlIndexAt(controls, viewID, width, height, x, y) == i)
+			{
+				if (control.toggle) { control.state = (control.state == 0.) ? 1. : 0.; queueState = control.state; }
+				else { queueState = 1.; } //a push button sends 1 and stays 0
+				queueID = control.id;
+			}
+			used = true;
+		}
+		controls.activeID = -1;
+	}
+	else if (action == GLFW_PRESS)
+	{
+		Index i = ControlIndexAt(controls, viewID, width, height, x, y);
+		if (i >= 0)
+		{
+			used = true; //no button of the mouse acts on the view through an element
+			RendererControls::Control& control = controls.items[i];
+			if (button == GLFW_MOUSE_BUTTON_LEFT)
+			{
+				control.pressed = true;
+				controls.activeID = control.id;
+				if (control.type == RendererControls::ControlType::Slider)
+				{
+					Real value = SliderValueAt(control, width, height, x);
+					if (value != control.state) { control.state = value; queueID = control.id; queueState = value; }
+				}
+			}
+		}
+	}
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (queueID >= 0) { PyQueueRendererControl(queueID, queueState); }
+	if (used) { SetCallBackRefreshSignal(); }
+	return used;
+}
+
+//! a slider follows the mouse while it is dragged; true while an element is active, so that the view does not move
+bool GlfwRenderer::ControlsCursor(GLFWwindow* window, Index viewID)
+{
+	if (basicVisualizationSystemContainer == nullptr) { return false; }
+	RendererControls::ControlList& controls = basicVisualizationSystemContainer->GetRendererControls();
+	if (controls.activeID < 0) { return false; }
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	Index queueID = -1;
+	Real queueState = 0.;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	Index i = controls.Find(controls.activeID);
+	if (i >= 0 && controls.items[i].type == RendererControls::ControlType::Slider)
+	{
+		RendererControls::Control& control = controls.items[i];
+		Real value = SliderValueAt(control, width, height, x);
+		if (value != control.state) { control.state = value; queueID = control.id; queueState = value; }
+	}
+	bool active = (i >= 0);
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (queueID >= 0) { PyQueueRendererControl(queueID, queueState); }
+	return active;
+}
+
+//! the mouse wheel over a slider changes its value by 1/100 of its range per step, with CTRL by 1/1000; true if it did
+bool GlfwRenderer::ControlsScroll(GLFWwindow* window, Index viewID, double yoffset)
+{
+	if (basicVisualizationSystemContainer == nullptr) { return false; }
+	RendererControls::ControlList& controls = basicVisualizationSystemContainer->GetRendererControls();
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	bool ctrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
+	Index queueID = -1;
+	Real queueState = 0.;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	Index i = ControlIndexAt(controls, viewID, width, height, x, y);
+	bool used = (i >= 0 && controls.items[i].type == RendererControls::ControlType::Slider);
+	if (used)
+	{
+		RendererControls::Control& control = controls.items[i];
+		Real step = (control.minMax[1] - control.minMax[0]) * (ctrl ? 0.001 : 0.01);
+		Real value = control.SliderValue(control.SliderPosition() + (step == 0. ? 0. : yoffset * step / (control.minMax[1] - control.minMax[0])));
+		if (value != control.state) { control.state = value; queueID = control.id; queueState = value; }
+	}
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (queueID >= 0) { PyQueueRendererControl(queueID, queueState); }
+	if (used) { SetCallBackRefreshSignal(); }
+	return used;
+}
+
+//! draw the elements of the view in pixels of the frame buffer, the label centered, the background with its alpha value
+void GlfwRenderer::DrawControls(GLFWwindow* window, Index viewID, int width, int height)
+{
+	if (basicVisualizationSystemContainer == nullptr || width <= 0 || height <= 0) { return; }
+	RendererControls::ControlList& controls = basicVisualizationSystemContainer->GetRendererControls();
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	std::vector<RendererControls::Control> items;
+	for (const RendererControls::Control& control : controls.items) { if (control.view == viewID) { items.push_back(control); } }
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (items.empty()) { return; }
+
+	glPushAttrib(GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_CURRENT_BIT | GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_LINE_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0.0, width, height, 0.0, -1.0, 1.0); //y down, as the mouse
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	auto Quad = [](float x0, float y0, float x1, float y1)
+	{
+		glBegin(GL_QUADS);
+		glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
+		glEnd();
+	};
+	auto Frame = [](float x0, float y0, float x1, float y1)
+	{
+		glBegin(GL_LINE_LOOP); glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1); glEnd();
+	};
+	float fontScaling = GetFontScaling(viewID);
+	for (const RendererControls::Control& control : items)
+	{
+		float x0, y0, x1, y1;
+		ControlRectangle(control, width, height, x0, y0, x1, y1);
+		Float4 back = control.backgroundColor;
+		bool isButton = control.type == RendererControls::ControlType::Button;
+		float shade = (control.pressed || (isButton && control.toggle && control.state != 0.)) ? 0.75f : 1.f; //pressed or switched on
+		glColor4f(shade * back[0], shade * back[1], shade * back[2], back[3]);
+		Quad(x0, y0, x1, y1);
+		glLineWidth(1.f);
+		glColor4f(0.45f * back[0], 0.45f * back[1], 0.45f * back[2], EXUstd::Minimum(1.f, back[3] + 0.2f));
+		Frame(x0 + 0.5f, y0 + 0.5f, x1 - 0.5f, y1 - 0.5f);
+
+		float textCenterY = 0.5f * (y0 + y1);
+		if (!isButton) //the track and the knob
+		{
+			float xa, xb, yTrack, knob;
+			SliderTrack(x0, y0, x1, y1, xa, xb, yTrack, knob);
+			const Float4& c = control.color;
+			glColor4f(c[0], c[1], c[2], 0.5f * c[3]);
+			glLineWidth(EXUstd::Maximum(1.f, 0.04f * (y1 - y0)));
+			glBegin(GL_LINES); glVertex2f(xa, yTrack); glVertex2f(xb, yTrack); glEnd();
+			float xk = xa + (float)control.SliderPosition() * (xb - xa);
+			float hk = 0.15f * (y1 - y0);
+			glColor4f(c[0], c[1], c[2], c[3]);
+			Quad(xk - knob, yTrack - hk, xk + knob, yTrack + hk);
+			textCenterY = y0 + 0.36f * (y1 - y0);
+		}
+
+		STDstring text = RendererControls::Label(control);
+		if (text.size())
+		{
+			float fontPixels = control.fontSize * fontScaling;
+			float scale = fontPixels / (float)bitmapFont.fontSize;
+			float textWidth = scale * (float)bitmapFont.characterWidth * (float)text.size();
+			glPushMatrix(); //the font draws upward from its point, so the y axis is turned for it
+			glTranslatef(0.5f * (x0 + x1 - textWidth), textCenterY + 0.35f * fontPixels, 0.f);
+			glScalef(1.f, -1.f, 1.f);
+			DrawStringWithTextures(text.c_str(), scale, Float3({ 0.f, 0.f, 0.f }), control.color, bitmapFont, charBuffer, bitmapFontListBase, true);
+			glPopMatrix();
+		}
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glPopAttrib();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the zoom and drag of the scopes while the simulation is idle (#3401): the mouse over the plot area of a scope changes
+//the override of its ranges in the render state (RenderState::scopeViews), which BuildScopes draws; after the buttons
+//and sliders and before the view
+
+GlfwRenderer::ScopeMouseState GlfwRenderer::scopeMouseStates[MAX_VIEWS_GLFW];
+
+//! the simulation is idle: paused, or no new state for scopeIdleTime seconds; a new state resets the zoom of the scopes
+bool GlfwRenderer::ScopesIdle(Index viewID)
+{
+	if (basicVisualizationSystemContainer == nullptr) { return false; }
+	ScopeMouseState& mouse = scopeMouseStates[viewID];
+	uint64_t counter = basicVisualizationSystemContainer->StateUpdateCounter();
+	double now = EXUstd::GetTimeInSeconds();
+	if (counter != mouse.lastCounter) //the simulation continues
+	{
+		mouse.lastCounter = counter;
+		mouse.lastCounterChange = now;
+		mouse.dragScope = -1;
+		RenderState* state = renderViews.State(viewID);
+		for (RenderState::ScopeView& view : state->scopeViews) { view.active = false; }
+	}
+	return basicVisualizationSystemContainer->SimulationIsPaused() || now - mouse.lastCounterChange > scopeIdleTime;
+}
+
+//! the scope whose plot area contains the mouse at (x, y), in pixels of the frame buffer from the top left, or -1
+Index GlfwRenderer::ScopeAt(Index viewID, int height, double x, double y)
+{
+	if (!GetSettingsView(viewID, *visSettings).window.showScopes) { return -1; }
+	RenderState* state = renderViews.State(viewID);
+	double yb = (double)height - y; //the plot area is from the bottom left
+	for (Index j = 0; j < (Index)state->scopeViews.size(); j++)
+	{
+		const RenderState::ScopeView& view = state->scopeViews[j];
+		if (view.drawn && x >= view.box[0] && x <= view.box[2] && yb >= view.box[1] && yb <= view.box[3]) { return j; }
+	}
+	return -1;
+}
+
+//! the settings of scope j of a view
+static const VSettingsScope& ScopeSettings(const VSettingsWindow& window, Index j)
+{
+	return j == 0 ? window.scope0 : (j == 1 ? window.scope1 : window.scope2);
+}
+
+//! a left click on a scope while idle starts to drag its lines, a double click resets its ranges; true if it acted
+bool GlfwRenderer::ScopesMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods)
+{
+	ScopeMouseState& mouse = scopeMouseStates[viewID];
+	if (action == GLFW_RELEASE)
+	{
+		bool dragging = mouse.dragScope >= 0;
+		mouse.dragScope = -1;
+		return dragging;
+	}
+	if (action != GLFW_PRESS || button != GLFW_MOUSE_BUTTON_LEFT || !ScopesIdle(viewID)) { return false; }
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	Index j = ScopeAt(viewID, height, x, y);
+	if (j < 0) { return false; }
+	RenderState::ScopeView& view = renderViews.State(viewID)->scopeViews[j];
+	double now = EXUstd::GetTimeInSeconds();
+	if (mouse.lastClickScope == j && now - mouse.lastClickTime < 0.4 && std::fabs(x - mouse.lastClickX) < 5. && std::fabs(y - mouse.lastClickY) < 5.)
+	{
+		view.active = false; //a double click: the ranges of the settings again
+		mouse.lastClickScope = -1;
+		mouse.dragScope = -1;
+		SetCallBackRefreshSignal();
+		return true;
+	}
+	mouse.lastClickScope = j;
+	mouse.lastClickTime = now;
+	mouse.lastClickX = x;
+	mouse.lastClickY = y;
+	mouse.dragScope = j;
+	mouse.dragRange = view.active ? view.range : view.drawnRange;
+	mouse.dragBox = view.box;
+	return true;
+}
+
+//! the lines of the dragged scope follow the mouse; true while a scope is dragged
+bool GlfwRenderer::ScopesCursor(GLFWwindow* window, Index viewID)
+{
+	ScopeMouseState& mouse = scopeMouseStates[viewID];
+	if (mouse.dragScope < 0) { return false; }
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	RenderState::ScopeView& view = renderViews.State(viewID)->scopeViews[mouse.dragScope];
+	const std::array<float, 4>& box = mouse.dragBox;
+	if (!(box[2] > box[0] && box[3] > box[1])) { return true; }
+	if (!view.active && std::fabs(x - mouse.lastClickX) < 2. && std::fabs(y - mouse.lastClickY) < 2.) { return true; } //a click is not a drag
+	const std::array<Real, 4>& r = mouse.dragRange;
+	Real dx = (x - mouse.lastClickX) / (Real)(box[2] - box[0]) * (r[1] - r[0]);
+	Real dy = -(y - mouse.lastClickY) / (Real)(box[3] - box[1]) * (r[3] - r[2]);
+	view.range = { r[0] - dx, r[1] - dx, r[2] - dy, r[3] - dy };
+	view.settings = ScopePlot::ScopeViewSettings(ScopeSettings(GetSettingsView(viewID, *visSettings).window, mouse.dragScope));
+	view.active = true;
+	SetCallBackRefreshSignal();
+	return true;
+}
+
+//! the wheel over a scope while idle zooms about the mouse, with SHIFT only the horizontal axis, with CTRL only the
+//! vertical one; true if it acted
+bool GlfwRenderer::ScopesScroll(GLFWwindow* window, Index viewID, double yoffset)
+{
+	if (!ScopesIdle(viewID)) { return false; }
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	Index j = ScopeAt(viewID, height, x, y);
+	if (j < 0) { return false; }
+	RenderState::ScopeView& view = renderViews.State(viewID)->scopeViews[j];
+	const std::array<float, 4>& box = view.box;
+	std::array<Real, 4> r = view.active ? view.range : view.drawnRange;
+	bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
+	bool ctrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
+	Real factor = std::pow(0.85, yoffset); //a step of the wheel up zooms in
+	Real xc = r[0] + (x - box[0]) / (Real)(box[2] - box[0]) * (r[1] - r[0]); //the values at the mouse stay where they are
+	Real yc = r[2] + ((Real)height - y - box[1]) / (Real)(box[3] - box[1]) * (r[3] - r[2]);
+	if (!ctrl) { r[0] = xc + (r[0] - xc) * factor; r[1] = xc + (r[1] - xc) * factor; }
+	if (!shift) { r[2] = yc + (r[2] - yc) * factor; r[3] = yc + (r[3] - yc) * factor; }
+	if (!(r[1] - r[0] > 1e-12 * (std::fabs(r[0]) + std::fabs(r[1]) + 1e-300) && r[3] - r[2] > 1e-12 * (std::fabs(r[2]) + std::fabs(r[3]) + 1e-300))) { return true; } //at the resolution of the numbers
+	view.range = r;
+	view.settings = ScopePlot::ScopeViewSettings(ScopeSettings(GetSettingsView(viewID, *visSettings).window, j));
+	view.active = true;
+	SetCallBackRefreshSignal();
+	return true;
+}
+
+
 void GlfwRenderer::DeleteFonts()
 {
 	glDeleteTextures(bitmapFont.nCharacters*NUMBER_OF_TEXTUREFONT_LISTS, &textureNumberRGBbitmap[0]);

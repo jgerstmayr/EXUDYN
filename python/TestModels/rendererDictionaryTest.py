@@ -28,7 +28,7 @@ def Check(condition, message):
 
 SC = exu.SystemContainer()
 values = SC.renderer.GetDictionary()
-Check(sorted(values.keys()) == ['materials', 'scopeGraphics', 'states', 'textures'], 'keys: ' + str(values.keys()))
+Check(sorted(values.keys()) == ['controls', 'materials', 'scopeGraphics', 'states', 'textures'], 'keys: ' + str(values.keys()))
 Check(len(values['materials']) == 10 and values['scopeGraphics'] == [] and list(values['states'].keys()) == [0],
       'the defaults: ten materials, no static graphics, the state of view 0')
 

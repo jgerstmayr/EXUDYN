@@ -179,8 +179,15 @@ namespace ScopePlot
 		}
 	}
 
+	std::array<float, 8> ScopeViewSettings(const VSettingsScope& scope)
+	{
+		return { scope.location[0][0], scope.location[0][1], scope.location[1][0], scope.location[1][1],
+			scope.minMaxX[0], scope.minMaxX[1], scope.minMaxY[0], scope.minMaxY[1] };
+	}
+
 	void AddScope(const VSettingsScope& scope, const VSettingsScopes& style, const std::vector<Curve>& curves, const Vector2D& xRange,
-		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics)
+		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics,
+		const Vector2D* yRange, std::array<Real, 4>* drawnRange, std::array<float, 4>* boxOut)
 	{
 		const float lineWidth = style.lineWidth;
 		const float cw = characterWidthFactor * fontSize;
@@ -195,7 +202,8 @@ namespace ScopePlot
 		Real xMin = xRange[0], xMax = xRange[1];
 		if (!(xMax > xMin)) { xMax = xMin + 1.; }
 		Real yMin = scope.minMaxY[0], yMax = scope.minMaxY[1];
-		if (yMin == 0. && yMax == 0.)
+		if (yRange) { yMin = (*yRange)[0]; yMax = (*yRange)[1]; }
+		else if (yMin == 0. && yMax == 0.)
 		{
 			yMin = EXUstd::MAXREAL; yMax = EXUstd::LOWESTREAL;
 			for (const Curve& curve : curves)
@@ -232,6 +240,8 @@ namespace ScopePlot
 		const float right = x1 - pad - 2.f * cw;
 		if (right - left < 4.f * fontSize) { return; }
 		const Float4 box({ left, bottom, right, top });
+		if (drawnRange) { *drawnRange = { xMin, xMax, yMin, yMax }; }
+		if (boxOut) { *boxOut = { left, bottom, right, top }; }
 
 		auto X = [&](Real x) { return (float)(left + (x - xMin) / (xMax - xMin) * (right - left)); };
 		auto Y = [&](Real y) { return (float)(bottom + (y - yMin) / (yMax - yMin) * (top - bottom)); };
@@ -677,10 +687,18 @@ namespace ScopePlot
 			std::vector<LineSource> sources;
 			LineSources(container, rows, sources, graphics.message);
 			std::vector<Curve> curves(sources.size());
+			RenderState::ScopeView& view = container.GetRenderState(viewID).scopeViews[j];
+			if (view.active && view.settings != ScopeViewSettings(scope)) { view.active = false; } //the settings changed (#3401)
 			Vector2D xRange = sources.size() ? HorizontalRange(scope, sources) : Vector2D({ 0., 1. });
+			Vector2D yRange({ view.range[2], view.range[3] });
+			if (view.active) { xRange = Vector2D({ view.range[0], view.range[1] }); }
 			Index bins = std::max((Index)1, (Index)(scope.xResolution * (regionPixels[2] - regionPixels[0])));
 			for (size_t i = 0; i < sources.size(); i++) { CollectCurve(sources[i], scope, xRange, bins, curves[i]); }
-			AddScope(scope, style, curves, xRange, regionPixels, fontSize, graphics, statics);
+			view.drawn = false;
+			view.box = {};
+			AddScope(scope, style, curves, xRange, regionPixels, fontSize, graphics, statics, view.active ? &yRange : nullptr,
+				&view.drawnRange, &view.box);
+			view.drawn = view.box[2] > view.box[0];
 		}
 	}
 }

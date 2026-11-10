@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:37:10 (last modified)
+* @date         2026-11-10  08:34:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -37,7 +37,7 @@ public: // AUTO:
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient: the friction force is \f$\mu_d |f_N|\f$, regularized below frictionProportionalZone, see the equation; 0: no friction
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [SI:m/s] up to which the friction force is proportional to the tangential velocity (regularization, against numerical oscillations); 0: no regularization
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/(m*m)]
-    Real contactDamping;                          //!< AUTO: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.
+    Real contactDamping;                          //!< AUTO: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care; the contact switches off where its force pulls, see [](#sec-contact-damping)
     Index contactModel;                           //!< AUTO: must be >= 0; number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from \f$l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)\f$ as long as \f$p>0\f$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization

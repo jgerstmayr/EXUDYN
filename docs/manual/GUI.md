@@ -114,7 +114,8 @@ does and the key. From the top:
   its settings and its model view, as far as it stores them; CTRL and the icon store the current
   settings and model view in it, see {ref}`sec-usersettings-storedconfigurations`.
 
-An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images; the
+An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images unless
+`visualizationSettings.general.iconBarAndControlsInImages` is True, see {ref}`sec-gui-controls`; the
 tooltips have the size of the version string, `window.globalFontSize` times 0.75 at the display scaling.
 `visualizationSettings.view0.window.showIconBar` (per view: `view1`, ... for the other views) switches it off. In
 `visualizationSettings.general`, `iconBarScaling` scales the icons relative to the display scaling of the monitor
@@ -176,6 +177,56 @@ SC.renderer.scopes.SetGraphics([
 `scopeExample.py` plots a double pendulum while it is simulated - the heights over the last 5 seconds, a velocity,
 and the paths of the masses with the circle of the first mass and the reach of the second as static lines - and
 shows the same plots in the solution viewer afterwards.
+
+**Zoom and move a scope** (#3401): while the simulation is idle - paused with SPACE, finished, or the solution viewer
+stopped, so that no new state arrives -, the mouse wheel over the plot of a scope zooms it about the mouse, with SHIFT
+only the horizontal axis and with CTRL only the vertical one, and dragging with the left mouse button moves its lines.
+The tick labels follow. A double click on the scope, a new state of the simulation, or a change of the `location`,
+`minMaxX` or `minMaxY` of the scope shows the ranges of its settings again; the zoomed ranges are kept in the render
+state of the view, not in the settings. Outside the scopes, or while the simulation runs, the mouse acts on the
+model as before.
+
+(sec-gui-controls)=
+### Buttons and sliders
+
+Buttons and sliders drawn in the render window, as the icon bar, let a model be changed while it is simulated,
+without a separate dialog (#3400). `SC.renderer.AddButton` and `SC.renderer.AddSlider` add one and return its ID:
+
+- **location** `[[x0, y0], [x1, y1]]`, its corners relative to the window from its top left corner, so that it
+  scales with the window; the **text** is centered, in **fontSize** points as `window.globalFontSize`, scaled with the
+  display scaling; **color** is the color of the text and **backgroundColor** that of the element, whose alpha value
+  is its transparency;
+- a **button** is a push button, which sends 1 when it is released over it, or with `toggle=True` switches its state
+  between 0 and 1;
+- a **slider** has a value in `minMax`, which follows the mouse while it is dragged, and which the mouse wheel over
+  it changes by 1/100 of the range (1/1000 with CTRL); `format` writes the value after the text, a Python format
+  with `{}` or `{:.Nf}`, `{:.Ne}`, `{:.Ng}`.
+
+All elements call **one user function**, `SC.renderer.SetControlUserFunction(f)` with `f(controlID, data)` and
+`data = [state, 0, 0]`: 0 or 1 for a button, the value of a slider. As the key press function, it is called in the
+main (Python) thread, from a queue that the renderer fills, while a simulation runs or in
+`SC.renderer.DoIdleTasks()`; of a slider that is dragged only its last value waits. `SetControlState`,
+`GetControlState`, `GetControls`, `DeleteControl` and `ClearControls` change and read them from Python;
+`SC.renderer.GetDictionary()` contains them, without the user function.
+
+The mouse acts on the icon bar first, then on the buttons and sliders, then on the scopes, and only then on the
+model, so that a click on a button never rotates the model. The elements are not part of saved images, unless
+`visualizationSettings.general.iconBarAndControlsInImages` is True, which puts them and the icon bar into the saved
+images and into `RedrawAndGetImage`; the scopes have their own switch, `window.showScopes`.
+
+`exudyn.interactive.WindowControls` gives each element its own Python function and places the elements without a
+location in a column at the left side of the window:
+
+```python
+from exudyn.interactive import WindowControls
+controls = WindowControls(SC)
+controls.Slider('stiffness', minMax=[100, 2000], value=500,
+                function=lambda value: mbs.SetObjectParameter(oSpring, 'stiffness', value))
+controls.Button('gravity', toggle=True, state=1,
+                function=lambda state: mbs.SetLoadParameter(lGravity, 'loadVector', [0, -9.81*mass*state, 0]))
+```
+
+`renderWindowControls.py` changes a pendulum with sliders and buttons while it is simulated.
 
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog

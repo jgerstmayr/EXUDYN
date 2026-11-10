@@ -30,6 +30,7 @@
 #include "Graphics/VisualizationSystemData.h"
 #include "Graphics/VisualizationSystem.h"
 #include "Graphics/ScopePlot.h"
+#include "Graphics/RendererControls.h"
 
 
 //! object graphics data for ground objects, rigid bodies and mass points
@@ -110,6 +111,7 @@ public: //declared as public for direct access via pybind
 	ResizableArray<VisualizationSystem*> visualizationSystems; //! linked to all visualization systems (placed in MainSystem); links need to be kept up-to-date by MainSystem Add/Delete
 	std::vector<VSettingsMaterial> materials; //!< std::vector because of std::string in class; managed by class MainGraphicsMaterialList; located here for communication between GlfwClient and VisualizationSystemContainer
 	ScopePlot::StaticGraphics scopeStaticGraphics; //!< the static items of the scopes, managed by MainRendererScopes (#3237)
+	RendererControls::ControlList rendererControls; //!< the buttons and sliders of the render window (#3400)
 
 	//flags and data that affect all views:
 	bool computeMaxSceneRequest;		//! used to update max scene coordinates and center
@@ -202,6 +204,11 @@ public:
 		EXUstd::WaitAndLockSemaphore(scopeStaticGraphics.lock);
 		scopeStaticGraphics.items.clear();
 		EXUstd::ReleaseSemaphore(scopeStaticGraphics.lock);
+		EXUstd::WaitAndLockSemaphore(rendererControls.lock);
+		rendererControls.items.clear();
+		rendererControls.activeID = -1;
+		rendererControls.userFunction = nullptr;
+		EXUstd::ReleaseSemaphore(rendererControls.lock);
 
 	}
 
@@ -310,6 +317,18 @@ public:
 	//! materials link for renderer
 	virtual std::vector<VSettingsMaterial>* GetGraphicsMaterialList() override { return &materials; }
 	virtual ScopePlot::StaticGraphics& GetScopeStaticGraphics() override { return scopeStaticGraphics; }
+	virtual RendererControls::ControlList& GetRendererControls() override { return rendererControls; }
+	virtual uint64_t StateUpdateCounter() override
+	{
+		uint64_t counter = 0;
+		for (auto item : visualizationSystems) { if (item->postProcessData) { counter += item->postProcessData->updateCounter; } }
+		return counter;
+	}
+	virtual bool SimulationIsPaused() override
+	{
+		for (auto item : visualizationSystems) { if (item->postProcessData && item->postProcessData->simulationPaused) { return true; } }
+		return false;
+	}
 	//! copy materials before using them in drawing
 	virtual void CopyMaterialsFromVisualizationSettings() override;
 

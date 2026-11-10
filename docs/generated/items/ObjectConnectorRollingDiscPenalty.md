@@ -34,7 +34,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPe
 | **planeNormal** | Vector3D | 3 | [0,0,1] | (symbol: $\LU{m0}{\vv_{PN}}, \;\; \vert \LU{m0}{\vv_{PN}}\vert  = 1$) normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$ |
 | **dryFrictionAngle** | Real |  | 0. | (symbol: $\alpha_t$) angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle |
 | **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] |
-| **contactDamping** | UReal |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)] |
+| **contactDamping** | UReal |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)]; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact |
 | **dryFriction** | Vector2D | 2 | [0,0] | (symbol: $[\mu_x,\mu_y]\tp$) dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$ |
 | **dryFrictionProportionalZone** | Real |  | 0. | (symbol: $v_\mu$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations) |
 | **viscousFriction** | Vector2D | 2 | [0,0] | (symbol: $[d_x, d_y]\tp$) viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity |

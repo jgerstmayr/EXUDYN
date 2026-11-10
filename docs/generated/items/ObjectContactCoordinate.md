@@ -23,7 +23,7 @@ The parameters of the item; in a dictionary, its type is 'ContactCoordinate':
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not ContactImpactModel.Linear |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m]; acts only upon penetration |
-| **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)]; acts only upon penetration |
+| **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)]; acts only upon penetration; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact |
 | **contactStiffnessExponent** | PReal |  | 1. | (symbol: $n_\mathrm{exp}$) exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear |
 | **restitutionCoefficient** | PReal |  | 1. | (symbol: $e_\mathrm{res}$) coefficient of restitution [SI:1], used by the impact models HuntCrossley and GonthierCarvalhoMartins; must be > 0 |
 | **minimumImpactVelocity** | UReal |  | 0. | (symbol: $\dot g_\mathrm{-,min}$) lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact |

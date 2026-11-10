@@ -65,9 +65,104 @@ def ConfigureDialogColumns(tkWindow):
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'openDialogs', 'ConfigureDialogColumns', 'InteractiveDialog', 'AnimateModes', 'SolutionViewer',
-    'ShowImage', 'ConvertImages2Video', 'InteractiveImages2Video',
+    'openDialogs', 'ConfigureDialogColumns', 'WindowControls', 'InteractiveDialog', 'AnimateModes',
+    'SolutionViewer', 'ShowImage', 'ConvertImages2Video', 'InteractiveImages2Video',
     ]
+
+class WindowControls:
+    """The buttons and sliders of the render window, each with its own Python function (#3400): the class sets the one
+    user function of SC.renderer (SetControlUserFunction) and calls the function of the element that changed, with its
+    state - 0 or 1 for a button, the value of a slider. The functions are called in the main thread while a simulation
+    runs or in SC.renderer.DoIdleTasks. An element without a location is placed in a column at the left side of the
+    window, one below the other.
+
+    Args:
+        systemContainer: the SystemContainer whose render window shows the elements
+        columnWidth: the width of the column of the elements without location, relative to the window width
+        rowHeight: the height of each of them, relative to the window height
+
+    Example:
+        controls = WindowControls(SC)
+        controls.Button('reset', function=lambda state: mbs.systemData.SetODE2Coordinates(q0))
+        controls.Slider('stiffness', minMax=[100, 1000], value=500, function=lambda value: mbs.SetObjectParameter(oSpring, 'stiffness', value))
+    """
+    def __init__(self, systemContainer, columnWidth=0.22, rowHeight=0.055):
+        self.systemContainer = systemContainer
+        self.functions = {}  #the function of each element by its ID
+        self.columnWidth = columnWidth
+        self.rowHeight = rowHeight
+        self.nextRow = 0  #the row of the next element without location
+        systemContainer.renderer.SetControlUserFunction(self._UserFunction)
+
+    def _UserFunction(self, controlID, data):
+        function = self.functions.get(controlID)
+        if function is not None:
+            function(data[0])
+
+    def _Location(self, location):
+        if location is not None:
+            return location
+        y0 = 0.01 + self.nextRow*(self.rowHeight + 0.01)
+        self.nextRow += 1
+        return [[0.01, y0], [0.01 + self.columnWidth, y0 + self.rowHeight]]
+
+    def Button(self, text, location=None, function=None, toggle=False, state=0, **kwargs):
+        """Add a button (SC.renderer.AddButton; fontSize, color, backgroundColor and view as keyword arguments as there);
+        function(state) is called when it is released: with 1 for a push button,
+        with the new state 0 or 1 for a toggle button
+
+        Args:
+            text: the label of the button
+            location: [[x0, y0], [x1, y1]] relative to the window, from its top left corner; None: the next row of the column
+            function: function(state), or None
+            toggle: True: the button switches between 0 and 1
+            state: the initial state of a toggle button
+
+        Returns:
+            the ID of the button
+        """
+        controlID = self.systemContainer.renderer.AddButton(text, location=self._Location(location), toggle=toggle, state=state, **kwargs)
+        self.functions[controlID] = function
+        return controlID
+
+    def Slider(self, text, location=None, function=None, minMax=[0., 1.], value=None, format='= {:.3g}', **kwargs):
+        """Add a slider (SC.renderer.AddSlider; fontSize, color, backgroundColor and view as keyword arguments as there);
+        function(value) is called with each new value
+
+        Args:
+            text: the label of the slider, before its value
+            location: [[x0, y0], [x1, y1]] relative to the window, from its top left corner; None: the next row of the column
+            function: function(value), or None
+            minMax: [min, max], the range of the value
+            value: the initial value; None: min
+            format: the value in the label, a Python format with {} or {:.Nf}, {:.Ne}, {:.Ng}; empty: no value
+
+        Returns:
+            the ID of the slider
+        """
+        controlID = self.systemContainer.renderer.AddSlider(text, location=self._Location(location), minMax=minMax, value=value,
+                                                            format=format, **kwargs)
+        self.functions[controlID] = function
+        return controlID
+
+    def State(self, controlID):
+        """the state of a button, 0 or 1, or the value of a slider"""
+        return self.systemContainer.renderer.GetControlState(controlID)[0]
+
+    def SetState(self, controlID, state, callFunction=False):
+        """set the state of a button or the value of a slider; with callFunction, its function is called as a click would"""
+        self.systemContainer.renderer.SetControlState(controlID, state, callUserFunction=callFunction)
+
+    def Delete(self, controlID):
+        """remove an element and its function"""
+        self.systemContainer.renderer.DeleteControl(controlID)
+        self.functions.pop(controlID, None)
+
+    def Clear(self):
+        """remove all elements and their functions; the next element without location is in the first row again"""
+        self.systemContainer.renderer.ClearControls()
+        self.functions = {}
+        self.nextRow = 0
 
 class InteractiveDialog:
     """create an interactive dialog, which allows to interact with simulations

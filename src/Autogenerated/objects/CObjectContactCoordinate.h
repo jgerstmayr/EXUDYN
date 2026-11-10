@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-08  22:55:36 (last modified)
+* @date         2026-11-10  08:34:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,7 +30,7 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: markers define contact gap
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not ContactImpactModel.Linear
     Real contactStiffness;                        //!< AUTO: must be >= 0; contact (penalty) stiffness [SI:N/m]; acts only upon penetration
-    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)]; acts only upon penetration
+    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)]; acts only upon penetration; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact
     Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear
     Real restitutionCoefficient;                  //!< AUTO: must be > 0; coefficient of restitution [SI:1], used by the impact models HuntCrossley and GonthierCarvalhoMartins; must be > 0
     Real minimumImpactVelocity;                   //!< AUTO: must be >= 0; lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact

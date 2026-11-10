@@ -6431,6 +6431,73 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-22"></a>
+### RG6.22, RG6.23, RG21.6.6 — buttons and sliders in the render window, the zoom of the scopes, the notebook scripts in Tier 2 (2026-11-10, #3400, #3401, #3399)
+*(Maintainer 2026-11-10: RG6.22 as recommended, except: the renderer thread does not take the GIL, it queues the
+event, which the main thread executes; a visualization setting in general puts the icon bar and the buttons and sliders
+into the images, default False, the scopes have their own switch. RG6.23 good to go. RG21.6.6.)*
+
+- **The elements** (#3400): `src/Graphics/RendererControls.h` - `Control` (type, view, location `[[x0, y0], [x1, y1]]`
+  relative from the top left, text, fontSize, color, backgroundColor, toggle, state, minMax, format) and `ControlList`
+  (lock, items, next ID, the element the mouse holds, the user function as `std::function<void(Index, std::vector<Real>)>`),
+  one list per SystemContainer in `VisualizationSystemContainer::rendererControls`, cleared by `SC.Reset()`. The slider
+  label takes a Python format, of which `{}` and `{:.Nf}`, `{:.Ne}`, `{:.Ng}` are converted to printf (`ConvertFormat`);
+  another format is refused when the slider is added, as the label is written in the renderer thread.
+- **Drawing and mouse** (GlfwClientExtended.cpp): `DrawControls` as the icon bar in pixels of the frame buffer, the
+  background with its alpha value, darker while pressed or switched on, a track and a knob for a slider, the label
+  centered. The mouse: icon bar, then the elements (`ControlsMouseButton`, `ControlsCursor`, `ControlsScroll`), then the
+  scopes, then the view; any mouse button over an element is taken, so a click never selects or rotates through it.
+  A push button sends 1 on release over it and stays 0, a toggle button switches; a slider sends each new value while
+  dragged, the wheel 1/100 of the range (CTRL 1/1000).
+- **The callback**: `PyQueueRendererControl(id, state)` in rendererPythonInterface.cpp, a queue as the key press
+  function has; a value of the same element still waiting is replaced, so a dragged slider does not pile up calls.
+  `PyProcessRendererControlQueue` in `PyProcessExecuteQueue` calls the user function in the main thread; an error in it
+  is a warning.
+- **Python**: `SC.renderer.AddButton`, `AddSlider` (keyword arguments; checked through one dict conversion that
+  `SetDictionary` uses too), `SetControlState(id, data, callUserFunction=False)`, `GetControlState`, `GetControls`,
+  `DeleteControl`, `ClearControls`, `SetControlUserFunction`; `GetDictionary()['controls']` with the IDs.
+  `visualizationSettings.general.iconBarAndControlsInImages`: the elements and the icon bar are drawn before the frame
+  is saved. `exudyn.interactive.WindowControls`: one function per element, elements without location in a column at
+  the left. rendererControlsTest.py (the API without a window), renderWindowControls.py (a mass on a spring-damper,
+  sliders for stiffness and damping, a gravity toggle, a push button, a scope), GUI.md section *Buttons and sliders*.
+  The robot model of RG19.16 is not yet moved onto them (its own step).
+- **Not seen on the screen**: no run here opens a window (rule 11), so the drawing and the mouse are checked by the
+  maintainer with renderWindowControls.py.
+- **The zoom of the scopes** (#3401): `RenderState::scopeViews`, per scope the override `[xMin, xMax, yMin, yMax]`, the
+  settings it began with (location, minMaxX, minMaxY: a change resets it), and the ranges and the plot area of the last
+  drawing, which `ScopePlot::BuildScopes`/`AddScope` write (also for the raytracer); `AddScope` takes the vertical
+  range of the override. Idle: a system paused, or no new state for 0.3 s (`StateUpdateCounter`, the sum of the update
+  counters of the systems); a new state resets the override, which covers the solver and the solution viewer alike.
+  The wheel zooms by 0.85 per step about the mouse (SHIFT: x only, CTRL: y only), a drag of more than 2 pixels moves the
+  lines, a double click (0.4 s, 5 pixels) resets. GUI.md, the mouse table of keyBindings.py.
+- **RG21.6.6** (#3399): `python/Examples/notebooks` is in `tier2Paths` of regenerate.py: a changed script is a
+  warning, a new one not in git a hard gate, as for the pages of the notebooks; checked with a changed script.
+
+<a id="rg4-27"></a>
+### RG4.27 — the contacts switch by the gap; the damping at the end of a contact documented (2026-11-10, #904)
+*(Maintainer 2026-11-10: close #904 as won't fix; the documentation says that the damping may give negative contact
+forces, which keeps the linear spring-damper behaviour between the two bodies, with the restitution-based contact law
+as the alternative; in the general section, referred to by the damping parameters.)*
+
+How the contacts switched when it was decided (2026-11-09):
+
+| contact | switched by | the damping may pull at the end of a contact |
+|---|---|---|
+| ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTorus, ObjectContactSphereTriangle, ObjectContactSphereCylinder | the gap of the last post-Newton step | yes |
+| ObjectContactCylinderCylinder, ObjectContactCylinderTriangle, ObjectContactConvexConvex, ObjectContactPrimitiveConvex (the contact points) | the gap per contact point | yes |
+| ObjectContactConvexRoll, ObjectConnectorRollingDiscPenalty | the gap | yes |
+| ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D | the gap per segment | yes |
+| ObjectContactCurveCircles | the gap **and** a pressing normal force (`gap < 0 and fNormal < 0` in its post-Newton step) | no |
+| GeneralContact, sphere-sphere and sphere-triangle | `keepContactWhilePenetrating`: True by the gap, **False (the default)** by a pressing force; a sphere-triangle contact with an explicit solver always by the gap | only with True |
+| GeneralContact, ANCF cable and other contacts | the gap | yes |
+
+Nothing changes in the code. The general section of the contacts (itemKindDefinitions.py, *Damping and the end of a
+contact*, `sec-contact-damping`) explains the pulling force, why the contact stays active while the shapes
+penetrate, the impact models HuntCrossley and GonthierCarvalhoMartins as the alternative, and the two exceptions;
+the `contactDamping` of 14 contacts refers to it, that of ObjectContactCurveCircles says that it switches off where
+its force pulls. ObjectJournalBearing has no such end of a contact. `keepContactWhilePenetrating` of GeneralContact
+already said it.
+
 <a id="rg11-6-3"></a>
 ### RG11.6.3, RG11.6.4 — the 3D joints on their relative frame with analytic derivatives, the documentation of the constraint Jacobians (2026-11-10, #2884, #845)
 *(Maintainer 2026-11-10: the decisions of RG11.6.2 as proposed, and the analytic Jacobians - planned as a remark for

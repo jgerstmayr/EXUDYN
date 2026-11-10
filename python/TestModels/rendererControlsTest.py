@@ -1,0 +1,125 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The buttons and sliders of the render window (#3400), without a window: SC.renderer.AddButton and
+#           AddSlider return their IDs, SetControlState and GetControlState set and give [state, 0, 0], the user
+#           function f(id, data) is called with callUserFunction as a click calls it, GetDictionary/SetDictionary
+#           carry them with their IDs, and what is wrong is refused. exudyn.interactive.WindowControls calls the
+#           function of each element and places elements without location in a column. A mass on a spring-damper is
+#           simulated with the stiffness and the gravity set through the controls.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-10
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.itemInterface import MarkerBodyMass, LoadMassProportional
+from exudyn.interactive import WindowControls
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+testError = 0
+def Check(condition, message):
+    global testError
+    if not condition:
+        exu.Print('rendererControlsTest: ' + message)
+        testError += 1
+
+def Refused(function, errorType):
+    try:
+        function()
+    except errorType:
+        return True
+    return False
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+renderer = SC.renderer
+
+#the API of the renderer
+bPush = renderer.AddButton('push', location=[[0.02, 0.02], [0.15, 0.08]])
+bToggle = renderer.AddButton('light', toggle=True, state=1)
+sValue = renderer.AddSlider('q1', location=[[0.7, 0.9], [0.98, 0.97]], minMax=[-3, 3], value=0.5, format='= {:.2f} rad')
+Check([bPush, bToggle, sValue] == [0, 1, 2], 'the IDs ' + str([bPush, bToggle, sValue]))
+Check(renderer.GetControlState(sValue) == [0.5, 0., 0.] and renderer.GetControlState(bToggle)[0] == 1., 'the initial states')
+Check(renderer.AddSlider('default') == 3 and renderer.GetControlState(3)[0] == 0., 'a slider starts at min of [0, 1]')
+renderer.DeleteControl(3)
+
+calls = []
+renderer.SetControlUserFunction(lambda controlID, data: calls.append((controlID, list(data))))
+renderer.SetControlState(sValue, 1.25, callUserFunction=True)
+renderer.SetControlState(bToggle, [0]) #without the user function
+Check(calls == [(sValue, [1.25, 0., 0.])] and renderer.GetControlState(bToggle)[0] == 0., 'the user function: ' + str(calls))
+
+controls = renderer.GetControls()
+Check([c['type'] for c in controls] == ['Button', 'Button', 'Slider'] and controls[2]['minMax'] == [-3., 3.]
+      and controls[2]['format'] == '= {:.2f} rad' and controls[0]['location'] == [[0.02, 0.02], [0.15, 0.08]]
+      and controls[1]['toggle'] and 'toggle' not in controls[2], 'GetControls: ' + str(controls))
+
+#the dictionary of the renderer carries them with their IDs
+values = renderer.GetDictionary()
+SC2 = exu.SystemContainer()
+SC2.renderer.SetDictionary({'controls': values['controls']})
+Check(SC2.renderer.GetControls() == controls, 'SetDictionary')
+Check(SC2.renderer.AddButton('next') == 3, 'the next ID after those of SetDictionary')
+renderer.DeleteControl(bPush)
+Check([c['id'] for c in renderer.GetControls()] == [1, 2], 'DeleteControl')
+
+#what is wrong is refused
+Check(Refused(lambda: renderer.AddSlider('a', minMax=[1, 0]), exu.ExudynValueError), 'minMax with min > max')
+Check(Refused(lambda: renderer.AddSlider('a', format='{:d}'), exu.ExudynValueError), 'a format without a float')
+Check(Refused(lambda: renderer.SetControlState(sValue, 7), exu.ExudynValueError), 'a value outside minMax')
+Check(Refused(lambda: renderer.SetControlState(bToggle, 0.5), exu.ExudynValueError), 'a button state other than 0, 1')
+Check(Refused(lambda: renderer.AddButton('a', location=[[0, 0], [0, 1]]), exu.ExudynValueError), 'a location without width')
+Check(Refused(lambda: renderer.AddButton('a', location=[[0, 0], [1.5, 1]]), exu.ExudynValueError), 'a location outside the window')
+Check(Refused(lambda: renderer.GetControlState(99), exu.ExudynIndexError), 'an unknown ID')
+Check(Refused(lambda: renderer.SetDictionary({'controls': [{'type': 'Button', 'id': 0, 'foo': 1}]}), exu.ExudynValueError), 'an unknown key')
+Check(Refused(lambda: renderer.SetControlUserFunction(5), exu.ExudynTypeError), 'a user function that is no function')
+renderer.ClearControls()
+Check(renderer.GetControls() == [], 'ClearControls')
+
+#WindowControls: the function of each element, the column of the elements without location
+mass = 1.
+oGround = mbs.CreateGround()
+oMass = mbs.CreateMassPoint(referencePosition=[0, -0.5, 0], mass=mass,
+                            graphicsDataList=[graphics.Sphere(radius=0.08, color=graphics.color.red, nTiles=24)])
+oSpring = mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=400., damping=2., referenceLength=0.5)
+lGravity = mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=oMass)), loadVector=[0, -9.81, 0]))
+mbs.Assemble()
+
+windowControls = WindowControls(SC)
+sStiffness = windowControls.Slider('stiffness', minMax=[50, 2000], value=400.,
+                                   function=lambda value: mbs.SetObjectParameter(oSpring, 'stiffness', value))
+bGravity = windowControls.Button('gravity', toggle=True, state=1,
+                                 function=lambda state: mbs.SetLoadParameter(lGravity, 'loadVector', [0, -9.81*mass*state, 0]))
+locations = [c['location'] for c in renderer.GetControls()]
+Check(abs(locations[0][0][1] - 0.01) < 1e-12 and abs(locations[1][0][1] - (0.01 + 0.055 + 0.01)) < 1e-12
+      and locations[0][0][0] == locations[1][0][0], 'the column of elements: ' + str(locations))
+windowControls.SetState(sStiffness, 1000., callFunction=True)
+windowControls.SetState(bGravity, 0, callFunction=True)
+Check(mbs.GetObjectParameter(oSpring, 'stiffness') == 1000. and windowControls.State(bGravity) == 0., 'the functions of WindowControls')
+
+#the mass on the spring: with gravity switched off it oscillates about the unloaded length
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.endTime = 0.5
+simulationSettings.timeIntegration.numberOfSteps = 500
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.solution.file.write = False
+mbs.SolveDynamic(simulationSettings)
+y = mbs.GetObjectOutputBody(oMass, exu.OutputVariableType.Position)[1]
+Check(abs(y + 0.5) < 1e-10, 'without gravity the mass stays at the unloaded length: ' + str(y))
+
+if not testIsActive: #the elements in the window; the solution viewer
+    SC.renderer.Start()
+    SC.renderer.DoIdleTasks()
+    SC.renderer.Stop()
+    mbs.SolutionViewer()
+
+u = testError + y
+exu.Print('rendererControlsTest: errors', testError)
+exu.Print('solution of rendererControlsTest=', u)
+exu.sys['testResult'] = u

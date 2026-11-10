@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-11-08  22:55:36 (last modified)
+* @date         2026-11-10  08:34:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,7 +33,7 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents the ground, which can undergo translations but not rotations, and \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m]
-    Real contactDamping;                          //!< AUTO: normal contact damping [SI:N/(m s)]
+    Real contactDamping;                          //!< AUTO: normal contact damping [SI:N/(m s)]; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real staticFrictionOffset;                    //!< AUTO: must be >= 0; static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real viscousFriction;                         //!< AUTO: must be >= 0; viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)

@@ -21,6 +21,14 @@ that holds the measured facts and the decisions.
 the defaults; a parameter the item does not have raises a `ValueError` instead of being ignored. `item.visualization`
 is always the `V` class (#2342).
 
+**Buttons and sliders in the render window** (#3400): `SC.renderer.AddButton` and `AddSlider`, with one user function
+`SC.renderer.SetControlUserFunction(f)`, `f(controlID, data)`, and `exudyn.interactive.WindowControls` with one
+function per element; `visualizationSettings.general.iconBarAndControlsInImages` puts them and the icon bar into saved
+images. See {ref}`sec-gui-controls`.
+
+**Zoom and move a scope** while the simulation is paused or finished: the mouse wheel over a scope zooms it, dragging
+moves its lines, a double click resets it (#3401).
+
 **Faster 3D joints.** `ObjectJointGeneric`, `ObjectJointRevoluteZ` and `ObjectJointPrismaticX` compute their equations
 on the relative frame of their joint frames with analytic derivatives, see {ref}`sec-constraintjacobian`; their
 reaction forces take half the time, a chain of revolute joints with modified Newton about 20 % less in all. The results

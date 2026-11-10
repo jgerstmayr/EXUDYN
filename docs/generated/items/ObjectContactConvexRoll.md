@@ -25,7 +25,7 @@ The parameters of the item; in a dictionary, its type is 'ContactConvexRoll':
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
 | **contactStiffness** | Real |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] |
-| **contactDamping** | Real |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)] |
+| **contactDamping** | Real |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)]; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact |
 | **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
 | **staticFrictionOffset** | UReal |  | 0. | (symbol: $\mu_{s_off}$) static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
 | **viscousFriction** | UReal |  | 0. | (symbol: $\mu_v$) viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |

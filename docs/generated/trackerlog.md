@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.526.dev1
+- Exudyn version = 1.13.530.dev1
 - last change = 2026-11-10
-- Number of issues = 3400
-- Number of resolved issues = 3303 (526 in current version)
+- Number of issues = 3402
+- Number of resolved issues = 3307 (530 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `LOW EFF` `raised by: Claude-JG` The scripts generated from the notebooks are not in the manifest of the regeneration (#3399)
-  - description: tools/regenerate.py reports python/Examples/notebooks/\*.py, which notebookEmitter.py writes from python/Notebooks/\*.ipynb, as drift outside both tiers (unexpected) when a notebook changes. To be checked: add them to the manifest, probably as tier 2 like the generated notebook pages.
-  - date raised: 2026-11-10
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` GetURDFrobotData: visual primitives, the names of the base links, the order of the links (#3393)
   - description: GetURDFrobotData reads only meshes as visual geometry, so boxes, cylinders and spheres in the visual elements of a URDF are left out; the names of the links fixed to the base are not stored; whether a parent always precedes its children in the link list is not checked. Decided: read the primitives as graphics, store the base link names, reorder or refuse an order with a child before its parent.
   - date raised: 2026-11-09
@@ -9312,10 +9309,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` GeneralContact (#907)
   - description: add implicit Trig-Sphere contact
   - date raised: 2022-02-02
-- `EXTENSION` `LOW EFF` GeneralContact (#904)
-  - description: PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force
-  - **remarks:** revision2026c step RG4.27: the list of the contacts and how they switch; the maintainer decides (2026-11-09: keep the switching by the gap, as ObjectContactSphereSphere)
-  - date raised: 2022-01-31
 - `CHANGE` `MEDIUM EFF` GeneralContact (#867)
   - description: change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu
   - date raised: 2022-01-17

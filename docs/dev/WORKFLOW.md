@@ -644,7 +644,8 @@ python tools/regenerate.py --check
 ```
 
 It runs the six generators from their required working directory and classifies every difference
-against HEAD: **Tier 1** (the API surface) fails with exit 1, **Tier 2** (documentation) warns,
+against HEAD: **Tier 1** (the API surface) fails with exit 1, **Tier 2** (documentation, and the
+scripts of the notebooks in `python/Examples/notebooks`) warns,
 anything outside both tiers is reported as an unexpected gap in the manifest. `--no-run` checks
 without regenerating; `--python` selects the interpreter. It ignores modifications outside the two
 tiers as unrelated work, and ignores files that differ only in their `@date ... (last modified)`

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-08  22:55:36 (last modified)
+* @date         2026-11-10  08:34:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     Vector3D planeNormal;                         //!< AUTO: normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker \f$m0\f$
     Real dryFrictionAngle;                        //!< AUTO: angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m]
-    Real contactDamping;                          //!< AUTO: must be >= 0; normal contact damping [SI:N/(m s)]
+    Real contactDamping;                          //!< AUTO: must be >= 0; normal contact damping [SI:N/(m s)]; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact
     Vector2D dryFriction;                         //!< AUTO: dry friction coefficients [SI:1] in local marker 1 joint \f$J1\f$ coordinates; if \f$\alpha_t==0\f$, lateral direction \f$l=x\f$ and forward direction \f$f=y\f$; assuming a normal force \f$f_n\f$, the local friction force can be computed as \f$\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}\f$
     Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     Vector2D viscousFriction;                     //!< AUTO: viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint \f$J1\f$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity

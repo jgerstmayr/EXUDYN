@@ -1142,6 +1142,7 @@ py::dict MainRenderer::GetDictionary() const
 	for (Index i = 0; i < materials.NumberOfItems(); i++) { materialList.append(materials.PyGetMaterialDict(py::int_(i))); }
 	d["materials"] = materialList;
 	d["scopeGraphics"] = scopes.PyGetGraphics();
+	d["controls"] = GetControls();
 	py::dict states; //the views that are enabled; a disabled view has no state to give
 	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
 	for (Index viewID = 0; viewID < MAX_VIEWS_GLFW; viewID++)
@@ -1158,9 +1159,9 @@ void MainRenderer::SetDictionary(const py::dict& d)
 	for (auto item : d)
 	{
 		STDstring key = py::str(item.first);
-		if (key != "materials" && key != "scopeGraphics" && key != "states" && key != "textures")
+		if (key != "materials" && key != "scopeGraphics" && key != "controls" && key != "states" && key != "textures")
 		{
-			PyError("renderer.SetDictionary: unknown key '" + key + "'; the keys are materials, scopeGraphics, states and textures", PyErrorType::valueError);
+			PyError("renderer.SetDictionary: unknown key '" + key + "'; the keys are materials, scopeGraphics, controls, states and textures", PyErrorType::valueError);
 		}
 	}
 	if (d.contains("textures")) //first, as the graphics may name them
@@ -1179,6 +1180,7 @@ void MainRenderer::SetDictionary(const py::dict& d)
 		}
 	}
 	if (d.contains("scopeGraphics")) { scopes.PySetGraphics(d["scopeGraphics"]); }
+	if (d.contains("controls")) { SetControls(d["controls"]); }
 	if (d.contains("states"))
 	{
 		for (auto item : py::dict(d["states"]))
@@ -1523,6 +1525,300 @@ void MainRendererScopes::ClearGraphics(Index view, Index scope)
 	graphics.items.erase(std::remove_if(graphics.items.begin(), graphics.items.end(), [view, scope](const ScopePlot::StaticItem& item)
 		{ return (view < 0 || item.view == view) && (scope < 0 || item.scope == scope); }), graphics.items.end());
 	EXUstd::ReleaseSemaphore(graphics.lock);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the buttons and sliders of the render window (#3400)
+namespace
+{
+	const char* controlTypeNames[] = { "Button", "Slider" };
+
+	//! an element from its dict, every key checked; withID: the dict has the key 'id' (SetDictionary)
+	RendererControls::Control ControlFromDict(const py::dict& d, const STDstring& function, bool withID)
+	{
+		const STDstring where = "renderer." + function + ": ";
+		auto Get = [&](const char* key, auto& value)
+		{
+			try { value = py::cast<std::remove_reference_t<decltype(value)>>(d[key]); }
+			catch (const py::cast_error&)
+			{
+				PyError(where + "the key '" + key + "' of " + EXUstd::ToString(py::str(d)) + " has the wrong type", PyErrorType::typeError);
+			}
+		};
+		RendererControls::Control control;
+		STDstring type = "Button";
+		if (d.contains("type")) { Get("type", type); }
+		std::vector<STDstring> keys = { "type", "view", "location", "text", "fontSize", "color", "backgroundColor", "state" };
+		if (withID) { keys.push_back("id"); }
+		if (type == "Button") { control.type = RendererControls::ControlType::Button; keys.push_back("toggle"); }
+		else if (type == "Slider") { control.type = RendererControls::ControlType::Slider; keys.insert(keys.end(), { "minMax", "format" }); }
+		else { PyError(where + "the type must be 'Button' or 'Slider', but is '" + type + "'", PyErrorType::valueError); }
+		for (auto entry : d)
+		{
+			STDstring key = py::str(entry.first);
+			if (std::find(keys.begin(), keys.end(), key) == keys.end())
+			{
+				STDstring list;
+				for (const STDstring& name : keys) { list += (list.size() ? ", " : "") + name; }
+				PyError(where + "a " + type + " has no key '" + key + "'; its keys are " + list, PyErrorType::valueError);
+			}
+		}
+		auto Color = [&](const char* key, Float4& color)
+		{
+			if (!d.contains(key)) { return; }
+			std::array<float, 4> c;
+			Get(key, c);
+			color = Float4({ c[0], c[1], c[2], c[3] });
+		};
+		if (withID)
+		{
+			if (!d.contains("id")) { PyError(where + "each element needs its 'id'", PyErrorType::valueError); }
+			Get("id", control.id);
+			if (control.id < 0) { PyError(where + "the id must be >= 0, but is " + EXUstd::ToString(control.id), PyErrorType::valueError); }
+		}
+		if (d.contains("view")) { Get("view", control.view); }
+		if (control.view < 0 || control.view >= MAX_VIEWS_GLFW) { PyError(where + "the view must be 0 to " + EXUstd::ToString(MAX_VIEWS_GLFW - 1) + ", but is " + EXUstd::ToString(control.view), PyErrorType::indexError); }
+		if (d.contains("location")) { Get("location", control.location); }
+		for (Index i = 0; i < 2; i++)
+		{
+			for (Index j = 0; j < 2; j++)
+			{
+				Real v = control.location[i][j];
+				if (!(v >= 0. && v <= 1.)) { PyError(where + "the location [[x0, y0], [x1, y1]] is relative to the window, each value in [0, 1], but it is " + EXUstd::ToString(py::str(py::cast(control.location))), PyErrorType::valueError); }
+			}
+		}
+		if (control.location[0][0] == control.location[1][0] || control.location[0][1] == control.location[1][1])
+		{
+			PyError(where + "the location [[x0, y0], [x1, y1]] has no width or no height", PyErrorType::valueError);
+		}
+		if (d.contains("text")) { Get("text", control.text); }
+		if (d.contains("fontSize")) { Get("fontSize", control.fontSize); }
+		if (!(control.fontSize > 0.f)) { PyError(where + "the fontSize must be > 0, but is " + EXUstd::ToString(control.fontSize), PyErrorType::valueError); }
+		Color("color", control.color);
+		Color("backgroundColor", control.backgroundColor);
+		if (d.contains("toggle")) { Get("toggle", control.toggle); }
+		if (d.contains("minMax"))
+		{
+			Get("minMax", control.minMax);
+			if (!(control.minMax[0] < control.minMax[1])) { PyError(where + "minMax must be [min, max] with min < max, but is " + EXUstd::ToString(py::str(py::cast(control.minMax))), PyErrorType::valueError); }
+		}
+		if (d.contains("format"))
+		{
+			Get("format", control.format);
+			STDstring before, printfFormat, after;
+			if (!RendererControls::ConvertFormat(control.format, before, printfFormat, after))
+			{
+				PyError(where + "the format '" + control.format + "' must contain {} or {:.Nf}, {:.Ne}, {:.Ng} for the value, or be empty", PyErrorType::valueError);
+			}
+		}
+		if (control.type == RendererControls::ControlType::Slider) { control.state = control.minMax[0]; }
+		if (d.contains("state")) { Get("state", control.state); }
+		if (control.type == RendererControls::ControlType::Button && control.state != 0. && control.state != 1.)
+		{
+			PyError(where + "the state of a button must be 0 or 1, but is " + EXUstd::ToString(control.state), PyErrorType::valueError);
+		}
+		if (control.type == RendererControls::ControlType::Slider && !(control.state >= control.minMax[0] && control.state <= control.minMax[1]))
+		{
+			PyError(where + "the value of a slider must be in minMax " + EXUstd::ToString(py::str(py::cast(control.minMax))) + ", but is " + EXUstd::ToString(control.state), PyErrorType::valueError);
+		}
+		return control;
+	}
+
+	//! the dict of an element with all its keys
+	py::dict ControlToDict(const RendererControls::Control& control)
+	{
+		py::dict d;
+		d["id"] = control.id;
+		d["type"] = controlTypeNames[(Index)control.type];
+		d["view"] = control.view;
+		d["location"] = control.location;
+		d["text"] = control.text;
+		d["fontSize"] = control.fontSize;
+		d["color"] = std::array<float, 4>({ control.color[0], control.color[1], control.color[2], control.color[3] });
+		d["backgroundColor"] = std::array<float, 4>({ control.backgroundColor[0], control.backgroundColor[1], control.backgroundColor[2], control.backgroundColor[3] });
+		d["state"] = control.state;
+		if (control.type == RendererControls::ControlType::Button) { d["toggle"] = control.toggle; }
+		else { d["minMax"] = control.minMax; d["format"] = control.format; }
+		return d;
+	}
+
+	//! the arguments of AddButton and AddSlider as the dict of an element; None leaves a key out
+	void SetIfGiven(py::dict& d, const char* key, const py::object& value)
+	{
+		if (!value.is_none()) { d[key] = value; }
+	}
+}
+
+Index MainRenderer::AddControl(const py::dict& d, const STDstring& function)
+{
+	RendererControls::Control control = ControlFromDict(d, function, false);
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	control.id = controls.nextID++;
+	controls.items.push_back(control);
+	EXUstd::ReleaseSemaphore(controls.lock);
+	SendRedrawSignal();
+	return control.id;
+}
+
+Index MainRenderer::AddButton(const STDstring& text, const py::object& location, bool toggle, Real state, float fontSize,
+	const py::object& color, const py::object& backgroundColor, Index view)
+{
+	py::dict d;
+	d["type"] = "Button";
+	d["text"] = text;
+	SetIfGiven(d, "location", location);
+	d["toggle"] = toggle;
+	d["state"] = state;
+	d["fontSize"] = fontSize;
+	SetIfGiven(d, "color", color);
+	SetIfGiven(d, "backgroundColor", backgroundColor);
+	d["view"] = view;
+	return AddControl(d, "AddButton");
+}
+
+Index MainRenderer::AddSlider(const STDstring& text, const py::object& location, const py::object& minMax, const py::object& value,
+	const STDstring& format, float fontSize, const py::object& color, const py::object& backgroundColor, Index view)
+{
+	py::dict d;
+	d["type"] = "Slider";
+	d["text"] = text;
+	SetIfGiven(d, "location", location);
+	SetIfGiven(d, "minMax", minMax);
+	SetIfGiven(d, "state", value);
+	d["format"] = format;
+	d["fontSize"] = fontSize;
+	SetIfGiven(d, "color", color);
+	SetIfGiven(d, "backgroundColor", backgroundColor);
+	d["view"] = view;
+	return AddControl(d, "AddSlider");
+}
+
+void MainRenderer::SetControlState(Index controlID, const py::object& data, bool callUserFunction)
+{
+	Real state = 0.;
+	try
+	{
+		if (py::isinstance<py::float_>(data) || py::isinstance<py::int_>(data) || py::isinstance<py::bool_>(data)) { state = py::cast<Real>(data); }
+		else { state = py::cast<std::vector<Real>>(data).at(0); }
+	}
+	catch (...)
+	{
+		PyError("renderer.SetControlState: data must be the state, or a list [state, ...] as the user function receives it, but is " + EXUstd::ToString(py::str(data)), PyErrorType::typeError);
+	}
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	STDstring error;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	Index i = controls.Find(controlID);
+	if (i < 0) { error = "renderer.SetControlState: there is no element with the id " + EXUstd::ToString(controlID); }
+	else
+	{
+		RendererControls::Control& control = controls.items[i];
+		if (control.type == RendererControls::ControlType::Button && state != 0. && state != 1.)
+		{
+			error = "renderer.SetControlState: the state of a button must be 0 or 1, but is " + EXUstd::ToString(state);
+		}
+		else if (control.type == RendererControls::ControlType::Slider && !(state >= control.minMax[0] && state <= control.minMax[1]))
+		{
+			error = "renderer.SetControlState: the value of a slider must be in its minMax " + EXUstd::ToString(control.minMax[0]) + " to " + EXUstd::ToString(control.minMax[1]) + ", but is " + EXUstd::ToString(state);
+		}
+		else { control.state = state; }
+	}
+	std::function<void(Index, std::vector<Real>)> userFunction = controls.userFunction;
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (error.size()) { PyError(error, i < 0 ? PyErrorType::indexError : PyErrorType::valueError); }
+	SendRedrawSignal();
+	if (callUserFunction && userFunction) { userFunction(controlID, std::vector<Real>({ state, 0., 0. })); }
+}
+
+std::vector<Real> MainRenderer::GetControlState(Index controlID) const
+{
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	Index i = controls.Find(controlID);
+	Real state = (i >= 0) ? controls.items[i].state : 0.;
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (i < 0) { PyError("renderer.GetControlState: there is no element with the id " + EXUstd::ToString(controlID), PyErrorType::indexError); }
+	return std::vector<Real>({ state, 0., 0. });
+}
+
+void MainRenderer::DeleteControl(Index controlID)
+{
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	Index i = controls.Find(controlID);
+	if (i >= 0) { controls.items.erase(controls.items.begin() + i); }
+	if (controls.activeID == controlID) { controls.activeID = -1; }
+	EXUstd::ReleaseSemaphore(controls.lock);
+	if (i < 0) { PyError("renderer.DeleteControl: there is no element with the id " + EXUstd::ToString(controlID), PyErrorType::indexError); }
+	SendRedrawSignal();
+}
+
+void MainRenderer::ClearControls()
+{
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	controls.items.clear();
+	controls.activeID = -1;
+	EXUstd::ReleaseSemaphore(controls.lock);
+	SendRedrawSignal();
+}
+
+py::list MainRenderer::GetControls() const
+{
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	std::vector<RendererControls::Control> items = controls.items;
+	EXUstd::ReleaseSemaphore(controls.lock);
+	py::list list;
+	for (const RendererControls::Control& control : items) { list.append(ControlToDict(control)); }
+	return list;
+}
+
+void MainRenderer::SetControls(const py::object& items)
+{
+	if (!py::isinstance<py::list>(items) && !py::isinstance<py::tuple>(items))
+	{
+		PyError("renderer.SetDictionary: 'controls' must be a list of dicts, but is " + EXUstd::ToString(py::str(items)), PyErrorType::typeError);
+	}
+	std::vector<RendererControls::Control> list;
+	Index nextID = 0;
+	for (auto item : items)
+	{
+		if (!py::isinstance<py::dict>(item)) { PyError("renderer.SetDictionary: each of 'controls' must be a dict, but is " + EXUstd::ToString(py::str(item)), PyErrorType::typeError); }
+		RendererControls::Control control = ControlFromDict(py::reinterpret_borrow<py::dict>(item), "SetDictionary", true);
+		for (const RendererControls::Control& other : list)
+		{
+			if (other.id == control.id) { PyError("renderer.SetDictionary: the id " + EXUstd::ToString(control.id) + " of 'controls' is given twice", PyErrorType::valueError); }
+		}
+		nextID = EXUstd::Maximum(nextID, control.id + 1);
+		list.push_back(control);
+	}
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	controls.items = list;
+	controls.nextID = EXUstd::Maximum(controls.nextID, nextID);
+	controls.activeID = -1;
+	EXUstd::ReleaseSemaphore(controls.lock);
+	SendRedrawSignal();
+}
+
+void MainRenderer::SetControlUserFunction(const py::object& function)
+{
+	std::function<void(Index, std::vector<Real>)> userFunction;
+	if (!function.is_none() && !(py::isinstance<py::int_>(function) && py::cast<Index>(function) == 0))
+	{
+		if (!py::isinstance<py::function>(function))
+		{
+			PyError("renderer.SetControlUserFunction: expects a function f(id, data), or None, but received " + EXUstd::ToString(py::str(function)), PyErrorType::typeError);
+		}
+		userFunction = py::cast<std::function<void(Index, std::vector<Real>)>>(function);
+	}
+	RendererControls::ControlList& controls = mainSystemContainer->GetVisualizationSystemContainer().rendererControls;
+	EXUstd::WaitAndLockSemaphore(controls.lock);
+	controls.userFunction = userFunction;
+	EXUstd::ReleaseSemaphore(controls.lock);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

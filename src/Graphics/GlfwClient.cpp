@@ -972,7 +972,10 @@ void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yo
 	Index viewID = renderViews.GetViewID(window);
 	RenderState* state = renderViews.State(viewID);
 
-	if (PyGetRendererCallbackLock() || GetSettingsView(viewID, *visSettings).window.lockModelView) { return; }
+	if (PyGetRendererCallbackLock()) { return; }
+	if (ControlsScroll(window, viewID, yoffset)) { return; } //the wheel over a slider (#3400)
+	if (ScopesScroll(window, viewID, yoffset)) { return; } //the wheel over a scope while idle (#3401)
+	if (GetSettingsView(viewID, *visSettings).window.lockModelView) { return; }
 	SetCallBackRefreshSignal();
 	//rendererOut << "scroll: x=" << xoffset << ", y=" << yoffset << "\n";
 	stateMachine.hasLastMousePressed = 0;
@@ -996,6 +999,8 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	SetCallBackRefreshSignal();
 	//EXUstd::WaitAndLockSemaphore(graphicsUpdateAtomicFlag);
 	if (IconBarMouseButton(window, viewID, button, action, mods)) { return; } //a click on the icon bar (#3026)
+	if (ControlsMouseButton(window, viewID, button, action, mods)) { return; } //a button or slider of the window (#3400)
+	if (ScopesMouseButton(window, viewID, button, action, mods)) { return; } //a scope while idle (#3401)
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//STATE MACHINE MOUSE MOVE
@@ -1143,6 +1148,8 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 
 	state->mouseCoordinates = Vector2D({ xpos, ypos });
 	state->openGLcoordinates = basicVisualizationSystemContainer->PixelsToOpenGLCoordinates2D(xpos, ypos, *state);
+	if (ControlsCursor(window, viewID)) { return; } //a slider is dragged (#3400)
+	if (ScopesCursor(window, viewID)) { return; } //a scope is dragged (#3401)
 		//factor * Vector2D({ xpos - 0.5*state->currentWindowSize[0], -1.*(ypos - 0.5*state->currentWindowSize[1]) }) +
 		//Vector2D({ (double)state->centerPoint[0], (double)state->centerPoint[1] });
 
@@ -2548,8 +2555,19 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	//the frame is read from the back buffer before the swap: after it the back buffer is undefined, and the
 	//front buffer reads black under a compositor or a remote desktop (#2881)
-	SaveImage(viewID); //in case of flag, save frame to image file
-	DrawIconBar(window, viewID, width, height); //after the frame is saved: not part of saved images (#3026)
+	ScopesIdle(viewID); //a new state of the simulation resets the zoom of the scopes (#3401)
+	if (visSettings->general.iconBarAndControlsInImages) //the buttons, sliders and the icon bar in the saved images (#3400)
+	{
+		DrawControls(window, viewID, width, height);
+		DrawIconBar(window, viewID, width, height);
+		SaveImage(viewID); //in case of flag, save frame to image file
+	}
+	else
+	{
+		SaveImage(viewID); //in case of flag, save frame to image file
+		DrawControls(window, viewID, width, height); //after the frame is saved: not part of saved images (#3400)
+		DrawIconBar(window, viewID, width, height); //after the frame is saved: not part of saved images (#3026)
+	}
 	glfwSwapBuffers(window);
 
 	//++++++++++++++++++++++++++++++++++++++++++

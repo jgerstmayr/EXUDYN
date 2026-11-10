@@ -39,9 +39,10 @@ public: // AUTO:
   Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling
   float displayScaleFactor;                       //!< AUTO: must be > 0; factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling
   float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
+  bool iconBarAndControlsInImages;                //!< AUTO: True: the icon bar, as far as it is shown, and the buttons and sliders of the render window (SC.renderer.AddButton, AddSlider) are in the saved images and in RedrawAndGetImage; False: only on the screen; the scopes have their own switch, window.showScopes (#3400)
   float iconBarFoldDistance;                      //!< AUTO: must be >= 0; distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)
   float iconBarScaling;                           //!< AUTO: must be > 0; size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)
-  Index iconBarStartTime;                         //!< AUTO: must be >= 0; time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images (#3396)
+  Index iconBarStartTime;                         //!< AUTO: must be >= 0; time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images unless iconBarAndControlsInImages is True (#3396)
   Index iconBarTimeout;                           //!< AUTO: must be >= 0; time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
   float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see [](#sec-renderer-modelsize); SET GREATER THAN ZERO
@@ -85,6 +86,7 @@ public: // AUTO:
     cylinderTiling = 16;
     displayScaleFactor = 1.f;
     graphicsUpdateInterval = 0.1f;
+    iconBarAndControlsInImages = false;
     iconBarFoldDistance = 20.f;
     iconBarScaling = 0.7f;
     iconBarStartTime = 5000;
@@ -166,6 +168,7 @@ public: // AUTO:
     os << "  cylinderTiling = " << cylinderTiling << "\n";
     os << "  displayScaleFactor = " << displayScaleFactor << "\n";
     os << "  graphicsUpdateInterval = " << graphicsUpdateInterval << "\n";
+    os << "  iconBarAndControlsInImages = " << iconBarAndControlsInImages << "\n";
     os << "  iconBarFoldDistance = " << iconBarFoldDistance << "\n";
     os << "  iconBarScaling = " << iconBarScaling << "\n";
     os << "  iconBarStartTime = " << iconBarStartTime << "\n";

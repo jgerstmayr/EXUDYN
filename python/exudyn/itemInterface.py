@@ -6946,7 +6946,7 @@ class ObjectConnectorRollingDiscPenalty:
 
         contactStiffness: normal contact stiffness [SI:N/m]; type: float
 
-        contactDamping: normal contact damping [SI:N/(m s)]; type: float
+        contactDamping: normal contact damping [SI:N/(m s)]; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         dryFriction: dry friction coefficients [SI:1] in local marker 1 joint :math:`J1` coordinates; if :math:`\alpha_t==0`, lateral direction :math:`l=x` and forward direction :math:`f=y`; assuming a normal force :math:`f_n`, the local friction force can be computed as :math:`{}^{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}`; type: [float,float]
 
@@ -7055,7 +7055,7 @@ class ObjectContactConvexRoll:
 
         contactStiffness: normal contact stiffness [SI:N/m]; type: float
 
-        contactDamping: normal contact damping [SI:N/(m s)]; type: float
+        contactDamping: normal contact damping [SI:N/(m s)]; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
@@ -7156,7 +7156,7 @@ class ObjectContactCoordinate:
 
         contactStiffness: contact (penalty) stiffness [SI:N/m]; acts only upon penetration; type: float
 
-        contactDamping: contact damping [SI:N/(m s)]; acts only upon penetration; type: float
+        contactDamping: contact damping [SI:N/(m s)]; acts only upon penetration; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear; type: float
 
@@ -7347,7 +7347,7 @@ class ObjectContactFrictionCircleCable2D:
 
         contactStiffness: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_n` act in contact normal direction only upon penetration; type: float
 
-        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration; type: float
+        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         frictionVelocityPenalty: tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area; type: float
 
@@ -7450,7 +7450,7 @@ class ObjectContactSphereSphere:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -7573,7 +7573,7 @@ class ObjectContactSphereTorus:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -7689,7 +7689,7 @@ class ObjectContactSphereTriangle:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -7807,7 +7807,7 @@ class ObjectContactSphereCylinder:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -7922,7 +7922,7 @@ class ObjectContactCylinderCylinder:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -8055,7 +8055,7 @@ class ObjectContactConeCone:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -8186,7 +8186,7 @@ class ObjectContactConeTriangle:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -8317,7 +8317,7 @@ class ObjectContactConvexConvex:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -8452,7 +8452,7 @@ class ObjectContactPrimitiveConvex:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -8587,7 +8587,7 @@ class ObjectContactCylinderTriangle:
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see sec-contact-damping for the negative contact force it gives at the end of a contact; type: float
 
         contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
@@ -8807,7 +8807,7 @@ class ObjectContactCurveCircles:
 
         contactStiffness: normal contact stiffness [SI:N/(m*m)]; type: float
 
-        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.; type: float
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care; the contact switches off where its force pulls, see sec-contact-damping; type: float
 
         contactModel: number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from :math:`l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)` as long as :math:`p>0`; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
 

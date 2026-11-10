@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-11-08  22:55:36 (last modified)
+* @date         2026-11-10  08:34:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
-    Real contactDamping;                          //!< AUTO: must be >= 0; linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
+    Real contactDamping;                          //!< AUTO: must be >= 0; linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior; see [](#sec-contact-damping) for the negative contact force it gives at the end of a contact
     Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in normal contact model [SI:1]
     Real constantPullOffForce;                    //!< AUTO: must be >= 0; constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model
     Real contactPlasticityRatio;                  //!< AUTO: must be >= 0; ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; \f$\lambda_\mathrm{P}=1-k_c/K2\f$, which gives the contact stiffness for unloading/reloading \f$K2 = k_c/(1-\lambda_\mathrm{P})\f$; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model

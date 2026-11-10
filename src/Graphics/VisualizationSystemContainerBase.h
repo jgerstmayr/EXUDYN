@@ -21,6 +21,7 @@
 
 class MainSystem;
 namespace ScopePlot { class StaticGraphics; }
+namespace RendererControls { class ControlList; }
 
 //MOVE to python generated class!!!
 
@@ -141,6 +142,20 @@ public:
 	Vector3D joystickPosition;		//!< stored position of joystick, if available
 	Vector3D joystickRotation;		//!< stored rotation of joystick, if available
 	Index joystickAvailable;		//!< -1 if no joystick available, otherwise the index of the available joystick
+
+	//! a scope zoomed or moved with the mouse while the simulation is idle (#3401): the override of its ranges, and
+	//! the ranges and the plot area of its last drawing, to which the mouse is mapped; not part of GetState
+	class ScopeView
+	{
+	public:
+		bool active = false;							//!< the ranges are overridden
+		std::array<Real, 4> range = { 0., 1., 0., 1. };	//!< the override [xMin, xMax, yMin, yMax]
+		std::array<float, 8> settings = {};				//!< location, minMaxX and minMaxY of the scope when it began; a change resets it
+		bool drawn = false;								//!< drawnRange and box are those of the last frame
+		std::array<Real, 4> drawnRange = { 0., 1., 0., 1. };	//!< [xMin, xMax, yMin, yMax] of the last drawing
+		std::array<float, 4> box = {};					//!< its plot area [left, bottom, right, top] in pixels from the bottom left corner
+	};
+	std::array<ScopeView, 3> scopeViews;	//!< per scope of the view, ScopePlot::numberOfScopes
 
 
 	//! minimal distance of the near plane from the eye in a perspective view: 0.1, and 0.001 of the scene for scenes
@@ -458,6 +473,9 @@ public:
 
 	virtual std::vector<VSettingsMaterial>* GetGraphicsMaterialList() = 0;
 	virtual ScopePlot::StaticGraphics& GetScopeStaticGraphics() = 0; //!< the static items of the scopes (#3237)
+	virtual RendererControls::ControlList& GetRendererControls() = 0; //!< the buttons and sliders of the render window (#3400)
+	virtual uint64_t StateUpdateCounter() = 0; //!< the sum of the update counters of the states of the systems: it changes with every new state (#3401)
+	virtual bool SimulationIsPaused() = 0; //!< a system is paused (SPACE) (#3401)
 	virtual void CopyMaterialsFromVisualizationSettings() = 0;
 
 	//! added to directly access this data from GlfwClient

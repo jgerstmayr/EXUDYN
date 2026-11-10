@@ -68,6 +68,9 @@ std::atomic_flag queuedRendererKeyListAtomicFlag = ATOMIC_FLAG_INIT;	//!< flag f
 ResizableArray<SlimArray<int, 3>> queuedRendererKeyList;	//!< this list contains keys that are transferred to python
 std::function<int(int, int, int)> keyPressUserFunction = 0; //!< must be set by GLFW, before that nothing is done; should not be changed too often, as it is not stored in list
 
+std::atomic_flag queuedRendererControlListAtomicFlag = ATOMIC_FLAG_INIT;	//!< flag for queuedRendererControlList
+std::vector<std::pair<Index, Real>> queuedRendererControlList;	//!< the (id, state) of the buttons and sliders for their user function (#3400)
+
 //! lock renderer callbacks during critical operations 
 void PySetRendererCallbackLock(bool flag) { rendererCallbackLock = flag; }
 
@@ -154,6 +157,16 @@ void PyQueueKeyPressed(int key, int action, int mods)
 }
 
 
+//! the new state of a button or slider for the user function of the controls (#3400); while a slider is dragged, only
+//! its last value waits
+void PyQueueRendererControl(Index id, Real state)
+{
+	EXUstd::WaitAndLockSemaphore(queuedRendererControlListAtomicFlag);
+	if (queuedRendererControlList.size() && queuedRendererControlList.back().first == id) { queuedRendererControlList.back().second = state; }
+	else { queuedRendererControlList.push_back(std::pair<Index, Real>(id, state)); }
+	EXUstd::ReleaseSemaphore(queuedRendererControlListAtomicFlag);
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //function to execute regularly the queues
 void PyProcessExecuteQueue() //call python function and execute string as python code
@@ -163,6 +176,46 @@ void PyProcessExecuteQueue() //call python function and execute string as python
 	PyProcessExecutableStringQueue();
 
 	PyProcessRendererKeyQueue();
+
+	PyProcessRendererControlQueue();
+}
+
+//! call the user function of the controls, f(id, data) with data = [state, 0, 0], for the queued events, in the main
+//! (Python) thread (#3400); an error in it is a warning, as for the key press function
+void PyProcessRendererControlQueue()
+{
+	EXUstd::WaitAndLockSemaphore(queuedRendererControlListAtomicFlag);
+	if (queuedRendererControlList.empty())
+	{
+		EXUstd::ReleaseSemaphore(queuedRendererControlListAtomicFlag);
+		return;
+	}
+	std::vector<std::pair<Index, Real>> events = queuedRendererControlList;
+	queuedRendererControlList.clear();
+	EXUstd::ReleaseSemaphore(queuedRendererControlListAtomicFlag);
+
+	std::function<void(Index, std::vector<Real>)> userFunction;
+#ifdef USE_GLFW_GRAPHICS
+	if (GetGlfwRenderer().IsGlfwInitAndRendererActive()) { userFunction = GetGlfwRenderer().GetControlUserFunction(); }
+#endif //USE_GLFW_GRAPHICS
+	if (!userFunction) { return; }
+	deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
+	for (const std::pair<Index, Real>& event : events)
+	{
+		try
+		{
+			userFunction(event.first, std::vector<Real>({ event.second, 0., 0. }));
+		}
+		catch (const pybind11::error_already_set& ex)
+		{
+			PyWarning("Error in the user function of the buttons and sliders, for the element " + EXUstd::ToString(event.first) + ":\n" + STDstring(ex.what()));
+		}
+		catch (const EXUexception& ex)
+		{
+			PyWarning("Error in the user function of the buttons and sliders, for the element " + EXUstd::ToString(event.first) + ":\n" + STDstring(ex.what()));
+		}
+	}
+	deactivateGlobalPyRuntimeErrorFlag = false;
 }
 
 

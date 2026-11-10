@@ -476,12 +476,14 @@ class VSettingsGeneral:
     """factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling."""
     graphicsUpdateInterval: float
     """interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed."""
+    iconBarAndControlsInImages: bool
+    """True: the icon bar, as far as it is shown, and the buttons and sliders of the render window (SC.renderer.AddButton, AddSlider) are in the saved images and in RedrawAndGetImage; False: only on the screen; the scopes have their own switch, window.showScopes (#3400)."""
     iconBarFoldDistance: float
     """distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)."""
     iconBarScaling: float
     """size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)."""
     iconBarStartTime: int
-    """time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images (#3396)."""
+    """time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images unless iconBarAndControlsInImages is True (#3396)."""
     iconBarTimeout: int
     """time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)."""
     limitWindowToScreenSize: bool

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 503 | 1.13.526 |
+| 1.13 | Newborn | 506 | 1.13.530 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.530** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` zoom and drag of the scopes while the simulation is idle (#3401)
+  - description: While no solver runs, or the solver or the solution viewer is paused, the mouse wheel zooms the scope under the cursor (SHIFT only x, CTRL only y) and the left button drags its lines; a double click, the simulation continuing or a change of the scope settings resets it. The ranges are kept as an override in the render state, not in the settings. revision2026c step RG6.23
+  - **notes:** While the simulation is paused or finished, the mouse wheel over a scope zooms it about the mouse (SHIFT: only the horizontal axis, CTRL: only the vertical one), dragging with the left mouse button moves its lines, and a double click, a new state of the simulation or a change of its settings shows the ranges of its settings again.
+  - date resolved: **2026-11-10 09:44**, date raised: 2026-11-10
+- **1.13.529** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` buttons and sliders in the render window with one Python callback (#3400)
+  - description: Buttons and sliders drawn in the render window like the icon bar, each with a centered text, a font size, colors with transparency and a location relative to the window; SC.renderer.AddButton, AddSlider, SetControlState, GetControlState, DeleteControl, ClearControls and SetControlUserFunction, one user function f(id, data) with data = \[state, 0, 0\], called in the main thread from a queue as the key press function; the elements in GetDictionary/SetDictionary; general.iconBarAndControlsInImages puts them and the icon bar into saved images; a helper class in exudyn.interactive. revision2026c step RG6.22
+  - **notes:** Buttons and sliders in the render window: SC.renderer.AddButton and AddSlider with a location relative to the window, a centered text, a font size and colors with transparency; one user function SC.renderer.SetControlUserFunction(f), f(controlID, data) with data = \[state, 0, 0\], called in the main thread; SetControlState, GetControlState, GetControls, DeleteControl, ClearControls, and the elements in GetDictionary/SetDictionary; visualizationSettings.general.iconBarAndControlsInImages puts them and the icon bar into saved images; exudyn.interactive.WindowControls with one function per element; the example renderWindowControls.py.
+  - date resolved: **2026-11-10 09:44**, date raised: 2026-11-10
+- **1.13.528** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The scripts generated from the notebooks are not in the manifest of the regeneration (#3399)
+  - description: tools/regenerate.py reports python/Examples/notebooks/\*.py, which notebookEmitter.py writes from python/Notebooks/\*.ipynb, as drift outside both tiers (unexpected) when a notebook changes. To be checked: add them to the manifest, probably as tier 2 like the generated notebook pages.
+  - **notes:** The scripts of the notebooks in python/Examples/notebooks are in Tier 2 of tools/regenerate.py, as the pages of the notebooks: a changed script is a warning, a new one that is not in git a hard gate.
+  - date resolved: **2026-11-10 09:44**, date raised: 2026-11-10
 - **1.13.526** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - **notes:** ObjectJointGeneric, ObjectJointRevoluteZ and ObjectJointPrismaticX compute their equations with one implementation on the relative frame of their joint frames, with analytic derivatives instead of automatic differentiation; the velocity level is their derivative times the velocities of the markers. Their reaction forces take half the time, a chain of revolute joints with modified Newton about 20 % less in all; the velocity level of the alternative constraints of ObjectJointGeneric is now the time derivative of these constraints.

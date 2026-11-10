@@ -187,7 +187,7 @@ public:
 	py::dict GetState(Index viewID = VisualizationSystemContainer::mainViewID) const;
 
 	//! what the renderer holds besides visualizationSettings, as a dictionary (#2075): the materials, the static
-	//! graphics of the scopes and the render states of the enabled views
+	//! graphics of the scopes, the buttons and sliders (#3400) and the render states of the enabled views
 	py::dict GetDictionary() const;
 	//! set what GetDictionary gives; a key left out stays as it is, an unknown key raises
 	void SetDictionary(const py::dict& d);
@@ -223,6 +223,29 @@ public:
 	std::vector<STDstring> GetTextureNames() const;
 	//! a texture as a dict, see PyGetTexture (#3268)
 	py::dict GetTexture(const STDstring& name) const;
+
+	//! the buttons and sliders of the render window (#3400): add one from the dict of its keys, returns its ID
+	Index AddControl(const py::dict& d, const STDstring& function);
+	//! add a button; None for the default location and colors
+	Index AddButton(const STDstring& text, const py::object& location, bool toggle, Real state, float fontSize,
+		const py::object& color, const py::object& backgroundColor, Index view);
+	//! add a slider; value None: minMax[0]
+	Index AddSlider(const STDstring& text, const py::object& location, const py::object& minMax, const py::object& value,
+		const STDstring& format, float fontSize, const py::object& color, const py::object& backgroundColor, Index view);
+	//! set the state of an element, data = state or [state, ...]; with callUserFunction, call the user function as a click does
+	void SetControlState(Index controlID, const py::object& data, bool callUserFunction = false);
+	//! the state of an element as [state, 0, 0]
+	std::vector<Real> GetControlState(Index controlID) const;
+	//! remove an element
+	void DeleteControl(Index controlID);
+	//! remove all elements
+	void ClearControls();
+	//! the elements as dicts with all their keys and their IDs
+	py::list GetControls() const;
+	//! replace the elements by dicts of GetControls, with their IDs (SetDictionary)
+	void SetControls(const py::object& items);
+	//! the user function f(id, data) of all elements; None removes it
+	void SetControlUserFunction(const py::object& function);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -17,6 +17,7 @@
 #include "Utilities/BasicDefinitions.h"
 #include "Linalg/BasicLinalg.h"
 #include <vector>
+#include <array>
 #include <atomic>
 
 class VisualizationSystemContainerBase;
@@ -112,12 +113,19 @@ namespace ScopePlot
 	//! the drawing of one scope in the look of style: regionPixels is [x0, y0, x1, y1] from the bottom left corner of
 	//! the window, xRange the range of the horizontal axis, fontSize the font size in pixels; the static items behind
 	//! and in front of the lines, outside the automatic range
+	//! yRange, if given, replaces the vertical range of the settings (the zoom of the mouse, #3401); drawnRange and box,
+	//! if given, receive [xMin, xMax, yMin, yMax] and the plot area [left, bottom, right, top] as drawn
 	void AddScope(const VSettingsScope& scope, const VSettingsScopes& style, const std::vector<Curve>& curves, const Vector2D& xRange,
-		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics = {});
+		const Float4& regionPixels, float fontSize, Graphics& graphics, const std::vector<StaticItem>& statics = {},
+		const Vector2D* yRange = nullptr, std::array<Real, 4>* drawnRange = nullptr, std::array<float, 4>* box = nullptr);
+	//! the location, minMaxX and minMaxY of a scope, which the zoom of the mouse compares to reset itself (#3401)
+	std::array<float, 8> ScopeViewSettings(const VSettingsScope& scope);
 
 	//! the drawing of the scopes of a view from the stored sensor data, read under the lock of each sensor; nothing if
 	//! window.showScopes is False; fontSize is the global font size of the view in pixels, which
 	//! sensors.scopes.fontSizeFactor scales
+	//! a scope with the override of the render state (RenderState::scopeViews, #3401) is drawn in its ranges, and the
+	//! ranges and plot area of each scope are written back there
 	void BuildScopes(VisualizationSystemContainerBase& container, Index viewID, Index width, Index height,
 		float fontSize, Graphics& graphics);
 

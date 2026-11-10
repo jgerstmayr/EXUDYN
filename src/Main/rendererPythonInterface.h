@@ -92,6 +92,10 @@ void PyQueueExecutableString(STDstring str); //call python function and execute 
 
 //! put executable key codes into queue, which are the processed in main (Python) thread
 void PyQueueKeyPressed(int key, int action, int mods); //call python user function
+
+//! put the new state of a button or slider of the render window into the queue, for the user function of the controls,
+//! called in the main (Python) thread (#3400); a state of the same element still waiting is replaced
+void PyQueueRendererControl(Index id, Real state);
 //void PyQueueKeyPressed(int key, int action, int mods, std::function<bool(int, int, int)> keyPressUserFunctionInit); //call python user function
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -108,6 +112,9 @@ void PyProcessExecutableStringQueue(); //call python function, execute string as
 
 //! process waiting queue: ProcessID
 void PyProcessRendererKeyQueue();
+
+//! process waiting queue: the user function of the buttons and sliders (#3400)
+void PyProcessRendererControlQueue();
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! specific process called:

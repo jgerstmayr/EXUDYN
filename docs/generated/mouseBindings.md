@@ -7,3 +7,5 @@
 | **right mouse button** | rotate model | keep right mouse button pressed to rotate the model around the current $X_1$/$X_2$ axes |
 | **right mouse button** | show item dictionary | (short) press and release on an item; opens the edit dialog if it is activated in visualizationSettings |
 | **mouse wheel** | zoom | use the mouse wheel to zoom (on touch screens 'pinch-to-zoom' might work as well) |
+| **left button, wheel** | buttons and sliders | a button acts when released over it, a slider follows the mouse while it is dragged, and the mouse wheel over a slider changes it by 1/100 of its range (with CTRL 1/1000); over a button or slider, the mouse does not move or zoom the model |
+| **wheel, left button** | zoom and move a scope | while the simulation is paused or finished, the mouse wheel over a scope zooms it about the mouse (with SHIFT only the horizontal axis, with CTRL only the vertical one) and dragging with the left mouse button moves its lines; a double click, or the simulation continuing, shows the ranges of its settings again |

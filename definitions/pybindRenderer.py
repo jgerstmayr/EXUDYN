@@ -167,13 +167,13 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetState', cName='GetState',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary',
-                        description="what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, 'states', the render states of the enabled views by their number, as GetState gives them, and 'textures', the list of the textures as GetTexture gives them (#3268)",
+                        description="what the renderer holds besides visualizationSettings, as a dictionary (#2075): 'materials', the list of the materials as GraphicsMaterialList.GetDict gives them, 'scopeGraphics', the static graphics of the scopes as scopes.GetGraphics gives them, 'controls', the buttons and sliders as GetControls gives them (#3400), 'states', the render states of the enabled views by their number, as GetState gives them, and 'textures', the list of the textures as GetTexture gives them (#3268)",
                         example = r"""rendererData = SC.renderer.GetDictionary()\\SC.renderer.SetDictionary(rendererData)""",
                         returnType='dict',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetDictionary', cName='SetDictionary',
-                        description="set the materials, the static graphics of the scopes, the render states of the views and the textures from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled, and a texture is added as AddTexture adds it, replacing the image of its name",
+                        description="set the materials, the static graphics of the scopes, the buttons and sliders (with their IDs; the user function stays), the render states of the views and the textures from a dictionary as GetDictionary gives it; a key left out stays as it is, an unknown key raises; materials beyond the existing ones are appended, a state is set as SetState(state, waitForRendererFullStartup=False, viewID) sets it, which needs the view enabled, and a texture is added as AddTexture adds it, replacing the image of its name",
                         argList=['values'],
                         argTypes=['dict'],
                         returnType='None',
@@ -256,6 +256,68 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetTexture', cName='GetTexture',
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetTextureNames', cName='GetTextureNames',
                         description="The names of the textures added with AddTexture, in the order they were added",
                         returnType='list[str]',
+                        )
+
+#+++++++++++++++++++++++++++++++++
+#the buttons and sliders of the render window (#3400)
+pb.DefPyFunctionAccess(cClass=classStr, pyName='AddButton', cName='AddButton',
+                        description="Add a button to the render window; a push button (toggle=False) has the state 0 and sends 1 to the user function when it is released over the button, a toggle button switches its state between 0 and 1 when released and sends the new state; location is [[x0, y0], [x1, y1]], the corners relative to the window from its top left corner, values in [0, 1], so that it scales with the window (None: [[0, 0], [0.1, 0.05]]); the text is centered; fontSize is in points as window.globalFontSize, scaled with the display scaling; color is the color of the text, backgroundColor the color of the element, whose alpha value is its transparency (None: [0, 0, 0, 1] and [0.85, 0.87, 0.9, 0.8]); view is the view it is drawn in; returns the ID of the element, which the user function receives; elements added later are drawn over earlier ones and take the mouse first, after the icon bar; they are not in saved images unless visualizationSettings.general.iconBarAndControlsInImages is True (#3400)",
+                        example = r"""bStart = SC.renderer.AddButton('start', location=[[0.02, 0.02], [0.15, 0.08]])\\bLight = SC.renderer.AddButton('light', location=[[0.02, 0.1], [0.15, 0.16]], toggle=True)""",
+                        argList=['text', 'location', 'toggle', 'state', 'fontSize', 'color', 'backgroundColor', 'view'],
+                        argTypes=['str', 'list[list[float]] | None', 'bool', 'float', 'float', 'list[float] | None', 'list[float] | None', 'int'],
+                        defaultArgs=['', 'py::none()', 'false', '0.', '12.', 'py::none()', 'py::none()', '0'],
+                        returnType='int',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='AddSlider', cName='AddSlider',
+                        description="Add a slider to the render window, whose value in minMax = [min, max] (None: [0, 1]) is set by dragging it with the left mouse button or by the mouse wheel over it (1/100 of the range per step, with CTRL 1/1000); it sends each new value to the user function; value is its initial value (None: min); format is the value in its label after the text, a Python format with {} or {:.Nf}, {:.Ne}, {:.Ng}, e.g. 'q1 = {:.2f}', or empty for no value; location is [[x0, y0], [x1, y1]], the corners relative to the window from its top left corner, values in [0, 1], so that it scales with the window (None: [[0, 0], [0.1, 0.05]]); the text is centered; fontSize is in points as window.globalFontSize, scaled with the display scaling; color is the color of the text, backgroundColor the color of the element, whose alpha value is its transparency (None: [0, 0, 0, 1] and [0.85, 0.87, 0.9, 0.8]); view is the view it is drawn in; returns the ID of the element, which the user function receives; elements added later are drawn over earlier ones and take the mouse first, after the icon bar; they are not in saved images unless visualizationSettings.general.iconBarAndControlsInImages is True (#3400)",
+                        example = r"""sQ1 = SC.renderer.AddSlider('q1', location=[[0.7, 0.9], [0.98, 0.97]], minMax=[-3.14, 3.14], value=0., format='= {:.2f} rad')""",
+                        argList=['text', 'location', 'minMax', 'value', 'format', 'fontSize', 'color', 'backgroundColor', 'view'],
+                        argTypes=['str', 'list[list[float]] | None', 'list[float] | None', 'float | None', 'str', 'float', 'list[float] | None', 'list[float] | None', 'int'],
+                        defaultArgs=['', 'py::none()', 'py::none()', 'py::none()', '"{:.3g}"', '12.', 'py::none()', 'py::none()', '0'],
+                        returnType='int',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetControlUserFunction', cName='SetControlUserFunction',
+                        description="Set the one user function of the buttons and sliders, f(controlID, data), with the ID of the element and data = [state, 0, 0]: 0 or 1 for a button, the value of a slider; the renderer queues the events, and the function is called in the main (Python) thread while a simulation runs or in SC.renderer.DoIdleTasks, as the key press function; a slider that is dragged sends only its last value; None removes it (#3400)",
+                        example = r"""def UFcontrols(controlID, data):\\    print('element', controlID, 'state', data[0])\\SC.renderer.SetControlUserFunction(UFcontrols)""",
+                        argList=['function'],
+                        argTypes=['Callable[[int, list[float]], None] | None'],
+                        returnType='None',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetControlState', cName='SetControlState',
+                        description="Set the state of a button (0 or 1) or the value of a slider (in its minMax), given as a number or as a list [state, ...] as the user function receives it; the user function is called only with callUserFunction=True, as a click would call it (#3400)",
+                        example = r"""SC.renderer.SetControlState(sQ1, 0.5)""",
+                        argList=['controlID', 'data', 'callUserFunction'],
+                        argTypes=['int', 'float | list[float]', 'bool'],
+                        defaultArgs=['', '', 'false'],
+                        returnType='None',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='GetControlState', cName='GetControlState',
+                        description="The state of a button or slider as [state, 0, 0], as the user function receives it (#3400)",
+                        example = r"""q1 = SC.renderer.GetControlState(sQ1)[0]""",
+                        argList=['controlID'],
+                        argTypes=['int'],
+                        returnType='list[float]',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='GetControls', cName='GetControls',
+                        description="The buttons and sliders as a list of dicts with all their keys: 'id', 'type' ('Button' or 'Slider'), 'view', 'location', 'text', 'fontSize', 'color', 'backgroundColor', 'state', and 'toggle' of a button, 'minMax' and 'format' of a slider (#3400)",
+                        returnType='list[dict]',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='DeleteControl', cName='DeleteControl',
+                        description="Remove a button or slider by its ID (#3400)",
+                        argList=['controlID'],
+                        argTypes=['int'],
+                        returnType='None',
+                        )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='ClearControls', cName='ClearControls',
+                        description="Remove all buttons and sliders; the user function stays (#3400)",
+                        returnType='None',
                         )
 
 pb.CppCode('        .def_readwrite("materials", &MainRenderer::materials, py::return_value_policy::reference)\n')

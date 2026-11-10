@@ -1808,6 +1808,9 @@
     <ClInclude Include="..\src\Graphics\IconBar.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\RendererControls.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\ScopePlot.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

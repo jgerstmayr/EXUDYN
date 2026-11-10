@@ -356,6 +356,20 @@ definitions.append(ItemKindDefinition(
     regularized Coulomb friction at the contact point - and none where they are apart. Its output `Distance` is the
     signed distance of the shapes, negative for a penetration, also where the contact is not active.
 
+    (sec-contact-damping)=
+    ## Damping and the end of a contact
+
+    The linear contact damping $d_c$ adds a force proportional to the velocity of the penetration. While the shapes
+    separate, this force pulls, and shortly before the end of a contact the contact force may become negative: the
+    shapes stick to each other for a moment. The contact nevertheless stays active as long as the shapes penetrate - it
+    switches by the gap, not by the sign of its force -, so that it behaves as the linear spring-damper between the two
+    bodies, with the same dissipation, and does not jump at the change of sign. A contact law without such a pulling
+    force is based on the coefficient of restitution: the impact models `ContactImpactModel.HuntCrossley` and
+    `GonthierCarvalhoMartins` (parameter `impactModel`) have a damping that vanishes with the penetration, see
+    [ContactImpactModel](#sec-contactimpactmodel). Two contacts switch by the force instead: `ObjectContactCurveCircles`
+    is active only with a penetration and a pressing force, and GeneralContact switches its sphere-sphere and
+    sphere-triangle contacts by a pressing force unless `keepContactWhilePenetrating` is True (#904).
+
     ## The data node and the active set
 
     The contact state is discontinuous. A contact - except `ObjectJournalBearing`, whose film force is smooth - needs a

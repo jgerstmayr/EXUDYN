@@ -190,6 +190,7 @@ raytracerNOGLFWtest
 reduceURDFrobotDataTest
 reevingSystemSpringsTest
 relativeRotationTranslationMechanism
+rendererControlsTest
 rendererDictionaryTest
 rendererItemChangesTest
 restartFileTest

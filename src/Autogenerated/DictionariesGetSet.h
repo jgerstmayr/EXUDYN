@@ -1983,6 +1983,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.iconBarAndControlsInImages;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "True: the icon bar, as far as it is shown, and the buttons and sliders of the render window (SC.renderer.AddButton, AddSlider) are in the saved images and in RedrawAndGetImage; False: only on the screen; the scopes have their own switch, window.showScopes (#3400)";
+    structureDict["iconBarAndControlsInImages"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.iconBarFoldDistance;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
@@ -2002,7 +2010,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["value"] = data.iconBarStartTime;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images (#3396)";
+    d["description"] = "time in milliseconds the icon bar is shown when the render window opens, so that it is seen where it is; 0: it folds in only at the mouse; it is not part of saved or raytraced images unless iconBarAndControlsInImages is True (#3396)";
     structureDict["iconBarStartTime"] = d;
 
     d = py::dict(); //reset local dict
@@ -2198,6 +2206,7 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
     structureDict["cylinderTiling"] = data.cylinderTiling;
     structureDict["displayScaleFactor"] = data.displayScaleFactor;
     structureDict["graphicsUpdateInterval"] = data.graphicsUpdateInterval;
+    structureDict["iconBarAndControlsInImages"] = data.iconBarAndControlsInImages;
     structureDict["iconBarFoldDistance"] = data.iconBarFoldDistance;
     structureDict["iconBarScaling"] = data.iconBarScaling;
     structureDict["iconBarStartTime"] = data.iconBarStartTime;
@@ -2239,6 +2248,7 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["cylinderTiling"], data.cylinderTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.cylinderTiling");
     EPyUtils::FromPython(d["displayScaleFactor"], data.displayScaleFactor, EPyUtils::RangeCheck::positive, "VSettingsGeneral.displayScaleFactor");
     EPyUtils::FromPython(d["graphicsUpdateInterval"], data.graphicsUpdateInterval, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.graphicsUpdateInterval");
+    EPyUtils::FromPython(d["iconBarAndControlsInImages"], data.iconBarAndControlsInImages, "VSettingsGeneral.iconBarAndControlsInImages");
     EPyUtils::FromPython(d["iconBarFoldDistance"], data.iconBarFoldDistance, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.iconBarFoldDistance");
     EPyUtils::FromPython(d["iconBarScaling"], data.iconBarScaling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.iconBarScaling");
     EPyUtils::FromPython(d["iconBarStartTime"], data.iconBarStartTime, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.iconBarStartTime");
