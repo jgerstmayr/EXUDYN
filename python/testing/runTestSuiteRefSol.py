@@ -49,6 +49,7 @@ def TestExamplesReferenceSolution():
         'rendererControlsTest.py': -0.5, #new 2026-11-10: #3400
         'imagesToVideoTest.py': 6., #new 2026-11-10: #3403
         'flyballGovernorLieGroupTest.py': 4.355437879974056, #new 2026-11-10: #559
+        'beamMarkerAccessTest.py': 3.671828577706509, #new 2026-11-11: #3406
         'rollingDiscRollingFrictionTest.py': 7.475420024768816, #new 2026-11-11: #926
         'objectFFRFforceVectorTest.py': 12., #2026-11-11: LoadMassProportional (#3404), before 10.; new 2026-11-10: #591
         'itemVisualizationArgumentTest.py': 8., #new 2026-11-09: #2342

@@ -27,6 +27,7 @@ ANCFThinPlateRotationTest
 appendSystemTest
 automaticStepLieGroupTest
 ballBearingTest
+beamMarkerAccessTest
 binarySolutionFileTest
 bricardMechanism
 capsulePrimitiveContactTest

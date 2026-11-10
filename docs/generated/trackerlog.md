@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.542.dev1
+- Exudyn version = 1.13.544.dev1
 - last change = 2026-11-10
 - Number of issues = 3409
-- Number of resolved issues = 3319 (542 in current version)
+- Number of resolved issues = 3321 (544 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9092,10 +9092,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: revision2026c step RG9.7 (docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
   - **remarks:** 2026-10-25 (\#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker).
   - date raised: 2026-10-12
-- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` the member functions an item must provide, checked at compile time (#2866)
-  - description: Successor of \#2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -\> required functions, generated static\_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.
-  - **remarks:** revision2026c step RG9.6.1 done 2026-11-11: the table of declarations and required member functions is in the log (rg2-9-4); the scan found \#3406. Open: RG9.6.2, the static\_asserts.
-  - date raised: 2026-10-05
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - **remarks:** revision2026c step RG11.7 closed 2026-11-09: a remark in group RG5, a measured performance step only
@@ -9369,6 +9365,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ObjectBeamGeometricallyExact2D has no GetAngularVelocityLocal and ObjectANCFBeam no GetLocalCenterOfMass, although they declare the access functions that need them (#3406)
-  - description: ObjectBeamGeometricallyExact2D declares AngularVelocity\_qt (it provides GetRotationJacobian) and inherits the throwing default of GetAngularVelocityLocal: a RigidBodySpringDamper on a MarkerBodyRigid of the beam stops at the first step with 'illegal call to CObjectBody::GetAngularVelocityLocal', and so does the output AngularVelocityLocal of the marker. ObjectANCFBeam declares DisplacementMassIntegral\_q (GetMassWeightedPositionJacobian) and inherits the throwing default of GetLocalCenterOfMass, which CMarkerBodyMass::GetPosition calls. Found by the table of revision2026c step RG9.6.1 (\#2866); fixed with the static\_asserts of RG9.6.2.
-  - date raised: 2026-11-10

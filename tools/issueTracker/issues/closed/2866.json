@@ -2,11 +2,14 @@
   "number": 2866,
   "title": "the member functions an item must provide, checked at compile time",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "MEDIUM",
   "description": "Successor of #2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -> required functions, generated static_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.",
   "dateRaised": "2026-10-05",
   "deadline": "2027-04-03",
-  "workingRemarks": "revision2026c step RG9.6.1 done 2026-11-11: the table of declarations and required member functions is in the log (rg2-9-4); the scan found #3406. Open: RG9.6.2, the static_asserts."
+  "dateResolved": "2026-11-10 22:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Each generated item header asserts at compile time that the item overrides every member function its declarations require - by node type, marker type, access function types of a body and output variables - instead of inheriting the default that raises 'illegal call' at run time; the table is RequiredMemberFunctions in tools/generators/itemHeaderEmitter.py (353 assertions in 96 headers). The run-time half, every listed output variable readable, is test_inspectOutputVariables.py (#2768).",
+  "resolvedInVersion": "1.13.543"
 }

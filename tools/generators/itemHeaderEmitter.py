@@ -134,6 +134,68 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
 overriddenGetters = {'VisualizationObjectSuperElement': ['ShowNodes', 'TriangleMesh', 'Color']}
 
 
+#the member functions that a declaration of an item requires: the system calls them for it, and the default of the base class
+#raises "illegal call"; (declared types, functions, base class with the default) per kind (#2866; the table of revision2026c
+#step RG9.6.1 in the log)
+_requiredOfNodeType = [
+    (('Position', 'Position2D'), ['GetPosition', 'GetVelocity', 'GetPositionJacobian'], 'CNodeODE2'),
+    (('Orientation', 'Orientation2D'), ['GetRotationMatrix', 'GetAngularVelocity', 'GetAngularVelocityLocal', 'GetRotationJacobian'], 'CNodeODE2'),
+    ]
+_requiredOfRigidBodyNode = (['GetNumberOfRotationCoordinates', 'GetG', 'GetGlocal', 'GetG_t', 'GetGlocal_t'], 'CNodeRigidBody') #3D rigid body nodes
+_requiredOfMarkerType = [
+    (('Position',), ['GetPosition', 'GetVelocity', 'ComputeMarkerData'], 'CMarker'),
+    (('Orientation',), ['GetRotationMatrix', 'GetAngularVelocity', 'GetAngularVelocityLocal'], 'CMarker'),
+    (('Coordinate', 'Coordinates'), ['ComputeMarkerData'], 'CMarker'),
+    (('JacobianDerivativeAvailable',), ['ComputeMarkerDataJacobianDerivative'], 'CMarker'),
+    (('HasPostNewton',), ['PostNewtonStep'], 'CMarker'),
+    ]
+_requiredOfAccessType = [ #for the general body markers; an object with OwnMarkersOnly serves its own markers only
+    ('TranslationalVelocity_qt', ['GetPosition', 'GetVelocity', 'GetDisplacement'], 'CObjectBody'),
+    ('AngularVelocity_qt', ['GetRotationMatrix', 'GetAngularVelocity', 'GetAngularVelocityLocal'], 'CObjectBody'),
+    ('DisplacementMassIntegral_q', ['GetLocalCenterOfMass'], 'CObjectBody'),
+    ('SuperElement', ['GetNumberOfMeshNodes', 'GetMeshNode', 'GetMeshNodeLocalPosition', 'GetMeshNodeLocalVelocity',
+                      'GetMeshNodePosition', 'GetMeshNodeVelocity', 'GetAccessFunctionSuperElement',
+                      'GetOutputVariableTypesSuperElement', 'GetOutputVariableSuperElement'], 'CObjectSuperElement'),
+    ]
+_outputVariableFunction = {'MainNode': ('GetOutputVariable', 'CNode'), 'MainObject': ('GetOutputVariable', 'CObject'),
+                           'MainObjectBody': ('GetOutputVariableBody', 'CObjectBody'),
+                           'MainObjectConnector': ('GetOutputVariableConnector', 'CObjectConnector')}
+
+
+def RequiredMemberFunctions(definition):
+    """the member functions the declarations of an item require, as (function, base class, declaration), each once (#2866)"""
+    required = []
+    def Add(functions, baseClass, declaration):
+        for function in functions:
+            if function not in [r[0] for r in required]:
+                required.append((function, baseClass, declaration))
+    classType = Header(definition, 'classType')
+    members = definition['members']
+    if len(OutputVariableNames(definition)) != 0 and Header(definition, 'mainParentClass') in _outputVariableFunction:
+        (function, baseClass) = _outputVariableFunction[Header(definition, 'mainParentClass')]
+        Add([function], baseClass, 'output variables')
+    itemTypes = [t for m in members if m.get('pythonName') == 'GetType' for t in m.get('itemTypes', [])]
+    if classType == 'Node':
+        for (types, functions, baseClass) in _requiredOfNodeType:
+            declared = [t for t in types if t in itemTypes]
+            if declared:
+                Add(functions, baseClass, declared[0])
+        if 'RigidBody' in itemTypes and 'Position2D' not in itemTypes:
+            Add(_requiredOfRigidBodyNode[0], _requiredOfRigidBodyNode[1], 'RigidBody')
+    elif classType == 'Marker':
+        for (types, functions, baseClass) in _requiredOfMarkerType:
+            declared = [t for t in types if t in itemTypes]
+            if declared:
+                Add(functions, baseClass, declared[0])
+    elif classType == 'Object':
+        for m in members:
+            if m.get('deriveAccess', False) and m.get('bodyMarkers', True):
+                for (accessType, functions, baseClass) in _requiredOfAccessType:
+                    if accessType in m.get('accessFunctionTypes', []):
+                        Add(functions, baseClass, accessType)
+    return required
+
+
 def ItemCppHeaders(definition):
     parameterList = definition['members']
     """the C, Main and Visu headers of one item, and its symbolic user functions"""
@@ -820,6 +882,15 @@ def ItemCppHeaders(definition):
     for i in range(nClasses):
         sList[i]+='};\n\n\n' #class
 
+    #the member functions its declarations require: if one is inherited from the base class, whose default raises, the build fails (#2866)
+    required = RequiredMemberFunctions(definition)
+    if len(required) != 0:
+        sList[2] += '//! AUTO: the member functions that the declarations of ' + compClassStr + ' require (#2866)\n'
+        sList[2] += '#include <type_traits>\n'
+        for (function, baseClass, declaration) in required:
+            sList[2] += ('static_assert(!std::is_same<decltype(&' + compClassStr + '::' + function + '), decltype(&' + baseClass + '::' + function
+                         + ')>::value, "' + compClassStr + ' declares ' + declaration + ' and must implement ' + function
+                         + '; the default of ' + baseClass + ' raises");\n')
     sList[2] += '\n#endif //#ifdef include once...\n'
     sList[3] += '\n#endif //#ifdef include once...\n'
     sList[4] += '\n#endif //#ifdef include once...\n'

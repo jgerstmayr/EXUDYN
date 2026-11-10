@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-10  21:44:25 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -429,5 +429,24 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectFFRF require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectFFRF declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetPosition), decltype(&CObjectBody::GetPosition)>::value, "CObjectFFRF declares TranslationalVelocity_qt and must implement GetPosition; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetVelocity), decltype(&CObjectBody::GetVelocity)>::value, "CObjectFFRF declares TranslationalVelocity_qt and must implement GetVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetDisplacement), decltype(&CObjectBody::GetDisplacement)>::value, "CObjectFFRF declares TranslationalVelocity_qt and must implement GetDisplacement; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetRotationMatrix), decltype(&CObjectBody::GetRotationMatrix)>::value, "CObjectFFRF declares AngularVelocity_qt and must implement GetRotationMatrix; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetAngularVelocity), decltype(&CObjectBody::GetAngularVelocity)>::value, "CObjectFFRF declares AngularVelocity_qt and must implement GetAngularVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetAngularVelocityLocal), decltype(&CObjectBody::GetAngularVelocityLocal)>::value, "CObjectFFRF declares AngularVelocity_qt and must implement GetAngularVelocityLocal; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetLocalCenterOfMass), decltype(&CObjectBody::GetLocalCenterOfMass)>::value, "CObjectFFRF declares DisplacementMassIntegral_q and must implement GetLocalCenterOfMass; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetNumberOfMeshNodes), decltype(&CObjectSuperElement::GetNumberOfMeshNodes)>::value, "CObjectFFRF declares SuperElement and must implement GetNumberOfMeshNodes; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetMeshNode), decltype(&CObjectSuperElement::GetMeshNode)>::value, "CObjectFFRF declares SuperElement and must implement GetMeshNode; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetMeshNodeLocalPosition), decltype(&CObjectSuperElement::GetMeshNodeLocalPosition)>::value, "CObjectFFRF declares SuperElement and must implement GetMeshNodeLocalPosition; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetMeshNodeLocalVelocity), decltype(&CObjectSuperElement::GetMeshNodeLocalVelocity)>::value, "CObjectFFRF declares SuperElement and must implement GetMeshNodeLocalVelocity; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetMeshNodePosition), decltype(&CObjectSuperElement::GetMeshNodePosition)>::value, "CObjectFFRF declares SuperElement and must implement GetMeshNodePosition; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetMeshNodeVelocity), decltype(&CObjectSuperElement::GetMeshNodeVelocity)>::value, "CObjectFFRF declares SuperElement and must implement GetMeshNodeVelocity; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetAccessFunctionSuperElement), decltype(&CObjectSuperElement::GetAccessFunctionSuperElement)>::value, "CObjectFFRF declares SuperElement and must implement GetAccessFunctionSuperElement; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetOutputVariableTypesSuperElement), decltype(&CObjectSuperElement::GetOutputVariableTypesSuperElement)>::value, "CObjectFFRF declares SuperElement and must implement GetOutputVariableTypesSuperElement; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRF::GetOutputVariableSuperElement), decltype(&CObjectSuperElement::GetOutputVariableSuperElement)>::value, "CObjectFFRF declares SuperElement and must implement GetOutputVariableSuperElement; the default of CObjectSuperElement raises");
 
 #endif //#ifdef include once...

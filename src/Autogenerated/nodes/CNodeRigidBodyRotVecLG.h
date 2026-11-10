@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2026-10-11  11:30:41 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -197,5 +197,20 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CNodeRigidBodyRotVecLG require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetOutputVariable), decltype(&CNode::GetOutputVariable)>::value, "CNodeRigidBodyRotVecLG declares output variables and must implement GetOutputVariable; the default of CNode raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetPosition), decltype(&CNodeODE2::GetPosition)>::value, "CNodeRigidBodyRotVecLG declares Position and must implement GetPosition; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetVelocity), decltype(&CNodeODE2::GetVelocity)>::value, "CNodeRigidBodyRotVecLG declares Position and must implement GetVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetPositionJacobian), decltype(&CNodeODE2::GetPositionJacobian)>::value, "CNodeRigidBodyRotVecLG declares Position and must implement GetPositionJacobian; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetRotationMatrix), decltype(&CNodeODE2::GetRotationMatrix)>::value, "CNodeRigidBodyRotVecLG declares Orientation and must implement GetRotationMatrix; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetAngularVelocity), decltype(&CNodeODE2::GetAngularVelocity)>::value, "CNodeRigidBodyRotVecLG declares Orientation and must implement GetAngularVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetAngularVelocityLocal), decltype(&CNodeODE2::GetAngularVelocityLocal)>::value, "CNodeRigidBodyRotVecLG declares Orientation and must implement GetAngularVelocityLocal; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetRotationJacobian), decltype(&CNodeODE2::GetRotationJacobian)>::value, "CNodeRigidBodyRotVecLG declares Orientation and must implement GetRotationJacobian; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetNumberOfRotationCoordinates), decltype(&CNodeRigidBody::GetNumberOfRotationCoordinates)>::value, "CNodeRigidBodyRotVecLG declares RigidBody and must implement GetNumberOfRotationCoordinates; the default of CNodeRigidBody raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetG), decltype(&CNodeRigidBody::GetG)>::value, "CNodeRigidBodyRotVecLG declares RigidBody and must implement GetG; the default of CNodeRigidBody raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetGlocal), decltype(&CNodeRigidBody::GetGlocal)>::value, "CNodeRigidBodyRotVecLG declares RigidBody and must implement GetGlocal; the default of CNodeRigidBody raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetG_t), decltype(&CNodeRigidBody::GetG_t)>::value, "CNodeRigidBodyRotVecLG declares RigidBody and must implement GetG_t; the default of CNodeRigidBody raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBodyRotVecLG::GetGlocal_t), decltype(&CNodeRigidBody::GetGlocal_t)>::value, "CNodeRigidBodyRotVecLG declares RigidBody and must implement GetGlocal_t; the default of CNodeRigidBody raises");
 
 #endif //#ifdef include once...

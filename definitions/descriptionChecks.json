@@ -202,9 +202,9 @@
    "fingerprint": "8e5fd4b59ff7"
   },
   "ObjectANCFBeam": {
-   "checked": "2026-10-31",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "17794d5b40d3"
+   "fingerprint": "c4fc0bbd257d"
   },
   "ObjectANCFCable": {
    "checked": "2026-10-17",
@@ -227,9 +227,9 @@
    "fingerprint": "02497e579883"
   },
   "ObjectBeamGeometricallyExact2D": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "cbcfab5aed91"
+   "fingerprint": "b7337bc07ab3"
   },
   "ObjectConnectorCartesianSpringDamper": {
    "checked": "2026-11-08",

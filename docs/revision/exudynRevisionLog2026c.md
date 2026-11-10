@@ -6431,6 +6431,33 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg9-6-2"></a>
+### RG9.6.2 — the static_asserts of the required member functions; ObjectANCFBeam and ObjectBeamGeometricallyExact2D completed (2026-11-11, #2866, #3406)
+
+- `RequiredMemberFunctions(definition)` in `tools/generators/itemHeaderEmitter.py` holds the table of RG9.6.1 and
+  gives, per item, the function, the base class whose default raises, and the declaration that requires it: the node
+  type (Position, Orientation, their 2D variants, RigidBody), the marker type (Position, Orientation, Coordinate(s),
+  JacobianDerivativeAvailable, HasPostNewton), the access function types of a body (`TranslationalVelocity_qt`,
+  `AngularVelocity_qt`, `DisplacementMassIntegral_q`, `SuperElement` on `CObjectSuperElement`; not for
+  `OwnMarkersOnly`) and the output variables (`GetOutputVariable`, `...Body` or `...Connector` by the main parent).
+- Each generated `C<Item>.h` ends with
+  `static_assert(!std::is_same<decltype(&CItem::F), decltype(&CBase::F)>::value, "...")` per required function:
+  `&CItem::F` has the type of a pointer to a member of the class that declares `F`, so the assertion fails exactly when
+  neither the item nor a hand-written parent overrides the default. 353 assertions in 96 headers; the message names
+  the item, the declaration and the function.
+- The first build failed for exactly the two items of #3406 and for no other: `ObjectANCFBeam` gets
+  `GetLocalCenterOfMass` (the middle of the beam axis, the origin of its local frame, x from -L/2 to L/2),
+  `ObjectBeamGeometricallyExact2D` gets `GetAngularVelocityLocal` (equal to the global one, as it rotates about z
+  only). Before, a `MarkerBodyMass` on the ANCF beam, resp. a `MarkerBodyRigid` on the 2D beam under a connector that
+  reads the local angular velocity, raised "illegal call".
+- `beamMarkerAccessTest.py` (new): a pendulum of four 2D beams on a `RigidBodySpringDamper` (which reads the local
+  angular velocity of its markers) under gravity, and the `MarkerBodyMass` of an ANCF beam drawn at the center of mass;
+  result 3.671828577706509. `test_itemRequiredMemberFunctions.py` checks the table on the definitions (7 tests).
+- `checkDescriptions.py` leaves the assertions out of the fingerprint of a header, as they repeat its declarations;
+  the fingerprints of the other 100 items stay. `NEW_ITEM.md` §4 says what the assertion checks and where its table is.
+- Gates: build ok; regeneration: the 96 headers, the two items, the pages; test suite 331 + 107 successful; pytest
+  1795 passed; docs ok.
+
 <a id="rg21-6-7"></a>
 ### RG21.6.7 — pathPlanningUR5.py: pick and place with a second robot among obstacles of all convex shapes (2026-11-11, #3408)
 *(Maintainer 2026-11-11: extend pathPlanningUR5 by a second robot with a much more complicated task and more obstacles -

@@ -2,11 +2,15 @@
   "number": 3406,
   "title": "ObjectBeamGeometricallyExact2D has no GetAngularVelocityLocal and ObjectANCFBeam no GetLocalCenterOfMass, although they declare the access functions that need them",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "ObjectBeamGeometricallyExact2D declares AngularVelocity_qt (it provides GetRotationJacobian) and inherits the throwing default of GetAngularVelocityLocal: a RigidBodySpringDamper on a MarkerBodyRigid of the beam stops at the first step with 'illegal call to CObjectBody::GetAngularVelocityLocal', and so does the output AngularVelocityLocal of the marker. ObjectANCFBeam declares DisplacementMassIntegral_q (GetMassWeightedPositionJacobian) and inherits the throwing default of GetLocalCenterOfMass, which CMarkerBodyMass::GetPosition calls. Found by the table of revision2026c step RG9.6.1 (#2866); fixed with the static_asserts of RG9.6.2.",
   "dateRaised": "2026-11-10",
   "deadline": "2027-05-09",
-  "file": "src/ImplObjects/CObjectBeamGeometricallyExact2D.cpp"
+  "dateResolved": "2026-11-10 22:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectBeamGeometricallyExact2D.cpp",
+  "releaseNotes": "ObjectANCFBeam provides GetLocalCenterOfMass (the middle of the beam axis) and ObjectBeamGeometricallyExact2D provides GetAngularVelocityLocal, as their access function types declare; a MarkerBodyMass on the ANCF beam and a RigidBodySpringDamper on a MarkerBodyRigid of the 2D beam raised 'illegal call' before. Test model beamMarkerAccessTest.py.",
+  "resolvedInVersion": "1.13.544"
 }

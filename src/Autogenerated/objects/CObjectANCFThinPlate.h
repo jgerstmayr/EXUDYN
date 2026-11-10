@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:28:01 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -293,5 +293,15 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectANCFThinPlate require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectANCFThinPlate declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetPosition), decltype(&CObjectBody::GetPosition)>::value, "CObjectANCFThinPlate declares TranslationalVelocity_qt and must implement GetPosition; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetVelocity), decltype(&CObjectBody::GetVelocity)>::value, "CObjectANCFThinPlate declares TranslationalVelocity_qt and must implement GetVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetDisplacement), decltype(&CObjectBody::GetDisplacement)>::value, "CObjectANCFThinPlate declares TranslationalVelocity_qt and must implement GetDisplacement; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetRotationMatrix), decltype(&CObjectBody::GetRotationMatrix)>::value, "CObjectANCFThinPlate declares AngularVelocity_qt and must implement GetRotationMatrix; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetAngularVelocity), decltype(&CObjectBody::GetAngularVelocity)>::value, "CObjectANCFThinPlate declares AngularVelocity_qt and must implement GetAngularVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetAngularVelocityLocal), decltype(&CObjectBody::GetAngularVelocityLocal)>::value, "CObjectANCFThinPlate declares AngularVelocity_qt and must implement GetAngularVelocityLocal; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFThinPlate::GetLocalCenterOfMass), decltype(&CObjectBody::GetLocalCenterOfMass)>::value, "CObjectANCFThinPlate declares DisplacementMassIntegral_q and must implement GetLocalCenterOfMass; the default of CObjectBody raises");
 
 #endif //#ifdef include once...

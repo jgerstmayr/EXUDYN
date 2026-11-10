@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-03  23:57:24 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -200,5 +200,15 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CNodeUser require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CNodeUser::GetOutputVariable), decltype(&CNode::GetOutputVariable)>::value, "CNodeUser declares output variables and must implement GetOutputVariable; the default of CNode raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetPosition), decltype(&CNodeODE2::GetPosition)>::value, "CNodeUser declares Position and must implement GetPosition; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetVelocity), decltype(&CNodeODE2::GetVelocity)>::value, "CNodeUser declares Position and must implement GetVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetPositionJacobian), decltype(&CNodeODE2::GetPositionJacobian)>::value, "CNodeUser declares Position and must implement GetPositionJacobian; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetRotationMatrix), decltype(&CNodeODE2::GetRotationMatrix)>::value, "CNodeUser declares Orientation and must implement GetRotationMatrix; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetAngularVelocity), decltype(&CNodeODE2::GetAngularVelocity)>::value, "CNodeUser declares Orientation and must implement GetAngularVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetAngularVelocityLocal), decltype(&CNodeODE2::GetAngularVelocityLocal)>::value, "CNodeUser declares Orientation and must implement GetAngularVelocityLocal; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeUser::GetRotationJacobian), decltype(&CNodeODE2::GetRotationJacobian)>::value, "CNodeUser declares Orientation and must implement GetRotationJacobian; the default of CNodeODE2 raises");
 
 #endif //#ifdef include once...

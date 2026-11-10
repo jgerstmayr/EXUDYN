@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:22:26 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,5 +123,11 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CNodePointSlope1 require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CNodePointSlope1::GetOutputVariable), decltype(&CNode::GetOutputVariable)>::value, "CNodePointSlope1 declares output variables and must implement GetOutputVariable; the default of CNode raises");
+static_assert(!std::is_same<decltype(&CNodePointSlope1::GetPosition), decltype(&CNodeODE2::GetPosition)>::value, "CNodePointSlope1 declares Position and must implement GetPosition; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodePointSlope1::GetVelocity), decltype(&CNodeODE2::GetVelocity)>::value, "CNodePointSlope1 declares Position and must implement GetVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodePointSlope1::GetPositionJacobian), decltype(&CNodeODE2::GetPositionJacobian)>::value, "CNodePointSlope1 declares Position and must implement GetPositionJacobian; the default of CNodeODE2 raises");
 
 #endif //#ifdef include once...

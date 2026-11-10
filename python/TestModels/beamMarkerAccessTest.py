@@ -1,0 +1,99 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The body markers on two beams use the access functions the beams declare (#3406): a RigidBodySpringDamper
+#           holds a pendulum of ObjectBeamGeometricallyExact2D elements at a MarkerBodyRigid, which reads the local angular
+#           velocity of the beam - equal to the global one, as the beam rotates about z only; the MarkerBodyMass of an
+#           ObjectANCFBeam is drawn at the center of mass, the middle of the beam axis (a system of its own, not simulated).
+#           The pendulum swings under gravity for 1 s. The result is the number of checks that pass plus the y-position of
+#           the tip at the end.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-11
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+testError = 0
+numberOfChecks = 0
+def Check(condition, message):
+    global testError, numberOfChecks
+    numberOfChecks += 1
+    if not condition:
+        exu.Print('beamMarkerAccessTest: ' + message)
+        testError += 1
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.AddObject(ObjectGround())
+
+#%%+++ a pendulum of 4 geometrically exact 2D beam elements along x, held at its first node by a RigidBodySpringDamper
+nElements = 4
+lElement = 1./nElements
+nodes = [mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[i*lElement, 0, 0])) for i in range(nElements + 1)]
+beams = [mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement, massPerLength=1.,
+                                                      crossSectionInertia=1e-3, bendingStiffness=10., axialStiffness=1e4, shearStiffness=1e4,
+                                                      visualization=VObjectBeamGeometricallyExact2D(drawHeight=0.05)))
+         for i in range(nElements)]
+mBeam = mbs.AddMarker(MarkerBodyRigid(bodyNumber=beams[0], localPosition=[-0.5*lElement, 0, 0])) #at the first node
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 0, 0]))
+#stiff in x, y and in the rotation about z; the other directions are not those of a 2D beam
+mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mGround, mBeam], stiffness=np.diag([1e5, 1e5, 0, 0, 0, 1e2]),
+                                    damping=np.diag([1e2, 1e2, 0, 0, 0, 0.1])))
+for b in beams:
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=b)), loadVector=[0, -9.81, 0]))
+
+#%%+++ an ANCF beam with a mass marker, in a system of its own, which is only drawn
+SC2 = exu.SystemContainer()
+mbs2 = SC2.AddSystem()
+n0 = mbs2.AddNode(NodePointSlope23(referenceCoordinates=[0, 0.5, 0, 0, 1, 0, 0, 0, 1]))
+n1 = mbs2.AddNode(NodePointSlope23(referenceCoordinates=[1, 0.5, 0, 0, 1, 0, 0, 0, 1]))
+section = exu.BeamSection() #a steel bar of 1 x 1 cm
+section.massPerLength = 0.785
+section.inertia = 1e-5*np.eye(3)
+section.stiffnessMatrix = np.diag([2e7, 8e6, 8e6, 1.4e2, 1.7e2, 1.7e2])
+oANCF = mbs2.AddObject(ObjectANCFBeam(nodeNumbers=[n0, n1], length=1., sectionData=section, crossSectionPenaltyFactor=[100, 100, 100]))
+mMass = mbs2.AddMarker(MarkerBodyMass(bodyNumber=oANCF))
+mbs2.Assemble()
+mbs.Assemble()
+
+#the markers drawn: the mass marker of the ANCF beam at its center of mass
+SC2.visualizationSettings.markers.show = True
+try:
+    SC2.renderer.GetGraphicsData()
+    Check(True, '')
+except Exception as e:
+    Check(False, 'the markers cannot be drawn: ' + str(e))
+pCenter = np.array(mbs2.GetObjectOutputBody(oANCF, exu.OutputVariableType.Position, localPosition=[0, 0, 0]))
+Check(cMath.norm(pCenter - np.array([0.5, 0.5, 0])) < 1e-14, 'the local origin of the ANCF beam is the middle of its axis: ' + str(pCenter))
+
+#%%+++ the pendulum swings
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+simulationSettings.timeIntegration.endTime = 1.
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.solution.file.write = not testIsActive
+simulationSettings.solution.file.writePeriod = 0.01
+mbs.SolveDynamic(simulationSettings)
+
+omega = np.array(mbs.GetMarkerOutput(mBeam, exu.OutputVariableType.AngularVelocity))
+omegaLocal = np.array(mbs.GetMarkerOutput(mBeam, exu.OutputVariableType.AngularVelocityLocal))
+Check(cMath.norm(omega - omegaLocal) == 0. and abs(omega[2]) > 1e-3, 'the local angular velocity of the 2D beam: ' + str(omegaLocal))
+yTip = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
+Check(yTip < -0.3, 'the pendulum swings down: ' + str(yTip))
+
+if not testIsActive:
+    mbs.SolutionViewer()
+
+u = numberOfChecks - 10*testError + yTip
+exu.Print('beamMarkerAccessTest: errors', testError)
+exu.Print('solution of beamMarkerAccessTest=', u)
+exu.sys['testResult'] = u

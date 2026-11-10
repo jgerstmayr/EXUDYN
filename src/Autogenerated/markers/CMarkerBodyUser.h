@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-04  00:02:40 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -172,5 +172,13 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CMarkerBodyUser require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CMarkerBodyUser::GetPosition), decltype(&CMarker::GetPosition)>::value, "CMarkerBodyUser declares Position and must implement GetPosition; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerBodyUser::GetVelocity), decltype(&CMarker::GetVelocity)>::value, "CMarkerBodyUser declares Position and must implement GetVelocity; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerBodyUser::ComputeMarkerData), decltype(&CMarker::ComputeMarkerData)>::value, "CMarkerBodyUser declares Position and must implement ComputeMarkerData; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerBodyUser::GetRotationMatrix), decltype(&CMarker::GetRotationMatrix)>::value, "CMarkerBodyUser declares Orientation and must implement GetRotationMatrix; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerBodyUser::GetAngularVelocity), decltype(&CMarker::GetAngularVelocity)>::value, "CMarkerBodyUser declares Orientation and must implement GetAngularVelocity; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerBodyUser::GetAngularVelocityLocal), decltype(&CMarker::GetAngularVelocityLocal)>::value, "CMarkerBodyUser declares Orientation and must implement GetAngularVelocityLocal; the default of CMarker raises");
 
 #endif //#ifdef include once...

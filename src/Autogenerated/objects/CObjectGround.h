@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  23:46:14 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -203,5 +203,15 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectGround require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectGround::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectGround declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetPosition), decltype(&CObjectBody::GetPosition)>::value, "CObjectGround declares TranslationalVelocity_qt and must implement GetPosition; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetVelocity), decltype(&CObjectBody::GetVelocity)>::value, "CObjectGround declares TranslationalVelocity_qt and must implement GetVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetDisplacement), decltype(&CObjectBody::GetDisplacement)>::value, "CObjectGround declares TranslationalVelocity_qt and must implement GetDisplacement; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetRotationMatrix), decltype(&CObjectBody::GetRotationMatrix)>::value, "CObjectGround declares AngularVelocity_qt and must implement GetRotationMatrix; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetAngularVelocity), decltype(&CObjectBody::GetAngularVelocity)>::value, "CObjectGround declares AngularVelocity_qt and must implement GetAngularVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetAngularVelocityLocal), decltype(&CObjectBody::GetAngularVelocityLocal)>::value, "CObjectGround declares AngularVelocity_qt and must implement GetAngularVelocityLocal; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectGround::GetLocalCenterOfMass), decltype(&CObjectBody::GetLocalCenterOfMass)>::value, "CObjectGround declares DisplacementMassIntegral_q and must implement GetLocalCenterOfMass; the default of CObjectBody raises");
 
 #endif //#ifdef include once...

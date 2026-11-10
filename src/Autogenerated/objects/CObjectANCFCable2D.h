@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -229,5 +229,15 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectANCFCable2D require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectANCFCable2D declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetPosition), decltype(&CObjectBody::GetPosition)>::value, "CObjectANCFCable2D declares TranslationalVelocity_qt and must implement GetPosition; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetVelocity), decltype(&CObjectBody::GetVelocity)>::value, "CObjectANCFCable2D declares TranslationalVelocity_qt and must implement GetVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetDisplacement), decltype(&CObjectBody::GetDisplacement)>::value, "CObjectANCFCable2D declares TranslationalVelocity_qt and must implement GetDisplacement; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetRotationMatrix), decltype(&CObjectBody::GetRotationMatrix)>::value, "CObjectANCFCable2D declares AngularVelocity_qt and must implement GetRotationMatrix; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetAngularVelocity), decltype(&CObjectBody::GetAngularVelocity)>::value, "CObjectANCFCable2D declares AngularVelocity_qt and must implement GetAngularVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetAngularVelocityLocal), decltype(&CObjectBody::GetAngularVelocityLocal)>::value, "CObjectANCFCable2D declares AngularVelocity_qt and must implement GetAngularVelocityLocal; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFCable2D::GetLocalCenterOfMass), decltype(&CObjectBody::GetLocalCenterOfMass)>::value, "CObjectANCFCable2D declares DisplacementMassIntegral_q and must implement GetLocalCenterOfMass; the default of CObjectBody raises");
 
 #endif //#ifdef include once...

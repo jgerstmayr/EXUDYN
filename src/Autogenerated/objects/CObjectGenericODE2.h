@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-25  14:35:54 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -311,5 +311,8 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectGenericODE2 require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectGenericODE2::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectGenericODE2 declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
 
 #endif //#ifdef include once...

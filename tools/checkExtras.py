@@ -107,6 +107,9 @@ exemptImports = {
                      'python/testing/test_accessFunctionDeclarations.py, which checks its rule 7 (#2744)',
     'itemDefsObjects': 'a module of definitions/, imported by name by the same test, for the '
                      'definitions it checks (#2744)',
+    'itemDefsNodes': 'a module of definitions/, imported by name by '
+                     'python/testing/test_itemRequiredMemberFunctions.py, for the definitions it checks (#2866)',
+    'itemDefsMarkers': 'a module of definitions/, imported by name by the same test (#2866)',
     'itemModel':     'a module of tools/generators/, imported by name by '
                      'python/testing/test_itemParameterDeprecation.py, which reads what the item '
                      'generators emit for a renamed parameter (#2589)',

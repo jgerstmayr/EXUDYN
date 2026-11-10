@@ -89,6 +89,12 @@ in the generated headers.
 | sensor | `GetSensorValues` |
 | every item | `UpdateGraphics` of `Visualization<Item>`, in the same `.cpp` |
 
+What the declarations require is checked when the item is compiled: its generated header asserts, for
+every member function that its types, its access function types and its output variables require, that the
+item does not inherit the default of the base class, which raises "illegal call" - e.g. `AngularVelocity_qt`
+requires `GetAngularVelocityLocal` of a body. The table is `RequiredMemberFunctions` in
+`tools/generators/itemHeaderEmitter.py`; a failed assertion names the declaration and the function (#2866).
+
 Checks of parameters and of the items it is attached to go into `CheckPreAssembleConsistency`, with
 a message that names the parameter; errors raised from C++ follow
 [CODING_STYLE.md](CODING_STYLE.md) §10.

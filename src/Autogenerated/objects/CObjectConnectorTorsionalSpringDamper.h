@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-08  22:55:36 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -227,5 +227,8 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectConnectorTorsionalSpringDamper require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector), decltype(&CObjectConnector::GetOutputVariableConnector)>::value, "CObjectConnectorTorsionalSpringDamper declares output variables and must implement GetOutputVariableConnector; the default of CObjectConnector raises");
 
 #endif //#ifdef include once...

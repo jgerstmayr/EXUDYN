@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-29  18:30:26 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,5 +132,8 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CMarkerBodiesRelativeTranslationCoordinate require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CMarkerBodiesRelativeTranslationCoordinate::ComputeMarkerData), decltype(&CMarker::ComputeMarkerData)>::value, "CMarkerBodiesRelativeTranslationCoordinate declares Coordinate and must implement ComputeMarkerData; the default of CMarker raises");
 
 #endif //#ifdef include once...

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 518 | 1.13.542 |
+| 1.13 | Newborn | 520 | 1.13.544 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.544** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectBeamGeometricallyExact2D has no GetAngularVelocityLocal and ObjectANCFBeam no GetLocalCenterOfMass, although they declare the access functions that need them (#3406)
+  - description: ObjectBeamGeometricallyExact2D declares AngularVelocity\_qt (it provides GetRotationJacobian) and inherits the throwing default of GetAngularVelocityLocal: a RigidBodySpringDamper on a MarkerBodyRigid of the beam stops at the first step with 'illegal call to CObjectBody::GetAngularVelocityLocal', and so does the output AngularVelocityLocal of the marker. ObjectANCFBeam declares DisplacementMassIntegral\_q (GetMassWeightedPositionJacobian) and inherits the throwing default of GetLocalCenterOfMass, which CMarkerBodyMass::GetPosition calls. Found by the table of revision2026c step RG9.6.1 (\#2866); fixed with the static\_asserts of RG9.6.2.
+  - **notes:** ObjectANCFBeam provides GetLocalCenterOfMass (the middle of the beam axis) and ObjectBeamGeometricallyExact2D provides GetAngularVelocityLocal, as their access function types declare; a MarkerBodyMass on the ANCF beam and a RigidBodySpringDamper on a MarkerBodyRigid of the 2D beam raised 'illegal call' before. Test model beamMarkerAccessTest.py.
+  - date resolved: **2026-11-10 22:02**, date raised: 2026-11-10
+- **1.13.543** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the member functions an item must provide, checked at compile time (#2866)
+  - description: Successor of \#2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -\> required functions, generated static\_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.
+  - **notes:** Each generated item header asserts at compile time that the item overrides every member function its declarations require - by node type, marker type, access function types of a body and output variables - instead of inheriting the default that raises 'illegal call' at run time; the table is RequiredMemberFunctions in tools/generators/itemHeaderEmitter.py (353 assertions in 96 headers). The run-time half, every listed output variable readable, is test\_inspectOutputVariables.py (\#2768).
+  - date resolved: **2026-11-10 22:02**, date raised: 2026-10-05
 - **1.13.542** `EXAMPLE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pathPlanningUR5.py with a second robot: pick in a pocket, place on a column, beneath a plate, among obstacles of all convex shapes (#3408)
   - description: A second UR5 beside the first picks a part from a pocket of four blocks in front of it and places it on a column behind it, turning by 180 degrees beneath a plate, past a lamp, a cone and a pyramid, with a wall on the other side; the obstacles are boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points (Obstacle(...) gives the ConvexShape and its drawing at one place); pick and place from the analytic inverse kinematics, the part drawn below the tool by a graphicsDataUserFunction. The first robot keeps its three scenes.
   - **notes:** pathPlanningUR5.py has a second UR5 that picks a part from a pocket in front of it and places it on a column behind it, beneath a plate, among obstacles of all convex shapes: boxes, a cylinder, a capsule, a sphere, a cone and the convex hull of points

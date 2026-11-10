@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:28:01 (last modified)
+* @date         2026-11-10  21:44:25 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -156,6 +156,12 @@ public: // AUTO:
     //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; in 2D case, this is the same as the global angular velocity; returns always a 3D Vector
     virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
+    //! AUTO:  the center of mass in the local frame: the middle of the beam axis, local x from -L/2 to L/2 (#3406)
+    virtual Vector3D GetLocalCenterOfMass() const override
+    {
+        return Vector3D({0.,0.,0.});
+    }
+
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
@@ -267,5 +273,15 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectANCFBeam require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectANCFBeam declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetPosition), decltype(&CObjectBody::GetPosition)>::value, "CObjectANCFBeam declares TranslationalVelocity_qt and must implement GetPosition; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetVelocity), decltype(&CObjectBody::GetVelocity)>::value, "CObjectANCFBeam declares TranslationalVelocity_qt and must implement GetVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetDisplacement), decltype(&CObjectBody::GetDisplacement)>::value, "CObjectANCFBeam declares TranslationalVelocity_qt and must implement GetDisplacement; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetRotationMatrix), decltype(&CObjectBody::GetRotationMatrix)>::value, "CObjectANCFBeam declares AngularVelocity_qt and must implement GetRotationMatrix; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetAngularVelocity), decltype(&CObjectBody::GetAngularVelocity)>::value, "CObjectANCFBeam declares AngularVelocity_qt and must implement GetAngularVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetAngularVelocityLocal), decltype(&CObjectBody::GetAngularVelocityLocal)>::value, "CObjectANCFBeam declares AngularVelocity_qt and must implement GetAngularVelocityLocal; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectANCFBeam::GetLocalCenterOfMass), decltype(&CObjectBody::GetLocalCenterOfMass)>::value, "CObjectANCFBeam declares DisplacementMassIntegral_q and must implement GetLocalCenterOfMass; the default of CObjectBody raises");
 
 #endif //#ifdef include once...

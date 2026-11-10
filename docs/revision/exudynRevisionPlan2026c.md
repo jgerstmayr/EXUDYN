@@ -54,7 +54,7 @@ The title of each says what it does; the sentence after it, why it comes now.
    4.3.0 and of cp315 on GitHub.
 2. **The baseline of the solvers** (RG5.8.1), measured by python/testing/solverBaseline.py; it decides on the total coordinates (RG5.8.2).
 3. **The larger open work**, once the next release is planned: the linear algebra benchmark (RG5.1), the plugin
-   interface (RG8), the checked item interface (RG9.6).
+   interface (RG8).
 
 # Revision plan open steps
 
@@ -83,7 +83,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG8.9 Document what a plugin may and must do
   - RG8.10 Let an item take a user function compiled in C++
 - **RG9** Structural core improvements
-  - RG9.6 Check at compile time that an item provides the member functions its declarations require (1 open sub-step)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
@@ -113,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 3 | Structural core improvements |
+| RG9 | OPEN | 1 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | CLOSED | 0 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -1300,11 +1299,13 @@ differentiation, #1104 the generic object, #1722 `exudyn.Parameter`, #88 data de
 inverse-dynamics solvers). This is where **2.0** comes from (info document D15). Put off: the energy of contact and
 special objects (#2202).
 
-### **OPEN_RG9.6** Check at compile time that an item provides the member functions its declarations require
+### **CLOSED_RG9.6** Check at compile time that an item provides the member functions its declarations require
 
 #2866. Abstract base classes do not fit - what an item must provide depends on what it declares -, so the generated
 header of each item gets a `static_assert` per required function with `decltype(&CItem::F)`, which names the class
 that declares `F`. The evaluation is in the log of revision2026b step RG9.6.
+
+CLOSED 2026-11-11 (#2866): the item headers check the required member functions when they compile. [log](exudynRevisionLog2026c.md#rg9-6-2)
 
 #### **CLOSED_RG9.6.1** Tabulate which declaration requires which member function
 
@@ -1313,9 +1314,11 @@ classes.
 
 CLOSED 2026-11-11 (#2866): the table is in the log, with a scan of the generated headers and their hand-written parents: two items declare a capability and inherit the throwing default (#3406). [log](exudynRevisionLog2026c.md#rg2-9-4)
 
-#### **OPEN_RG9.6.2** Write the static_asserts in itemHeaderEmitter.py and fix what the first build finds
+#### **CLOSED_RG9.6.2** Write the static_asserts in itemHeaderEmitter.py and fix what the first build finds
 
 Known before the first build: #3406, ObjectBeamGeometricallyExact2D (GetAngularVelocityLocal) and ObjectANCFBeam (GetLocalCenterOfMass), from the table of RG9.6.1.
+
+CLOSED 2026-11-11 (#2866, #3406): each generated header asserts that the item overrides the default of every member function its declarations require (353 assertions in 96 headers); the first build failed for exactly the two items of #3406, which now have GetLocalCenterOfMass resp. GetAngularVelocityLocal; beamMarkerAccessTest.py. [log](exudynRevisionLog2026c.md#rg9-6-2)
 
 ### **OPEN_RG9.7** Replace the Cable2D markers by general markers for curves, surfaces and volumes
 

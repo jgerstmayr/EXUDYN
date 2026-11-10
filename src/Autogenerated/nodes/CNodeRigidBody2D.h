@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -155,5 +155,15 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CNodeRigidBody2D require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetOutputVariable), decltype(&CNode::GetOutputVariable)>::value, "CNodeRigidBody2D declares output variables and must implement GetOutputVariable; the default of CNode raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetPosition), decltype(&CNodeODE2::GetPosition)>::value, "CNodeRigidBody2D declares Position2D and must implement GetPosition; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetVelocity), decltype(&CNodeODE2::GetVelocity)>::value, "CNodeRigidBody2D declares Position2D and must implement GetVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetPositionJacobian), decltype(&CNodeODE2::GetPositionJacobian)>::value, "CNodeRigidBody2D declares Position2D and must implement GetPositionJacobian; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetRotationMatrix), decltype(&CNodeODE2::GetRotationMatrix)>::value, "CNodeRigidBody2D declares Orientation2D and must implement GetRotationMatrix; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetAngularVelocity), decltype(&CNodeODE2::GetAngularVelocity)>::value, "CNodeRigidBody2D declares Orientation2D and must implement GetAngularVelocity; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetAngularVelocityLocal), decltype(&CNodeODE2::GetAngularVelocityLocal)>::value, "CNodeRigidBody2D declares Orientation2D and must implement GetAngularVelocityLocal; the default of CNodeODE2 raises");
+static_assert(!std::is_same<decltype(&CNodeRigidBody2D::GetRotationJacobian), decltype(&CNodeODE2::GetRotationJacobian)>::value, "CNodeRigidBody2D declares Orientation2D and must implement GetRotationJacobian; the default of CNodeODE2 raises");
 
 #endif //#ifdef include once...

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  01:23:29 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,5 +132,14 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CMarkerNodeRigid require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::GetPosition), decltype(&CMarker::GetPosition)>::value, "CMarkerNodeRigid declares Position and must implement GetPosition; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::GetVelocity), decltype(&CMarker::GetVelocity)>::value, "CMarkerNodeRigid declares Position and must implement GetVelocity; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::ComputeMarkerData), decltype(&CMarker::ComputeMarkerData)>::value, "CMarkerNodeRigid declares Position and must implement ComputeMarkerData; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::GetRotationMatrix), decltype(&CMarker::GetRotationMatrix)>::value, "CMarkerNodeRigid declares Orientation and must implement GetRotationMatrix; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::GetAngularVelocity), decltype(&CMarker::GetAngularVelocity)>::value, "CMarkerNodeRigid declares Orientation and must implement GetAngularVelocity; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::GetAngularVelocityLocal), decltype(&CMarker::GetAngularVelocityLocal)>::value, "CMarkerNodeRigid declares Orientation and must implement GetAngularVelocityLocal; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodeRigid::ComputeMarkerDataJacobianDerivative), decltype(&CMarker::ComputeMarkerDataJacobianDerivative)>::value, "CMarkerNodeRigid declares JacobianDerivativeAvailable and must implement ComputeMarkerDataJacobianDerivative; the default of CMarker raises");
 
 #endif //#ifdef include once...

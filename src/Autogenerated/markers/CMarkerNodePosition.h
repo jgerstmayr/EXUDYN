@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-01  23:46:14 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,5 +118,11 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CMarkerNodePosition require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CMarkerNodePosition::GetPosition), decltype(&CMarker::GetPosition)>::value, "CMarkerNodePosition declares Position and must implement GetPosition; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodePosition::GetVelocity), decltype(&CMarker::GetVelocity)>::value, "CMarkerNodePosition declares Position and must implement GetVelocity; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodePosition::ComputeMarkerData), decltype(&CMarker::ComputeMarkerData)>::value, "CMarkerNodePosition declares Position and must implement ComputeMarkerData; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerNodePosition::ComputeMarkerDataJacobianDerivative), decltype(&CMarker::ComputeMarkerDataJacobianDerivative)>::value, "CMarkerNodePosition declares JacobianDerivativeAvailable and must implement ComputeMarkerDataJacobianDerivative; the default of CMarker raises");
 
 #endif //#ifdef include once...

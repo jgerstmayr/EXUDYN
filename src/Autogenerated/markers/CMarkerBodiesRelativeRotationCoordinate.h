@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-05  20:21:38 (last modified)
+* @date         2026-11-10  21:43:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -153,5 +153,9 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CMarkerBodiesRelativeRotationCoordinate require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerData), decltype(&CMarker::ComputeMarkerData)>::value, "CMarkerBodiesRelativeRotationCoordinate declares Coordinate and must implement ComputeMarkerData; the default of CMarker raises");
+static_assert(!std::is_same<decltype(&CMarkerBodiesRelativeRotationCoordinate::PostNewtonStep), decltype(&CMarker::PostNewtonStep)>::value, "CMarkerBodiesRelativeRotationCoordinate declares HasPostNewton and must implement PostNewtonStep; the default of CMarker raises");
 
 #endif //#ifdef include once...

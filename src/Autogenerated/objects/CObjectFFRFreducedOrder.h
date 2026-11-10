@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-11-09  21:00:28 (last modified)
+* @date         2026-11-10  21:44:25 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -467,5 +467,24 @@ public: // AUTO:
 };
 
 
+//! AUTO: the member functions that the declarations of CObjectFFRFreducedOrder require (#2866)
+#include <type_traits>
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetOutputVariableBody), decltype(&CObjectBody::GetOutputVariableBody)>::value, "CObjectFFRFreducedOrder declares output variables and must implement GetOutputVariableBody; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetPosition), decltype(&CObjectBody::GetPosition)>::value, "CObjectFFRFreducedOrder declares TranslationalVelocity_qt and must implement GetPosition; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetVelocity), decltype(&CObjectBody::GetVelocity)>::value, "CObjectFFRFreducedOrder declares TranslationalVelocity_qt and must implement GetVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetDisplacement), decltype(&CObjectBody::GetDisplacement)>::value, "CObjectFFRFreducedOrder declares TranslationalVelocity_qt and must implement GetDisplacement; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetRotationMatrix), decltype(&CObjectBody::GetRotationMatrix)>::value, "CObjectFFRFreducedOrder declares AngularVelocity_qt and must implement GetRotationMatrix; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetAngularVelocity), decltype(&CObjectBody::GetAngularVelocity)>::value, "CObjectFFRFreducedOrder declares AngularVelocity_qt and must implement GetAngularVelocity; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetAngularVelocityLocal), decltype(&CObjectBody::GetAngularVelocityLocal)>::value, "CObjectFFRFreducedOrder declares AngularVelocity_qt and must implement GetAngularVelocityLocal; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetLocalCenterOfMass), decltype(&CObjectBody::GetLocalCenterOfMass)>::value, "CObjectFFRFreducedOrder declares DisplacementMassIntegral_q and must implement GetLocalCenterOfMass; the default of CObjectBody raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetNumberOfMeshNodes), decltype(&CObjectSuperElement::GetNumberOfMeshNodes)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetNumberOfMeshNodes; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetMeshNode), decltype(&CObjectSuperElement::GetMeshNode)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetMeshNode; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetMeshNodeLocalPosition), decltype(&CObjectSuperElement::GetMeshNodeLocalPosition)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetMeshNodeLocalPosition; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetMeshNodeLocalVelocity), decltype(&CObjectSuperElement::GetMeshNodeLocalVelocity)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetMeshNodeLocalVelocity; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetMeshNodePosition), decltype(&CObjectSuperElement::GetMeshNodePosition)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetMeshNodePosition; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetMeshNodeVelocity), decltype(&CObjectSuperElement::GetMeshNodeVelocity)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetMeshNodeVelocity; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetAccessFunctionSuperElement), decltype(&CObjectSuperElement::GetAccessFunctionSuperElement)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetAccessFunctionSuperElement; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetOutputVariableTypesSuperElement), decltype(&CObjectSuperElement::GetOutputVariableTypesSuperElement)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetOutputVariableTypesSuperElement; the default of CObjectSuperElement raises");
+static_assert(!std::is_same<decltype(&CObjectFFRFreducedOrder::GetOutputVariableSuperElement), decltype(&CObjectSuperElement::GetOutputVariableSuperElement)>::value, "CObjectFFRFreducedOrder declares SuperElement and must implement GetOutputVariableSuperElement; the default of CObjectSuperElement raises");
 
 #endif //#ifdef include once...
