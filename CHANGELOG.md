@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 501 | 1.13.524 |
+| 1.13 | Newborn | 503 | 1.13.526 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.526** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
+  - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
+  - **notes:** ObjectJointGeneric, ObjectJointRevoluteZ and ObjectJointPrismaticX compute their equations with one implementation on the relative frame of their joint frames, with analytic derivatives instead of automatic differentiation; the velocity level is their derivative times the velocities of the markers. Their reaction forces take half the time, a chain of revolute joints with modified Newton about 20 % less in all; the velocity level of the alternative constraints of ObjectJointGeneric is now the time derivative of these constraints.
+  - date resolved: **2026-11-10 07:53**, date raised: 2026-10-07
+- **1.13.525** `DOCU` `HIGH EFF` `resolved by: Claude-JG` Jacobian documentation (#845)
+  - description: add documentation to object and connector jacobians
+  - **notes:** The documentation says how the Jacobian of a constraint is obtained: the derivatives of its equations by the positions and rotations of its markers, chained with the marker Jacobians, the reaction forces per marker without forming the Jacobian, the analytic derivatives of the 3D joints and which constraints use automatic differentiation (solver.md, The Jacobian of a constraint); the pages of ObjectJointGeneric, ObjectJointRevoluteZ and ObjectJointPrismaticX describe their velocity level.
+  - date resolved: **2026-11-10 07:53**, date raised: 2021-12-23
 - **1.13.524** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The URDF import loses the colors of the materials of Collada meshes (#3398)
   - description: GetURDFrobotData reads the meshes by pymeshlab, which merges the parts of a Collada (.dae) file and drops the diffuse colors of their materials; the UR5 of ur\_description, whose meshes have dark grey, light grey and blue parts, was drawn in the one grey of its URDF material. Decided: a small Collada reader (ReadColladaMesh, xml of the standard library) gives the triangles with the colors of their materials, used for a .dae mesh without a texture.
   - **notes:** The URDF import keeps the colors of the materials of Collada (.dae) meshes without texture, read by the new function ReadColladaMesh.

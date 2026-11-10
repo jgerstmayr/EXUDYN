@@ -6431,6 +6431,51 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg11-6-3"></a>
+### RG11.6.3, RG11.6.4 — the 3D joints on their relative frame with analytic derivatives, the documentation of the constraint Jacobians (2026-11-10, #2884, #845)
+*(Maintainer 2026-11-10: the decisions of RG11.6.2 as proposed, and the analytic Jacobians - planned as a remark for
+RG5 - now too.)*
+
+- **One implementation** (#2884): `src/System/JointRelativeFrame.h` has the 6 equations of a joint on the relative
+  frame of J1 in J0 for a set of constrained axes - the translations, global if all three are constrained, else
+  $\tv_{i0}\tp(\pv_1-\pv_0)$; the rotations as rigid (or the alternative triple products), revolute or universal joint -
+  with their rows by the 12 variations [dp0, dtheta0, dp1, dtheta1]: $\tv_{i0}\tp\dv$ gives $\pm\tv_{i0}$ and
+  $\tv_{i0}\times\dv$, an axes product $\tv_{i0}\tp\tv_{j1}$ gives $\pm\tv_{i0}\times\tv_{j1}$, the triple product
+  $a\tp(b\times c)$ (a, c of J0) gives $\pm b\times(c\times a)$, as it is invariant under a common rotation. The
+  velocity level is the same rows times the twists of the markers, which replaces the three hand-written time
+  derivatives. ObjectJointGeneric uses it with its axes and the offset of the user function, JointRevoluteZ with
+  [1,1,1,1,1,0], JointPrismaticX with [0,1,1,1,1,1], keeping the rows of the constrained axes
+  (`JointConstrainedEquations`): the three joints are 230 lines shorter, the header has the equations once.
+- **The interface**: `CObjectConstraint::ComputeConstraintEquationsRigidDerivatives` (false by default) returns the
+  equations with a `RigidMarkersDerivatives` matrix (MarkerData.h); `ConstraintEquationsDerivativesRigid` replaces
+  `SeedConstraintEquationsRigid` and gives the rows for the Jacobian and the reaction forces, analytic or copied from
+  the automatic differentiation of `ComputeConstraintEquationsRigidDiff` (JointPrismatic2D, JointUser). The three
+  joints no longer have `ComputeConstraintEquationsRigidDiff` and the template.
+- **First try, not kept**: the analytic rows written into the AutoDiff numbers of the existing `RigidDiff` path. The
+  seeding and copying of the AutoDiff frames stayed, and the gain was small (reaction forces of the RevoluteZ chain
+  0.39 -> 0.31 s); the Real interface halves them.
+- **Measured** (scratchpad jointBench.py: 400 Euler parameter bodies in a chain, 200 steps of 1 ms,
+  generalized-alpha, EigenSparse, best of 3), automatic -> analytic, total (reaction forces, AE Jacobian):
+
+  | joint | modified Newton | full Newton |
+  |---|---|---|
+  | JointRevoluteZ | 1.058 -> 0.853 s (0.388 -> 0.190, 0.014 -> 0.011) | 6.02 -> 5.81 s (0.239 -> 0.119, 0.438 -> 0.338) |
+  | JointGeneric revolute | 1.003 -> 0.871 s (0.330 -> 0.198) | 6.13 -> 5.98 s (0.213 -> 0.130, 0.472 -> 0.400) |
+  | JointGeneric universal | 1.082 -> 0.999 s (0.214 -> 0.129) | 3.91 -> 3.82 s (0.168 -> 0.104, 0.355 -> 0.295) |
+  | JointPrismaticX | 0.184 -> 0.145 s (0.095 -> 0.057) | 0.523 -> 0.428 s (0.097 -> 0.057, 0.113 -> 0.094) |
+
+  The same Newton iterations and coordinates to 12 digits. What remains of the reaction forces and the Jacobian is the
+  kinematics and Jacobians of the markers and their projection; with full Newton the factorization dominates.
+- **A correction**: the velocity level of the alternative constraints of ObjectJointGeneric used the time derivatives
+  of the standard ones; it is now the derivative of the alternative constraints.
+- **Checks**: test_connectorInterface.py compares C_q with finite differences of the equations (RevoluteZ, PrismaticX
+  with rotated marker frames, Generic rigid, revolute, universal with a free translation, spherical, rotated frames,
+  the alternative constraints on Rxyz nodes, slope nodes) and C_q^T lambda with the reaction forces.
+- **#845**: solver.md, {ref}`sec-constraintjacobian`: C_q chained from the derivatives by the marker kinematics and
+  the marker Jacobians, the reaction forces per marker without C_q, the rows of the 3D joints, which constraints use
+  automatic differentiation and which compute their Jacobian themselves, and how to check it with ComputeItem and
+  NumericalJacobian; systemJacobians.md the interface and the measurement.
+
 <a id="rg21-6-3"></a>
 ### RG21.6.3 to RG21.6.5 — the trajectory along a path, the colors of the UR5, the figures (2026-11-10, #3397, #3398)
 *(Maintainer 2026-11-09: the trajectory of PlanToPose, ShortcutPath and TrajectoryFromPath has many intermediate points,

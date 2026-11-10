@@ -1,0 +1,15 @@
+{
+  "number": 845,
+  "title": "Jacobian documentation",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "HIGH",
+  "description": "add documentation to object and connector jacobians",
+  "dateRaised": "2021-12-23",
+  "deadline": "2022-02-21",
+  "dateResolved": "2026-11-10 07:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The documentation says how the Jacobian of a constraint is obtained: the derivatives of its equations by the positions and rotations of its markers, chained with the marker Jacobians, the reaction forces per marker without forming the Jacobian, the analytic derivatives of the 3D joints and which constraints use automatic differentiation (solver.md, The Jacobian of a constraint); the pages of ObjectJointGeneric, ObjectJointRevoluteZ and ObjectJointPrismaticX describe their velocity level.",
+  "resolvedInVersion": "1.13.525"
+}

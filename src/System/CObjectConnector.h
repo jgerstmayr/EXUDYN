@@ -336,6 +336,14 @@ public:
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigidDiff: not implemented for this constraint");
 	}
 
+	//! the equations at position level with their analytic derivatives by the variations of the frames of the markers, a
+	//! row per equation (#2884); false: the derivatives come from ComputeConstraintEquationsRigidDiff
+	virtual bool ComputeConstraintEquationsRigidDerivatives(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda,
+		Real t, ConstSizeVector<maxConstraintEquations>& equations, RigidMarkersDerivatives& derivatives) const
+	{
+		return false;
+	}
+
 	//! the derivative of the equations by the Lagrange multipliers, if GetAvailableJacobians() names AE_AE (#2745)
 	virtual void ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
 	{

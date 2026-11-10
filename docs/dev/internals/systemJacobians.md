@@ -53,6 +53,16 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   along e and the row `e^T/(e^T e)`; the chains add one force evaluation per Euler parameter marker. For constraints the
   part goes into the rows of the equations only (`temp.localJacobianAE_ODE2radial`): the reaction forces have none,
   and with it restartFileTest and userJointTest did not converge.
+- **Constraints on rigid markers** (#2884): `ConstraintEquationsDerivativesRigid` (CObjectConnector.cpp) gives the
+  equations and their rows in the 12 variations [dp0, dtheta0, dp1, dtheta1] (`RigidMarkersDerivatives`), for both
+  `ConstraintJacobianRigidMarkers` and `ConstraintReactionForcesRigidMarkers`: analytic from
+  `CObjectConstraint::ComputeConstraintEquationsRigidDerivatives` where the constraint has it - the 3D joints, on the
+  relative frame of their joint frames, `src/System/JointRelativeFrame.h` -, else by automatic differentiation of
+  `ComputeConstraintEquationsRigidDiff` (`AutoDiff<12>`). The velocity level of the joints is the same rows times the
+  twists. A chain of 400 Euler parameter bodies, 200 steps, generalized-alpha with modified Newton, automatic /
+  analytic: JointRevoluteZ 1.06 / 0.85 s (reaction forces 0.39 / 0.19 s), JointGeneric revolute 1.00 / 0.87 s,
+  universal 1.08 / 1.00 s, JointPrismaticX 0.18 / 0.15 s; with full Newton the factorization dominates, 6.0 / 5.8 s.
+  The rest is the kinematics and Jacobians of the markers and their projection.
 - The Lie group node NodeRigidBodyRotVecLG (#3217): its rotation velocity coordinates are the local angular velocity
   omega, and the system differentiates its rotation coordinates by the local composition A Exp(delta). So
   `RigidBodyNodeVelocity_q` gives d(A v)/d delta = -A v~ for the angular velocity and the velocity of a point, and

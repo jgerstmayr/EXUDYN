@@ -112,14 +112,7 @@ $$
 \end{aligned}
 $$
 
-and the translational index 2 constraints read
-
-$$
-\begin{aligned}
-\LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &= \Null \\
-\LU{J0}{\vv}_{z,m1} - \LU{J0}{\vv}_{z,m0} &= \Null
-\end{aligned}
-$$
+and the translational index 2 constraints are their time derivatives, which contain the rotation of $J0$.
 
 **Equations for rotational part (`activeConnector = True`)**:
 
@@ -136,7 +129,8 @@ $$
 \end{aligned}
 $$ (eq-objectjointprismaticx-index3)
 
-The index 2 constraints follow from the derivative of {eq}`eq-objectjointprismaticx-index3` w.r.t., and are given in the C++ code.
+At velocity level (index 2), the equations are the time derivatives of {eq}`eq-objectjointprismaticx-index3`: the rows of their
+Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian).
 
 if `activeConnector = False`,
 

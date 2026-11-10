@@ -97,7 +97,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (1 open sub-step)
-  - RG11.6 Write the joints and their Jacobians on homogeneous transformations
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
 - **RG14** Uniform evaluation of symbolic systems on the CPU and the GPU
@@ -131,7 +130,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
-| RG11 | OPEN | 3 | Misc |
+| RG11 | OPEN | 2 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | CLOSED | 0 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
@@ -495,6 +494,8 @@ So two places switch by the force: ObjectContactCurveCircles, and GeneralContact
 Measurement first, then the code that is actually hot.
 
 Remark (maintainer 2026-11-09, from RG11.7, #2746): objects that compute from the coordinates passed in instead of reading them from their nodes would simplify automatic differentiation and could speed up the finite elements; done only as a measured performance step of this group, together with the numerical differentiation of the Jacobians (evaluation in the log of revision2026b step RG15.1).
+
+Remark (2026-11-10, #2884): the 3D joints have analytic derivatives since revision2026c step RG11.6.3; what remains of their Jacobian and reaction forces is the kinematics and Jacobians of the markers and their projection.
 
 ### **OPEN_RG5.1** Write a linear algebra micro-benchmark that every build carries
 
@@ -2008,10 +2009,12 @@ CLOSED 2026-11-09 (#625, #626, #627, #987, #2325; maintainer 2026-11-09: the con
 
 CLOSED 2026-11-10 (#3395; maintainer 2026-11-09): ObjectContactSphereSphere names the three cases by ContactImpactModel.Linear, HuntCrossley and GonthierCarvalhoMartins, SphereTorus, SphereTriangle and SphereCylinder name them and link the type. [log](exudynRevisionLog2026c.md#rg6-21)
 
-### **OPEN_RG11.6** Write the joints and their Jacobians on homogeneous transformations
+### **CLOSED_RG11.6** Write the joints and their Jacobians on homogeneous transformations
 
 #2884, with the documentation of the Jacobians (#845): the constraints as functions of $\Hm_0^{-1}\Hm_1$, one
 implementation for the joints instead of one each. From revision2026b group RG14.
+
+CLOSED 2026-11-10: RG11.6.3 and RG11.6.4 done; the 2D, sliding and rolling joints keep their own equations (RG11.6.2).
 
 #### **CLOSED_RG11.6.1** Document localPosition of the rigid body markers and rotationMarker0/1 of the joints and connectors as deprecated
 
@@ -2024,6 +2027,18 @@ CLOSED 2026-11-02 (#3179 resolved): the descriptions of rotationMarker0/1 of the
 #### **CLOSED_RG11.6.2** Evaluate the joints on homogeneous transformations and the documentation of their Jacobians
 
 CLOSED 2026-11-09, evaluation: the 3D joints already compute on the marker frames with Jacobians by automatic differentiation, their rotation equations are entries of A0^T A1 - #2884 is mostly there. Left: (1) one shared function of the relative frame for ObjectJointGeneric, JointRevoluteZ and JointPrismaticX (small to medium); (2) analytic Jacobians by the relative twist, a performance question for RG5; (3) the 2D, sliding and rolling joints stay; (4) #845, one section on how the joint Jacobians are obtained. **Recommendation: do (1) and (4) as two sub-steps, (2) as a remark in RG5, then close RG11.6 and #2884.** [log](exudynRevisionLog2026c.md#rg11-6-2)
+
+#### **CLOSED_RG11.6.3** Write the 3D joints on their relative frame with analytic derivatives
+
+#2884 (maintainer 2026-11-10: as recommended in RG11.6.2, with the analytic Jacobians of the RG5 remark).
+
+CLOSED 2026-11-10 (#2884 resolved): JointRelativeFrame.h - the equations of ObjectJointGeneric, JointRevoluteZ and JointPrismaticX once, with analytic rows by the variations of the marker frames and the velocity level as rows times twists; CObjectConstraint::ComputeConstraintEquationsRigidDerivatives, automatic differentiation as fallback; reaction forces half the time, a RevoluteZ chain with modified Newton 1.06 -> 0.85 s. [log](exudynRevisionLog2026c.md#rg11-6-3)
+
+#### **CLOSED_RG11.6.4** Document how the Jacobians of the constraints are obtained
+
+#845.
+
+CLOSED 2026-11-10 (#845 resolved): solver.md, section The Jacobian of a constraint; the velocity level on the pages of the three joints; systemJacobians.md. [log](exudynRevisionLog2026c.md#rg11-6-3)
 
 ### **CLOSED_RG11.7** Let objects compute from the coordinates passed in instead of reading their nodes
 

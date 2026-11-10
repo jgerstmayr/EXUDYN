@@ -168,8 +168,9 @@ center of a user mass point, is on a marker of the body (#3207).
 numbers and for recordings, an `esym.Function` of the derivative of the constraints by the 12 variations of the two
 frames - the rotation `(I + skew(theta)) A` written by its components, so that the terms of the variations,
 zero, go -, written by codeExport as a Python function of the frames and the parameters ('numpy' for numbers,
-'symbolic' for a recording, then `Optimize(level=2)`). The symbolic counterpart of the automatic differentiation of the
-C++ joints on the connector interface (`ComputeConstraintEquationsRigidDiff`). The recorded Jacobians of the joints
+'symbolic' for a recording, then `Optimize(level=2)`). The symbolic counterpart of the derivatives of the C++ joints on
+the connector interface by the same variations (`ComputeConstraintEquationsRigidDerivatives`, analytic, and
+`ComputeConstraintEquationsRigidDiff`, automatic, #2884). The recorded Jacobians of the joints
 have 55 instead of 34 operations (revolute), 112 instead of 85 (prismatic), 32 instead of 23 (distance) of the
 hand-written ones they replace, with the same results. A recording for a kind has parameters of run-time size, so the
 number of parameters is an argument there.

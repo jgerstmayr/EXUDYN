@@ -16550,12 +16550,6 @@ definitions.append(ItemDefinition(
                         \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, i_N, \pv_{par}) = \Null
                         $$
 
-    and the translational index 2 constraints read
-
-    $$
-                        \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, i_N, \pv_{par})= \Null
-                        $$
-
     and `iN` represents the itemNumber (=objectNumber).
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
@@ -16568,14 +16562,9 @@ definitions.append(ItemDefinition(
                         \end{aligned}
                         $$
 
-    and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
-
-    $$
-                        \begin{aligned}
-                        \LU{J0}{\Delta v_k} - UF_{t;k}(mbs, t, i_N, \pv_{par})  &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
-                              \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
-                        \end{aligned}
-                        $$
+    At velocity level (index 2), the equations are the time derivatives of the index 3 equations: the rows of their
+    Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian).
+    They do not contain the offset of the user function; with `offsetUserFunction_t`, the velocity level raises an error.
 
     <!--
     
@@ -16587,7 +16576,7 @@ definitions.append(ItemDefinition(
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
     Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointgeneric-definitionofquantities).
     
-    Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
+    Equations are given for the index 3 case; the index 2 case is their time derivative, see above.
     In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(mbs, t, \pv_{par}))$, in which the three components of 
     $UF_{3,4,5}$ are interpreted as Tait-Bryan angles that are added to the joint frame.
     
@@ -16728,12 +16717,9 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='ComputeConstraintEquationsRigid', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations',
             description=r'the algebraic equations from the kinematics of the two markers (#2745)'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
-            pythonName='ComputeConstraintEquationsRigidDiff', args='FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations',
-            description=r'the same equations with automatic differentiation, for C_q (#2745)'),
-        ItemFunction(type='template<class TReal> void', destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ComputeConstraintEquationsTemplate', args='FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations',
-            description=r'the equations of the joint, for Real and AutoDiff (#2745)'),
+        ItemFunction(type=Tbool, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigidDerivatives', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVector<maxConstraintEquations>& equations, RigidMarkersDerivatives& derivatives',
+            description=r'the equations with their analytic derivatives by the variations of the marker frames, on the relative frame of the joint frames, for C_q (#2884)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='ComputeJacobianAE_AE', args='ResizableMatrix& jacobian_AE',
             description=r'the derivative of the equations of the free axes by the Lagrange multipliers (#2745)'),
@@ -16862,7 +16848,8 @@ definitions.append(ItemDefinition(
     \end{aligned}
     $$ (eq-objectjointrevolutez-index3)
 
-    The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t. time, and are given in the C++ code.
+    At velocity level (index 2), the equations are the time derivatives of {eq}`eq-objectjointrevolutez-index3`: the rows of their
+    Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian).
     <!-- -->
     if `activeConnector = False`, 
 
@@ -16945,12 +16932,9 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='ComputeConstraintEquationsRigid', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations',
             description=r'the algebraic equations from the kinematics of the two markers (#2745)'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
-            pythonName='ComputeConstraintEquationsRigidDiff', args='FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations',
-            description=r'the same equations with automatic differentiation, for C_q (#2745)'),
-        ItemFunction(type='template<class TReal> void', destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ComputeConstraintEquationsTemplate', args='FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations',
-            description=r'the equations of the joint, for Real and AutoDiff (#2745)'),
+        ItemFunction(type=Tbool, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigidDerivatives', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVector<maxConstraintEquations>& equations, RigidMarkersDerivatives& derivatives',
+            description=r'the equations with their analytic derivatives by the variations of the marker frames, on the relative frame of the joint frames, for C_q (#2884)'),
         ItemFunctionDef('GetOutputVariableConnector'),
         ItemRequestedTypes('Marker', ['Position', 'Orientation']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
@@ -17071,15 +17055,7 @@ definitions.append(ItemDefinition(
                         \end{aligned}
                         $$
 
-    and the translational index 2 constraints read
-
-
-    $$
-                        \begin{aligned}
-                        \LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &= \Null \\
-                              \LU{J0}{\vv}_{z,m1} - \LU{J0}{\vv}_{z,m0} &= \Null
-                        \end{aligned}
-                        $$
+    and the translational index 2 constraints are their time derivatives, which contain the rotation of $J0$.
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Equations for rotational part (`activeConnector = True`)**:
@@ -17099,7 +17075,8 @@ definitions.append(ItemDefinition(
     \end{aligned}
     $$ (eq-objectjointprismaticx-index3)
 
-    The index 2 constraints follow from the derivative of {eq}`eq-objectjointprismaticx-index3` w.r.t., and are given in the C++ code.
+    At velocity level (index 2), the equations are the time derivatives of {eq}`eq-objectjointprismaticx-index3`: the rows of their
+    Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian).
     <!-- -->
     if `activeConnector = False`, 
 
@@ -17161,12 +17138,9 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='ComputeConstraintEquationsRigid', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations',
             description=r'the algebraic equations from the kinematics of the two markers (#2745)'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
-            pythonName='ComputeConstraintEquationsRigidDiff', args='FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations',
-            description=r'the same equations with automatic differentiation, for C_q (#2745)'),
-        ItemFunction(type='template<class TReal> void', destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ComputeConstraintEquationsTemplate', args='FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations',
-            description=r'the equations of the joint, for Real and AutoDiff (#2745)'),
+        ItemFunction(type=Tbool, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigidDerivatives', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVector<maxConstraintEquations>& equations, RigidMarkersDerivatives& derivatives',
+            description=r'the equations with their analytic derivatives by the variations of the marker frames, on the relative frame of the joint frames, for C_q (#2884)'),
         ItemFunctionDef('GetOutputVariableConnector'),
         ItemRequestedTypes('Marker', ['Position', 'Orientation']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,

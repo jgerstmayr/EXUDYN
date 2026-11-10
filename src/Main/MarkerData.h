@@ -341,6 +341,10 @@ typedef EXUmath::AutoDiff<2, Real> DRealCoordinateMarkers;
 //! factorODE2_t in the same directions
 typedef EXUmath::AutoDiff<12, Real> DRealRigidMarkers;
 
+//! the derivatives of the equations of a constraint on two rigid markers in the 12 directions of DRealRigidMarkers - the
+//! variations [dp0, dtheta0, dp1, dtheta1] of the two frames -, a row per equation (#2884)
+typedef ConstSizeMatrix<maxConstraintEquations * 12> RigidMarkersDerivatives;
+
 //! a matrix of Real in the number type of a connector's physics (#2745)
 template<class TReal>
 inline ConstSizeMatrixBase<TReal, 9> Matrix3DAs(const Matrix3D& matrix)

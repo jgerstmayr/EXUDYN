@@ -382,9 +382,9 @@
    "fingerprint": "b53d16e676ed"
   },
   "ObjectJointGeneric": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "558750414514"
+   "fingerprint": "3c2cc49b26bd"
   },
   "ObjectJointPrismatic2D": {
    "checked": "2026-11-08",
@@ -392,9 +392,9 @@
    "fingerprint": "a0b5c45bf4fe"
   },
   "ObjectJointPrismaticX": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "3fc33042157b"
+   "fingerprint": "55c429c746b2"
   },
   "ObjectJointRevolute2D": {
    "checked": "2026-11-08",
@@ -402,9 +402,9 @@
    "fingerprint": "49505848e157"
   },
   "ObjectJointRevoluteZ": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-10",
    "by": "Claude-JG",
-   "fingerprint": "c4cfd7088766"
+   "fingerprint": "b3c5ef0d6005"
   },
   "ObjectJointRollingDisc": {
    "checked": "2026-11-06",

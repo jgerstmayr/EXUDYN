@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.524.dev1
+- Exudyn version = 1.13.526.dev1
 - last change = 2026-11-10
 - Number of issues = 3400
-- Number of resolved issues = 3301 (524 in current version)
+- Number of resolved issues = 3303 (526 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9104,9 +9104,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
   - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
   - date raised: 2026-10-09
-- `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
-  - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
-  - date raised: 2026-10-07
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` the member functions an item must provide, checked at compile time (#2866)
   - description: Successor of \#2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -\> required functions, generated static\_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.
   - date raised: 2026-10-05
@@ -9325,10 +9322,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#859)
   - description: split searchtree into regions, proportional to number of threads (FinalizeContact); use 2 splits in x, 2 splits in y, etc. until uneven number left; add class Box3Dindexed:Box3D, which adds index for region in searchtree; add access in GeneralContact for adding bounding box, creating the index; index is -1, if overlapping, filled in serially
   - date raised: 2022-01-13
-- `DOCU` `HIGH EFF` Jacobian documentation (#845)
-  - description: add documentation to object and connector jacobians
-  - **remarks:** planned as revision2026b step RG14.3 (triage 2026-10-07)
-  - date raised: 2021-12-23
 - `EXTENSION` `HIGH EFF` GeneralContact regularized friction (#841)
   - description: extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs
   - date raised: 2021-12-19

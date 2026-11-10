@@ -130,7 +130,8 @@ $$
 \end{aligned}
 $$ (eq-objectjointrevolutez-index3)
 
-The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t. time, and are given in the C++ code.
+At velocity level (index 2), the equations are the time derivatives of {eq}`eq-objectjointrevolutez-index3`: the rows of their
+Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian).
 
 if `activeConnector = False`,
 

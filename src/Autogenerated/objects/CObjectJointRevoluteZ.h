@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-08  22:55:36 (last modified)
+* @date         2026-11-10  07:19:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,11 +132,8 @@ public: // AUTO:
     //! AUTO:  the algebraic equations from the kinematics of the two markers (#2745)
     virtual void ComputeConstraintEquationsRigid(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const override;
 
-    //! AUTO:  the same equations with automatic differentiation, for C_q (#2745)
-    virtual void ComputeConstraintEquationsRigidDiff(FlatArray<const MarkerRigid<DRealRigidMarkers>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const override;
-
-    //! AUTO:  the equations of the joint, for Real and AutoDiff (#2745)
-    template<class TReal> void ComputeConstraintEquationsTemplate(FlatArray<const MarkerRigid<TReal>> markers, const LinkedDataVector& lambda, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const;
+    //! AUTO:  the equations with their analytic derivatives by the variations of the marker frames, on the relative frame of the joint frames, for C_q (#2884)
+    virtual bool ComputeConstraintEquationsRigidDerivatives(FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVector<maxConstraintEquations>& equations, RigidMarkersDerivatives& derivatives) const override;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;

@@ -21,6 +21,12 @@ that holds the measured facts and the decisions.
 the defaults; a parameter the item does not have raises a `ValueError` instead of being ignored. `item.visualization`
 is always the `V` class (#2342).
 
+**Faster 3D joints.** `ObjectJointGeneric`, `ObjectJointRevoluteZ` and `ObjectJointPrismaticX` compute their equations
+on the relative frame of their joint frames with analytic derivatives, see {ref}`sec-constraintjacobian`; their
+reaction forces take half the time, a chain of revolute joints with modified Newton about 20 % less in all. The results
+are the same. The velocity level of the alternative constraints of ObjectJointGeneric is now the time derivative of
+these constraints (#2884).
+
 **Reproducible results on every platform.** The C++ code computes `sin`, `exp`, `atan2`, ... with its own portable
 functions instead of those of the platform's library, which round some results differently; `exudyn.cMath` gives the
 same functions to Python, and the test models use it for their initial values. The test models give the same results

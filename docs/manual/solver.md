@@ -142,8 +142,9 @@ the item:
   rolling disc do -, chained with the Jacobians of the markers. The contacts with friction and the rolling disc also
   take the derivative of the marker velocities by the coordinates. Differentiating by the marker kinematics instead
   of the system coordinates leaves the system state untouched, so that connectors are computed in parallel;
-- **constraints** have their Jacobians analytically, as have the pressure equations of ConnectorHydraulicActuatorSimple
-  (#3214);
+- **constraints** differentiate their equations by the kinematics of their markers, see
+  {ref}`sec-constraintjacobian`; the pressure equations of ConnectorHydraulicActuatorSimple have their Jacobian
+  analytically (#3214);
 - the other items are **differentiated numerically by the system**, by their own coordinates - the rotation
   coordinates of the Lie group nodes by the composition of the rotation -: ObjectFFRF, ObjectFFRFreducedOrder with a
   forceUserFunction, on Lie group nodes or with `numericalJacobian`, ObjectKinematicTree with a floating base or a
@@ -187,6 +188,50 @@ sphere of the parameters.
 
 The Python interface of the solvers gives the Jacobian and its parts, e.g. `ComputeJacobianODE2RHS`,
 `ComputeJacobianODE1RHS` and `ComputeJacobianAE` of a solver (see {ref}`sec-mainsolverimplicitsecondorder`).
+
+(sec-constraintjacobian)=
+#### The Jacobian of a constraint
+
+A constraint on two markers writes its equations $\gv$ as a function of the kinematics of the markers: the positions
+$\pv_0$, $\pv_1$ and, for rigid markers, the rotation matrices $\Am_0$, $\Am_1$. Its Jacobian is the derivative of
+$\gv$ by this kinematics, chained with the Jacobians of the markers (#845),
+
+$$
+  \Cm_{\qv} = \sum_{k=0}^{1} \left( \frac{\partial \gv}{\partial \pv_k}\,\Jm_{pos,k}
+    + \frac{\partial \gv}{\partial \ttheta_k}\,\Jm_{rot,k} \right) ,
+$$
+in which $\ttheta_k$ are the global rotation increments of marker $k$, $\delta\Am_k = \tilde{\ttheta}_k \Am_k$, and
+$\Jm_{pos,k}$, $\Jm_{rot,k}$ the position and rotation Jacobians of the marker by the coordinates it acts on. The
+reaction forces $\Cm_{\qv}\tp\tlambda$ are formed per marker as a force $(\partial\gv/\partial\pv_k)\tp\tlambda$ and a
+torque $(\partial\gv/\partial\ttheta_k)\tp\tlambda$, which the marker projects as a load, without forming
+$\Cm_{\qv}$. On Euler parameters, the derivative along the parameters is added to the rows of the equations.
+
+**The 3D joints** `ObjectJointGeneric`, `ObjectJointRevoluteZ` and `ObjectJointPrismaticX` constrain components of the
+relative frame of their joint frames J1 in J0 (#2884), and their derivatives are analytic. With the axes
+$\tv_{i0}$ of J0 (the columns of $\Am_0$), $\tv_{j1}$ of J1, and $\dv = \pv_1 - \pv_0$:
+
+- a translation constrained in J0, $g = \tv_{i0}\tp \dv$: $\delta g = \tv_{i0}\tp(\delta\pv_1 - \delta\pv_0)
+  + (\tv_{i0}\times\dv)\tp \delta\ttheta_0$; if all three translations are constrained, $\gv = \dv$ in global
+  coordinates;
+- a rotation, $g = \tv_{i0}\tp \tv_{j1}$, an entry of $\Am_0\tp\Am_1$: $\delta g = (\tv_{i0}\times\tv_{j1})\tp
+  (\delta\ttheta_0 - \delta\ttheta_1)$;
+- the alternative constraints of ObjectJointGeneric, $g = \tv_{a0}\tp(\tv_{b1}\times\tv_{c0}) - 1$:
+  $\delta g = \left(\tv_{b1}\times(\tv_{c0}\times\tv_{a0})\right)\tp(\delta\ttheta_1 - \delta\ttheta_0)$.
+
+The equations at velocity level, for the index 2 solvers, are the same rows times the velocities $\vv_k$ and the global
+angular velocities $\tomega_k$ of the markers,
+
+$$
+  \dot g = \sum_{k=0}^{1} \left( \frac{\partial g}{\partial\pv_k}\,\vv_k + \frac{\partial g}{\partial\ttheta_k}\,\tomega_k \right) .
+$$
+
+**The other constraints** on the connector interface - `ObjectJointSpherical`, `ObjectConnectorDistance`,
+`ObjectJointRevolute2D`, `ObjectJointPrismatic2D`, `ObjectConnectorCoordinate` - write their equations once, as a
+template, and their derivatives come from automatic differentiation of it; `ObjectJointUser` takes them from its
+`jacobianUserFunction`. `ObjectJointSliding`, `ObjectJointSliding2D`, `ObjectJointALEMoving2D`,
+`ObjectJointRollingDisc`, `ObjectConnectorCoordinateVector` and `ObjectGenericDAE` compute their Jacobians themselves,
+from the data of their markers. `mbs.ComputeItem(object, exu.ComputeItemType.ConstraintJacobian)` gives the Jacobian
+of a constraint, and `exudyn.systemUtilities.NumericalJacobian` its numerical derivative to compare with.
 
 ## General solver structure
 

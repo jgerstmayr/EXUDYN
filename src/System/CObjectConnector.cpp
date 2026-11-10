@@ -720,36 +720,40 @@ void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryCo
 	localAE.CopyFrom(equations);
 }
 
-//! the equations of a constraint on rigid markers with automatic differentiation in the 12 directions of RG14.2.8.1 -
-//! per marker 3 translations and 3 global rotation increments, A(dtheta) = (I + skew(dtheta)) A; with Jacobians, the
-//! marker data is in temp.markerTemp, else the frames come from GetKinematicsRigid; the frames into realKinematics if given
-static void SeedConstraintEquationsRigid(const CSystemData& cSystemData, TemporaryComputationData& temp,
-	const CObjectConstraint& constraint, bool withJacobians, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations,
-	Index* numberOfCoordinates = nullptr, MarkerRigid<Real>* realKinematics = nullptr)
+//! the equations of a constraint on rigid markers at position level and their derivatives in the 12 directions of
+//! RG14.2.8.1 - per marker 3 translations and 3 global rotation increments, A(dtheta) = (I + skew(dtheta)) A -, a row per
+//! equation: analytic where the constraint has them (ComputeConstraintEquationsRigidDerivatives, #2884), else by automatic
+//! differentiation of ComputeConstraintEquationsRigidDiff; with Jacobians, the marker data is in temp.markerTemp, else the
+//! frames come from GetKinematicsRigid; the frames into realKinematics if given
+static void ConstraintEquationsDerivativesRigid(const CSystemData& cSystemData, TemporaryComputationData& temp,
+	const CObjectConstraint& constraint, bool withJacobians, ConstSizeVector<maxConstraintEquations>& equations,
+	RigidMarkersDerivatives& derivatives, Index* numberOfCoordinates = nullptr, MarkerRigid<Real>* realKinematics = nullptr)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
-	MarkerRigid<DRealRigidMarkers> kinematics[2];
+	MarkerRigid<Real> kinematics[2];
 	for (Index k = 0; k < 2; k++)
 	{
 		const CMarker* marker = cSystemData.GetCMarkers()[markerNumbers[k]];
-		Vector3D position;
-		Matrix3D A;
 		if (withJacobians)
 		{
-			MarkerRigid<Real> markerKinematics;
-			marker->GetKinematicsJacobianRigid(cSystemData, markerKinematics, temp.markerTemp[k]);
-			position = markerKinematics.frame.GetTranslation();
-			A = markerKinematics.frame.GetRotation();
-			if (realKinematics) { realKinematics[k] = markerKinematics; }
+			marker->GetKinematicsJacobianRigid(cSystemData, kinematics[k], temp.markerTemp[k]);
 		}
 		else
 		{
-			MarkerRigid<Real> frame;
-			Index n = marker->GetKinematicsRigid(cSystemData, frame, temp.markerTemp[k]);
+			Index n = marker->GetKinematicsRigid(cSystemData, kinematics[k], temp.markerTemp[k]);
 			if (numberOfCoordinates) { numberOfCoordinates[k] = n; }
-			position = frame.frame.GetTranslation();
-			A = frame.frame.GetRotation();
 		}
+		if (realKinematics) { realKinematics[k] = kinematics[k]; }
+	}
+	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
+	const Real t = cSystemData.GetCData().currentState.time;
+	if (constraint.ComputeConstraintEquationsRigidDerivatives(kinematics, lambda, t, equations, derivatives)) { return; }
+
+	MarkerRigid<DRealRigidMarkers> kinematicsAD[2];
+	for (Index k = 0; k < 2; k++)
+	{
+		const Vector3D& position = kinematics[k].frame.GetTranslation();
+		const Matrix3D& A = kinematics[k].frame.GetRotation();
 		const int offset = 6 * (int)k;
 		SlimVectorBase<DRealRigidMarkers, 3> positionAD;
 		EXUmath::SeedAutoDiff(positionAD, position, offset);
@@ -767,12 +771,20 @@ static void SeedConstraintEquationsRigid(const CSystemData& cSystemData, Tempora
 				rotation(m2, j).DValue(offset + 3 + (int)m) = A(m1, j);
 			}
 		}
-		kinematics[k].frame = HomogeneousTransformationBase<DRealRigidMarkers>(rotation, positionAD);
-		kinematics[k].velocity.SetAll(0.); //position level: the equations do not read them
-		kinematics[k].angularVelocityLocal.SetAll(0.);
+		kinematicsAD[k].frame = HomogeneousTransformationBase<DRealRigidMarkers>(rotation, positionAD);
+		kinematicsAD[k].velocity.SetAll(0.); //position level: the equations do not read them
+		kinematicsAD[k].angularVelocityLocal.SetAll(0.);
 	}
-	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
-	constraint.ComputeConstraintEquationsRigidDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, equations);
+	ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equationsAD;
+	constraint.ComputeConstraintEquationsRigidDiff(kinematicsAD, lambda, t, equationsAD);
+	const Index n = equationsAD.NumberOfItems();
+	equations.SetNumberOfItems(n);
+	derivatives.SetNumberOfRowsAndColumns(n, 12);
+	for (Index r = 0; r < n; r++)
+	{
+		equations[r] = equationsAD[r].Value();
+		for (Index j = 0; j < 12; j++) { derivatives(r, j) = equationsAD[r].DValue((int)j); }
+	}
 }
 
 //! the equations of a constraint on coordinate markers (#2745)
@@ -912,16 +924,17 @@ void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, Temporary
 	}
 }
 
-//! C_q = [dg/d(p,theta)_k [J_pos,k; J_rot,k]] of a constraint on rigid markers, the derivatives by automatic
-//! differentiation of the constraint's own equations (#2745); the derivative along the Euler parameters of the markers
+//! C_q = [dg/d(p,theta)_k [J_pos,k; J_rot,k]] of a constraint on rigid markers, the derivatives of the constraint's own
+//! equations, analytic or by automatic differentiation (#2745, #2884); the derivative along the Euler parameters of the markers
 //! which have one, dg radial_q,k from the equations at the frame moved by eps along it, into
 //! temp.localJacobianAE_ODE2radial (#3201)
 void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	ResizableMatrix& jacobian)
 {
-	ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
+	ConstSizeVector<maxConstraintEquations> equations;
+	RigidMarkersDerivatives derivatives;
 	MarkerRigid<Real> kinematics[2];
-	SeedConstraintEquationsRigid(cSystemData, temp, constraint, true, equations, nullptr, kinematics);
+	ConstraintEquationsDerivativesRigid(cSystemData, temp, constraint, true, equations, derivatives, nullptr, kinematics);
 	const Index n0 = temp.markerTemp[0].positionJacobian.NumberOfColumns();
 	const Index n1 = temp.markerTemp[1].positionJacobian.NumberOfColumns();
 	jacobian.SetNumberOfRowsAndColumns(equations.NumberOfItems(), n0 + n1);
@@ -935,8 +948,8 @@ void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryCom
 				Real value = 0.;
 				for (Index c = 0; c < 3; c++)
 				{
-					value += equations[r].DValue((int)(6 * k + c)) * markerData.positionJacobian(c, j)
-						+ equations[r].DValue((int)(6 * k + 3 + c)) * markerData.rotationJacobian(c, j);
+					value += derivatives(r, 6 * k + c) * markerData.positionJacobian(c, j)
+						+ derivatives(r, 6 * k + 3 + c) * markerData.rotationJacobian(c, j);
 				}
 				jacobian(r, (k == 0 ? 0 : n0) + j) = value;
 			}
@@ -960,7 +973,7 @@ void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryCom
 		constraint.ComputeConstraintEquationsRigid(perturbed, lambda, cSystemData.GetCData().currentState.time, false, equations1);
 		for (Index r = 0; r < equations.NumberOfItems(); r++)
 		{
-			const Real derivative = (equations1[r] - equations[r].Value()) / radialEpsilon;
+			const Real derivative = (equations1[r] - equations[r]) / radialEpsilon;
 			for (Index j = 0; j < n; j++) { radialJacobian(r, (k == 0 ? 0 : n0) + j) += derivative * radial_q[j]; }
 		}
 	}
@@ -1015,9 +1028,10 @@ void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, Tem
 void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	const Vector& reactionForces, Vector& localODE2)
 {
-	ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
+	ConstSizeVector<maxConstraintEquations> equations;
+	RigidMarkersDerivatives derivatives;
 	Index n[2];
-	SeedConstraintEquationsRigid(cSystemData, temp, constraint, false, equations, n); //GetKinematicsRigid prepares temp for the projection
+	ConstraintEquationsDerivativesRigid(cSystemData, temp, constraint, false, equations, derivatives, n); //GetKinematicsRigid prepares temp for the projection
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[constraint.GetObjectNumber()];
 	const CMarker* marker[2] = { cSystemData.GetCMarkers()[markerNumbers[0]], cSystemData.GetCMarkers()[markerNumbers[1]] };
@@ -1031,8 +1045,8 @@ void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, Tempor
 		{
 			for (Index c = 0; c < 3; c++)
 			{
-				force[c] += reactionForces[ltgAE[r]] * equations[r].DValue((int)(6 * k + c));
-				torque[c] += reactionForces[ltgAE[r]] * equations[r].DValue((int)(6 * k + 3 + c));
+				force[c] += reactionForces[ltgAE[r]] * derivatives(r, 6 * k + c);
+				torque[c] += reactionForces[ltgAE[r]] * derivatives(r, 6 * k + 3 + c);
 			}
 		}
 		LinkedDataVector localODE2k(localODE2, k == 0 ? 0 : n[0], n[k]);

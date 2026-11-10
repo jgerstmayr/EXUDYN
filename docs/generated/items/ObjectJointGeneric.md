@@ -116,12 +116,6 @@ $$
 \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, i_N, \pv_{par}) = \Null
 $$
 
-and the translational index 2 constraints read
-
-$$
-\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, i_N, \pv_{par})= \Null
-$$
-
 and `iN` represents the itemNumber (=objectNumber).
 
 If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
@@ -134,21 +128,16 @@ $$
 \end{aligned}
 $$
 
-and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
-
-$$
-\begin{aligned}
-\LU{J0}{\Delta v_k} - UF_{t;k}(mbs, t, i_N, \pv_{par})  &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
-\lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
-\end{aligned}
-$$
+At velocity level (index 2), the equations are the time derivatives of the index 3 equations: the rows of their
+Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian).
+They do not contain the offset of the user function; with `offsetUserFunction_t`, the velocity level raises an error.
 
 **Equations for rotational part (`activeConnector = True`)**:
 
 The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
 Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointgeneric-definitionofquantities).
 
-Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
+Equations are given for the index 3 case; the index 2 case is their time derivative, see above.
 In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(mbs, t, \pv_{par}))$, in which the three components of
 $UF_{3,4,5}$ are interpreted as Tait-Bryan angles that are added to the joint frame.
 
