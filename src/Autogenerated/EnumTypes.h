@@ -431,6 +431,7 @@ enum class LinearSolverType {
     EigenSparse = 1 << 1,          //!< use sparse matrices and according solvers; additional overhead for very small multibody systems; specifically, memory allocation is performed during a factorization process
     EigenSparseSymmetric = 1 << 2, //!< use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite
     EigenDense = 1 << 3,           //!< use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolver.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!); NOTE: in the default partial pivoting mode a singular matrix is NOT detected - Eigen provides no invertibility check there - so the solver continues with an undefined result instead of reporting a singular jacobian; use EXUdense or EigenSparse if that must be reported, or full pivot (ignoreSingularJacobian=True), which resolves the singular system by least squares on purpose
+    PardisoMKL = 1 << 4,           //!< use sparse matrices as EigenSparse, factorized and solved by Intel MKL PARDISO, which the user installs into the Python environment (pip install mkl, or conda install mkl; x86-64 only) and which Exudyn loads at run time; faster than EigenSparse for frequent factorizations of large systems (full Newton, contact), slower in the back-substitution; the residual is checked after the first factorization of a pattern and periodically, and a failure falls back to SparseLU with a warning; exudyn.special.solver.PardisoInfo() tells whether MKL is found, and exudyn.special.solver holds the settings; EXPERIMENTAL
     Dense = (1 << 0) + (1 << 3)    //!< any dense solver
 };
 
@@ -444,6 +445,7 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
     case LinearSolverType::EigenSparse: return os << "EigenSparse";
     case LinearSolverType::EigenSparseSymmetric: return os << "EigenSparseSymmetric";
     case LinearSolverType::EigenDense: return os << "EigenDense";
+    case LinearSolverType::PardisoMKL: return os << "PardisoMKL";
     case LinearSolverType::Dense: return os << "Dense";
     default: return os << "LinearSolverType::invalid";
     }

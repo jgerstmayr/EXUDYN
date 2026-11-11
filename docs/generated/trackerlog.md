@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.563.dev1
+- Exudyn version = 1.13.567.dev1
 - last change = 2026-11-11
-- Number of issues = 3430
-- Number of resolved issues = 3340 (563 in current version)
+- Number of issues = 3435
+- Number of resolved issues = 3344 (567 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,8 +9039,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` The threads during the sparse factorization: Exudyn's workers spin while the factorization runs, and cannot be given to an external solver (#3428)
-  - description: The workers of ExuThreading::TaskManager wait for jobs by spinning with yield, also during the factorization of the system Jacobian, which is serial in Eigen; SuspendWorkers and ResumeWorkers are empty stubs. A multi-threaded external solver (MKL PARDISO with OpenMP or TBB threads) would compete with them for the cores, and MKL cannot use Exudyn's threads. Options (docs/dev/design/sparseSolvers.md section 5): the workers sleep on a condition variable during a factorization (SuspendWorkers/ResumeWorkers implemented, the wake-up measured); and models of independent subsystems factorized and solved per connected component in a ParallelFor on Exudyn's own threads, which also parallelizes the back-substitution where a level-scheduled solve cannot (chains have about 3 unknowns per level).
+- `IDEA` `HIGH EFF` `raised by: Claude-JG` Solve the systems of one SystemContainer in parallel (#3433)
+  - description: A model of independent parts can be split by the user into several MainSystems of one SystemContainer; they are solved one after the other today. Solving them in parallel, each on its own thread with its own solver, needs the shared resources of the SystemContainer (renderer, visualization data, Python user functions and the GIL, output files, the TaskManager) to be sorted out first; a study of what is shared, then a design.
+  - date raised: 2026-11-11
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` A parallel forward and backward substitution of the sparse solver with a nested-dissection ordering (#3432)
+  - description: With modified Newton and a Jacobian that hardly changes, the back-substitution is done far more often than the factorization; with the minimum-degree or COLAMD orderings of today, chains have 2-7 unknowns per level of the triangular solves, but a nested-dissection ordering gives speedup bounds of 18-60 at about twice the fill; an ordering by nested dissection (without METIS), the factors in a plain format after each factorization and the substitution by subtrees of the elimination tree on Exudyn's threads, measured against the serial solve of SparseLU (design docs/dev/design/sparseSolvers.md section 4).
   - date raised: 2026-11-11
 - `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
   - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.

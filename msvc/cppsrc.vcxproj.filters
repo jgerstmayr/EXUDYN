@@ -255,6 +255,9 @@
     <ClCompile Include="..\src\Linalg\LinearSolver.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Linalg\PardisoMKL.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Main\CSystem.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>
@@ -639,6 +642,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\LinearSolver.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Linalg\PardisoMKL.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Solver\CSolver.h">

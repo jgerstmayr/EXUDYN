@@ -1,0 +1,15 @@
+{
+  "number": 3434,
+  "title": "Measure what linearSolver.reuseAnalyzedPattern gives in the performance models and the test models with sparse solvers",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "Before making the reuse of the analyzed pattern of SparseLU the default: the wall time of every performance model and test model that uses EigenSparse, with the flag off and on (the faster of two runs each), and whether the results change.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 17:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Measured: linearSolver.reuseAnalyzedPattern=True leaves the performance models with sparse solvers unchanged and saves 1.6 % on the test models with sparse solvers (at most 13 %); it stays off by default.",
+  "resolvedInVersion": "1.13.567"
+}

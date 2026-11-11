@@ -405,6 +405,7 @@ void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #include "Main/Experimental.h"
+#include "Linalg/PardisoMKL.h"	//exudyn.special.solver.PardisoInfo (#3431)
 #include "Utilities/MathFunctions.h"	//exudyn.experimental.EvaluateMathFunction (#2947)
 #include "Pymodules/PyCUtilities.h"	//exudyn.cUtilities (#2960)
 #include "Pymodules/PyKinematicChain.h"	//exudyn.cUtilities.KinematicChain (#3259)
@@ -650,6 +651,24 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("throwErrorWithCtrlC", &PySpecialSolver::throwErrorWithCtrlC)
 		.def_readwrite("multiThreadingLoadBalancing", &PySpecialSolver::multiThreadingLoadBalancing)
 		.def_readwrite("initialConstraintsViolations", &PySpecialSolver::initialConstraintsViolations)
+		.def_readwrite("suspendWorkersDuringFactorization", &PySpecialSolver::suspendWorkersDuringFactorization)
+		.def_readwrite("suspendWorkersMinimumSize", &PySpecialSolver::suspendWorkersMinimumSize)
+		.def_readwrite("pardisoNumberOfThreads", &PySpecialSolver::pardisoNumberOfThreads)
+		.def_readwrite("pardisoCheckPeriod", &PySpecialSolver::pardisoCheckPeriod)
+		.def_readwrite("pardisoResidualTolerance", &PySpecialSolver::pardisoResidualTolerance)
+		.def_readwrite("pardisoFallback", &PySpecialSolver::pardisoFallback)
+		.def_readwrite("pardisoParameters", &PySpecialSolver::pardisoParameters)
+		.def_readwrite("pardisoFallbacks", &PySpecialSolver::pardisoFallbacks)
+		.def_static("PardisoInfo", []() {
+			std::string message;
+			bool available = PardisoLibrary::Load(message);
+			py::dict d;
+			d["available"] = available;
+			d["library"] = PardisoLibrary::LibraryPath();
+			d["version"] = PardisoLibrary::Version();
+			d["message"] = message;
+			return d;
+			}, "whether Intel MKL PARDISO (LinearSolverType.PardisoMKL) is available: a dict with available, library, version and message (#3431)")
 
 		//representation:
 		.def("__repr__", [](const PySpecialSolver& item) {

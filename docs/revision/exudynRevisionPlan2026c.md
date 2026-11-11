@@ -68,7 +68,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
-  - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution (5 open sub-steps)
+  - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution (1 open sub-step)
+  - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -110,7 +111,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 15 | Performance |
+| RG5 | OPEN | 12 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -648,29 +649,39 @@ From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a perf
 
 Maintainer 2026-11-11: MKL installed by the user (e.g. pip) and used by the C++ through the API, not in the wheel, for the performance gains; the problems of PARDISO determined in an extra study - possibly the format, or other causes; resolvable at least for some classes of problems; the solver checked at least at one of the first steps that it produces a useful factorization. Exudyn's threads cannot be passed to the solvers: for a large system the Exudyn threads idle or stopped, the factorization multithreaded, then back to the Exudyn threads - ideally the solver takes the existing threads. The back-substitution is serial and done much more often than the factorization - whether it can be done by hand at least for Eigen. Design note: [sparseSolvers.md](../dev/design/sparseSolvers.md).
 
+Maintainer 2026-11-11, later: the sleeping workers cost something for very small thread tasks, and how long they sleep must be decided (as in NGsolve's TaskManager), so at least a setting switches them on and off - exudyn.special for such linear algebra settings during testing; with a constant step size the Jacobian hardly changes in realistic models, so the back-substitutions are many and a parallel one makes sense; RG5.9.5 closed, not done: realistic models (a large ropeway, a complex machine) have no decoupled components, and a user who has them can split them into systems of one SystemContainer - solving those in parallel is a step of its own (RG5.10), critical for the resources shared in the SystemContainer; RG5.9.6 to be measured on the performance tests and the test models with sparse solvers (expected to help little); RG5.9.2-RG5.9.4 now.
+
 #### **CLOSED_RG5.9.1** Design and evaluate MKL PARDISO at run time, the threads of the factorization and a parallel back-substitution
 
 #3427. CLOSED 2026-11-11 (#3427): docs/dev/design/sparseSolvers.md - MKL loaded at run time from the environment (no build dependency), the solver type PardisoMKL with Eigen's matrix passed without a copy, a residual check and the fallback to SparseLU, the settings; the study of the failures (half of the stored entries are numerical noise, condition up to 2e11); the back-substitution has about 3 unknowns per level in chains - not parallelizable by levels; the workers sleeping during a factorization, and independent subsystems on Exudyn's own threads. [log](exudynRevisionLog2026c.md#rg5-9-1)
 
-#### **OPEN_RG5.9.2** Study the failures of PARDISO on Exudyn's Jacobians: the classes and settings for which it is reliable
+#### **CLOSED_RG5.9.2** Study the failures of PARDISO on Exudyn's Jacobians: the classes and settings for which it is reliable
 
-Hypotheses H1-H6 of sparseSolvers.md section 3 (format, scaling, conditioning, numerical noise, saddle-point pivots, settings) on exported Jacobians of ODE models, constrained test models and the extreme chain; result: the classes and the settings, the default iparm of the solver type.
+#3430. CLOSED 2026-11-11 (#3430): 18 Jacobians, 14 settings - the failures come from the METIS ordering with the parallel or two-level factorization; minimum degree with the one-level factorization solved all on 1-16 threads to SuperLU's residual; format, noise, scaling and the zero diagonal refuted; nested dissection would parallelize the back-substitution (RG5.9.7). [log](exudynRevisionLog2026c.md#rg5-9-2)
 
-#### **OPEN_RG5.9.3** Let the workers of the TaskManager sleep during a factorization
+#### **CLOSED_RG5.9.3** Let the workers of the TaskManager sleep during a factorization
 
-#3428: SuspendWorkers and ResumeWorkers implemented (a condition variable after the spin loop), called around factorizations above a size; the wake-up measured; option A of sparseSolvers.md section 5.
+#3428. CLOSED 2026-11-11 (#3428): SuspendWorkers/ResumeWorkers with a condition variable, switched by exu.special.solver.suspendWorkersDuringFactorization (default False) above suspendWorkersMinimumSize; full Newton on 8 threads 12-14 % faster with a third of the CPU time. [log](exudynRevisionLog2026c.md#rg5-9-2)
 
-#### **OPEN_RG5.9.4** Add the linear solver type PardisoMKL, loaded at run time, with the residual check and the fallback
+#### **CLOSED_RG5.9.4** Add the linear solver type PardisoMKL, loaded at run time, with the residual check and the fallback
 
-sparseSolvers.md section 2; after RG5.9.2 and RG5.9.3; a test model that runs where MKL is available.
+#3431. CLOSED 2026-11-11 (#3431): LinearSolverType.PardisoMKL (experimental), mkl_rt loaded at run time, the analysis on the union of the patterns, every MKL call on a thread of its own (PARDISO changed the caller's registers), the residual check and the fallback, settings in exu.special.solver; faster only for full Newton on large systems with threads. [log](exudynRevisionLog2026c.md#rg5-9-2)
 
-#### **OPEN_RG5.9.5** Factorize and solve independent subsystems in parallel on Exudyn's threads
+#### **CLOSED_RG5.9.5** Factorize and solve independent subsystems in parallel on Exudyn's threads
 
-#3428: the connected components of the Jacobian, each with its own SparseLU in a ParallelFor, also for the back-substitution; option C of sparseSolvers.md section 5.
+#3428. CLOSED 2026-11-11, not done (maintainer): realistic models have no decoupled components; a user who has them splits them into systems of one SystemContainer, solved in parallel by RG5.10.
 
-#### **OPEN_RG5.9.6** Reuse the analyzed pattern of SparseLU by default, with a pattern independent of numerical zeros
+#### **CLOSED_RG5.9.6** Reuse the analyzed pattern of SparseLU by default, with a pattern independent of numerical zeros
 
-linalgBenchmark.md section 3.9 (20-31 % of the factorization where the pattern stays), sparseSolvers.md section 1 (half of the stored entries are noise and come and go).
+#3434. CLOSED 2026-11-11 (#3434), not the default: on the 5 performance models with sparse solvers the total time is the same (23.12 s both), on 53 test models 1.6 % less (20.73 -> 20.40 s), at most 13 % on single constrained or beam models; the results of the performance models are unchanged to 2e-12. [log](exudynRevisionLog2026c.md#rg5-9-2)
+
+#### **OPEN_RG5.9.7** Substitute forward and backward in parallel on Exudyn's threads with a nested-dissection ordering
+
+#3432. The ordering by nested dissection gives the triangular solves of chains 40-100 levels instead of 1000-4500, and speedup bounds of 18-60 at about twice the fill (sparseSolvers.md section 4); an ordering without METIS, the factors in a plain format after each factorization, the substitution by subtrees of the elimination tree; measured against the serial solve of SparseLU on the chains and on a model with constant Jacobian and modified Newton.
+
+### **OPEN_RG5.10** Solve the systems of one SystemContainer in parallel, each on its own thread
+
+#3433. Approved by the maintainer 2026-11-11 (in place of RG5.9.5): a model of independent parts is split by the user into systems of one SystemContainer; first a study of what the systems share (renderer and visualization data, Python user functions and the GIL, output files, the TaskManager, pySpecial and other globals), then a design.
 
 ## **CLOSED_RG6** Graphics and rendering
 

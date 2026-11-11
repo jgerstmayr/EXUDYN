@@ -37,6 +37,9 @@ namespace ExuThreading {
 	int TaskManager::max_threads = std::thread::hardware_concurrency();
 	std::atomic<bool> TaskManager::isRunning{ false };
 	std::atomic<bool> TaskManager::jobIsRunning{ false };
+	std::atomic<bool> TaskManager::workersSuspended{ false };
+	std::mutex TaskManager::suspendMutex;
+	std::condition_variable TaskManager::suspendCondition;
 	//bool TaskManager::isRunning = false;
 	bool TaskManager::loadBalancing = false;
 
@@ -63,8 +66,18 @@ namespace ExuThreading {
 		}
 	}
 
+	void TaskManager::ResumeWorkers()
+	{
+		{
+			std::lock_guard<std::mutex> lock(suspendMutex);
+			workersSuspended.store(false, std::memory_order_seq_cst);
+		}
+		suspendCondition.notify_all();
+	}
+
 	void TaskManager::CreateJob(const std::function<void(TaskInfo&)>& afunc, Index numberOfJobTasks)
 	{
+		if (WorkersSuspended()) { ResumeWorkers(); } //a job never waits for workers that sleep (#3428)
 		func = &afunc;
 		ex = nullptr;
 		jobIsRunning.store(true, MEMORY_ORDER_SYNCSTORE);
@@ -148,6 +161,13 @@ namespace ExuThreading {
 			while (sync[thread_id]->value.load(MEMORY_ORDER_SYNCLOAD) && !stop)
 			{
 				stop = !isRunning.load(std::memory_order_relaxed);
+				if (workersSuspended.load(std::memory_order_relaxed) && !stop) //sleep instead of spinning (#3428)
+				{
+					std::unique_lock<std::mutex> lock(suspendMutex);
+					suspendCondition.wait(lock, [] { return !workersSuspended.load(std::memory_order_seq_cst)
+						|| !isRunning.load(std::memory_order_seq_cst); });
+					continue;
+				}
 				std::this_thread::yield();
 			}
 			if (stop) { break; }
@@ -254,7 +274,12 @@ namespace ExuThreading {
 
 	void TaskManager::StopWorkers()
 	{
-		isRunning.store(false, std::memory_order_relaxed);
+		{
+			std::lock_guard<std::mutex> lock(suspendMutex); //wakes suspended workers, which then see isRunning == false
+			isRunning.store(false, std::memory_order_seq_cst);
+			workersSuspended.store(false, std::memory_order_seq_cst);
+		}
+		suspendCondition.notify_all();
 
 		//wait for other threads to stop
 		while (active_workers) { ; }

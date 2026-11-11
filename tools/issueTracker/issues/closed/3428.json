@@ -2,11 +2,15 @@
   "number": 3428,
   "title": "The threads during the sparse factorization: Exudyn's workers spin while the factorization runs, and cannot be given to an external solver",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
   "description": "The workers of ExuThreading::TaskManager wait for jobs by spinning with yield, also during the factorization of the system Jacobian, which is serial in Eigen; SuspendWorkers and ResumeWorkers are empty stubs. A multi-threaded external solver (MKL PARDISO with OpenMP or TBB threads) would compete with them for the cores, and MKL cannot use Exudyn's threads. Options (docs/dev/design/sparseSolvers.md section 5): the workers sleep on a condition variable during a factorization (SuspendWorkers/ResumeWorkers implemented, the wake-up measured); and models of independent subsystems factorized and solved per connected component in a ParallelFor on Exudyn's own threads, which also parallelizes the back-substitution where a level-scheduled solve cannot (chains have about 3 unknowns per level).",
   "dateRaised": "2026-11-11",
   "deadline": "2027-05-10",
-  "file": "src/Utilities/Threading.h"
+  "dateResolved": "2026-11-11 17:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/Threading.h",
+  "releaseNotes": "With several threads, exudyn.special.solver.suspendWorkersDuringFactorization (default False) lets the worker threads sleep on a condition variable while a sparse matrix of at least suspendWorkersMinimumSize unknowns is factorized, instead of spinning; full Newton on 8 threads becomes 12-14 % faster with a third of the CPU time. Factorizing independent subsystems on Exudyn's threads is not done.",
+  "resolvedInVersion": "1.13.564"
 }

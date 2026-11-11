@@ -6431,6 +6431,77 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-9-2"></a>
+### RG5.9.2-RG5.9.6 — the PARDISO study, sleeping workers, LinearSolverType.PardisoMKL, reuseAnalyzedPattern measured (2026-11-11, #3428, #3430, #3431, #3434)
+
+*(Maintainer 2026-11-11: the sleeping workers cost something for very small thread tasks, and how long they sleep must
+be decided, as in NGsolve's TaskManager - at least a setting to switch them on and off, possibly in exudyn.special for
+such linear algebra settings during testing; with a constant step size the Jacobian hardly changes, so the
+back-substitutions are many and a parallel one makes sense; RG5.9.5 closed, as realistic models (a ropeway, a complex
+machine) have no decoupled components - a user who has them splits them into systems of one SystemContainer, whose
+parallel solution is a step of its own; "Do the other RG5.9.2, RG5.9.3 and RG5.9.4 now".)*
+
+**RG5.9.2, the study (#3430)** - details in sparseSolvers.md section 3:
+- 18 Jacobians exported after two steps (ODE chains and a grid; index-3 chains of 10-1000 bodies on revolute, spherical
+  and generic joints, 1000 pendulums, 30 four-bar loops; four of them at index 2), 14 settings, every PARDISO call in
+  its own process: PARDISO crashed with an access violation in several settings on the chains of 1000 bodies.
+- The cause is the setting, not the matrix: METIS (the default ordering) with the parallel or the two-level
+  factorization is wrong or fails on the larger constrained chains (`iparm[23] = 10`: error -15, NaN or the crash at
+  1000 bodies; the default on 8 threads: 12 of 18; `iparm[23] = 1` on 8 threads: wrong at 100 bodies); minimum degree
+  with the two-level factorization on 8 threads gave $10^{27}$ even for the spring chain. **Minimum degree with the
+  one-level factorization solved all 18 on 1, 8 and 16 threads** to SuperLU's residual (the chain of 1000 bodies
+  $9\cdot10^{-8}$, condition $2\cdot10^{11}$).
+- Refuted: the format (the compressed columns as the rows of the transposed, `iparm[11] = 2`, give the same residuals),
+  the numerical noise (dropping it changed nothing that failed), the zero diagonal of the multipliers (matching is on
+  by default; index 2 behaves alike). Without matching and scaling 13 of 18. Pivot perturbation and refinement changed
+  nothing.
+- The ordering also decides the back-substitution: nested dissection gives chains 40-100 levels instead of 1000-4500,
+  speedup bounds 18-60 at twice the fill (sparseSolvers.md section 4); after the maintainer's remark this is RG5.9.7
+  (#3432), open.
+
+**RG5.9.3, sleeping workers (#3428)**:
+- `TaskManager::SuspendWorkers()` / `ResumeWorkers()` (empty stubs since 2022) built with a flag and a condition
+  variable: a worker in its spin loop waits on it; `CreateJob` resumes first, `StopWorkers` wakes them to end.
+  `FactorizeNew` of the sparse matrix suspends them through an RAII guard if
+  `exu.special.solver.suspendWorkersDuringFactorization` (default False) and the matrix has at least
+  `suspendWorkersMinimumSize` unknowns (default 1000); the `#define LinearSolverSuspendWorkers false` and its commented
+  calls removed.
+- 8 threads, EigenSparse, 100 steps, full Newton: spring chain 2.14 s (CPU 17 s) -> 1.89 s (6.9 s), revolute chain 1000
+  1.52 s (12 s) -> 1.31 s (4.3 s), revolute chain 100 0.133 -> 0.114 s; modified Newton within the scatter. Off by
+  default, as asked.
+
+**RG5.9.4, `LinearSolverType.PardisoMKL` (#3431)** - sparseSolvers.md section 2:
+- `src/Linalg/PardisoMKL.h/.cpp` (new, in the vcxproj, sources.json 'all' and 'minimal'), `GeneralMatrixEigenSparse`
+  with `UsePardiso`, `FactorizePardiso`, `PardisoFallBack` and the solve with the residual check; the solver type
+  accepted in `InitializeSolverPreChecks` (a `ValueError` with the installation hint if MKL is missing) and
+  `InitializeSolverData`; settings and `PardisoInfo()` in `exu.special.solver`; setup.py links `-ldl` on Linux.
+- Three bugs found on the way, each one a wrong solution with no error:
+  - a pattern compared exactly made PARDISO analyze again in 66 of 100 steps (Exudyn drops exact zeros, which come and
+    go): the analysis keeps the union of the patterns seen;
+  - phases 11, 22 and -1 got pointers to one `double` as b and x, which PARDISO may use as vectors: arrays of size n;
+  - **PARDISO of MKL 2025.0 on Windows changed values the caller kept in registers**: the Newton iteration lost its
+    initial residual (`relTol = -1.6e+38`, then `inf`), 75 instead of 40 iterations on a chain of 10 mass points, 1103
+    instead of 198 on 1000 rigid bodies, while every solve checked to $10^{-16}$; not the integer arguments (guards), not
+    MXCSR or the x87 control word, also with `MKL_THREADING_LAYER=SEQUENTIAL`, not with TBB (other threads). Every MKL
+    call now runs on a persistent thread of its own (`PardisoLibrary::RunOnThread`), and the results equal EigenSparse
+    to $10^{-13}$.
+- Measured (sparseSolvers.md section 2.4): PARDISO pays only for full Newton on large systems with several threads -
+  1000 steps of the spring chain of 1000 bodies 15.3 s against 18.5 s (EigenSparse, 8 threads, sleeping workers) and
+  36.9 s (1 thread), the revolute chain 16.8 against 18.6 and 21.7 s; with modified Newton it is slower, as its solve
+  is 2-4 times slower than Eigen's. The type stays experimental.
+- pardisoSolverTest.py (new): spring and revolute chain against EigenSparse, the forced fallback, `pardisoFallback =
+  False`, the error without MKL, the sleeping workers on 4 threads; the same test result with and without MKL.
+- docs/manual/performanceErrors.md (both switches), revisions.md, linalgBenchmark.md (a pointer to the result).
+
+**RG5.9.5** closed, not done (maintainer, above); RG5.10 (#3433) solves the systems of one SystemContainer in parallel,
+open.
+
+**RG5.9.6, `reuseAnalyzedPattern` (#3434)**, measured as the maintainer asked (each model in its own process with
+`exu.SimulationSettings` patched, the faster of two runs; scratch reuseStudy.py): the 5 performance models with sparse
+solvers 23.12 s with and without (results equal to 2e-12), the 53 test models with EigenSparse 20.73 -> 20.40 s
+(-1.6 %), at most -13 % (PARTS_ATEs_moving.py), -8 to -11 % for the geometrically exact beams and the 2D mechanisms.
+As expected by the maintainer, too little for a default; the flag stays False.
+
 <a id="rg6-24-5"></a>
 ### RG6.24.5 — the reference manual page of exudyn.machines (2026-11-11, #3429)
 

@@ -18,6 +18,7 @@
 
 #include "Tests/UnitTestBase.h" //for unit tests
 #include <set>
+#include <map>
 #include "Main/UserTypes.h"
 
 
@@ -72,6 +73,14 @@ public:
     bool throwErrorWithCtrlC;               //!< switches behavior for CTRL-C; both works in console, but not in Spyder's iPython
     bool multiThreadingLoadBalancing;       //!< true=use load balancing
     Index initialConstraintsViolations;     //!< number of time integrations whose initial conditions did not fulfill the constraints (#2234)
+    bool suspendWorkersDuringFactorization; //!< the workers of the TaskManager sleep during a sparse factorization (#3428)
+    Index suspendWorkersMinimumSize;        //!< ... of at least this number of unknowns (#3428)
+    Index pardisoNumberOfThreads;           //!< threads of MKL PARDISO; 0: the threads of the TaskManager (#3431)
+    Index pardisoCheckPeriod;               //!< the residual is checked after every n-th factorization of PARDISO; 0: never (#3431)
+    Real pardisoResidualTolerance;          //!< relative residual above which a solve of PARDISO falls back to SparseLU (#3431)
+    bool pardisoFallback;                   //!< false: an error instead of the fallback (#3431)
+    std::map<Index, Index> pardisoParameters; //!< iparm entries written after pardisoinit and Exudyn's defaults (#3431)
+    Index pardisoFallbacks;                 //!< number of fallbacks from PARDISO to SparseLU since the import (#3431)
 
     PySpecialSolver()
     {
@@ -84,6 +93,14 @@ public:
         initialConstraintsViolations = 0;
         timeout = -1.; //means no timeout
         throwErrorWithCtrlC = false; //false works cleaner in Windows-console
+        suspendWorkersDuringFactorization = false;
+        suspendWorkersMinimumSize = 1000;
+        pardisoNumberOfThreads = 0;
+        pardisoCheckPeriod = 1;
+        pardisoResidualTolerance = 1e-6;
+        pardisoFallback = true;
+        pardisoParameters.clear();
+        pardisoFallbacks = 0;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -95,6 +112,16 @@ public:
         os << "  throwErrorWithCtrlC = " << throwErrorWithCtrlC << "\n";
         os << "  multiThreadingLoadBalancing = " << multiThreadingLoadBalancing << "\n";
         os << "  initialConstraintsViolations = " << initialConstraintsViolations << "\n";
+        os << "  suspendWorkersDuringFactorization = " << suspendWorkersDuringFactorization << "\n";
+        os << "  suspendWorkersMinimumSize = " << suspendWorkersMinimumSize << "\n";
+        os << "  pardisoNumberOfThreads = " << pardisoNumberOfThreads << "\n";
+        os << "  pardisoCheckPeriod = " << pardisoCheckPeriod << "\n";
+        os << "  pardisoResidualTolerance = " << pardisoResidualTolerance << "\n";
+        os << "  pardisoFallback = " << pardisoFallback << "\n";
+        os << "  pardisoParameters = {";
+        for (const auto& item : pardisoParameters) { os << item.first << ": " << item.second << ", "; }
+        os << "}\n";
+        os << "  pardisoFallbacks = " << pardisoFallbacks << "\n";
 
         os << "\n";
     }

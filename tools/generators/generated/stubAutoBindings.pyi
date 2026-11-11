@@ -1662,6 +1662,26 @@ class SpecialSolver:
     """the number of time integrations, since the import of exudyn, whose initial positions or velocities did not fulfill the constraints (timeIntegration.generalizedAlpha.checkInitialConstraints); it can be set to 0; the test suite reports it per test model (#2234)."""
     multiThreadingLoadBalancing:bool
     """if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing."""
+    suspendWorkersDuringFactorization:bool
+    """if True, the worker threads of a multithreaded simulation (parallel.numberOfThreads > 1) sleep on a condition variable while a sparse matrix of at least suspendWorkersMinimumSize unknowns is factorized, instead of spinning; this frees the cores for the threads of MKL PARDISO and for other processes, and the first parallel task after the factorization pays the wake-up of the threads; default=False (#3428)."""
+    suspendWorkersMinimumSize:int
+    """the number of unknowns from which suspendWorkersDuringFactorization lets the workers sleep; default=1000 (#3428)."""
+    pardisoNumberOfThreads:int
+    """the threads of MKL PARDISO (LinearSolverType.PardisoMKL); 0 (=default): parallel.numberOfThreads of the simulation (#3431)."""
+    pardisoCheckPeriod:int
+    """the residual of a solve with PARDISO is checked after the first factorization of a pattern and after every pardisoCheckPeriod-th factorization; 0: never; default=1, every factorization (#3431)."""
+    pardisoResidualTolerance:float
+    """the relative residual |A x - b| / |b| of a checked solve with PARDISO above which the simulation falls back to SparseLU; default=1e-6 (#3431)."""
+    pardisoFallback:bool
+    """if True (=default), a failed factorization or check of PARDISO falls back to SparseLU for the rest of the simulation, with a warning; if False, it raises an error (#3431)."""
+    pardisoParameters:dict
+    """a dict {index: value} of entries of the parameter array iparm of PARDISO, written after pardisoinit and the defaults of Exudyn (iparm[1] = 0, the minimum degree ordering, and iparm[23] = 0, the one-level factorization, which were reliable on all Jacobians studied); for experts; assign a whole dict, as a change of a returned dict is lost; default={} (#3431)."""
+    pardisoFallbacks:int
+    """the number of fallbacks from PARDISO to SparseLU since the import of exudyn; it can be set to 0 (#3431)."""
+    @overload
+    def PardisoInfo(self) -> dict: 
+        """Whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)."""
+        ...
 class SpecialExceptions:
     """special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions"""
     dictionaryVersionMismatch:bool

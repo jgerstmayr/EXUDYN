@@ -647,6 +647,7 @@ class BuildExt(_build_ext):
         l_opts['unix'] += [
             #'-lgomp', #for openmp; not needed any more, as omp_get_num_threads() has been replaced
             '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
+            '-ldl', #dlopen of MKL PARDISO at run time (#3431); part of libc since glibc 2.34
             ]        
         #warnings not available in clang:
         c_opts['unix'] += [

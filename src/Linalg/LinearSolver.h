@@ -17,6 +17,9 @@
 #include "Linalg/MatrixContainer.h"	
 #include <vector> //for eigen triplets
 #include <iostream>
+#include <memory>
+
+class PardisoSolver; //Linalg/PardisoMKL.h, MKL PARDISO loaded at run time (#3431)
 
 #define USE_EIGEN
 
@@ -485,6 +488,11 @@ private:
 
 	Index analyzedPatternLastNNZ;   //!< number of non-zeros of last analyzedPattern computation
 	bool reuseAnalyzedPattern;      //!< True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; 
+	bool usePardiso;                //!< true: factorization and solve by MKL PARDISO, LinearSolverType::PardisoMKL (#3431)
+	bool pardisoFallenBack;         //!< true: PARDISO failed, SparseLU is used until the solver is initialized again (#3431)
+	bool pardisoCheckNextSolve;     //!< true: the next Solve checks the residual of PARDISO (#3431)
+	Index pardisoFactorizations;    //!< factorizations by PARDISO since its last analysis (#3431)
+	std::shared_ptr<PardisoSolver> pardisoSolver; //!< created at the first factorization with PARDISO (#3431)
 	//data for Eigen sparse matrix storage:
 #ifdef USE_EIGEN_SPARSE_SOLVER
 	EigenSparseMatrix matrix;	 //this is the sparse matrix built from triplets
@@ -511,6 +519,10 @@ public:
 		numberOfColumns = 0;
 		analyzedPatternLastNNZ = 0;
 		reuseAnalyzedPattern = false;
+		usePardiso = false;
+		pardisoFallenBack = false;
+		pardisoCheckNextSolve = false;
+		pardisoFactorizations = 0;
 	}
 
 	//! information on storage type
@@ -537,6 +549,11 @@ public:
 	//! reuse pattern for faster computation [experimental]
 	virtual void SetReuseAnalyzedPattern(bool flag) override { reuseAnalyzedPattern = flag; }
 	virtual bool GetReuseAnalyzedPattern() const override { return reuseAnalyzedPattern; }
+
+	//! factorize and solve with MKL PARDISO instead of SparseLU (LinearSolverType::PardisoMKL); resets a fallback (#3431)
+	void UsePardiso(bool flag) { usePardiso = flag; pardisoFallenBack = false; pardisoCheckNextSolve = false; pardisoFactorizations = 0; }
+	//! true if PARDISO factorizes and solves; false for SparseLU, also after a fallback (#3431)
+	bool PardisoActive() const { return usePardiso && !pardisoFallenBack && !isSymmetric; }
 
 	//! get (read) matrix as dense exudyn Matrix
 	const SparseTripletVector& GetSparseTriplets() const { return triplets; }
@@ -618,6 +635,13 @@ public:
 	//! return -1 if success, causing index otherwise
     virtual Index FactorizeNew() override; // bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
+private:
+	//! factorize with PARDISO; true on success, false after a fallback to SparseLU (#3431)
+	bool FactorizePardiso();
+	//! switch to SparseLU for the rest of the simulation, with a warning, or raise if special.solver.pardisoFallback is False (#3431)
+	void PardisoFallBack(const std::string& reason);
+public:
+
 	//! multiply matrix with vector: solution = A*x
 	//! this leads to memory allocation in case that the matrix is built from triplets
 	virtual void MultMatrixVector(const Vector& x, Vector& solution) override;
@@ -654,6 +678,7 @@ public:
 
 	//! information on storage type
 	virtual LinearSolverType GetSystemMatrixType() const { return LinearSolverType::EigenSparse; };
+	void UsePardiso(bool flag) {}
 
 };
 

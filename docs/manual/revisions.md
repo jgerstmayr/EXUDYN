@@ -21,6 +21,12 @@ that holds the measured facts and the decisions.
 $z$-axis of marker 0 and moves along it by the pitch per radian; the five constraints can be switched off one by one
 (with the coupling off it is the cylindrical joint, with the pitch zero the revolute joint) (#3421, #3423).
 
+**Intel MKL PARDISO as sparse solver** (experimental): `exu.LinearSolverType.PardisoMKL` factorizes and solves with
+PARDISO when MKL is installed in the Python environment (`pip install mkl`); Exudyn loads it at run time, so nothing
+changes without it. The residual is checked after the factorizations, and a failure continues with `EigenSparse`'s
+SparseLU with a warning; the settings are in `exu.special.solver` (#3431). With several threads,
+`exu.special.solver.suspendWorkersDuringFactorization` lets the worker threads sleep during a factorization (#3428).
+
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running
 out at the ends; `graphics.HexagonPrism`, `graphics.Bolt` and `graphics.Nut` assemble heads, shanks and nuts;

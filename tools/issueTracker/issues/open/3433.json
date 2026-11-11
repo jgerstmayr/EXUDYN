@@ -1,0 +1,11 @@
+{
+  "number": 3433,
+  "title": "Solve the systems of one SystemContainer in parallel",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "HIGH",
+  "description": "A model of independent parts can be split by the user into several MainSystems of one SystemContainer; they are solved one after the other today. Solving them in parallel, each on its own thread with its own solver, needs the shared resources of the SystemContainer (renderer, visualization data, Python user functions and the GIL, output files, the TaskManager) to be sorted out first; a study of what is shared, then a design.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10"
+}

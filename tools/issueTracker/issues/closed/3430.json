@@ -1,0 +1,15 @@
+{
+  "number": 3430,
+  "title": "Study the failures of MKL PARDISO on the Jacobians of Exudyn: the classes of models and the settings for which it is reliable",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Jacobians exported from ODE models, index-3 and index-2 constrained models and the extreme chain of 1000 rigid bodies on revolute joints, solved by MKL PARDISO through ctypes with the settings varied (two-level factorization, ordering, matching and scaling, pivot perturbation, refinement, numerical noise dropped, the transposed CSC hand-over, threads); the result decides the default parameters of the solver type and for which classes it is recommended (design docs/dev/design/sparseSolvers.md section 3).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 17:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Studied why MKL PARDISO failed on Exudyn's Jacobians: the METIS ordering with the parallel or two-level factorization; the minimum degree ordering with the one-level factorization solves all 18 studied Jacobians (ODE, index 3, index 2, up to 13000 unknowns) on 1-16 threads to the accuracy of SuperLU; these are the defaults of LinearSolverType.PardisoMKL.",
+  "resolvedInVersion": "1.13.565"
+}

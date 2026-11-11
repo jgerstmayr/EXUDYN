@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 539 | 1.13.563 |
+| 1.13 | Newborn | 543 | 1.13.567 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.567** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Measure what linearSolver.reuseAnalyzedPattern gives in the performance models and the test models with sparse solvers (#3434)
+  - description: Before making the reuse of the analyzed pattern of SparseLU the default: the wall time of every performance model and test model that uses EigenSparse, with the flag off and on (the faster of two runs each), and whether the results change.
+  - **notes:** Measured: linearSolver.reuseAnalyzedPattern=True leaves the performance models with sparse solvers unchanged and saves 1.6 % on the test models with sparse solvers (at most 13 %); it stays off by default.
+  - date resolved: **2026-11-11 17:16**, date raised: 2026-11-11
+- **1.13.566** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LinearSolverType.PardisoMKL: Intel MKL PARDISO loaded at run time from the Python environment, with a residual check and the fallback to SparseLU (#3431)
+  - description: A sparse linear solver type that uses MKL PARDISO when the user has installed MKL (pip or conda); the C++ loads mkl\_rt at run time (no build dependency, nothing in the wheel), passes Eigen's compressed matrix without a copy, checks the residual after the first factorization of a pattern and periodically, falls back to SparseLU with a warning, and has its expert settings in exudyn.special.solver; exudyn.special.solver.PardisoInfo() tells whether MKL was found (design docs/dev/design/sparseSolvers.md section 2).
+  - **notes:** LinearSolverType.PardisoMKL (experimental): Intel MKL PARDISO, which the user installs into the Python environment (pip install mkl), loaded at run time - nothing changes without it; the residual is checked after the factorizations, a failure continues with SparseLU and a warning; exudyn.special.solver.PardisoInfo() tells whether MKL is found, and exudyn.special.solver holds its settings; faster than EigenSparse for full Newton on large systems with several threads.
+  - date resolved: **2026-11-11 17:16**, date raised: 2026-11-11
+- **1.13.565** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Study the failures of MKL PARDISO on the Jacobians of Exudyn: the classes of models and the settings for which it is reliable (#3430)
+  - description: Jacobians exported from ODE models, index-3 and index-2 constrained models and the extreme chain of 1000 rigid bodies on revolute joints, solved by MKL PARDISO through ctypes with the settings varied (two-level factorization, ordering, matching and scaling, pivot perturbation, refinement, numerical noise dropped, the transposed CSC hand-over, threads); the result decides the default parameters of the solver type and for which classes it is recommended (design docs/dev/design/sparseSolvers.md section 3).
+  - **notes:** Studied why MKL PARDISO failed on Exudyn's Jacobians: the METIS ordering with the parallel or two-level factorization; the minimum degree ordering with the one-level factorization solves all 18 studied Jacobians (ODE, index 3, index 2, up to 13000 unknowns) on 1-16 threads to the accuracy of SuperLU; these are the defaults of LinearSolverType.PardisoMKL.
+  - date resolved: **2026-11-11 17:16**, date raised: 2026-11-11
+- **1.13.564** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The threads during the sparse factorization: Exudyn's workers spin while the factorization runs, and cannot be given to an external solver (#3428)
+  - description: The workers of ExuThreading::TaskManager wait for jobs by spinning with yield, also during the factorization of the system Jacobian, which is serial in Eigen; SuspendWorkers and ResumeWorkers are empty stubs. A multi-threaded external solver (MKL PARDISO with OpenMP or TBB threads) would compete with them for the cores, and MKL cannot use Exudyn's threads. Options (docs/dev/design/sparseSolvers.md section 5): the workers sleep on a condition variable during a factorization (SuspendWorkers/ResumeWorkers implemented, the wake-up measured); and models of independent subsystems factorized and solved per connected component in a ParallelFor on Exudyn's own threads, which also parallelizes the back-substitution where a level-scheduled solve cannot (chains have about 3 unknowns per level).
+  - **notes:** With several threads, exudyn.special.solver.suspendWorkersDuringFactorization (default False) lets the worker threads sleep on a condition variable while a sparse matrix of at least suspendWorkersMinimumSize unknowns is factorized, instead of spinning; full Newton on 8 threads becomes 12-14 % faster with a third of the CPU time. Factorizing independent subsystems on Exudyn's threads is not done.
+  - date resolved: **2026-11-11 17:16**, date raised: 2026-11-11
 - **1.13.563** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.machines: a generated page of the reference manual (#3429)
   - description: exudyn.machines (involute gears, ball bearings, the ISO metric threads) is not parsed by the generator of the utility pages, so the reference manual has no page for it; add machines.py to the parsed files of tools/generators/utilityDocsModel.py and make its docstrings fit the generated page.
   - **notes:** exudyn.machines has a page in the reference manual: the involute functions, MetricThreadSizes and MetricThread, the ball bearing functions and the class InvoluteGear.

@@ -166,6 +166,11 @@ void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType, boo
 		systemMassMatrixSparse.SetReuseAnalyzedPattern(reuseAnalyzedPattern);
 		jacobianAEsparse.SetReuseAnalyzedPattern(reuseAnalyzedPattern);
 	}
+	//MKL PARDISO factorizes and solves the sparse matrices; a fallback of a previous simulation is reset (#3431)
+	bool usePardiso = (linearSolverType == LinearSolverType::PardisoMKL);
+	systemJacobianSparse.UsePardiso(usePardiso);
+	systemMassMatrixSparse.UsePardiso(usePardiso);
+	jacobianAEsparse.UsePardiso(usePardiso);
 	//std::cout << "SetLinearSolverType4" << std::flush;
 	systemJacobian->PivotThreshold() = pivotThreshold;
     systemMassMatrix->PivotThreshold() = pivotThreshold;

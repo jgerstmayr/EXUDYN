@@ -1,0 +1,15 @@
+{
+  "number": 3431,
+  "title": "LinearSolverType.PardisoMKL: Intel MKL PARDISO loaded at run time from the Python environment, with a residual check and the fallback to SparseLU",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "A sparse linear solver type that uses MKL PARDISO when the user has installed MKL (pip or conda); the C++ loads mkl_rt at run time (no build dependency, nothing in the wheel), passes Eigen's compressed matrix without a copy, checks the residual after the first factorization of a pattern and periodically, falls back to SparseLU with a warning, and has its expert settings in exudyn.special.solver; exudyn.special.solver.PardisoInfo() tells whether MKL was found (design docs/dev/design/sparseSolvers.md section 2).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 17:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "LinearSolverType.PardisoMKL (experimental): Intel MKL PARDISO, which the user installs into the Python environment (pip install mkl), loaded at run time - nothing changes without it; the residual is checked after the factorizations, a failure continues with SparseLU and a warning; exudyn.special.solver.PardisoInfo() tells whether MKL is found, and exudyn.special.solver holds its settings; faster than EigenSparse for full Newton on large systems with several threads.",
+  "resolvedInVersion": "1.13.566"
+}

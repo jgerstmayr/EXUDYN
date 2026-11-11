@@ -184,6 +184,7 @@ ode1LoadsJacobianTest
 orientTrianglesTest
 outputInterpolationOrderTest
 parameterConversionTest
+pardisoSolverTest
 PARTS_ATEs_moving
 pendulumFriction
 pickleCopyMbs

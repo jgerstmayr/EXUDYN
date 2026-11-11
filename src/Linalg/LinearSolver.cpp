@@ -21,6 +21,8 @@
 
 #include "Main/Experimental.h"
 extern PyExperimental pyExperimental; //!this class can be accessed from outside, but also from every other file where this is imported
+extern PySpecial pySpecial;           //!special.solver: the sleeping workers (#3428) and MKL PARDISO (#3431)
+#include "Linalg/PardisoMKL.h"
 
 //! factorize matrix (invert, SparseLU, etc.); -1=success; >=0: causing row
 Index GeneralMatrixEXUdense::FactorizeNew() //bool ignoreRedundantEquation, Index redundantEquationsStart)
@@ -143,6 +145,7 @@ void GeneralMatrixEigenSparse::Reset()
 	SetAllZero();
 	triplets.Flush();
 	analyzedPatternLastNNZ = 0;
+	if (pardisoSolver) { pardisoSolver->Release(); }
 //#ifdef useMatrixContainerTriplets
 //	SetAllZero();
 //	triplets.Flush();
@@ -435,15 +438,69 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 //Index TSeigenAnalyzePattern;
 //TimerStructureRegistrator TSReigenAnalyzePattern("eigenAnalyzePattern", TSeigenAnalyzePattern, globalTimers);
 
-#define LinearSolverSuspendWorkers false //maybe this gives better results for large systems, but needs to be adjusted
-#define LinearSolverSuspendWorkersTimeUS 20 //could not find good value; large values raise effort of other functions (mostly subsequent computation of mass matrix)
+//! the workers of the TaskManager sleep while a factorization of at least special.solver.suspendWorkersMinimumSize
+//! unknowns runs, if special.solver.suspendWorkersDuringFactorization; they are woken when it ends (#3428)
+class SuspendWorkersDuringFactorization
+{
+	bool suspended;
+public:
+	SuspendWorkersDuringFactorization(Index size)
+	{
+		suspended = pySpecial.solver.suspendWorkersDuringFactorization && ExuThreading::task_manager &&
+			ExuThreading::TaskManager::GetNumThreads() > 1 && size >= pySpecial.solver.suspendWorkersMinimumSize;
+		if (suspended) { ExuThreading::TaskManager::SuspendWorkers(); }
+	}
+	~SuspendWorkersDuringFactorization()
+	{
+		if (suspended) { ExuThreading::TaskManager::ResumeWorkers(); }
+	}
+};
+
+void GeneralMatrixEigenSparse::PardisoFallBack(const std::string& reason)
+{
+	if (!pySpecial.solver.pardisoFallback) //PyError, not CHECKandTHROW, which the fast module does not have
+	{
+		PyError("LinearSolverType.PardisoMKL: " + reason + "; no fallback to SparseLU, as exudyn.special.solver.pardisoFallback is False");
+	}
+	pySpecial.solver.pardisoFallbacks++;
+	PyWarning("LinearSolverType.PardisoMKL: " + reason + "; this simulation continues with SparseLU (as EigenSparse)");
+	pardisoFallenBack = true;
+	pardisoCheckNextSolve = false;
+	analyzedPatternLastNNZ = 0;
+}
+
+bool GeneralMatrixEigenSparse::FactorizePardiso()
+{
+	if (!pardisoSolver) { pardisoSolver = std::make_shared<PardisoSolver>(); }
+	matrix.makeCompressed(); //PARDISO takes the compressed columns of Eigen as they are
+	Index numberOfThreads = pySpecial.solver.pardisoNumberOfThreads > 0 ? pySpecial.solver.pardisoNumberOfThreads :
+		EXUstd::Maximum(ExuThreading::TaskManager::GetNumThreads(), (Index)1);
+	int error = pardisoSolver->Factorize((int)NumberOfRows(), matrix.outerIndexPtr(), matrix.innerIndexPtr(), matrix.valuePtr(),
+		(int)numberOfThreads, pySpecial.solver.pardisoParameters);
+	if (pardisoSolver->PatternChanged()) { pardisoFactorizations = 0; }
+	if (error != 0)
+	{
+		PardisoFallBack("the factorization failed with the error " + EXUstd::ToString(error) + " of PARDISO");
+		return false;
+	}
+	//the residual is checked after the first factorization of an analysis and after every checkPeriod-th one
+	Index period = pySpecial.solver.pardisoCheckPeriod;
+	pardisoCheckNextSolve = period > 0 && (pardisoFactorizations % period) == 0;
+	pardisoFactorizations++;
+	return true;
+}
 
 //! factorize matrix (invert, SparseLU, etc.); -1=success
 Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
-	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
-	if (LinearSolverSuspendWorkers && nThreads > 1) { ExuThreading::TaskManager::SuspendWorkers(LinearSolverSuspendWorkersTimeUS); }
+	SuspendWorkersDuringFactorization suspendWorkers(NumberOfRows()); //resumes the workers on every return (#3428)
+
+	if (PardisoActive() && FactorizePardiso())
+	{
+		SetMatrixIsFactorized(true);
+		return -1;
+	}
 
 	Index rv = 0;
 	if (!IsSymmetric())
@@ -467,8 +524,6 @@ Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, I
 			solver.analyzePattern(matrix);
 			solver.factorize(matrix);
 		}
-
-		if (LinearSolverSuspendWorkers && nThreads > 1) { ExuThreading::TaskManager::ResumeWorkers(); }
 
 		//Eigen::ComputationInfo: 0=Success, 1=NumericalIssue, 2=NoConvergence, 3=InvalidInput.
 		//NOTE: this is a STATUS, not a row. The comment that stood here described SuperLU's 'info'
@@ -616,8 +671,38 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 {
 	CHECKandTHROW(IsMatrixIsFactorized(), "GeneralMatrixEigenSparse::Solve( ...): matrix is not factorized!");
 
-	//Index nThreads = ExuThreading::TaskManager::GetNumThreads();
-	//if (LinearSolverSuspendWorkers && nThreads > 1) { ExuThreading::task_manager->SuspendWorkers(1); }
+	if (PardisoActive())
+	{
+		Index n = NumberOfRows();
+		solution.SetNumberOfItems(n);
+		int error = pardisoSolver->Solve(rhs.GetDataPointer(), solution.GetDataPointer());
+		std::string reason;
+		if (error != 0) { reason = "the solve failed with the error " + EXUstd::ToString(error) + " of PARDISO"; }
+		else if (pardisoCheckNextSolve)
+		{
+			pardisoCheckNextSolve = false;
+			Eigen::Map<const Eigen::VectorXd> b(pardisoSolver->LastRhs(), n); //rhs may be overwritten, if it is the solution
+			Eigen::Map<const Eigen::VectorXd> x(solution.GetDataPointer(), n);
+			Real residual = (matrix * x - b).norm();
+			Real bNorm = b.norm();
+			if (!(residual <= pySpecial.solver.pardisoResidualTolerance * bNorm)) //also catches NaN
+			{
+				reason = "the relative residual of the solve, " + EXUstd::ToString(bNorm != 0. ? residual / bNorm : residual) +
+					", is above exudyn.special.solver.pardisoResidualTolerance (perturbed pivots: " +
+					EXUstd::ToString(pardisoSolver->PerturbedPivots()) + ")";
+			}
+		}
+		if (reason.empty()) { return; }
+
+		PardisoFallBack(reason);
+		solver.analyzePattern(matrix);
+		solver.factorize(matrix);
+		if (solver.info() != 0) { SysError("LinearSolverType.PardisoMKL: the factorization by SparseLU after the fallback failed as well", PyErrorType::solverError); }
+		//the right-hand side kept by PARDISO, as rhs may be the solution vector, which PARDISO has overwritten
+		Eigen::VectorXd x = solver.solve(Eigen::Map<const Eigen::VectorXd>(pardisoSolver->LastRhs(), n));
+		for (Index i = 0; i < n; i++) { solution[i] = x[i]; }
+		return;
+	}
 
 	//will only work for Real==double!!! ==> make type check!
 	Real test=0;
@@ -655,8 +740,6 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 	{
 		solution[i] = x[i];
 	}
-
-	//if (LinearSolverSuspendWorkers && nThreads > 1) { ExuThreading::task_manager->ResumeWorkers(); }
 
 	//STOPGLOBALTIMER(TStimer1);
 }

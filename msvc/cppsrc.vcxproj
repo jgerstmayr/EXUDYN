@@ -122,6 +122,7 @@
     <ClCompile Include="..\src\Graphics\VisualizationUserFunctions.cpp" />
     <ClCompile Include="..\src\Linalg\LinearSolver.cpp" />
     <ClCompile Include="..\src\Linalg\Matrix.cpp" />
+    <ClCompile Include="..\src\Linalg\PardisoMKL.cpp" />
     <ClCompile Include="..\src\Linalg\Symbolic.cpp" />
     <ClCompile Include="..\src\Linalg\SymbolicTable.cpp" />
     <ClCompile Include="..\src\Linalg\Vector.cpp" />
@@ -626,6 +627,7 @@
     <ClInclude Include="..\src\Linalg\LinkedDataVectorParallel.h" />
     <ClInclude Include="..\src\Linalg\Matrix.h" />
     <ClInclude Include="..\src\Linalg\MatrixContainer.h" />
+    <ClInclude Include="..\src\Linalg\PardisoMKL.h" />
     <ClInclude Include="..\src\Linalg\ResizableMatrix.h" />
     <ClInclude Include="..\src\Linalg\ResizableVector.h" />
     <ClInclude Include="..\src\Linalg\ResizableVectorParallel.h" />

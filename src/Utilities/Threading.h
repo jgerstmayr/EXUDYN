@@ -23,6 +23,7 @@
 #include <exception>
 #include <atomic>
 #include <mutex>
+#include <condition_variable>
 #include "Utilities/BasicDefinitions.h"
 #include "Utilities/ResizableArray.h"
 
@@ -150,6 +151,9 @@ namespace ExuThreading {
 	{
 		static std::atomic<bool> isRunning;
 		static std::atomic<bool> jobIsRunning; //!< true while CreateJob runs a job in the threads (#3229)
+		static std::atomic<bool> workersSuspended; //!< true: the workers wait on suspendCondition instead of spinning (#3428)
+		static std::mutex suspendMutex;
+		static std::condition_variable suspendCondition;
 		std::atomic<Index> active_workers;
 		std::atomic<Index> numberOfTasks;  // number of tasks in current job
 
@@ -189,8 +193,12 @@ namespace ExuThreading {
 
 		void StartWorkers();
 		void StopWorkers();
-		static void SuspendWorkers(Index asleep_usecs = 1000) {} //not implemented, for compatibility with NGsolve
-		static void ResumeWorkers() {} //not implemented, for compatibility with NGsolve
+		//! the workers stop spinning and wait on a condition variable until ResumeWorkers or the next job, e.g. while a
+		//! serial or externally threaded factorization runs (#3428); the first job after it pays the wake-up
+		static void SuspendWorkers() { workersSuspended.store(true, std::memory_order_seq_cst); }
+		//! wake up the workers suspended by SuspendWorkers (#3428)
+		static void ResumeWorkers();
+		static bool WorkersSuspended() { return workersSuspended.load(std::memory_order_relaxed); }
 
 		static bool IsRunning() { return isRunning.load(std::memory_order_relaxed); }
 		//! true inside a parallel loop, in every thread taking part (#3229)
