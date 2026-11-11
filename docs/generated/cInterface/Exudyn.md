@@ -117,6 +117,17 @@ The class **exudyn** has the following **functions and structures**:
 - **`special.solver.pardisoParameters`**: a dict {index: value} of entries of the parameter array iparm of PARDISO, written after pardisoinit and the defaults of Exudyn (iparm[1] = 0, the minimum degree ordering, and iparm[23] = 0, the one-level factorization, which were reliable on all Jacobians studied); for experts; assign a whole dict, as a change of a returned dict is lost; default={} (#3431)
 - **`special.solver.pardisoFallbacks`**: the number of fallbacks from PARDISO to SparseLU since the import of exudyn; it can be set to 0 (#3431)
 - **`special.solver.PardisoInfo()`**: whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)
+- **`special.solver.StartPersistentThreads(numberOfThreads)`**: start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer uses them alike; not possible while a computation uses threads (#3437)
+
+  *Example*:
+
+  ```python
+  exu.special.solver.StartPersistentThreads(8)
+  simulationSettings.parallel.numberOfThreads = 8
+  ```
+
+- **`special.solver.StopPersistentThreads()`**: stop the threads of StartPersistentThreads; not possible while a computation uses threads (#3437)
+- **`special.solver.PersistentThreads()`**: the number of threads of StartPersistentThreads, the main thread included; 0: none (#3437)
 
 (sec-exudyn-special-exceptions)=
 ### exudyn.special.exceptions

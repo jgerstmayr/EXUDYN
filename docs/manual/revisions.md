@@ -26,6 +26,8 @@ PARDISO when MKL is installed in the Python environment (`pip install mkl`); Exu
 changes without it. The residual is checked after the factorizations, and a failure continues with `EigenSparse`'s
 SparseLU with a warning; the settings are in `exu.special.solver` (#3431). With several threads,
 `exu.special.solver.suspendWorkersDuringFactorization` lets the worker threads sleep during a factorization (#3428).
+`exu.special.solver.StartPersistentThreads(n)` keeps `n` threads for all solvers with `parallel.numberOfThreads = n`,
+sleeping between the runs (#3437).
 
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running

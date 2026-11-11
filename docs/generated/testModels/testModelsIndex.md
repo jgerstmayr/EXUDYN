@@ -187,6 +187,7 @@ parameterConversionTest
 pardisoSolverTest
 PARTS_ATEs_moving
 pendulumFriction
+persistentThreadsTest
 pickleCopyMbs
 plotSensorTest
 postNewtonStepContactTest

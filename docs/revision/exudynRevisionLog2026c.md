@@ -6431,6 +6431,59 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-9-8"></a>
+### RG5.9.8, RG5.10.1, RG5.11 — persistent threads, what the systems of a SystemContainer share, the raytracer steps (2026-11-11, #3437, #3438, #3439, #3440)
+
+*(Maintainer 2026-11-11, on the next steps: no special tricks for PARDISO - the option is valuable as it is, also where
+it is slower, and it is expected to pay for very large systems such as the coming 4- and 10-node tetrahedra (not a
+step); RG5.9.7 to be tried; the RG5.10 pre-analysis now; instead of sleeping workers by default, a function of
+exudyn.special.solver that starts a number of workers that run permanently, for many runs of small systems, with the
+solvers still taking the threads of simulationSettings, which wins with a message where the two disagree - "do that if
+everything is clear as suggested, or propose a better idea"; a step for the raytracer, which should run in parallel to
+the solver from the renderer thread, and one for its strange scaling - best with 64-128 threads on 16 cores.)*
+
+**RG5.9.8, persistent threads (#3437)**, as suggested, with one adjustment: the persistent workers sleep while no
+computation uses them (the condition variable of RG5.9.3), as spinning workers would occupy the cores between the
+solves, while Python runs:
+- `TaskManager` (`src/Utilities/Threading.h/.cpp`): a parked task manager - detached from `task_manager`, so that
+  `GetNumThreads()` is 1 and code outside a computation (mbs functions called from Python) runs serially; the static
+  `isRunning` stays true for its workers. `SetPersistentWorkers(n)`, `PersistentWorkers()`,
+  `AcquireWorkers(n, takeOver, message, ticket)` and `ReleaseWorkers(acquired, ticket)`, all under one mutex.
+  Acquire: the persistent workers if their number agrees; otherwise they are stopped and a task manager of its own runs
+  (`message` says so), or the computation is serial; with `takeOver` (the solvers) threads left running by another
+  computation are stopped, as before. Release: the persistent workers are parked again, threads of its own stop, and the
+  persistent ones start again; a ticket makes sure that a solver destroyed late (#2237) does not give back threads
+  another computation has taken over.
+- The solvers (`CSolverBase::InitializeSolverData`, `StopThreadsAndCloseFiles`), the raytracer and
+  `RunLinalgBenchmark` take and give back their threads through it; before, each called `SetNumThreads`,
+  `EnterTaskManager` and `ExitTaskManager`, and two task managers would have shared the static state.
+- `exu.special.solver.StartPersistentThreads(n)` (n >= 2; ValueError otherwise), `StopPersistentThreads()`,
+  `PersistentThreads()`; an `atexit` hook stops them, so that no worker waits on a condition variable while Python
+  ends. A solver with another `parallel.numberOfThreads` (also 1) warns: "numberOfThreads = 4 differs from the 8
+  persistent threads ...; this computation uses 4 thread(s), and the persistent threads start again after it".
+- Measured (a chain of mass points, EigenSparse, per solve, scratch persist2.py): 200 bodies, 1 step - 0.44 / 0.63 /
+  1.10 ms on 4 / 8 / 16 threads of its own, 0.26 / 0.24 / 0.30 ms persistent; 20 steps 2.03 / 2.11 / 2.49 against
+  1.82 / 1.30 / 1.67 ms; 2000 bodies, 20 steps 26.1 / 18.2 / 14.8 against 25.0 / 17.6 / 13.7 ms - the start and stop of
+  the threads cost 0.2-0.8 ms per solve. The results equal those of one thread.
+- persistentThreadsTest.py (new); performanceErrors.md, revisions.md, sparseSolvers.md section 5.
+
+**RG5.10.1, the pre-analysis (#3440)**: docs/dev/design/systemContainerParallel.md, from a read of the code. The
+decisive fact: the solve never releases the GIL (`SolveSystem` has no `gil_scoped_release`; the only release is in
+`MainRenderer::GetGraphicsData`), so solves on Python threads run one after another today. 13 kinds of shared state
+to be made per solver or locked (the one task manager and its global thread count, thread id 0 meaning the main
+thread for the symbolic recordings, the suspension of workers, the `pySpecial` counters, the global timers, a
+`static` matrix in `MatrixBase::Invert`, `pout`/`outputBuffer`, `PyError`/`PyWarning` with the global error flag, the
+Python user functions, the idle operations with the renderer queues and `PyCheckSignals`, the default file names, the
+settings object that `SolveDynamic` changes); safe: the per-system render lock, per-solver data, `thread_local` scratch
+data, PARDISO (serialized). The natural start: one thread per system (numberOfThreads = 1 in each), thread-local
+thread counts and ids. RG5.10 stays open for the design.
+
+**RG5.11 (approved by the maintainer)**, with RG5.11.1 (#3438, the raytracer with threads of its own while a solver
+runs, from the renderer thread) and RG5.11.2 (#3439, its scaling). A first candidate for the scaling, seen while
+reading the code: without load balancing a `ParallelFor` runs one task per thread with a static split, and the
+raytracer takes `multiThreadingLoadBalancing` from the last solver; more threads then mean finer tiles and a better
+balance.
+
 <a id="rg5-9-2"></a>
 ### RG5.9.2-RG5.9.6 — the PARDISO study, sleeping workers, LinearSolverType.PardisoMKL, reuseAnalyzedPattern measured (2026-11-11, #3428, #3430, #3431, #3434)
 

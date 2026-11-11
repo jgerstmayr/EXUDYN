@@ -66,6 +66,110 @@ namespace ExuThreading {
 		}
 	}
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//persistent workers (#3437): they are a task manager that is detached from task_manager while no computation uses
+	//it; then num_threads is 1, so that code outside a computation runs serially, and the workers sleep
+	std::mutex TaskManager::poolMutex;
+	TaskManager* TaskManager::parkedManager = nullptr;
+	Index TaskManager::persistentNumberOfThreads = 0;
+	Index TaskManager::ticketCounter = 0;
+	Index TaskManager::attachedTicket = 0;
+
+	//poolMutex is locked and no task manager is attached
+	void TaskManager::StartPersistentLocked()
+	{
+		num_threads = persistentNumberOfThreads;
+		EnterTaskManager();
+		ParkLocked();
+	}
+
+	//poolMutex is locked; the attached task manager becomes the parked one
+	void TaskManager::ParkLocked()
+	{
+		SuspendWorkers();
+		parkedManager = task_manager;
+		task_manager = nullptr;
+		num_threads = 1;
+	}
+
+	//poolMutex is locked and no task manager is attached
+	void TaskManager::StopParkedLocked()
+	{
+		if (parkedManager)
+		{
+			task_manager = parkedManager;
+			parkedManager = nullptr;
+			ExitTaskManager(1);
+			num_threads = 1;
+		}
+	}
+
+	bool TaskManager::SetPersistentWorkers(Index numberOfThreads)
+	{
+		std::lock_guard<std::mutex> lock(poolMutex);
+		if (task_manager) { return false; }
+		StopParkedLocked();
+		persistentNumberOfThreads = numberOfThreads > 1 ? numberOfThreads : 0;
+		if (persistentNumberOfThreads) { StartPersistentLocked(); }
+		return true;
+	}
+
+	WorkersAcquired TaskManager::AcquireWorkers(Index numberOfThreads, bool takeOver, STDstring& message, Index& ticket)
+	{
+		std::lock_guard<std::mutex> lock(poolMutex);
+		ticket = ++ticketCounter;
+		if (task_manager) //another computation uses the threads, or one did not release them
+		{
+			if (!takeOver) { return workersBusy; }
+			message = "TaskManager already/still running from previous computation; this may indicate a recursive/parallel solver call with numberOfThreads>1; exiting task manager now";
+			ExitTaskManager(1);
+			num_threads = 1;
+		}
+		if (parkedManager)
+		{
+			if (numberOfThreads == persistentNumberOfThreads)
+			{
+				task_manager = parkedManager;
+				parkedManager = nullptr;
+				num_threads = numberOfThreads;
+				loadBalancing = pySpecial.solver.multiThreadingLoadBalancing;
+				attachedTicket = ticket;
+				return workersPersistent; //the first job wakes them
+			}
+			if (message.size()) { message += "; "; }
+			message += "numberOfThreads = " + std::to_string(numberOfThreads) + " differs from the " +
+				std::to_string(persistentNumberOfThreads) + " persistent threads of exudyn.special.solver.StartPersistentThreads; " +
+				"this computation uses " + std::to_string(numberOfThreads) + " thread(s), and the persistent threads start again after it";
+			StopParkedLocked();
+		}
+		if (numberOfThreads > 1)
+		{
+			num_threads = numberOfThreads;
+			EnterTaskManager();
+			attachedTicket = ticket;
+			return workersOwn;
+		}
+		num_threads = 1;
+		return workersSerial;
+	}
+
+	void TaskManager::ReleaseWorkers(WorkersAcquired acquired, Index ticket)
+	{
+		std::lock_guard<std::mutex> lock(poolMutex);
+		if (task_manager && attachedTicket != ticket) { return; } //another computation took the threads over
+		if (acquired == workersPersistent && task_manager) { ParkLocked(); }
+		else if (acquired == workersOwn && task_manager)
+		{
+			ExitTaskManager(1);
+			num_threads = 1;
+		}
+		//persistent workers lost or stopped for this computation start again
+		if (acquired != workersBusy && acquired != workersNotAcquired && persistentNumberOfThreads > 1 && !parkedManager && !task_manager)
+		{
+			StartPersistentLocked();
+		}
+	}
+
 	void TaskManager::ResumeWorkers()
 	{
 		{

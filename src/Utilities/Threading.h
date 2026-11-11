@@ -147,8 +147,20 @@ namespace ExuThreading {
 		std::atomic_int value;
 	};
 
+	//! how a computation got its threads from TaskManager::AcquireWorkers (#3437)
+	enum WorkersAcquired { workersNotAcquired = -2, workersBusy = -1, workersSerial = 0, workersPersistent = 1, workersOwn = 2 };
+
 	class TaskManager
 	{
+		static std::mutex poolMutex;				//!< guards task_manager, parkedManager and persistentNumberOfThreads (#3437)
+		static TaskManager* parkedManager;			//!< the persistent workers while no computation uses them; they sleep (#3437)
+		static Index persistentNumberOfThreads;		//!< the threads of the persistent workers, main thread included; 0: none (#3437)
+		static Index ticketCounter;					//!< counts AcquireWorkers (#3437)
+		static Index attachedTicket;				//!< the ticket of the computation that uses task_manager (#3437)
+		static void StartPersistentLocked();
+		static void ParkLocked();
+		static void StopParkedLocked();
+
 		static std::atomic<bool> isRunning;
 		static std::atomic<bool> jobIsRunning; //!< true while CreateJob runs a job in the threads (#3229)
 		static std::atomic<bool> workersSuspended; //!< true: the workers wait on suspendCondition instead of spinning (#3428)
@@ -201,6 +213,20 @@ namespace ExuThreading {
 		static bool WorkersSuspended() { return workersSuspended.load(std::memory_order_relaxed); }
 
 		static bool IsRunning() { return isRunning.load(std::memory_order_relaxed); }
+
+		//! start numberOfThreads > 1 persistent workers, which sleep while no computation uses them; 0 or 1 stops them;
+		//! returns false and changes nothing while a computation uses the threads (#3437)
+		static bool SetPersistentWorkers(Index numberOfThreads);
+		//! the threads of the persistent workers, main thread included; 0: none (#3437)
+		static Index PersistentWorkers() { return persistentNumberOfThreads; }
+		//! take the threads for a parallel computation with numberOfThreads: the persistent workers if their number agrees,
+		//! otherwise a task manager of its own (the persistent workers stop until ReleaseWorkers, and message says so);
+		//! if threads are in use: workersBusy, or with takeOver they are stopped (message says so); the result goes to
+		//! ReleaseWorkers (#3437)
+		static WorkersAcquired AcquireWorkers(Index numberOfThreads, bool takeOver, STDstring& message, Index& ticket);
+		//! give back the threads of AcquireWorkers with its ticket: persistent workers sleep again, a task manager of its
+		//! own stops; threads taken over by another computation in the meantime are left alone (#2237, #3437)
+		static void ReleaseWorkers(WorkersAcquired acquired, Index ticket);
 		//! true inside a parallel loop, in every thread taking part (#3229)
 		static bool JobIsRunning() { return jobIsRunning.load(std::memory_order_relaxed); }
 		static void SetNumThreads(Index numThreadsInit)

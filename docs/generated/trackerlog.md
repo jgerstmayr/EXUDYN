@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.569.dev1
+- Exudyn version = 1.13.571.dev1
 - last change = 2026-11-11
-- Number of issues = 3437
-- Number of resolved issues = 3346 (569 in current version)
+- Number of issues = 3441
+- Number of resolved issues = 3348 (571 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` Study the scaling of the raytracer with the number of threads (#3439)
+  - description: The raytracer reaches its best speed only with 64-128 threads on a machine with 16 cores, although each thread gets small portions of work. Measure and explain the scaling (the static split of tasks without load balancing, the tiles per thread, the spinning workers, the memory access) and what it tells about the parallel loops of Exudyn in general.
+  - date raised: 2026-11-11
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
+  - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.
+  - date raised: 2026-11-11
 - `IDEA` `HIGH EFF` `raised by: Claude-JG` Solve the systems of one SystemContainer in parallel (#3433)
   - description: A model of independent parts can be split by the user into several MainSystems of one SystemContainer; they are solved one after the other today. Solving them in parallel, each on its own thread with its own solver, needs the shared resources of the SystemContainer (renderer, visualization data, Python user functions and the GIL, output files, the TaskManager) to be sorted out first; a study of what is shared, then a design.
   - date raised: 2026-11-11

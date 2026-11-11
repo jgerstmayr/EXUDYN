@@ -4834,6 +4834,23 @@ class SpecialSolver:
     def PardisoInfo(self) -> dict: 
         """Whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)."""
         ...
+    @overload
+    def StartPersistentThreads(self, numberOfThreads: int) -> None: 
+        """Start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer uses them alike; not possible while a computation uses threads (#3437).
+        
+        Examples:
+            exu.special.solver.StartPersistentThreads(8)
+            simulationSettings.parallel.numberOfThreads = 8
+        """
+        ...
+    @overload
+    def StopPersistentThreads(self) -> None: 
+        """Stop the threads of StartPersistentThreads; not possible while a computation uses threads (#3437)."""
+        ...
+    @overload
+    def PersistentThreads(self) -> int: 
+        """The number of threads of StartPersistentThreads, the main thread included; 0: none (#3437)."""
+        ...
 
 class SpecialExceptions:
     """special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions"""

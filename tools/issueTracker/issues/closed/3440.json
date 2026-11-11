@@ -1,0 +1,15 @@
+{
+  "number": 3440,
+  "title": "What the systems of one SystemContainer share, before they are solved in parallel",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "A pre-analysis for #3433: the global and static state, the GIL, the output, the errors, the files and the renderer interplay that two solvers on threads of their own would share, classified as to be made per system or locked, safe, or unclear, with the hardest obstacles.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 20:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Pre-analysis of solving the systems of one SystemContainer in parallel (docs/dev/design/systemContainerParallel.md): the solve does not release the GIL today; the shared state to be made per solver or locked (task manager, thread ids, timers, output, errors, renderer queues, file names), the safe parts and the main obstacles.",
+  "resolvedInVersion": "1.13.571"
+}

@@ -1581,17 +1581,24 @@ ResizableArray<GLLine> triangles6Edges;
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		RTS.numberOfThreadsUsed = 1;
 
-		if (ExuThreading::TaskManager::IsRunning()) //should not happen; only if FinalizeSolver has not been called in last computation
+		//the threads: the persistent workers if their number agrees, otherwise threads of its own; while a solver uses
+		//the threads, the raytracer computes serially (#3437)
+		ExuThreading::WorkersAcquired workersAcquired = ExuThreading::workersNotAcquired;
+		Index workersTicket = 0;
+		if (RTS.numberOfThreads > 1)
 		{
-			if (RTS.verbose) { PrintDelayed("Raytracer: multi-threading: TaskManager already/still running (in solver?); do not use multithreading for solver"); }
-			RTS.numberOfThreads = 1;
+			STDstring threadsMessage;
+			workersAcquired = ExuThreading::TaskManager::AcquireWorkers(RTS.numberOfThreads, false, threadsMessage, workersTicket);
+			if (workersAcquired == ExuThreading::workersBusy)
+			{
+				if (RTS.verbose) { PrintDelayed("Raytracer: multi-threading: TaskManager already/still running (in solver?); do not use multithreading for solver"); }
+				RTS.numberOfThreads = 1;
+			}
+			else if (RTS.verbose && threadsMessage.size()) { PrintDelayed("Raytracer: " + threadsMessage); }
 		}
 		RTS.numberOfThreadsUsed = RTS.numberOfThreads;
 		if (RTS.numberOfThreads > 1)
 		{
-			ExuThreading::TaskManager::SetNumThreads(RTS.numberOfThreads);
-
-			ExuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
 
 			RTS.numberOfThreadsUsed = ExuThreading::TaskManager::GetNumThreads();
 
@@ -1755,12 +1762,10 @@ ResizableArray<GLLine> triangles6Edges;
 				}
 			}, taskSplit);
 
-		if (RTS.numberOfThreadsUsed != 1 && //do not stop threads, if running in solver thread!
-			ExuThreading::TaskManager::IsRunning()) 
+		if (workersAcquired != ExuThreading::workersNotAcquired && workersAcquired != ExuThreading::workersBusy) //only its own threads (#3437)
 		{
-			if (RTS.verbose) { PrintDelayed("Stop multi-threading"); }
-			ExuThreading::ExitTaskManager(1); // output.numberOfThreadsUsed);
-			ExuThreading::TaskManager::SetNumThreads(1); //for next computation, if it is going to be serial
+			if (RTS.verbose && RTS.numberOfThreadsUsed != 1) { PrintDelayed("Stop multi-threading"); }
+			ExuThreading::TaskManager::ReleaseWorkers(workersAcquired, workersTicket);
 			RTS.numberOfThreadsUsed = 1;
 		}
 

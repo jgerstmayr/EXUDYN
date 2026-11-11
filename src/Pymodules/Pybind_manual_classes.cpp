@@ -669,6 +669,21 @@ void Init_Pybind_manual_classes(py::module& m) {
 			d["message"] = message;
 			return d;
 			}, "whether Intel MKL PARDISO (LinearSolverType.PardisoMKL) is available: a dict with available, library, version and message (#3431)")
+		.def_static("StartPersistentThreads", [](Index numberOfThreads) {
+			if (numberOfThreads < 2) { PyError("exudyn.special.solver.StartPersistentThreads: numberOfThreads must be at least 2, got " + EXUstd::ToString(numberOfThreads) + "; StopPersistentThreads() stops them", PyErrorType::valueError); }
+			if (!ExuThreading::TaskManager::SetPersistentWorkers(numberOfThreads)) { PyError("exudyn.special.solver.StartPersistentThreads: not possible while a solver or the raytracer uses threads"); }
+			static bool stopAtExit = false; //the workers wait on a condition variable, which must not die with them at exit
+			if (!stopAtExit)
+			{
+				py::module_::import("atexit").attr("register")(py::cpp_function([]() { ExuThreading::TaskManager::SetPersistentWorkers(0); }));
+				stopAtExit = true;
+			}
+			}, "start numberOfThreads persistent threads (main thread included) for the solvers (#3437)", py::arg("numberOfThreads"))
+		.def_static("StopPersistentThreads", []() {
+			if (!ExuThreading::TaskManager::SetPersistentWorkers(0)) { PyError("exudyn.special.solver.StopPersistentThreads: not possible while a solver or the raytracer uses threads"); }
+			}, "stop the persistent threads of StartPersistentThreads (#3437)")
+		.def_static("PersistentThreads", []() { return ExuThreading::TaskManager::PersistentWorkers(); },
+			"the number of persistent threads, main thread included; 0: none (#3437)")
 
 		//representation:
 		.def("__repr__", [](const PySpecialSolver& item) {

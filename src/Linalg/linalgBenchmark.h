@@ -212,10 +212,12 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 		if (numberOfThreads > 1 && n >= limit) { threadList.push_back(numberOfThreads); }
 		for (Index threads : threadList)
 		{
-			if (threads > 1)
+			ExuThreading::WorkersAcquired acquired = ExuThreading::workersNotAcquired;
+			Index ticket = 0;
+			if (threads > 1) //the persistent workers if their number agrees (#3437)
 			{
-				ExuThreading::TaskManager::SetNumThreads(threads);
-				ExuThreading::EnterTaskManager();
+				STDstring message;
+				acquired = ExuThreading::TaskManager::AcquireWorkers(threads, false, message, ticket);
 			}
 			Index threadsUsed = ExuThreading::TaskManager::GetNumThreads();
 			ResizableVectorParallel c(n), d(n);
@@ -223,11 +225,7 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 			results.push_back(LinalgBenchmarkTime("vector", "Exudyn", "ResizableVectorParallel +=", n, threadsUsed, minimumTime, [&]() { c += d; return c[0]; }));
 			results.push_back(LinalgBenchmarkTime("vector", "Exudyn", "ResizableVectorParallel MultAdd", n, threadsUsed, minimumTime, [&]() { c.MultAdd(1e-3, d); return c[0]; }));
 			results.push_back(LinalgBenchmarkTime("vector", "Exudyn", "ResizableVectorParallel CopyFrom", n, threadsUsed, minimumTime, [&]() { c.CopyFrom(d); return c[n - 1]; }));
-			if (threads > 1)
-			{
-				ExuThreading::ExitTaskManager(threads);
-				ExuThreading::TaskManager::SetNumThreads(1);
-			}
+			if (threads > 1) { ExuThreading::TaskManager::ReleaseWorkers(acquired, ticket); }
 		}
 	}
 	LinalgBenchmarkFixedVector<6>(results, minimumTime);

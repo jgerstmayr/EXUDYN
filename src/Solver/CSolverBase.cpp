@@ -452,25 +452,20 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	output.multiThreadingMode = 0; //no multithreading
 	output.numberOfThreadsUsed = 1;
 
-	if (ExuThreading::TaskManager::IsRunning()) //should not happen; only if FinalizeSolver has not been called in last computation
-	{
-		PyWarning("Initialize Solver: TaskManager already/still running from previous computation; this may indicate a recursive/parallel solver call with numberOfThreads>1; exiting task manager now");
-		ExuThreading::ExitTaskManager(1); //arg must be larger than 1 to stop active workers
-	}
-
-	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
+	//the threads: the persistent workers of exudyn.special.solver.StartPersistentThreads if their number agrees,
+	//otherwise a task manager of this solver; parallel.numberOfThreads wins (#3437)
 	Index nThreads = simulationSettings.parallel.numberOfThreads;
-	//pout << "numThreads before init=" << ExuThreading::TaskManager::GetNumThreads() << "\n";
+	pySpecial.solver.multiThreadingLoadBalancing = simulationSettings.parallel.useLoadBalancing;
+	STDstring threadsMessage;
+	if (workersAcquired != ExuThreading::workersNotAcquired) //a run of this solver that did not finish
+	{
+		ExuThreading::TaskManager::ReleaseWorkers(workersAcquired, workersTicket);
+		workersAcquired = ExuThreading::workersNotAcquired;
+	}
+	workersAcquired = ExuThreading::TaskManager::AcquireWorkers(nThreads, true, threadsMessage, workersTicket);
+	if (threadsMessage.size()) { PyWarning("Initialize Solver: " + threadsMessage); }
 	if (nThreads > 1)
 	{
-		//verboseMode not defined at this point ==> this part needs to move to initialization of solver!
-		//VerboseWrite(1, STDstring("TaskManager::SetNumThreads = ") + EXUstd::ToString(simulationSettings.parallel.numberOfThreads) + "\n");
-		ExuThreading::TaskManager::SetNumThreads(simulationSettings.parallel.numberOfThreads);
-		pySpecial.solver.multiThreadingLoadBalancing = simulationSettings.parallel.useLoadBalancing;
-
-
-		ExuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
-
         output.numberOfThreadsUsed = ExuThreading::TaskManager::GetNumThreads();
         
         if (output.numberOfThreadsUsed == 1) //this reflects that taskmanager is not running!
@@ -482,16 +477,12 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 			STDstring strThreading;
 			strThreading = " (multithreading)";
 			if (ExuThreading::TaskManager::GetLoadBalancing()) { strThreading = " (multithreading & load balancing)"; }
+			if (workersAcquired == ExuThreading::workersPersistent) { strThreading += ", persistent threads"; }
 			VerboseWrite(1, STDstring("Start multi-threading with ") +
 				EXUstd::ToString(output.numberOfThreadsUsed) + " threads" + strThreading + "\n");
 
 			output.multiThreadingMode = 1 + (Index)ExuThreading::TaskManager::GetLoadBalancing(); //signal that exudyn internal multithreading mode was used
 		}
-	}
-	else
-	{
-		//this is needed to set back number of threads to 0, which otherwise causes that CSystem functions are still using parallel mode if there was a parallel run before
-		ExuThreading::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
 	}
 	//pout << "numThreads after init=" << ExuThreading::TaskManager::GetNumThreads() << "\n";
 
@@ -860,14 +851,15 @@ void CSolverBase::StopThreadsAndCloseFiles()
 {
 	//only the threads this solver started: the task manager is global, and a solver that is destroyed - by the garbage
 	//collector, while another solver runs - must not stop the threads of the other one (#2237)
-	if (output.multiThreadingMode != 0 && ExuThreading::TaskManager::IsRunning())
+	//ReleaseWorkers only touches the threads of this solver's ticket; persistent workers sleep again (#3437)
+	if (workersAcquired != ExuThreading::workersNotAcquired)
 	{
-		VerboseWrite(1, "Stop multi-threading\n");
-        ExuThreading::ExitTaskManager(1); // output.numberOfThreadsUsed);
-        ExuThreading::TaskManager::SetNumThreads(1); //for next computation, if it is going to be serial
-        output.numberOfThreadsUsed = 1;
-        output.multiThreadingMode = 0;
-    }
+		if (output.multiThreadingMode != 0) { VerboseWrite(1, "Stop multi-threading\n"); }
+		ExuThreading::TaskManager::ReleaseWorkers(workersAcquired, workersTicket);
+		workersAcquired = ExuThreading::workersNotAcquired;
+		output.numberOfThreadsUsed = 1;
+		output.multiThreadingMode = 0;
+	}
 
 	//++++++++++++++++++++++++++++++++++
 	//final finalize: close files (NO EARLIER!)

@@ -32,6 +32,7 @@
 #include "Linalg/LinearSolver.h" //for GeneralMatrixEXUdense
 #include "Main/WriteBinary.h"
 #include "Solver/CSolver.h"
+#include "Utilities/Parallel.h" //ExuThreading::WorkersAcquired (#3437)
 
 class CSystem;
 
@@ -70,6 +71,8 @@ public: //made public for simpler access via pybind; nevertheless, C++ functions
 	CSystemState outputEndOfStepState; //!< the state at the end of the step while the output within the step is written (#3286)
 	ArrayIndex outputLinearODE2; //!< 1 for the ODE2 coordinates not interpolated as polynomials in the output within the step: the rotations of Lie group nodes (#3286, #3389)
 	ArrayIndex outputLieGroupNodes; //!< the Lie group nodes, whose rotations are interpolated in the Lie algebra in the output within the step (#3389)
+	ExuThreading::WorkersAcquired workersAcquired = ExuThreading::workersNotAcquired; //!< the threads this solver took and gives back in StopThreadsAndCloseFiles (#3437)
+	Index workersTicket = 0; //!< identifies the threads taken, so that only they are given back (#2237, #3437)
 public:
 	CSolverBase()
 	{

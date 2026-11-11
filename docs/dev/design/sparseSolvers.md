@@ -211,6 +211,18 @@ serial in Eigen. MKL's threads cannot be Exudyn's (MKL creates its own OpenMP or
 - **Not done** (maintainer): factorizing independent subsystems on Exudyn's threads (RG5.9.5). Realistic models have no
   decoupled components; a user who has them splits them into systems of one SystemContainer, and solving those in
   parallel is RG5.10 (#3433).
+- **Persistent threads** (RG5.9.8, #3437), instead of sleeping workers by default (maintainer):
+  `exu.special.solver.StartPersistentThreads(n)` starts a task manager that stays; while no computation uses it, it is
+  detached from `task_manager`, `GetNumThreads()` is 1 for all other code, and its workers sleep on the condition
+  variable above. `TaskManager::AcquireWorkers(n, takeOver, message, ticket)` gives a solver (or the raytracer, or the
+  linear algebra benchmark) the persistent workers if `n` agrees, otherwise a task manager of its own, stopping the
+  persistent one for that run with a message - `parallel.numberOfThreads` wins; `ReleaseWorkers(acquired, ticket)`
+  parks them again or stops its own threads and restarts the persistent ones, and leaves alone threads another
+  computation took over (the ticket; #2237). An `atexit` hook stops them before Python ends. Measured (a chain of mass
+  points, EigenSparse, scratch persist2.py; per solve): 200 bodies, 1 step - 0.44 / 0.63 / 1.10 ms with threads of its own
+  on 4 / 8 / 16 threads, 0.26 / 0.24 / 0.30 ms persistent; 20 steps - 2.03 / 2.11 / 2.49 ms against 1.82 / 1.30 / 1.67 ms;
+  2000 bodies, 20 steps - 26.1 / 18.2 / 14.8 ms against 25.0 / 17.6 / 13.7 ms. Starting and stopping the threads costs
+  0.2-0.8 ms per solve.
 
 ## 6. Steps (RG5.9)
 
@@ -222,3 +234,4 @@ serial in Eigen. MKL's threads cannot be Exudyn's (MKL creates its own OpenMP or
 6. RG5.9.6 (#3434, closed): `reuseAnalyzedPattern` by default - not done: the performance models gain nothing, the test
    models with sparse solvers 1.6 % (at most 13 %).
 7. RG5.9.7 (#3432): the parallel forward and backward substitution with a nested-dissection ordering (§4).
+8. RG5.9.8 (#3437, closed): persistent threads of the TaskManager, started by `exu.special.solver` (§5).

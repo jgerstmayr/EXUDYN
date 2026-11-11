@@ -373,6 +373,28 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.solver.PardisoInfo', cName='un
                         argTypes=[],
                         returnType='dict',
                         )
+pb.DefPyFunctionAccess(cClass='', pyName='special.solver.StartPersistentThreads', cName='unused',
+                        description='start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer uses them alike; not possible while a computation uses threads (#3437)',
+                        argList=['numberOfThreads'],
+                        defaultArgs=[''],
+                        argTypes=['int'],
+                        returnType='None',
+                        example=r"""exu.special.solver.StartPersistentThreads(8)\\simulationSettings.parallel.numberOfThreads = 8""",
+                        )
+pb.DefPyFunctionAccess(cClass='', pyName='special.solver.StopPersistentThreads', cName='unused',
+                        description='stop the threads of StartPersistentThreads; not possible while a computation uses threads (#3437)',
+                        argList=[],
+                        defaultArgs=[],
+                        argTypes=[],
+                        returnType='None',
+                        )
+pb.DefPyFunctionAccess(cClass='', pyName='special.solver.PersistentThreads', cName='unused',
+                        description='the number of threads of StartPersistentThreads, the main thread included; 0: none (#3437)',
+                        argList=[],
+                        defaultArgs=[],
+                        argTypes=[],
+                        returnType='int',
+                        )
 pb.EndCppWrittenByHand()
 
 pb.AddDocu('', section='exudyn.special.exceptions', sectionLevel=2, sectionLabel='sec-exudyn-special-exceptions')

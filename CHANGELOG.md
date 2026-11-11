@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 545 | 1.13.569 |
+| 1.13 | Newborn | 547 | 1.13.571 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.571** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` What the systems of one SystemContainer share, before they are solved in parallel (#3440)
+  - description: A pre-analysis for \#3433: the global and static state, the GIL, the output, the errors, the files and the renderer interplay that two solvers on threads of their own would share, classified as to be made per system or locked, safe, or unclear, with the hardest obstacles.
+  - **notes:** Pre-analysis of solving the systems of one SystemContainer in parallel (docs/dev/design/systemContainerParallel.md): the solve does not release the GIL today; the shared state to be made per solver or locked (task manager, thread ids, timers, output, errors, renderer queues, file names), the safe parts and the main obstacles.
+  - date resolved: **2026-11-11 20:32**, date raised: 2026-11-11
+- **1.13.570** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Persistent worker threads of the TaskManager, started by exudyn.special.solver, sleeping between solves (#3437)
+  - description: Every solver with numberOfThreads \> 1 starts and stops its worker threads; for many runs of small systems this costs. A function of exudyn.special.solver starts a number of workers that stay, sleeping on a condition variable while no solver uses them; a solver whose simulationSettings.parallel.numberOfThreads agrees uses them, one that disagrees uses its own number for that solve and writes a message (simulationSettings wins).
+  - **notes:** exu.special.solver.StartPersistentThreads(n) starts n threads that stay, sleeping while no computation uses them; every solver with parallel.numberOfThreads = n uses them instead of starting and stopping threads of its own, which saves 0.2-0.8 ms per solve; a solver with another number of threads uses that number for its run, with a warning; StopPersistentThreads() and PersistentThreads() stop and count them; the raytracer uses them alike.
+  - date resolved: **2026-11-11 20:32**, date raised: 2026-11-11
 - **1.13.569** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The chapter of the Python modules is called Exudyn Python Modules (#3436)
   - description: The reference manual listed the Python modules of the exudyn package under the heading Python Utility Functions, which undersells them; the heading and the texts naming the chapter (README.rst, pdfIndex.md, pyproject.toml, robotics.md) say Exudyn Python Modules.
   - **notes:** The chapter of the reference manual with the Python modules of the exudyn package is called Exudyn Python Modules instead of Python Utility Functions.

@@ -70,6 +70,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
   - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution (1 open sub-step)
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
+  - RG5.11 Raytracer: threads parallel to the solver, and its scaling with the number of threads (2 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -111,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 12 | Performance |
+| RG5 | OPEN | 15 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -651,6 +652,10 @@ Maintainer 2026-11-11: MKL installed by the user (e.g. pip) and used by the C++ 
 
 Maintainer 2026-11-11, later: the sleeping workers cost something for very small thread tasks, and how long they sleep must be decided (as in NGsolve's TaskManager), so at least a setting switches them on and off - exudyn.special for such linear algebra settings during testing; with a constant step size the Jacobian hardly changes in realistic models, so the back-substitutions are many and a parallel one makes sense; RG5.9.5 closed, not done: realistic models (a large ropeway, a complex machine) have no decoupled components, and a user who has them can split them into systems of one SystemContainer - solving those in parallel is a step of its own (RG5.10), critical for the resources shared in the SystemContainer; RG5.9.6 to be measured on the performance tests and the test models with sparse solvers (expected to help little); RG5.9.2-RG5.9.4 now.
 
+Maintainer 2026-11-11, on the next steps: no special tricks for PARDISO (such as factorizing with PARDISO and substituting with SparseLU) - the option is valuable as it is, also where it is slower; PARDISO is expected to pay for very large systems, which come with the planned 4- and 10-node tetrahedra (not a step). RG5.9.7 to be tried; the persistent threads of the TaskManager as RG5.9.8 instead of sleeping workers by default.
+
+Maintainer 2026-11-11, on the next steps: no special tricks for PARDISO (such as factorizing with PARDISO and substituting with SparseLU) - the option is valuable as it is, also where it is slower; PARDISO is expected to pay for very large systems, which come with the planned 4- and 10-node tetrahedra (not a step). RG5.9.7 to be tried; persistent threads of the TaskManager (RG5.9.8) instead of sleeping workers by default.
+
 #### **CLOSED_RG5.9.1** Design and evaluate MKL PARDISO at run time, the threads of the factorization and a parallel back-substitution
 
 #3427. CLOSED 2026-11-11 (#3427): docs/dev/design/sparseSolvers.md - MKL loaded at run time from the environment (no build dependency), the solver type PardisoMKL with Eigen's matrix passed without a copy, a residual check and the fallback to SparseLU, the settings; the study of the failures (half of the stored entries are numerical noise, condition up to 2e11); the back-substitution has about 3 unknowns per level in chains - not parallelizable by levels; the workers sleeping during a factorization, and independent subsystems on Exudyn's own threads. [log](exudynRevisionLog2026c.md#rg5-9-1)
@@ -679,9 +684,33 @@ Maintainer 2026-11-11, later: the sleeping workers cost something for very small
 
 #3432. The ordering by nested dissection gives the triangular solves of chains 40-100 levels instead of 1000-4500, and speedup bounds of 18-60 at about twice the fill (sparseSolvers.md section 4); an ordering without METIS, the factors in a plain format after each factorization, the substitution by subtrees of the elimination tree; measured against the serial solve of SparseLU on the chains and on a model with constant Jacobian and modified Newton.
 
+#### **CLOSED_RG5.9.8** Keep persistent worker threads in the TaskManager, started by exudyn.special.solver and sleeping between solves
+
+#3437. Maintainer 2026-11-11: sleeping workers by default would change the workflow of the TaskManager; instead a function of exudyn.special.solver starts a number of workers that stay - for many runs of small systems; the solvers still take the number of threads from simulationSettings, and where the two disagree simulationSettings wins and a message is written. Between solves the workers sleep on the condition variable of RG5.9.3; the raytracer takes them like a solver.
+
+CLOSED 2026-11-11 (#3437): exu.special.solver.StartPersistentThreads(n), StopPersistentThreads(), PersistentThreads(); a parked task manager (detached from task_manager, GetNumThreads() 1 outside a computation, workers asleep on the condition variable of RG5.9.3); TaskManager::AcquireWorkers / ReleaseWorkers with a ticket for the solvers, the raytracer and the linear algebra benchmark - persistent workers if the number agrees, otherwise threads of its own with a warning, and the persistent ones again after it; an atexit hook stops them; 0.2-0.8 ms saved per solve (40-70 % of a solve of one step, 4-8 % of 20 steps of 2000 bodies); test model persistentThreadsTest.py. [log](exudynRevisionLog2026c.md#rg5-9-8)
+
 ### **OPEN_RG5.10** Solve the systems of one SystemContainer in parallel, each on its own thread
 
 #3433. Approved by the maintainer 2026-11-11 (in place of RG5.9.5): a model of independent parts is split by the user into systems of one SystemContainer; first a study of what the systems share (renderer and visualization data, Python user functions and the GIL, output files, the TaskManager, pySpecial and other globals), then a design.
+
+Maintainer 2026-11-11: the pre-analysis of what the systems share now.
+
+#### **CLOSED_RG5.10.1** Pre-analysis: what the systems of one SystemContainer and their solvers share
+
+#3440. CLOSED 2026-11-11 (#3440): docs/dev/design/systemContainerParallel.md - the solve never releases the GIL, so solves on Python threads run one after another today; to be made per solver or locked: the one task manager with its global thread count, thread id 0 as the main thread (symbolic recordings), the suspension of workers, the pySpecial counters, the global timers, a static matrix in MatrixBase::Invert, pout and outputBuffer, PyError/PyWarning and the global error flag, the idle operations (renderer queues, PyCheckSignals), colliding default file names, the shared settings object in SolveDynamic; safe: the per-system render lock, per-solver data, thread_local scratch data, PARDISO (serialized). The natural start: numberOfThreads = 1 per system, the systems on threads of a pool, thread-local thread counts and ids. [log](exudynRevisionLog2026c.md#rg5-9-8)
+
+### **OPEN_RG5.11** Raytracer: threads parallel to the solver, and its scaling with the number of threads
+
+Approved by the maintainer 2026-11-11: the raytracer shall run in parallel to the solver from the renderer thread, and its scaling shall be understood - it needs 64-128 threads on 16 cores for its best speed, although each thread gets small portions of work; what is learned may speed up the parallel loops of Exudyn in general, and a faster raytracer helps every user.
+
+#### **OPEN_RG5.11.1** Run the raytracer with threads of its own while a solver runs, also from the renderer thread
+
+#3438. The raytracer is started from the main thread and from the renderer thread; the TaskManager is one global object, so during a solve the raytracer falls back to one thread, and one started in the renderer thread during a solve crashes at once. A pool of threads for the raytracer next to the solver's.
+
+#### **OPEN_RG5.11.2** Measure and explain the scaling of the raytracer with the number of threads
+
+#3439. Best speed only with 64-128 threads on 16 cores. Candidates: the static split of the tiles when load balancing is off (multiThreadingLoadBalancing is taken from the last solver), the tiles per thread, the workers that spin with yield, the memory traffic of the tiles; the result applies to ParallelFor in general.
 
 ## **CLOSED_RG6** Graphics and rendering
 

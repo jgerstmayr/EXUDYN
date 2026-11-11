@@ -1,0 +1,15 @@
+{
+  "number": 3437,
+  "title": "Persistent worker threads of the TaskManager, started by exudyn.special.solver, sleeping between solves",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Every solver with numberOfThreads > 1 starts and stops its worker threads; for many runs of small systems this costs. A function of exudyn.special.solver starts a number of workers that stay, sleeping on a condition variable while no solver uses them; a solver whose simulationSettings.parallel.numberOfThreads agrees uses them, one that disagrees uses its own number for that solve and writes a message (simulationSettings wins).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 20:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exu.special.solver.StartPersistentThreads(n) starts n threads that stay, sleeping while no computation uses them; every solver with parallel.numberOfThreads = n uses them instead of starting and stopping threads of its own, which saves 0.2-0.8 ms per solve; a solver with another number of threads uses that number for its run, with a warning; StopPersistentThreads() and PersistentThreads() stop and count them; the raytracer uses them alike.",
+  "resolvedInVersion": "1.13.570"
+}

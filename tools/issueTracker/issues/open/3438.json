@@ -1,0 +1,11 @@
+{
+  "number": 3438,
+  "title": "The raytracer runs with several threads while a solver runs, from the renderer thread",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10"
+}
