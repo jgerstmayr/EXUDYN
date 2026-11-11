@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.559.dev1
+- Exudyn version = 1.13.560.dev1
 - last change = 2026-11-11
-- Number of issues = 3425
-- Number of resolved issues = 3336 (559 in current version)
+- Number of issues = 3427
+- Number of resolved issues = 3337 (560 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` graphics: screw threads (single- and multi-start, external and internal, run-outs, shafts) and hexagon prisms for heads and nuts (#3425)
+  - description: Screws on ObjectJointHelicalZ have no graphics: exudyn.graphics has solids of revolution and extrusions, but no helical surface. Proposed: graphics.ScrewThread for external and internal threads of a given pitch and number of starts, with the profile as a normalized line segment or by name ('triangle', 'metric', 'trapezoid'), the thread running out at both ends into the shaft, contours of the shaft before and after the thread as in SolidOfRevolution, an outer cylinder for internal threads; graphics.HexagonPrism for heads and nuts. The recommendation and the questions are in revision2026c step RG6.24; the implementation waits for the decisions.
+  - date raised: 2026-11-11
 - `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
   - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.
   - date raised: 2026-11-09

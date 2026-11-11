@@ -1,0 +1,16 @@
+{
+  "number": 3426,
+  "title": "Evaluate Eigen 5.0.1 instead of 3.3.7, and MKL PARDISO from Python for the factorization of the system Jacobian",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Exudyn vendors Eigen 3.3.7; Eigen 5.0.1 (2025-11) requires C++14 and is MPL2 only. Evaluate, before changing Exudyn: whether Exudyn builds with 5.0.1 unchanged, the linear algebra benchmark and the sparse factorization of the system Jacobian with both versions in the regular and the fast module, the test suite results, and the known bugs of 5.0.x as far as they concern Exudyn. Further, whether the factorization can be done by Intel MKL (PARDISO) through Python - the hooks of the solver, the cost of handing the Jacobian over, the speed and the reliability on Exudyn's Jacobians. Results in docs/dev/design/linalgBenchmark.md.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 12:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/design/linalgBenchmark.md",
+  "releaseNotes": "Evaluated, Exudyn unchanged (docs/dev/design/linalgBenchmark.md sections 3.8 and 3.9): Eigen 5.0.1 builds unchanged, but the sparse factorization and setFromTriplets are as fast as with 3.3.7, small fixed-size products are slower, and 10 test results move by round-off - kept at 3.3.7. MKL PARDISO factorizes 2.5-24 times faster when its analysis is kept, but fails or returns wrong solutions on the Jacobians of index-3 constraints, and the solver has no hook to hand a Newton increment back from Python - not used. The existing setting linearSolver.reuseAnalyzedPattern shortens the sparse factorization by 20-31 % where the pattern stays.",
+  "resolvedInVersion": "1.13.560"
+}

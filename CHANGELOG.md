@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 535 | 1.13.559 |
+| 1.13 | Newborn | 536 | 1.13.560 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.560** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Evaluate Eigen 5.0.1 instead of 3.3.7, and MKL PARDISO from Python for the factorization of the system Jacobian (#3426)
+  - description: Exudyn vendors Eigen 3.3.7; Eigen 5.0.1 (2025-11) requires C++14 and is MPL2 only. Evaluate, before changing Exudyn: whether Exudyn builds with 5.0.1 unchanged, the linear algebra benchmark and the sparse factorization of the system Jacobian with both versions in the regular and the fast module, the test suite results, and the known bugs of 5.0.x as far as they concern Exudyn. Further, whether the factorization can be done by Intel MKL (PARDISO) through Python - the hooks of the solver, the cost of handing the Jacobian over, the speed and the reliability on Exudyn's Jacobians. Results in docs/dev/design/linalgBenchmark.md.
+  - **notes:** Evaluated, Exudyn unchanged (docs/dev/design/linalgBenchmark.md sections 3.8 and 3.9): Eigen 5.0.1 builds unchanged, but the sparse factorization and setFromTriplets are as fast as with 3.3.7, small fixed-size products are slower, and 10 test results move by round-off - kept at 3.3.7. MKL PARDISO factorizes 2.5-24 times faster when its analysis is kept, but fails or returns wrong solutions on the Jacobians of index-3 constraints, and the solver has no hook to hand a Newton increment back from Python - not used. The existing setting linearSolver.reuseAnalyzedPattern shortens the sparse factorization by 20-31 % where the pattern stays.
+  - date resolved: **2026-11-11 12:31**, date raised: 2026-11-11
 - **1.13.559** `EXAMPLE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pathPlanningUR5.py: the floors at the height of the robot bases, the wall of the first robot lower and transparent (#3424)
   - description: The floors of both robots had their top at z = -0.1, while the bases of the UR5 and the obstacles standing on the floor begin at z = 0, so robots and objects appeared to float. The wall of the first robot (1.6 m high, opaque) hid the robots and their trajectories when both are seen from one side. Change: the floors are drawn with their top at z = 0; the floor of the collision check lies 0.03 m lower, because the capsule of the shoulder reaches 4 mm below the base and would otherwise touch the floor at every configuration. The wall of the first robot is 0.8 m high and half transparent. The window scene uses another seed of the planner, as the narrow passage was not found with the previous one.
   - **notes:** pathPlanningUR5.py: the floors are drawn with their top at z = 0, where the robot bases and the obstacles stand (the floor of the collision check lies 0.03 m lower, as the capsule of the shoulder reaches below the base); the wall of the first robot is 0.8 m high and half transparent; the window scene uses seed 6.

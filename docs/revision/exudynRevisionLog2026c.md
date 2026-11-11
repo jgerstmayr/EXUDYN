@@ -6431,6 +6431,29 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-1-12"></a>
+### RG5.1.12 — Eigen 5.0.1 and MKL PARDISO from Python, evaluated (2026-11-11, #3426)
+*(Maintainer 2026-11-11: the current eigen-5.0.1.zip is in tmp - try whether it helps; check the bugs mentioned on the
+GitLab page as far as they are relevant; consider MKL for the factorization directly through Python, not through the
+C++ - does this work; evaluate first and add the results to linalgBenchmark.md before changing Exudyn.)*
+
+- Eigen 5.0.1: a scratch worktree of HEAD with `include/Eigen` replaced, built with `exudev build --fast --no-install`,
+  the wheel in a scratch venv (`--system-site-packages`, `pip install --ignore-installed`; without it pip kept the
+  installed 1.13.559 of the base environment - first run). Builds without a source change and without a warning from
+  Eigen. `RunLinalgBenchmark` in both modules and versions (scratch benchRun.py, eigenCmp.py), the factorization of the
+  models of RG5.1.11 (scratch mklEval.py), the test suite in both modules: 10 of 333 test models differ by round-off.
+- Network (announced): libeigen.gitlab.io, its release page of 5.0, the GitLab API for the issues of `release::5.0.1`
+  and the open confirmed bugs since 2025-09. Relevant were only #2982/#2984 (alignment, fixed in 5.0.1), #3230
+  (`ComplexEigenSolver` eigenvectors; Exudyn uses eigenvalues only), #3086/#3119 (performance of small sizes).
+- MKL: `mkl_rt.2.dll` of `venvExuP313` by ctypes, PARDISO on the Jacobians from `GetSystemJacobian(sparse=True)`. The
+  default parallel factorization gave a residual of 1e3 on the revolute chain of 100 bodies with error 0 (44 perturbed
+  pivots; first run); `iparm[23] = 10` solved it, but the chain of 1000 bodies failed with every tried setting. The Python
+  side has `SetUserFunctionNewton`, but no setter of the Newton increment.
+- Then `linearSolver.reuseAnalyzedPattern` (exists, off by default): 20-31 % shorter factorizations where the number of
+  nonzeros stays; the spring chain changes it, because the assembly leaves out exact zeros.
+- `docs/dev/design/linalgBenchmark.md` §3.8, §3.9, G6, G7 and §7. The worktree and the scratch venv removed.
+- Raised #3425 for the screw graphics (RG6.24, open: the recommendation and the questions in the plan).
+
 <a id="rg21-6-9"></a>
 ### RG21.6.9 — pathPlanningUR5.py: the floors at the height of the bases, the wall lower and transparent (2026-11-11, #3424)
 *(Maintainer 2026-11-11: the robot with the many obstacles and the objects seem to fly, possibly the ground is too low;

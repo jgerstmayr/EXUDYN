@@ -213,6 +213,113 @@ pattern mode of the sparse Jacobian (G1) would gain at most these few percent, a
 factorization (Eigen's `SparseLU`, 53-58 % of the revolute chain with full Newton) and the Jacobian of the
 RigidBodySpringDamper (58-66 % of its chain: about 10 us per connector and Jacobian, against 2 us for a revolute joint).
 
+### 3.8 Eigen 5.0.1 instead of 3.3.7 (#3426)
+
+Eigen 5.0.1 (2025-11-11; requires C++14, MPL2 only since the LGPL parts were removed) in place of `include/Eigen`,
+in a scratch copy of the repository, Exudyn 1.13.559, both modules; nothing else changed.
+
+- **It builds unchanged**: no source change, no warning from Eigen (`EIGEN_MPL2_ONLY` is no longer needed but harmless).
+- **The test suite**: 323 of 333 test models and all 108 mini examples give the same results, in both modules; 10 differ
+  by round-off beyond the tolerance of 5e-14 - beams (ANCFBeamTest, geometricallyExactBeam2DquadraticTest,
+  geometricallyExactBeamRightAngleFrame 3e-10 / 6e-10), bricardMechanism, ballBearingTest, ANCFgeneralContactCircle,
+  sphereTriangleTest2, createSphereQuadContact2 (1e-13 to 2e-11) and the contact models createSphereQuadContact and
+  createSphereTriangleContact (3e-8 / 2e-8, regular / fast). A change of Eigen moves these references.
+- **The sparse factorization** (`SparseLU` with COLAMD, per factorization of the models of §3.7, full Newton, regular
+  module): the same within the noise - revolute chain 31/317/4221 us (3.3.7) against 32/318/3983 us (5.0.1) for 10/100/1000
+  bodies, spring chain 34/561/6866 against 35/583/6956 us, mass points 8/46/328 against 9/46/328 us. The wall time of the
+  solver in both modules within -6 % ... +6 %. `setFromTriplets` (assembly, §3.5) the same.
+- **Dense LU** (`PartialPivLU`, the solver type `EigenDense`): `compute` in the fast module (AVX2) 1.3-2.9 times faster
+  from n = 12 on (n = 500: 5.6 ms to 1.9 ms), in the regular module 1.2-1.5 times faster up to n = 24 and 0.8-0.9 times
+  from n = 100 on; `solve` 0.6-0.8 times in both.
+- **Vectors** (`VectorXd`): 1.4-2.5 times faster from n = 12 on in the regular module, 1.1-2.7 in the fast module; but
+  n = 3 and 6 in the fast module 0.5-0.65 times.
+- **Small fixed sizes are slower**, with MSVC: `Matrix3d * Vector3d` 3.4 to 14.8 ns (regular), `Matrix3d^T * Vector3d`
+  3.9 to 31-40 ns, `Matrix<6,6> * Matrix<6,1>` 7.8 to 20 ns, $\Jm\tp\fv$ with `Matrix<3,n>` 6-13 to 59-253 ns (10-20
+  times, both modules); `Matrix3d * Matrix3d` faster (42 to 36 / 20 ns). Exudyn's items do not use Eigen's fixed sizes,
+  so this concerns the benchmark's reference only, not the solver.
+- **Known bugs** (gitlab.com/libeigen/eigen, 2026-11-11): the 20 issues fixed in 5.0.1 include an aligned AVX store into
+  a 16-byte array (#2982) and an alignment assumption on macOS (#2984), both relevant to the fast module and the macOS
+  wheels, both fixed in 5.0.1 - so not 5.0.0. Open and confirmed since 2025-09: `ComplexEigenSolver` eigenvectors that
+  overflow (#3230; Exudyn computes eigenvalues only, in `EXUmath::PolynomialRoots`), `SparseQR` (#3231, not used), HIP
+  (#3199, not used); open performance issues on partial packets on AVX2 (#3086) and on the threshold of fixed-size
+  products (#3119), which match the slower small sizes above. Nothing open concerns `SparseLU`, `SimplicialLDLT`,
+  `PartialPivLU`, `FullPivLU` or `setFromTriplets`.
+
+**Result**: 5.0.1 is a drop-in replacement, but it gains nothing where Exudyn spends time (the sparse factorization and
+`setFromTriplets`); it gains for the dense solver `EigenDense` in the fast module, and loses on small fixed-size
+products, which Exudyn does not use. G6 is therefore not worth a change now; the next occasion is Eigen 5.1 or a need for
+the dense solver of larger systems.
+
+### 3.9 MKL PARDISO from Python (#3426)
+
+The question: can the factorization be done by Intel MKL directly from Python, without linking MKL into the C++ (rule 6:
+no heavy C++ dependency)? MKL is present in the conda environment `venvExuP313` (`Library/bin/mkl_rt.2.dll`, with `mkl-service`); PARDISO
+was called by `ctypes` on the system Jacobians of the models of §3.7, taken by `GetSystemJacobian(sparse=True)` after
+100 steps (real unsymmetric, `mtype = 11`, zero-based CSR, `iparm` from `pardisoinit`), against Eigen's `SparseLU` inside
+Exudyn and scipy's `splu` (SuperLU, COLAMD). Microseconds per call, regular module, Eigen 3.3.7:
+
+| model | n | system / nonzeros | SparseLU (Exudyn) | SuperLU | PARDISO 1 thread: factorize / solve | PARDISO 4 / 16 threads: factorize | PARDISO analysis | `GetSystemJacobian` |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| revolute chain | 10 | 130 / 644 | 31 | 37 | 12 / 13 | 12 / 13 | 60 | 28 |
+| revolute chain | 100 | 1300 / 6674 | 317 | 337 | 75 / 59 | 30 / 63 | 827 | 48 |
+| revolute chain | 1000 | 13000 / 66974 | 4221 | 3364 | **fails** | **wrong** | 11158 | 408 |
+| spring chain | 10 | 80 / 748 | 34 | 28 | 12 / 12 | 12 / 12 | 54 | 29 |
+| spring chain | 100 | 800 / 8170 | 561 | 453 | 94 / 52 | 95 / 95 | 663 | 54 |
+| spring chain | 1000 | 8000 / 83244 | 6866 | 5280 | 2446 / 814 | 532 / 282 | 15209 | 451 |
+| mass points | 10 | 30 / 116 | 8 | 17 | 8 / 10 | 9 / 9 | 30 | 26 |
+| mass points | 100 | 300 / 937 | 46 | 46 | 14 / 16 | 14 / 14 | 74 | 30 |
+| mass points | 1000 | 3000 / 5789 | 328 | 315 | 43 / 61 | 25 / 29 | 427 | 49 |
+
+- **Speed**: PARDISO factorizes 2.5-7 times faster than `SparseLU` on one thread when the analysis (ordering, symbolic
+  factorization) is reused, and up to 24 times with 16 threads on the largest spring chain. The analysis costs 2-3
+  factorizations of `SparseLU`, so the gain needs the pattern kept between the Jacobians - which is G1, rejected in §3.7
+  for the assembly alone.
+- **Reliability - the decisive point**: PARDISO pivots statically (perturbing small pivots by $10^{-13}$, then iterative
+  refinement), not by partial pivoting as `SparseLU` and SuperLU. On the Jacobians of index-3 constraints (zero
+  diagonal of the multipliers, the scaling of generalized-$\alpha$) this fails silently: the revolute chain of 100 bodies
+  with the default parallel factorization (`iparm[23] = 0`, 8 threads) perturbs 44 pivots and returns a solution with a
+  relative residual of $10^3$ and error code 0; only the two-level factorization (`iparm[23] = 10`) solves it. The chain of
+  1000 bodies fails with every tried setting (`iparm[23]` 0, 1, 10; perturbation $10^{-13}$, $10^{-8}$, $10^{-6}$; 20
+  refinement steps; without scaling and matching): error -15 or relative residuals from $10^{-3}$ to $10^2$, while
+  `SparseLU` and SuperLU solve it (SuperLU residual $10^{-7}$). The ODE models (spring chain, mass points) are solved to
+  $10^{-16}$ in every setting.
+- **The hand-over**: `GetSystemJacobian(sparse=True)` copies the Jacobian into a scipy CSR matrix: 26-54 us up to 1300
+  unknowns, 400-450 us at 8000-13000 - as much as the factorization for small systems, which therefore cannot gain.
+- **The hooks**: `MainSolverImplicitSecondOrder.SetUserFunctionNewton` replaces the Newton loop by Python, which calls
+  `ComputeNewtonResidual`, `ComputeNewtonJacobian`, `GetSystemJacobian` and `GetSystemResidual`. There is **no way back**:
+  the increment `newtonSolution` cannot be set from Python (`SolverLocalData` is bound, but no solver gives it out, and
+  there is no setter), and `ComputeNewtonUpdate` reads it. A Python Newton would also have to repeat what the C++ Newton
+  does (modified Newton, the discontinuous iteration, the step reduction, the solver statistics). So **MKL from Python
+  does not work today** without a small C++ addition - a user function of the linear solve, `(J, r) -> x`, or
+  `SetNewtonSolution` - and then pays the hand-over and a Python call per iteration.
+- **The estimate** where it would gain: the spring chain of 1000 bodies with full Newton spends 198 x 6.9 ms = 1.36 s of
+  4.5 s in `SparseLU`; PARDISO with 16 threads, the hand-over and the solve would take about 198 x 1.0 ms = 0.2 s, i.e.
+  25 % of the solver time. With modified Newton (the default) the factorization is 1-18 % of the solver time (§3.7), and
+  the gain is at most that.
+
+**Result**: MKL PARDISO is fast but not reliable on the Jacobians of index-3 constraints, which are Exudyn's common case;
+from Python it needs a C++ hook and loses its gain on small systems to the hand-over. Not now. If a faster sparse
+solver is wanted, the candidates are (1) the reuse of the symbolic analysis of `SparseLU` between Jacobians, which
+exists as `linearSolver.reuseAnalyzedPattern` (off by default; the pattern is analyzed again when the number of
+nonzeros changes, and when the factorization with the old one fails). Measured, regular module, full Newton:
+
+| model | n | factorize: new analysis / reused | wall time of the solver |
+|---|---:|---:|---:|
+| revolute chain | 100 | 316 / 224 us | 0.117 / 0.098 s (-16 %) |
+| revolute chain | 1000 | 3926 / 2806 us | 1.51 / 1.26 s (-17 %) |
+| spring chain | 100 | 547 / 549 us | 0.355 / 0.357 s |
+| spring chain | 1000 | 5714 / 5664 us | 3.70 / 3.65 s |
+| mass points | 100 | 47 / 32 us | 0.017 / 0.016 s |
+| mass points | 1000 | 329 / 265 us | 0.159 / 0.153 s (-4 %) |
+
+The factorization is 20-31 % shorter where the pattern stays; the spring chain gains nothing, because its number of
+nonzeros changes between the Jacobians (8130 and 8170 at n = 100 in the export: the assembly into triplets leaves out
+the entries that are exactly zero, `GeneralMatrixEigenSparse::AddSubmatrix`), so the analysis is repeated. This is the cheapest lever - a setting, no new dependency; whether it can be the default needs
+the test suite with it and a pattern that does not depend on numerical zeros. (2) a solver with threshold partial
+pivoting and threads, loaded at run time as an optional dependency - UMFPACK or KLU of SuiteSparse, which Eigen
+supports in C++ but which are GPL (UMFPACK) and LGPL (KLU), or PARDISO only after its pivoting is shown to work on the
+index-3 tests.
+
 ## 4. Eigen as the reference
 
 Eigen 3.3.7 compiled by MSVC is not a reference for every small product: `Matrix3d * Matrix3d` takes 41 ns with
@@ -287,7 +394,8 @@ L1-L3 are implemented by #3417, L4 and the products of L5 by #3418 (the replacem
 | G3 | merge `ResizableVector` into `Vector` (RG5.1.2) | after L2 the difference is gone | only if L2 does not close it |
 | G4 | the threading limit per number of threads, or 100000 | 16 threads 2.5 times slower at 20000 | RG5.1.2 |
 | G5 | the dense solver by Eigen's LU from n ~ 24 on, or keep the inverse and L1 | after L1 the inverse times rhs is as fast as the LU solve | decide after L1 |
-| G6 | Eigen 3.4 (or later) instead of 3.3.7 | 3.3.7/MSVC small products slow (§4) | the vendored headers; a check of the sparse solvers' results first |
+| G6 | Eigen 3.4 (or later) instead of 3.3.7 | 3.3.7/MSVC small products slow (§4) | the vendored headers; a check of the sparse solvers' results first. 5.0.1 evaluated (§3.8): builds unchanged, no gain in the sparse factorization, small fixed sizes slower - not now |
+| G7 | an external sparse solver (MKL PARDISO) for the factorization | PARDISO 2.5-24 times faster when the analysis is kept (§3.9) | evaluated (§3.9): fails on index-3 Jacobians, no hook from Python - not now; first `linearSolver.reuseAnalyzedPattern` of `SparseLU`, 20-31 % of the factorization (§3.9) |
 
 ### 6.3 Tests that give the evidence for the next decisions
 
@@ -301,4 +409,6 @@ L1-L3 are implemented by #3417, L4 and the products of L5 by #3418 (the replacem
 ## 7. Open
 
 - The same tables on Linux (gcc) and macOS (clang).
-- The cause of the slow small products of Eigen 3.3.7 with MSVC (§4).
+- The cause of the slow small products of Eigen 3.3.7 with MSVC (§4); with 5.0.1 they are slower still (§3.8).
+- The factorization: whether `linearSolver.reuseAnalyzedPattern` can be the default for the sparse solver (§3.9), with
+  a pattern that keeps exact zeros, so that it does not change between the Jacobians; the test suite with it.

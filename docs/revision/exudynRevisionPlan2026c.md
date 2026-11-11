@@ -68,6 +68,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
+- **RG6** Graphics and rendering
+  - RG6.24 Screw threads and hexagon prisms in exudyn.graphics, for the helical joint
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -110,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
-| RG6 | CLOSED | 0 | Graphics and rendering |
+| RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -565,6 +567,12 @@ Recommendation G1 of docs/dev/design/linalgBenchmark.md: adding into a known pat
 
 CLOSED 2026-11-11 (#3420): the global timers finalize matrix and factorize; FinalizeMatrix is 2-7 % of the solver time of sparse models of many small objects with full Newton, below 2 % with modified Newton - a pattern mode of GeneralMatrix (G1) not now; the factorization (SparseLU, up to 58 %) and the Jacobian of RigidBodySpringDamper (up to 66 % of its chain) are the levers. [log](exudynRevisionLog2026c.md#rg5-1-11)
 
+#### **CLOSED_RG5.1.12** Evaluate Eigen 5.0.1 and MKL PARDISO from Python for the factorization
+
+#3426 (maintainer 2026-11-11: Eigen 5.0.1 tried in place of 3.3.7, its known bugs checked as far as they concern Exudyn; MKL for the factorization directly from Python, not through the C++ - does it work; the evaluation into linalgBenchmark.md before Exudyn is changed).
+
+CLOSED 2026-11-11 (#3426): Eigen 5.0.1 builds unchanged; SparseLU and setFromTriplets the same speed, dense LU faster in the fast module, small fixed-size products slower; 323 of 333 test results the same, 10 by round-off (up to 3e-8 for contact); no open Eigen bug concerns Exudyn - not now. MKL PARDISO 2.5-24 times faster when its analysis is kept, but wrong or failing on index-3 Jacobians, and no way from Python to hand the increment back to the Newton loop - not now; linearSolver.reuseAnalyzedPattern shortens the factorization by 20-31 % where the pattern stays. [log](exudynRevisionLog2026c.md#rg5-1-12)
+
 ### **OPEN_RG5.2** Make the hot linear algebra vectorizable with compile-time sizes
 
 The solver time of long-vector models sits in `ODE2RHS` - per-object 3x3 and short-vector work - and
@@ -637,7 +645,7 @@ From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a perf
 
 #1910, moved from RG13.2. After RG5.8.1: where the items add reference and current coordinates today and what that costs; where total coordinates would be formed (once per step, per Newton iteration, per evaluation), stored or linked (currentState.ODE2CoordsTotal, an option of the solver); a proposal only if the gain exceeds the vector addition and the memory.
 
-## **CLOSED_RG6** Graphics and rendering
+## **OPEN_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -964,6 +972,33 @@ Maintainer 2026-11-09: while the simulation is idle (paused or stopped), the mou
 Sub-steps when decided: (1) the idle flag and the override in the render state, ScopePlot with the override, (2) the mouse handling with its priority after the icon bar and the controls of the step on buttons and sliders, (3) the user documentation (GUI chapter, scopes) and an interactive example.
 
 CLOSED 2026-11-10 (#3401 resolved): idle = paused or no new state for 0.3 s, a new state resets; RenderState::scopeViews with the override and the last drawn ranges and plot areas; wheel, SHIFT, CTRL, drag and double click; GUI.md and the mouse table. [log](exudynRevisionLog2026c.md#rg6-22)
+
+### **OPEN_RG6.24** Screw threads and hexagon prisms in exudyn.graphics, for the helical joint
+
+#3425 (maintainer 2026-11-11: a visualization of screws for the helical joint, similar to `SolidOfRevolution`: single- and multi-start threads of a given pitch as a function in `exudyn.graphics`; the thread profile as a line segment normalized to the pitch (and the height), with the basic profiles 'triangle' (simplified metric), 'metric' and 'trapezoid' by name; the thread running out over a length at both ends into a cylinder, with lists of shaft diameters before and after the thread as in `SolidOfRevolution`, so that a taper or the shaft itself is drawn as well; internal threads with an outer cylinder of a given radius; hexagonal heads, simplified as an extruded hexagon. Recommendation and questions first; the implementation after the maintainer checked them).
+
+**Recommendation (to be decided before the implementation):**
+- **Two functions**: `graphics.ScrewThread(...)` for external and internal threads, and `graphics.HexagonPrism(...)` for heads and nuts. A screw is the thread plus a hexagon prism; the example of the step shows a bolt with nut on the helical joint. A `Bolt`/`Nut` convenience function is left out until it is needed.
+- **The surface is one radius function** $r(\varphi, s)$ on a helical grid: with the lead $L = n_{starts} P$, a point at angle $\varphi$ and helical coordinate $s$ lies at $z = s + L\varphi/(2\pi)$ and radius $r = r_{root} \pm h\,f(u)$, $u = (s \bmod P)/P$, where $f$ is the normalized profile (+ external, - internal). The grid lines of constant $s$ are the breakpoints of the profile, so crests, roots and flanks are exact (sharp edges by doubled points with their own normals), multi-start comes from $L = n_{starts}P$ without extra code, and left-hand threads from the sign of $L$. The mesh is closed and made of plain triangles (`FromPointsAndTrigs`), $n_{Tiles}$ around times the points of the profile per pitch.
+- **The profile**: a list (or numpy array) of points $[u, v]$, $u \in [0,1]$ along one pitch, $v \in [0,1]$ from the root (0) to the crest (1), piecewise linear and periodic ($v(0) = v(1)$); a vertical flank is two points of the same $u$, an overhanging flank (decreasing $u$) is refused. The height $h$ is absolute, by default from the pitch for the named profiles, so the flank angle follows from $h$ and $P$:
+  - `'triangle'`: the sharp 60 degree V, $h = 0.866P$;
+  - `'metric'`: ISO 68-1 with the flat crest $P/8$ and the root $P/4$ (rounded root drawn flat), $h = 0.6134P$ external, $0.5413P$ internal;
+  - `'trapezoid'`: ISO 2904 (Tr), 30 degrees, $h = 0.5P$ (+ clearance), crest and root flats $0.366P$;
+  - possibly `'square'` and `'buttress'` (ISO 3030, 3/30 degrees) as they cost one line each.
+- **Run-out, chamfers and shafts by an envelope**: the thread radius is clamped between `rMin(z)` and `rMax(z)`, two piecewise linear contours given as lists of `[z, r]` (as the contour of `SolidOfRevolution`). A machined run-out is `rMin` rising from the root to the major diameter over `runOutLength`; a chamfer at the tip is `rMax` falling. `contourBefore` and `contourAfter` (lists of `[z, r]`, z relative to the start and the end of the thread) are drawn as solids of revolution and meet the thread seamlessly, because the envelope ends at their radius. A plain `runOutLength=[l0, l1]` builds the envelope for the common case, so the lists are only needed for a shaft or a taper. The clamped edges do not lie on grid lines, so a chamfer is faceted at coarse `nTiles` - acceptable for the visualization.
+- **Internal thread**: the same surface with the profile turned over (crest at the minor diameter) and the normals inward; `outerDiameter` gives the outer cylinder, the end faces are rings between the thread and the outer cylinder.
+- **HexagonPrism**: `pAxis, vAxis, widthAcrossFlats, height`, optional `boreDiameter` (a nut, by `SolidExtrusion` with an inner circle) and a 30 degree chamfer of the edges as an option later (the intersection with a cone, by the same clamp).
+- **Parameters of ScrewThread**: `pAxis, vAxis, length, majorDiameter, pitch, profile='metric', height=None, starts=1, rightHanded=True, internal=False, outerDiameter=None, runOutLength=[0,0], contourBefore=None, contourAfter=None, rMin=None, rMax=None, color, nTiles=32, alternatingColor=None, addEdges=False`. Size: an M10 thread of 50 mm with 32 tiles and 8 profile points is about 17000 quads, 34000 triangles.
+- **Test model** with the bounding boxes, the number of triangles and a fingerprint of the points (graphics regression), the closedness of the mesh, and the helical joint drawn with a bolt and a nut whose rotation matches the pitch.
+
+**Questions:**
+1. Two functions `ScrewThread` and `HexagonPrism`, or also `Bolt`/`Nut` that assemble head, shaft and thread?
+2. The height of the profile absolute (default from the pitch per named profile), or relative to the pitch?
+3. The envelope by `rMin`/`rMax` contours (general) plus `runOutLength` (simple) - or only the simple parameters?
+4. A small table of ISO coarse threads (`'M10'` -> 10 mm, pitch 1.5 mm), or always diameter and pitch?
+5. Should `ObjectJointHelicalZ` draw a thread itself (C++, `VObjectJointHelicalZ`, with the pitch of the joint), or does the thread stay graphics data of the bodies, the joint drawing its axis and helix as now?
+
+Sub-steps when decided: (1) `ScrewThread` with the named profiles and the run-out, external and internal, (2) the envelope and the contours before and after, (3) `HexagonPrism`, (4) the test model and an example with the helical joint, the graphics regression references.
 
 ## **OPEN_RG7** Python user items
 
