@@ -2,11 +2,15 @@
   "number": 3415,
   "title": "Helical joints: a screw joint and a point on a helix",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "A regular C++ joint like ObjectJointGeneric for a screw - the rotation about an axis coupled with the translation along it by the pitch - which also covers a motion on a screw curve with a radial offset to the axis, and so a motion on a circle; the parts of the joint can be locked separately. First an analysis of the constraint formulation (valid for all angles, the pitch zero included), of one or two joints and of their names and options (docs/dev/design/helicalJoint.md); then the implementation with analytic Jacobians, test models against analytic motions and MiniExamples.",
   "dateRaised": "2026-11-11",
   "deadline": "2027-05-10",
-  "file": "definitions/itemDefsObjects.py"
+  "dateResolved": "2026-11-11 09:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "The helical (screw) joint ObjectJointHelicalZ with mbs.CreateHelicalJoint (#3421-#3423); its design in docs/dev/internals/helicalJoint.md. A joint for a point moving on a helix or another space curve is left to a general curve joint.",
+  "resolvedInVersion": "1.13.558"
 }

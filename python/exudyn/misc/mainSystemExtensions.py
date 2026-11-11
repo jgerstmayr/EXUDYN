@@ -52,7 +52,7 @@ __all__ = [
     'MainSystemCreateGround', 'MainSystemCreateMassPoint', 'MainSystemCreateRigidBody',
     'MainSystemCreateSpringDamper', 'MainSystemCreateCartesianSpringDamper',
     'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper',
-    'MainSystemCreateLinearSpringDamper', 'MainSystemCreateRevoluteJoint',
+    'MainSystemCreateLinearSpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreateHelicalJoint',
     'MainSystemCreatePrismaticJoint', 'MainSystemCreateSphericalJoint',
     'MainSystemCreateGenericJoint', 'MainSystemCreateDistanceConstraint',
     'MainSystemCreateCoordinateConstraint', 'MainSystemCreateRollingDisc',
@@ -1474,6 +1474,114 @@ def MainSystemCreateRevoluteJoint(mbs, name='', itemNumbers=[None, None],
     oJoint = mbs.AddObject(eii.ObjectJointRevoluteZ(name=name,markerNumbers=[mBody0,mBody1],
                                                 **_RotationMarkerArgs(MR0, MR1), #only a rotation a marker cannot take (#2820)
              visualization=eii.VRevoluteJointZ(show=show, axisRadius=axisRadius, axisLength=axisLength, color=color) ))
+
+    return oJoint
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@extends(exudyn.MainSystem)
+def MainSystemCreateHelicalJoint(mbs, name='', itemNumbers=[None, None],
+                                 position=[], axis=[], pitch=0., useGlobalFrame=True, constrainedAxes=[1,1,1,1,1],
+                                 show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+    """Create a helical (screw) joint between two bodies, ObjectJointHelicalZ: the second body turns about the axis and
+    moves along it by pitch per radian; position and axis in global coordinates (alternatively in body0 local
+    coordinates) for the reference configuration of the bodies, which is the configuration of the angle zero and the
+    axial position zero; the markers with the joint frame (the axis as z) are created
+
+    Args:
+        mbs: the MainSystem where joint and markers shall be created
+        name: name string for joint; markers get Marker0:name and Marker1:name
+        itemNumbers: a list of two items to be connected, each a rigid body or a ground object (ObjectIndex) or a rigid marker (MarkerIndex) with a localHT; with a marker, position is [], and the marker sets the position of the joint
+        position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
+        axis: a 3D vector as list or np.array containing the joint axis either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True); the second body moves by pitch per radian along this axis when it turns positively about it
+        pitch: the axial translation per radian of rotation (the lead of the thread is 2*pi*pitch); negative for a left-handed thread, 0 for a revolute joint
+        useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
+        constrainedAxes: the five flags of ObjectJointHelicalZ, [x, y, coupling, rotation about x, rotation about y] of the joint frame; 1 = constrained, 0 = free
+        show: if True, connector visualization is drawn
+        axisRadius: radius of axis for connector graphical representation
+        axisLength: length of axis for connector graphical representation
+        color: color of connector
+
+    Returns:
+        :ObjectIndex: returns index of created joint
+
+    Example:
+        import exudyn as exu
+        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+        import numpy as np
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        oGround = mbs.CreateGround()
+        bNut = mbs.CreateRigidBody(inertia = InertiaCylinder(density=7800, length=0.05,
+                                                             outerRadius=0.05, innerRadius=0.02, axis=1),
+                                   referencePosition = [0,1,0],
+                                   gravity = [0,-9.81,0])
+        mbs.CreateHelicalJoint(itemNumbers=[oGround, bNut], position=[0,1,0], axis=[0,1,0],
+                               pitch=0.005, axisRadius=0.02, axisLength=0.2)
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+        simulationSettings.timeIntegration.numberOfSteps = 1000
+        simulationSettings.timeIntegration.endTime = 1
+        mbs.SolveDynamic(simulationSettings = simulationSettings)
+    """
+    where = 'MainSystem.CreateHelicalJoint(...)'
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, None, None)
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+        if not IsVector(axis, 3):
+            RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
+        if not IsValidRealInt(pitch):
+            RaiseTypeError(where=where, argumentName='pitch', received = pitch, expectedType = ExpectedType.Real)
+        if not IsIntVector(constrainedAxes, 5):
+            RaiseTypeError(where=where, argumentName='constrainedAxes', received = constrainedAxes, expectedType = ExpectedType.IntVector, dim=5)
+        if not IsValidRealInt(axisRadius):
+            RaiseTypeError(where=where, argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(axisLength):
+            RaiseTypeError(where=where, argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
+
+    if useGlobalFrame:
+        vAxis = copy.copy(axis)
+    else: #transform into global coordinates, then everything works same
+        vAxis = A0 @ axis
+
+    #the joint frame: z along the axis, as CreateRevoluteJoint
+    B = ComputeOrthonormalBasis(vAxis) #axis = x-axis
+    AJ = np.eye(3)
+    AJ[:,0]=-B[:,2]
+    AJ[:,1]= B[:,1]
+    AJ[:,2]= B[:,0]
+
+    pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
+    pJ1 = _MatVec3(A1.T, np.array(pJoint) - p1)
+    MR0 = _MatMul3x3(A0.T, AJ)
+    MR1 = _MatMul3x3(A1.T, AJ)
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+
+    if mBody0 is None:
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=itemNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
+        MR0 = np.eye(3)
+    if mBody1 is None:
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=itemNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
+        MR1 = np.eye(3)
+    (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation
+    (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
+    if _RotationMarkerArgs(MR0, MR1): #the joint has no rotationMarker0/1 (#3179)
+        raise ValueError(where + ': a marker given in itemNumbers must be a rigid marker with localHT (MarkerBodyRigid, '
+                         'MarkerNodeRigid, MarkerKinematicTreeRigid), as the joint frame is turned into it; got a marker without localHT')
+
+    oJoint = mbs.AddObject(eii.ObjectJointHelicalZ(name=name, markerNumbers=[mBody0,mBody1], pitch=pitch,
+                                                   constrainedAxes=list(constrainedAxes),
+             visualization=eii.VHelicalJointZ(show=show, axisRadius=axisRadius, axisLength=axisLength, color=color) ))
 
     return oJoint
 

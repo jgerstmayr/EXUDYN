@@ -11,6 +11,7 @@ ObjectJointUser
 ObjectJointGeneric
 ObjectJointRevoluteZ
 ObjectJointPrismaticX
+ObjectJointHelicalZ
 ObjectJointSpherical
 ObjectJointRollingDisc
 ObjectJointRevolute2D

@@ -17212,6 +17212,190 @@ definitions.append(ItemDefinition(
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   ObjectJointHelicalZ   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(ItemDefinition(
+    className='ObjectJointHelicalZ',
+    drawing=r'The axis as two cylinders of `axisRadius` and `axisLength`, the thinner one at marker 0; for a pitch other than zero the thread as a helix of the radius `axisRadius` over `axisLength` around the axis at marker 1; with `connectors.showJointAxes` the frames of both markers.',
+    drawingSettings=['connectors.jointAxesLength', 'connectors.jointAxesRadius', 'connectors.showJointAxes', 'general.axesTiling', 'general.cylinderTiling', 'connectors.curveTiling'],
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    addProtectedC=r"""    static constexpr Index nConstraints = 5;
+""",
+    cParentClass=ParentClassCObjectConstraint,
+    overallDescription=r"""A helical (screw) joint in 3D: the frame of marker 1 moves on a screw motion about the $z$-axis of marker 0, a rotation by the angle $\varphi$ together with the translation $h\varphi$ along the axis, with the pitch $h$ per radian. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. Each of the five constraints can be switched off by `constrainedAxes`; with the pitch zero it is the revolute joint. For easier definition of the joint, use `mbs.CreateHelicalJoint(...)` for two rigid bodies (or ground).""",
+    classType=ClassTypeObject,
+    createFunctions=['CreateHelicalJoint'],
+    detailedDescription=r"""    (sec-objectjointhelicalz-definitionofquantities)=
+    #### Definition of quantities
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | joint J0 orientation | $\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]$ | the rotation matrix of marker m0, its columns the axes of J0 in global coordinates |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
+    | joint J1 orientation | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,\LU{0}{\tv_{z1}}]$ | the rotation matrix of marker m1 |
+    | DisplacementLocal | $\LU{J0}{\Delta\pv} = [d_x,\, d_y,\, d_z]\tp = \LU{0,J0}{\Rot}\tp (\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0})$ | the position of J1 in J0 |
+    | angle | $\varphi = \mathrm{atan2}(\LU{0}{\tv_{y0}}\tp \LU{0}{\tv_{x1}},\, \LU{0}{\tv_{x0}}\tp \LU{0}{\tv_{x1}})$ | the rotation of J1 about the axis, in $(-\pi, \pi]$ |
+    | continuous angle | $\tilde\varphi = \psi + \mathrm{atan2}(\sin(\varphi - \psi),\, \cos(\varphi - \psi))$, $\psi = d_z / h$ | the angle on the turn that the axial position $d_z$ belongs to; $\tilde\varphi = \varphi$ for $h = 0$ |
+    | algebraic variables | $\zv=[\lambda_0,\,\ldots,\,\lambda_4]\tp$ | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
+    <!-- -->
+
+    #### Connector constraint equations
+
+    With $\jv = [j_0,\,\ldots,\,j_4]$ = `constrainedAxes`, the index 3 equations read
+
+    $$
+    \begin{aligned}
+    j_0 = 1:&\quad d_x = 0 \\
+    j_1 = 1:&\quad d_y = 0 \\
+    j_2 = 1:&\quad d_z - h\tilde\varphi = -h\,\mathrm{atan2}(\sin(\varphi - \psi),\, \cos(\varphi - \psi)) = 0 \\
+    j_3 = 1:&\quad \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} = 0 \\
+    j_4 = 1:&\quad \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} = 0
+    \end{aligned}
+    $$ (eq-objectjointhelicalz-index3)
+
+    and $\lambda_i = 0$ for $j_i = 0$. The coupling is $d_z = 0$ for $h = 0$. It needs no state: the turns are counted by
+    the axial position, and the angle is taken on the branch nearest to $d_z/h$, which gives the coupling a single root;
+    it jumps where a Newton iterate is axially $\pi h$ off the thread. $\lambda_2$ is the axial force, which transmits
+    the torque $-h\lambda_2$ about the axis.
+
+    At velocity level (index 2), the equations are the time derivatives of {eq}`eq-objectjointhelicalz-index3`: the rows
+    of their Jacobian times the velocities and angular velocities of the markers, see [](#sec-constraintjacobian); the
+    coupling becomes $\dot d_z - h\dot\varphi = 0$.
+
+    | `constrainedAxes` | $h \neq 0$ | $h = 0$ |
+    |---|---|---|
+    | [1,1,1,1,1] | helical joint | revolute joint |
+    | [1,1,0,1,1] | cylindrical joint | cylindrical joint |
+    | [0,0,1,1,1] | screw with the axis free to shift in the plane | planar joint |
+    | [1,1,1,0,0] | the origin of J1 on the axis, $d_z$ coupled to the projected angle | spherical joint |
+
+    With the tilts free ($j_3 = j_4 = 0$) the angle is the one of $\LU{0}{\tv_{x1}}$ projected into the $x$-$y$-plane of J0,
+    which is undefined if $\LU{0}{\tv_{x1}}$ is parallel to the axis.
+
+    if `activeConnector = False`,
+
+    $$
+    \zv = \Null
+    $$
+""",
+    mainParentClass=MainParentClassMainObjectConnector,
+    miniExample=r"""    #a nut on a vertical screw: pitch 0.01 m per radian, the nut falls under gravity and turns
+    nBody = mbs.AddNode(RigidRxyz())
+    oBody = mbs.AddObject(RigidBody(mass=1, inertia=[0.01,0.01,0.02,0,0,0],
+                                    nodeNumber=nBody))
+
+    mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround,
+                                            localPosition = [0,0,0]))
+    oJoint = mbs.AddObject(HelicalJointZ(markerNumbers = [mGround, mBody],
+                                         pitch=0.01))
+
+    mbs.AddLoad(Force(markerNumber = mBody, loadVector=[0,0,-9.81]))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    mbs.SolveDynamic(exu.SimulationSettings())
+
+    #check result at default integration time: the continuous angle of the nut
+    exu.sys['testResult'] = mbs.GetObjectOutput(oJoint, exu.OutputVariableType.Rotation)[2]
+""",
+    objectType=ObjectTypeJoint,
+    outputVariables=[
+        ItemOutputVariable(OVPosition, OVDPositionMarker0),
+        ItemOutputVariable(OVVelocity, OVDVelocityMarker0),
+        ItemOutputVariable(OVDisplacementLocal, r"""$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; the $z$ component is the axial position $d_z$"""),
+        ItemOutputVariable(OVVelocityLocal, OVDVelocityLocalJoint),
+        ItemOutputVariable(OVRotation, r"""$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\tilde\varphi]\tp$relative rotation parameters (Tait Bryan Rxyz) for the components 0 and 1, the constraint drift; the $z$ component is the continuous angle $\tilde\varphi$ for $h \neq 0$, which counts the turns, and the angle in $(-\pi, \pi]$ for $h = 0$"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{J0}{\Delta\tomega}$relative angular velocity in joint J0 coordinates"""),
+        ItemOutputVariable(OVForceLocal, r"""$\LU{J0}{\fv} = [\lambda_0,\,\lambda_1,\,\lambda_2]\tp$the joint force in local $J0$ coordinates; the $z$ component is the axial force"""),
+        ItemOutputVariable(OVTorqueLocal, r"""$\LU{J0}{\mv} = [\lambda_3,\,\lambda_4,\,-h\lambda_2]\tp$the joint torques in local $J0$ coordinates; the torque about $z$ is the one the axial force transmits by the thread"""),
+        ItemOutputVariable(OVHomogeneousTransformation, OVDHomogeneousTransformationJoint),
+        ItemOutputVariable(OVHomogeneousTransformationLocal, OVDHomogeneousTransformationLocalJoint),
+        ItemOutputVariable(OVConstraintEquation, r'$\cv$residual of the constraint equations at position level, the drift (#565)'),
+        ],
+    pythonShortName='HelicalJointZ',
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"constraints's unique name"),
+        ItemParameter(type=TArrayIndex(ItemMarker, size=2), destination=DestComp+DestParam,
+            pythonName='markerNumbers',
+            defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
+            description=r'$[m0,m1]\tp$list of markers used in connector'),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='pitch',
+            defaultValue=0.,
+            description=r"""$h$the axial translation per radian of rotation (the lead of the thread is $2\pi h$); positive for a right-handed thread, negative for a left-handed one, zero for the revolute joint"""),
+        ItemParameter(type=TArrayIndex(size=5), destination=DestComp+DestParam,
+            pythonName='constrainedAxes',
+            defaultValue='ArrayIndex({1,1,1,1,1})',
+            description=r"""$\jv=[j_0,\,\ldots,\,j_4]$flags, which determine which equations are active: the translations along $x$ and $y$ of J0 (0, 1), the coupling of the axial translation and the rotation (2), the rotations about $x$ and $y$ (3, 4); 0=free, 1=constrained"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='activeConnector',
+            defaultValue=True,
+            description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags=CFConst,
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags='',
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('IsPenaltyConnector',
+            implementation='return false;'),
+        ItemFunctionDef('GetAvailableJacobians'),
+        *ItemConnectorInterface('Rigid', constraint=True),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigid', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations',
+            description=r'the algebraic equations from the kinematics of the two markers (#3421)'),
+        ItemFunction(type=Tbool, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeConstraintEquationsRigidDerivatives', args='FlatArray<const MarkerRigid<Real>> markers, const LinkedDataVector& lambda, Real t, ConstSizeVector<maxConstraintEquations>& equations, RigidMarkersDerivatives& derivatives',
+            description=r'the equations with their analytic derivatives by the variations of the marker frames, for C_q (#3421)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
+            pythonName='ComputeJacobianAE_AE', args='ResizableMatrix& jacobian_AE',
+            description=r'the derivative of the equations of the free axes by the Lagrange multipliers'),
+        ItemFunctionDef('GetOutputVariableConnector'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemRequestedTypes('Marker', ['Position', 'Orientation']),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);',
+            description=r'return object type (for node treatment in computation)'),
+        ItemFunctionDef('GetAlgebraicEquationsSize',
+            implementation='return nConstraints;'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "JointHelicalZ";',
+            description=r"Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?"),
+        ItemFunctionDef('IsActive',
+            implementation='return parameters.activeConnector;'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('IsConnector',
+            implementation='return true;'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemParameter(type=Tfloat, destination=DestVisu,
+            pythonName='axisRadius',
+            defaultValue=0.1,
+            description=r'radius of joint axis to draw'),
+        ItemParameter(type=Tfloat, destination=DestVisu,
+            pythonName='axisLength',
+            defaultValue=0.4,
+            description=r'length of joint axis to draw'),
+        ItemParameter(type=TFloat4, destination=DestVisu,
+            pythonName='color',
+            defaultValue=DVDefaultColor,
+            description=r'RGBA connector color; if R==-1, use default color'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectJointSpherical   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.553.dev1
+- Exudyn version = 1.13.558.dev1
 - last change = 2026-11-11
-- Number of issues = 3420
-- Number of resolved issues = 3330 (553 in current version)
+- Number of issues = 3424
+- Number of resolved issues = 3335 (558 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Helical joints: a screw joint and a point on a helix (#3415)
-  - description: A regular C++ joint like ObjectJointGeneric for a screw - the rotation about an axis coupled with the translation along it by the pitch - which also covers a motion on a screw curve with a radial offset to the axis, and so a motion on a circle; the parts of the joint can be locked separately. First an analysis of the constraint formulation (valid for all angles, the pitch zero included), of one or two joints and of their names and options (docs/dev/design/helicalJoint.md); then the implementation with analytic Jacobians, test models against analytic motions and MiniExamples.
-  - date raised: 2026-11-11
 - `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
   - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.
   - date raised: 2026-11-09

@@ -1,0 +1,16 @@
+{
+  "number": 3421,
+  "title": "ObjectJointHelicalZ: the helical (screw) joint about z",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The joint of docs/dev/design/helicalJoint.md (#3415): the frame of marker 1 on a screw motion about z of marker 0 with the pitch h per radian; 5 equations, the radial translations, the two tilts and the coupling d_z - h phi with phi the angle on the branch nearest d_z/h (no state, h = 0 the revolute joint), each lockable by constrainedAxes; analytic rows on the rigid connector interface, the velocity level for index 2; output variables with the continuous angle and the axial force; the drawing of the axis and the thread; a MiniExample (revision2026c step RG9.14.2).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 09:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "ObjectJointHelicalZ, a helical (screw) joint about the z-axis of marker 0 with the pitch per radian: the turns are counted by the axial position, no extra state; each of the 5 constraints can be switched off (cylindrical, planar and spherical variants; pitch 0 is the revolute joint); analytic Jacobian, index 2 support, the continuous angle and the axial force as outputs.",
+  "resolvedInVersion": "1.13.555"
+}

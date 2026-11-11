@@ -124,7 +124,8 @@ __all__ = [
     'VCamFollowerContactPlanar', 'VObjectJointGeneric', 'ObjectJointGeneric', 'GenericJoint',
     'VGenericJoint', 'VObjectJointRevoluteZ', 'ObjectJointRevoluteZ', 'RevoluteJointZ',
     'VRevoluteJointZ', 'VObjectJointPrismaticX', 'ObjectJointPrismaticX', 'PrismaticJointX',
-    'VPrismaticJointX', 'VObjectJointSpherical', 'ObjectJointSpherical', 'SphericalJoint',
+    'VPrismaticJointX', 'VObjectJointHelicalZ', 'ObjectJointHelicalZ', 'HelicalJointZ',
+    'VHelicalJointZ', 'VObjectJointSpherical', 'ObjectJointSpherical', 'SphericalJoint',
     'VSphericalJoint', 'VObjectJointRollingDisc', 'ObjectJointRollingDisc', 'RollingDiscJoint',
     'VRollingDiscJoint', 'VObjectJointRevolute2D', 'ObjectJointRevolute2D', 'RevoluteJoint2D',
     'VRevoluteJoint2D', 'VObjectJointPrismatic2D', 'ObjectJointPrismatic2D', 'PrismaticJoint2D',
@@ -9118,6 +9119,85 @@ class ObjectJointPrismaticX:
 #add typedef for short usage:
 PrismaticJointX = ObjectJointPrismaticX
 VPrismaticJointX = VObjectJointPrismaticX
+
+class VObjectJointHelicalZ:
+    """Visualization data for ObjectJointHelicalZ.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
+
+        axisRadius: radius of joint axis to draw; type: float
+
+        axisLength: length of joint axis to draw; type: float
+
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = True, axisRadius = 0.1, axisLength = 0.4, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.axisRadius = axisRadius
+        self.axisLength = axisLength
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'axisRadius', self.axisRadius
+        yield 'axisLength', self.axisLength
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectJointHelicalZ:
+    r"""A helical (screw) joint in 3D: the frame of marker 1 moves on a screw motion about the :math:`z`-axis of marker 0, a rotation by the angle :math:`\varphi` together with the translation :math:`h\varphi` along the axis, with the pitch :math:`h` per radian.
+    
+    The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. Each of the five constraints can be switched off by ``constrainedAxes``; with the pitch zero it is the revolute joint. For easier definition of the joint, use ``mbs.CreateHelicalJoint(...)`` for two rigid bodies (or ground).
+    
+    Args:
+        name: constraints's unique name
+
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
+
+        pitch: the axial translation per radian of rotation (the lead of the thread is :math:`2\pi h`); positive for a right-handed thread, negative for a left-handed one, zero for the revolute joint; type: float
+
+        constrainedAxes: flags, which determine which equations are active: the translations along :math:`x` and :math:`y` of J0 (0, 1), the coupling of the axial translation and the rotation (2), the rotations about :math:`x` and :math:`y` (3, 4); 0=free, 1=constrained; type: array_like
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointHelicalZ
+
+    Notes:
+        Object has/provides the following types: ``Connector``, ``Constraint``
+
+        Requested Marker type: ``Position`` + ``Orientation``
+
+    """
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], pitch = 0., constrainedAxes = [1,1,1,1,1], activeConnector = True, visualization = None):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.pitch = pitch
+        self.constrainedAxes = copy.copy(constrainedAxes)
+        self.activeConnector = activeConnector
+        self.visualization = _ItemVisualization(visualization, VObjectJointHelicalZ)
+
+    def __iter__(self):
+        yield 'objectType', 'JointHelicalZ'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'pitch', self.pitch
+        yield 'constrainedAxes', self.constrainedAxes
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VaxisRadius', dict(self.visualization)["axisRadius"]
+        yield 'VaxisLength', dict(self.visualization)["axisLength"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+#add typedef for short usage:
+HelicalJointZ = ObjectJointHelicalZ
+VHelicalJointZ = VObjectJointHelicalZ
 
 class VObjectJointSpherical:
     """Visualization data for ObjectJointSpherical.

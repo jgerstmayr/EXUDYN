@@ -17,6 +17,13 @@ that holds the measured facts and the decisions.
 (sec-revisions-after-1-13)=
 ## After version 1.13
 
+**A helical (screw) joint**, `ObjectJointHelicalZ` with `mbs.CreateHelicalJoint`: the frame of marker 1 turns about the
+$z$-axis of marker 0 and moves along it by the pitch per radian; the five constraints can be switched off one by one
+(with the coupling off it is the cylindrical joint, with the pitch zero the revolute joint) (#3421, #3423).
+
+**The reeving system** (`ObjectConnectorReevingSystemSprings`) computes the rope between two sheaves with axes that are
+not parallel correctly; the tangent points were wrong for such sheaves (#3412).
+
 **Gravity on an ObjectFFRF**: a `LoadMassProportional` on a `MarkerBodyMass` acts on all coordinates of the body as the
 loads of its mass matrix at the mesh nodes, with the deformed positions; before, only the coordinates of the reference
 frame got it, at a center of mass that was always computed as the origin. `ObjectFFRFinterface.AddObjectFFRF` applies its

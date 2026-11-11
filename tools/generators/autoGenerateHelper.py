@@ -851,6 +851,7 @@ createFunctionOfItem = {
     'ObjectConnectorRigidBodySpringDamper': 'CreateRigidBodySpringDamper(',
     'ObjectConnectorTorsionalSpringDamper': 'CreateTorsionalSpringDamper(',
     'ObjectJointRevoluteZ': 'CreateRevoluteJoint(',
+    'ObjectJointHelicalZ': 'CreateHelicalJoint(',
     'ObjectPrismaticJointX': 'CreatePrismaticJoint(',
     'ObjectJointSpherical': 'CreateSphericalJoint(',
     'ObjectJointGeneric': 'CreateGenericJoint(',

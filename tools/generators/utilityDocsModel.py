@@ -62,7 +62,7 @@ mutableArgsFunctionsChecked = [
     'ForwardDynamicsCRB', 'ComputeMassMatrixAndForceTerms', 'AddExternalForces',
     #mainSystemExtensions:
     'MainSystemCreateGround','MainSystemCreateMassPoint','MainSystemCreateRigidBody','MainSystemCreateSpringDamper','MainSystemCreateCartesianSpringDamper',
-    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
+    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreateHelicalJoint', 'MainSystemCreatePrismaticJoint',
     'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint', 'MainSystemCreateDistanceConstraint',
     'MainSystemCreateDistanceConstraint', 'MainSystemCreateRollingDiscPenalty', 'MainSystemCreateRollingDisc', 'MainSystemCreateKinematicTree',
     'MainSystemCreateForce','MainSystemCreateTorque','MainSystemCreateCoordinateConstraint',

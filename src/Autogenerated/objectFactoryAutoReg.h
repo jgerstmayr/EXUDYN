@@ -858,6 +858,17 @@ bool MainObjectJointPrismaticXIsRegistered = ClassFactoryItemsSystemData<MainObj
 		return object;
 	});
 
+bool MainObjectJointHelicalZIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JointHelicalZ", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectJointHelicalZ();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectJointHelicalZ(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectJointHelicalZ* vObject = new VisualizationObjectJointHelicalZ();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectJointSphericalIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JointSpherical", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectJointSpherical();

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 529 | 1.13.553 |
+| 1.13 | Newborn | 534 | 1.13.558 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,26 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.558** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Helical joints: a screw joint and a point on a helix (#3415)
+  - description: A regular C++ joint like ObjectJointGeneric for a screw - the rotation about an axis coupled with the translation along it by the pitch - which also covers a motion on a screw curve with a radial offset to the axis, and so a motion on a circle; the parts of the joint can be locked separately. First an analysis of the constraint formulation (valid for all angles, the pitch zero included), of one or two joints and of their names and options (docs/dev/design/helicalJoint.md); then the implementation with analytic Jacobians, test models against analytic motions and MiniExamples.
+  - **notes:** The helical (screw) joint ObjectJointHelicalZ with mbs.CreateHelicalJoint (\#3421-\#3423); its design in docs/dev/internals/helicalJoint.md. A joint for a point moving on a helix or another space curve is left to a general curve joint.
+  - date resolved: **2026-11-11 09:16**, date raised: 2026-11-11
+- **1.13.557** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.CreateHelicalJoint (#3423)
+  - description: A create function for ObjectJointHelicalZ as CreateRevoluteJoint: two bodies, the position and the axis in global or body frame, the pitch; the markers carry the rotation of the axis to z in their localHT (revision2026c step RG9.14.4).
+  - **notes:** mbs.CreateHelicalJoint creates ObjectJointHelicalZ between two bodies from a position, an axis and the pitch, with the markers carrying the joint frame.
+  - date resolved: **2026-11-11 09:12**, date raised: 2026-11-11
+- **1.13.556** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` helicalJointTest.py: ObjectJointHelicalZ against the analytic screw, ObjectJointUser and the reduced joints (#3422)
+  - description: The tests of docs/dev/design/helicalJoint.md section 5: the screw under a torque and an axial force through several turns against the analytic solution at index 3 and 2, h \< 0, the axial multiplier; the same model with the user screw of userJointTest.py; h = 0 against ObjectJointRevoluteZ, the cylindrical and planar cases against ObjectJointGeneric; a static solve against an axial spring; activeConnector and the refusals (revision2026c step RG9.14.3).
+  - **notes:** helicalJointTest.py: the screw against the analytic solution through 2.5 turns at index 3 and 2 for both thread directions, against ObjectJointUser, ObjectJointRevoluteZ and the cylindrical ObjectJointGeneric, a static solve, activeConnector=False and the refusals.
+  - date resolved: **2026-11-11 09:12**, date raised: 2026-11-11
+- **1.13.555** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointHelicalZ: the helical (screw) joint about z (#3421)
+  - description: The joint of docs/dev/design/helicalJoint.md (\#3415): the frame of marker 1 on a screw motion about z of marker 0 with the pitch h per radian; 5 equations, the radial translations, the two tilts and the coupling d\_z - h phi with phi the angle on the branch nearest d\_z/h (no state, h = 0 the revolute joint), each lockable by constrainedAxes; analytic rows on the rigid connector interface, the velocity level for index 2; output variables with the continuous angle and the axial force; the drawing of the axis and the thread; a MiniExample (revision2026c step RG9.14.2).
+  - **notes:** ObjectJointHelicalZ, a helical (screw) joint about the z-axis of marker 0 with the pitch per radian: the turns are counted by the axial position, no extra state; each of the 5 constraints can be switched off (cylindrical, planar and spherical variants; pitch 0 is the revolute joint); analytic Jacobian, index 2 support, the continuous angle and the axial force as outputs.
+  - date resolved: **2026-11-11 09:12**, date raised: 2026-11-11
+- **1.13.554** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Measure the share of FinalizeMatrix in the Newton step of sparse models (#3420)
+  - description: Recommendation G1 of docs/dev/design/linalgBenchmark.md: setFromTriplets is 86 % of the sparse assembly, adding into a known pattern 12 times faster. Before a pattern mode of GeneralMatrix is decided, the share of FinalizeMatrix, of the factorization and of the Jacobian computation in the Newton steps of sparse models of many small objects is measured, by the global timers of the two parts of timer.factorization (revision2026c step RG5.1.11).
+  - **notes:** The Newton step reports FinalizeMatrix and the factorization of the sparse Jacobian as two global timers (simulationSettings.show.globalTimers, regular module). Measured on sparse models of 10-1000 rigid bodies and mass points: FinalizeMatrix takes 2-7 % of the solver time with full Newton and below 2 % with modified Newton, so keeping the sparsity pattern between steps is not pursued now.
+  - date resolved: **2026-11-11 09:12**, date raised: 2026-11-11
 - **1.13.553** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` AddSubmatrix of GeneralMatrixEigenSparse appends the triplets from the data pointers (#3419)
   - description: Recommendation L6 of docs/dev/design/linalgBenchmark.md: AddSubmatrix and AddSubmatrixTransposed of GeneralMatrixEigenSparse read the local matrix and the index arrays through checked access per entry, 2.8 times slower in the regular module than in the fast one (4135 against 1481 ns for 10 objects). The sizes are checked once, the values and indices read from the data pointers, the triplet array reserved once per call (revision2026c step RG5.1.10).
   - **notes:** The AddSubmatrix variants of GeneralMatrixEigenSparse check the sizes once and append the triplets from the data pointers: 2.5 times faster in the regular module; with \#3417 and \#3418 the performance tests take 11 % (regular) and 13 % (fast module) less time.

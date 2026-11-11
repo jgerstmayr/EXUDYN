@@ -1731,6 +1731,25 @@ items = {
       'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA connector color; if R==-1, use default color'},
     },
   },
+  'ObjectJointHelicalZ': {
+    'kind': 'Object',
+    'types': ['Connector', 'Constraint'],
+    'requestedMarkerTypes': ['Position', 'Orientation'],
+    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal', 'ConstraintEquation'],
+    'parameters': {
+      'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
+      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
+      'pitch': {'type': 'Real', 'size': '', 'range': '', 'default': '0.', 'mustBeGiven': False, 'description': 'the axial translation per radian of rotation (the lead of the thread is :math:`2\\pi h`); positive for a right-handed thread, negative for a left-handed one, zero for the revolute joint'},
+      'constrainedAxes': {'type': 'ArrayIndex', 'size': '5', 'range': '', 'default': '[1,1,1,1,1]', 'mustBeGiven': False, 'description': 'flags, which determine which equations are active: the translations along :math:`x` and :math:`y` of J0 (0, 1), the coupling of the axial translation and the rotation (2), the rotations about :math:`x` and :math:`y` (3, 4); 0=free, 1=constrained'},
+      'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
+    },
+    'visualization': {
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+      'axisRadius': {'type': 'float', 'size': '', 'range': '', 'default': '0.1', 'mustBeGiven': False, 'description': 'radius of joint axis to draw'},
+      'axisLength': {'type': 'float', 'size': '', 'range': '', 'default': '0.4', 'mustBeGiven': False, 'description': 'length of joint axis to draw'},
+      'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA connector color; if R==-1, use default color'},
+    },
+  },
   'ObjectJointSpherical': {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],

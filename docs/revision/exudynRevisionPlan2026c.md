@@ -63,7 +63,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.1 Write a linear algebra micro-benchmark that every build carries (3 open sub-steps)
+  - RG5.1 Write a linear algebra micro-benchmark that every build carries (2 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
@@ -84,7 +84,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG8.10 Let an item take a user function compiled in C++
 - **RG9** Structural core improvements
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
-  - RG9.14 Add helical joints: a screw joint and a point on a helix
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
 - **RG14** Uniform evaluation of symbolic systems on the CPU and the GPU
@@ -110,11 +109,11 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 10 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 2 | Structural core improvements |
+| RG9 | OPEN | 1 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | CLOSED | 0 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -560,9 +559,11 @@ Recommendation L6 of docs/dev/design/linalgBenchmark.md: 2.8 times in the regula
 
 CLOSED 2026-11-11 (#3419): one template for the four AddSubmatrix variants, sizes checked once, the triplets from the data pointers; 2.5 times in the regular module, now as fast as the fast one; performance tests after RG5.1.8-RG5.1.10: regular -11 %, fast -13 %. [log](exudynRevisionLog2026c.md#rg5-1-10)
 
-#### **OPEN_RG5.1.11** Measure the share of FinalizeMatrix in the Newton step and decide on keeping the pattern of the sparse Jacobian
+#### **CLOSED_RG5.1.11** Measure the share of FinalizeMatrix in the Newton step and decide on keeping the pattern of the sparse Jacobian
 
 Recommendation G1 of docs/dev/design/linalgBenchmark.md: adding into a known pattern is 12 times faster than triplets and setFromTriplets; first the share in the solver timers of a sparse model of many small objects, then the decision on a pattern mode of GeneralMatrix.
+
+CLOSED 2026-11-11 (#3420): the global timers finalize matrix and factorize; FinalizeMatrix is 2-7 % of the solver time of sparse models of many small objects with full Newton, below 2 % with modified Newton - a pattern mode of GeneralMatrix (G1) not now; the factorization (SparseLU, up to 58 %) and the Jacobian of RigidBodySpringDamper (up to 66 % of its chain) are the levers. [log](exudynRevisionLog2026c.md#rg5-1-11)
 
 ### **OPEN_RG5.2** Make the hot linear algebra vectorizable with compile-time sizes
 
@@ -1870,13 +1871,33 @@ CLOSED 2026-11-08 (#3366; maintainer 2026-11-08): one SolidOfRevolution. [log](e
 
 #3376.
 
-### **OPEN_RG9.14** Add helical joints: a screw joint and a point on a helix
+### **CLOSED_RG9.14** Add helical joints: a screw joint and a point on a helix
 
 #3415 (maintainer 2026-11-11: a regular C++ joint like GenericJoint for a screw, which also works for a motion on a screw curve with a radial offset to the axis, and so on a circle; the parts of the joint lockable separately; the constraint formulation, the options, one or two joints and their names to be analysed first, in a design file).
+
+CLOSED 2026-11-11: ObjectJointHelicalZ with its test and create function; the point on a helix and the further proposals of the analysis not further considered - a general curve joint later, with the curve markers on deformable bodies (maintainer 2026-11-11).
 
 #### **CLOSED_RG9.14.1** Analyse the formulation, the options and the names of the helical joints
 
 CLOSED 2026-11-11 (#3415): docs/dev/design/helicalJoint.md - two joints, ObjectJointHelicalZ (the rigid screw about z, the coupling d_z - h phi with the angle on the branch nearest d_z/h: no state, one root, h = 0 the revolute joint; 5 lockable equations) and ObjectJointPointOnHelixZ (the point of marker 1 on a helix of radius r, orientation free; h = 0 the circle); the sub-steps proposed there wait for the maintainer's decision. [log](exudynRevisionLog2026c.md#rg9-14-1)
+
+#### **CLOSED_RG9.14.2** ObjectJointHelicalZ: the definition, the equations with analytic rows and the velocity level, the outputs, the drawing, the MiniExample
+
+#3421 (maintainer 2026-11-11: RG9.14.2-RG9.14.4 to be done; the point on a helix and the further proposals of the analysis are not further considered - a general curve joint, along a curve of 3rd or 5th order in space with a screw motion as option, is to come later, together with the curve markers on deformable bodies).
+
+CLOSED 2026-11-11 (#3421): ObjectJointHelicalZ - 5 equations, the coupling d_z - h phiTilde on the branch nearest d_z/h, analytic rows, the velocity level, lambda_i on a free equation, the outputs with the continuous angle, the thread drawn; the design note to docs/dev/internals/helicalJoint.md with the point on a helix as not built. [log](exudynRevisionLog2026c.md#rg9-14-2)
+
+#### **CLOSED_RG9.14.3** helicalJointTest.py: ObjectJointHelicalZ against the analytic screw, ObjectJointUser and the reduced joints
+
+#3422.
+
+CLOSED 2026-11-11 (#3422): the analytic screw through 2.5 turns at index 3 and 2 for h = +-0.05 (1.2e-3, the integration error), ObjectJointUser 1.3e-14, ObjectJointRevoluteZ and the cylindrical ObjectJointGeneric the same bits, a static solve 1e-16, the refusals. [log](exudynRevisionLog2026c.md#rg9-14-3)
+
+#### **CLOSED_RG9.14.4** mbs.CreateHelicalJoint
+
+#3423.
+
+CLOSED 2026-11-11 (#3423): as CreateRevoluteJoint with pitch and constrainedAxes; the design notes of closed steps (contactPrimitives.md, flatArray.md, robotPlanning.md) moved to internals. [log](exudynRevisionLog2026c.md#rg9-14-4)
 
 ## **CLOSED_RG10** Tooling and process
 

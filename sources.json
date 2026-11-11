@@ -95,6 +95,7 @@
         "src/ImplObjects/CObjectGround.cpp",
         "src/ImplObjects/CObjectJointALEMoving2D.cpp",
         "src/ImplObjects/CObjectJointGeneric.cpp",
+        "src/ImplObjects/CObjectJointHelicalZ.cpp",
         "src/ImplObjects/CObjectJointPrismatic2D.cpp",
         "src/ImplObjects/CObjectJointPrismaticX.cpp",
         "src/ImplObjects/CObjectJointRevolute2D.cpp",

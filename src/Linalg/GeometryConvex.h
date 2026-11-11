@@ -13,7 +13,7 @@
 *				  projections, a penetration by moving shape 1 out along the normal and taking the distance
 *				- the sphere and the cylinder also by the analytic formula, the check of GJK and the faster path
 *				- used by exudyn.cUtilities.Distance, and by the contact items and the collision check of path
-*				  planning (docs/dev/design/contactPrimitives.md)
+*				  planning (docs/dev/internals/contactPrimitives.md)
 *
 * @author		Gerstmayr Johannes
 * @date			2026-11-07

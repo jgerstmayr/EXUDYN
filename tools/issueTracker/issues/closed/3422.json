@@ -1,0 +1,16 @@
+{
+  "number": 3422,
+  "title": "helicalJointTest.py: ObjectJointHelicalZ against the analytic screw, ObjectJointUser and the reduced joints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "The tests of docs/dev/design/helicalJoint.md section 5: the screw under a torque and an axial force through several turns against the analytic solution at index 3 and 2, h < 0, the axial multiplier; the same model with the user screw of userJointTest.py; h = 0 against ObjectJointRevoluteZ, the cylindrical and planar cases against ObjectJointGeneric; a static solve against an axial spring; activeConnector and the refusals (revision2026c step RG9.14.3).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 09:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/helicalJointTest.py",
+  "releaseNotes": "helicalJointTest.py: the screw against the analytic solution through 2.5 turns at index 3 and 2 for both thread directions, against ObjectJointUser, ObjectJointRevoluteZ and the cylindrical ObjectJointGeneric, a static solve, activeConnector=False and the refusals.",
+  "resolvedInVersion": "1.13.556"
+}

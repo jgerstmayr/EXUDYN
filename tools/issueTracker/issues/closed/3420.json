@@ -1,0 +1,16 @@
+{
+  "number": 3420,
+  "title": "Measure the share of FinalizeMatrix in the Newton step of sparse models",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "Recommendation G1 of docs/dev/design/linalgBenchmark.md: setFromTriplets is 86 % of the sparse assembly, adding into a known pattern 12 times faster. Before a pattern mode of GeneralMatrix is decided, the share of FinalizeMatrix, of the factorization and of the Jacobian computation in the Newton steps of sparse models of many small objects is measured, by the global timers of the two parts of timer.factorization (revision2026c step RG5.1.11).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 09:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/CSolverBase.cpp",
+  "releaseNotes": "The Newton step reports FinalizeMatrix and the factorization of the sparse Jacobian as two global timers (simulationSettings.show.globalTimers, regular module). Measured on sparse models of 10-1000 rigid bodies and mass points: FinalizeMatrix takes 2-7 % of the solver time with full Newton and below 2 % with modified Newton, so keeping the sparsity pattern between steps is not pursued now.",
+  "resolvedInVersion": "1.13.554"
+}

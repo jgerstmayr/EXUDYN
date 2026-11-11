@@ -151,3 +151,41 @@ is computed by `ComputeJacobianODE2Connector` in parallel, as it does not touch 
   Tait-Bryan angles spinning at some 30 rad/s, generalized-alpha, full Newton, 200 steps, 417 iterations with the exact
   Jacobian of SymbolicSystem, 614 without the term, as SolveDynamic (#3228) -; dependencies outside the coordinates of an
   item (a user function reading a sensor) only the system-wide one.
+
+## 5. The arrays of the connector interface: FlatArray
+
+The virtual functions of the connector interface in `src/System/CObjectConnector.h` - `ComputeConnectorForce{Position,
+Rigid,Coordinate}` and their `Diff` versions, `ComputeConnectorForcesCoordinate`,
+`ComputeConstraintEquations{Position,Rigid,Coordinate}` with their `Diff` versions and
+`ComputeConstraintEquationsRigidDerivatives` - receive the marker kinematics, and return the forces and torques, as
+`FlatArray<T>` (`src/Utilities/FlatArray.h`, #3368): a pointer to items owned by someone else and their number.
+
+```cpp
+virtual void ComputeConnectorForceRigid(FlatArray<const MarkerRigid<Real>> markers, Real t,
+	FlatArray<Vector3D> forces, FlatArray<Vector3D> torques) const;
+```
+
+- **What it offers:** `NumberOfItems()`, `operator[]`, `begin()`/`end()` and `GetDataPointer()` (nullptr if
+  empty); no resize, append, math, comparison or output. `ResizableArray` and `SlimArray` own their items and
+  `LinkedDataVector` is the same idea for `Real` with math; FlatArray transports any `T`, and has the member names of
+  the other array classes, so that templates use it in the same way.
+- **Constructed from** a pointer and a number, a local C array (`MarkerRigid<Real> kinematics[2]`, the usual case in
+  CObjectConnector.cpp), a `SlimArray`, a `ResizableArray`, or a `FlatArray<U>` - this one adds const:
+  `FlatArray<const X>` from `FlatArray<X>`. A local array passed to a template function, such as
+  `MarkerDataFromKinematics` (MarkerData.h) or the spring functions of the spring-dampers, needs the explicit
+  `FlatArray<const MarkerRigid<Real>>(markers)`, as a template argument is not deduced through a conversion.
+- **Passed by value** - a pointer and an Index, as cheap as a raw pointer. The constness of the items is
+  that of `T`: `FlatArray<const MarkerRigid<Real>>` for what is read, `FlatArray<Vector3D>` for what is written.
+  `operator[]` is const and returns `T&` in both cases, as the class does not own the items; unlike the const access of
+  `SlimArray`, it never copies, and a `MarkerRigid` is too large to copy.
+- **The range** is checked by `operator[]` with `CHECKandTHROW`, an `ExudynInternalError`, which the fast module
+  compiles out like the checks of the other array classes; so it costs nothing there. An item does not check
+  `markers.NumberOfItems() == 2`: where a formula is for exactly two markers (`markers[1].position -
+  markers[0].position`) the index check catches a wrong number. Loops over all forces and torques run over the array,
+  `for (auto& force : forces) { force.SetAll(0.); }`.
+- The declarations of the items are generated from the `args=` strings of `definitions/itemDefsObjects.py`, which
+  carry the FlatArray types. The callers in CObjectConnector.cpp keep their local arrays of two markers and their loops
+  over the two markers.
+- Measured against raw pointers without a size (contactPrimitivesTableTest, revoluteJointPrismaticJointTest,
+  springDamperUserFunctionTest, best of 7): the same times within the spread of the runs, in the default and in the
+  fast module. Unit test: `src/Tests/AllArrayUnitTests.h`.

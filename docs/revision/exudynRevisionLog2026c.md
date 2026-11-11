@@ -6431,6 +6431,65 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-1-11"></a>
+### RG5.1.11 — the share of FinalizeMatrix in the Newton step (2026-11-11, #3420)
+*(Maintainer 2026-11-11: do RG5.1.11.)*
+
+- `CSolverBase::Newton`: the two parts of `timer.factorization`, `FinalizeMatrix` and `FactorizeNew`, as the global
+  timers *finalize matrix* and *factorize* (`show.globalTimers`), always registered and kept in the regular module
+  (`STARTGLOBALTIMERmain`; the registration without `addAlways` left the index at 0, the timer of the bounding boxes of
+  the contact - first run).
+- Measured (scratch finalizeShare.py, tables in `docs/dev/design/linalgBenchmark.md` §3.7): a revolute chain of 10-1000
+  rigid bodies, a RigidBodySpringDamper chain, a mass-point chain, EigenSparse, 100 steps. `FinalizeMatrix` is 2-7 % of
+  the solver time with full Newton, below 2 % with modified Newton; the factorization by `SparseLU` 53-58 % of the
+  revolute chain, the Jacobian 58-66 % of the spring chain (about 10 us per RigidBodySpringDamper and Jacobian).
+- Decision recorded in the design note: a pattern mode of `GeneralMatrix` (G1) gains at most these percent - not
+  now; the levers are the sparse factorization and the Jacobian of RigidBodySpringDamper.
+
+<a id="rg9-14-2"></a>
+### RG9.14.2 — ObjectJointHelicalZ (2026-11-11, #3421)
+*(Maintainer 2026-11-11: do RG9.14.2 ObjectJointHelicalZ with RG9.14.3 and RG9.14.4, with issues and steps; the point
+on a helix (RG9.14.5 of the analysis) and the following are not further considered - a general curve joint, probably
+along a 3rd or 5th order curve in space with an option for a screw motion, comes later, related also to the curve
+markers on deformable bodies; when ObjectJointHelicalZ is done, close the design file, move the revised file to
+internals keeping the abandoned proposal of ObjectJointPointOnHelixZ; check whether other design files can move to
+internals or need decisions.)*
+
+- `definitions/itemDefsObjects.py`: ObjectJointHelicalZ (`HelicalJointZ`, type name `JointHelicalZ`), the parameters
+  `pitch`, `constrainedAxes` (5), `activeConnector`, visualization `axisRadius`, `axisLength`, `color`; 5 algebraic
+  equations; the description with the equations, the table of the reduced joints and the MiniExample (a nut on a
+  vertical screw, $-Fht^2/(2(J_{zz}+mh^2))$ exactly).
+- `src/ImplObjects/CObjectJointHelicalZ.cpp`: the translations along $\mathbf{x}_0$, $\mathbf{y}_0$, the coupling
+  $d_z - h\tilde\varphi = -h\,\mathrm{atan2}(\ldots)$ with the angle on the branch nearest $d_z/h$, the tilts
+  $\mathbf{z}_0\cdot\mathbf{y}_1$, $\mathbf{z}_0\cdot\mathbf{x}_1$; analytic rows, the velocity level as rows times twists;
+  $\lambda_i$ on a free equation with `ComputeJacobianAE_AE`; the outputs (`Rotation` z the continuous angle,
+  `TorqueLocal` z $-h\lambda_2$); the drawing with the thread by `DrawSpring`. `CheckPreAssembleConsistency` for
+  `constrainedAxes`; the include of the factory (`MainObjectFactory.cpp`); vcxproj, filters, sources.json.
+- `docs/dev/design/helicalJoint.md` closed: `docs/dev/internals/helicalJoint.md` as built, with the point on a helix as
+  not built and its analysis kept; `docs/manual/revisions.md`.
+
+<a id="rg9-14-3"></a>
+### RG9.14.3 — helicalJointTest.py (2026-11-11, #3422)
+
+- The screw about the x-axis of the ground (the joint frame turned by the `localHT` of the markers), torque and axial
+  force, 2.5 turns, $h = \pm 0.05$, index 3 and 2: the angle and the position against the analytic solution, 1.2e-3 at
+  500 steps (the integration error); the continuous angle of `Rotation`; the multiplier of the coupling
+  $\lambda_2 = F - mh\ddot\varphi$ (the sign of the multipliers, $\mathbf{C}_q^T\boldsymbol{\lambda}$ on the left).
+- Against ObjectJointUser with the screw of userJointTest.py (#3100): 1.3e-14; pitch 0 against ObjectJointRevoluteZ and
+  the free coupling against the cylindrical ObjectJointGeneric: the same bits; static, an axial spring against the
+  torque, $M/(kh^2)$ to 1e-16; `activeConnector=False`; the refusals of an entry 2 and of a position marker.
+
+<a id="rg9-14-4"></a>
+### RG9.14.4 — mbs.CreateHelicalJoint (2026-11-11, #3423)
+
+- `python/exudyn/misc/mainSystemExtensions.py`: as CreateRevoluteJoint, with `pitch` and `constrainedAxes`; a marker
+  given in `itemNumbers` gets a copy turned by the joint frame, one without `localHT` is refused (the joint has no
+  `rotationMarker0/1`). Registered in `__all__`, `autoGenerateHelper.py` and `utilityDocsModel.py`; used by the static
+  case of the test.
+- The design notes of closed steps went to internals (WORKFLOW.md §8.4): contactPrimitives.md (RG9.12, RG9.13) and
+  robotPlanning.md (RG21) as `docs/dev/internals/` pages, flatArray.md (RG11.14) as §5 of
+  `docs/dev/internals/systemJacobians.md` - written by subagents from the notes and checked against the code.
+
 <a id="rg5-1-8"></a>
 ### RG5.1.8 — local sums over data pointers: matrix times vector, MultAdd and +=/-=, J^T K J (2026-11-11, #3417)
 *(Maintainer 2026-11-11: start with RG5.1.8 and do until RG5.1.10; the performance suite before and after.)*

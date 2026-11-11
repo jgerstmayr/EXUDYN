@@ -129,6 +129,7 @@ GraphicsDataTest
 gridGeomExactBeam2D
 hdf5ExudynTypesTest
 heavyTop
+helicalJointTest
 hollowContactTest
 homogeneousTransformationInterfaceTest
 homogeneousTransformationParameterTest

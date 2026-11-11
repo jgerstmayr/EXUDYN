@@ -335,6 +335,7 @@ def TestExamplesReferenceSolution():
         'postNewtonStepContactTest.py':0.057286638346409235,
         'raytracerNOGLFWtest.py':0.28013531271596,                  #2026-10-10: the edges of the bricks in front of the focal plane are drawn (#2951); before 0.28161678591179; 2026-10-01: the node of the rigid body is raytraced as a sphere (#2709); new 2026-01-03
         'reevingSystemSpringsTest.py':2.2156643963423805, #2026-11-11: the common tangent of two sheaves normalizes nB by its own length (#3412), before 2.2155575717433043; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 2.215557571743304;new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
+        'helicalJointTest.py':62.32477542908185, #new 2026-11-11 (#3421, #3422)
         'reevingSystemTangentTest.py':3.025965077828625, #new 2026-11-11: the common tangent of two sheaves with non-parallel axes (#3412)
         'relativeRotationTranslationMechanism.py': 1.509631854432837, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.509631854432179; new 2026-09-11
         'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes
@@ -601,6 +602,7 @@ def MiniExamplesReferenceSolution():
         'ObjectGenericDAE.py':0.04641633228789453, #2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 0.04815547453526271
         'ObjectUserBody.py':-4.904999999999998, #new 2026-10-12 (#2986)
         'ObjectJointRevoluteZ.py':0.49999999999999795,
+        'ObjectJointHelicalZ.py':-2.44029850746268, #new 2026-11-11 (#3421): -F h t^2/(2 (Jzz + m h^2)) exactly
         'ObjectKinematicTree.py':-3.134018551808591,
         'ObjectMass1D.py':2.0,
         'ObjectMassPoint.py':2.0,
@@ -826,6 +828,7 @@ def AVX2ReferenceSolutionUpdate():
         'sphereCylinderContactTest.py': 8.613788897623888, #drift 4.4e-13 (fast module, 2026-11-09)
         'carRollingDiscTest.py': -0.23940048804187597, #drift 1.0e-13 (fast module, 2026-11-10, #2884)
         'rollingDiscRollingFrictionTest.py': 7.475420024768965, #drift 1.5e-13 (fast module, 2026-11-11, the same at 1.13.548 before #3417)
+        'helicalJointTest.py': 62.32477543092194, #drift 1.8e-09 (fast module, 2026-11-11, #3422)
         'restartFileTest.py':                      -2.931848,                 #drift 1.0e-06
         'generalContactImplicit1.py':              0.7758156549599001,        #drift 8.9e-08
         'rollingDiscTangentialForces.py':          1.0342017444582357,        #drift 4.4e-09

@@ -12,7 +12,7 @@ recorded by `Record()` for the symbolic system and the uniform evaluation on the
 
 - from #3200: ObjectJointGeneric, ObjectConnectorHydraulicActuatorSimple, ObjectConnectorReevingSystemSprings,
   ObjectFFRFreducedOrder;
-- the contact primitives sphere-triangle, cylinder-triangle, cylinder-cylinder, cylinder-sphere (contactPrimitives.md);
+- the contact primitives sphere-triangle, cylinder-triangle, cylinder-cylinder, cylinder-sphere (docs/dev/internals/contactPrimitives.md);
 - ObjectBeamGeometricallyExact (3D);
 - ObjectKinematicTree with its markers MarkerKinematicTreeRigid;
 - ObjectConnectorRollingDiscPenalty.
@@ -194,7 +194,7 @@ cable on rigid markers.
 
 ### 4.5 Contact primitives
 
-**Built-in** (contactPrimitives.md; `src/Linalg/GeometryConvex.h`; `CObjectContactSphereCylinder.cpp`,
+**Built-in** (docs/dev/internals/contactPrimitives.md; `src/Linalg/GeometryConvex.h`; `CObjectContactSphereCylinder.cpp`,
 `CObjectContactSphereTriangle.cpp`, `CObjectContactCylinderCylinder.cpp` with `CylinderTrianglePoints`,
 `CylinderCylinderPoints`, `FacePoints`; the law `ContactPrimitiveForce.h`, the points `ContactPrimitivePoints.h`).
 Distances by GJK and EPA, closed forms where they exist (`DistanceSphereCylinder`, the infinite plane); up to 4

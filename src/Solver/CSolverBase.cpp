@@ -1400,10 +1400,12 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 	return conv.discontinuousIterationSuccessful; //return success; in case that no discIter. are needed (==0), no error is returned
 }
 
-//Index TSfinalizeMatrix;
-//TimerStructureRegistrator TSRfinalizeMatrix("finalize matrix", TSfinalizeMatrix, globalTimers);
-//Index TSfactorize;
-//TimerStructureRegistrator TSRfactorize("factorize", TSfactorize, globalTimers);
+//the two parts of timer.factorization of the Newton step, shown by simulationSettings.show.globalTimers in the regular
+//module (#3420)
+Index TSfinalizeMatrix;
+TimerStructureRegistrator TSRfinalizeMatrix("finalize matrix", TSfinalizeMatrix, globalTimers, true);
+Index TSfactorize;
+TimerStructureRegistrator TSRfactorize("factorize", TSfactorize, globalTimers, true);
 
 //! perform Newton method for given solver method
 bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -1510,10 +1512,10 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 
 			STARTTIMER(timer.factorization);
 
-			//STARTGLOBALTIMER(TSfinalizeMatrix);
+			STARTGLOBALTIMERmain(TSfinalizeMatrix);
 			data.systemJacobian->FinalizeMatrix();
-			//STOPGLOBALTIMER(TSfinalizeMatrix);
-			//STARTGLOBALTIMER(TSfactorize);
+			STOPGLOBALTIMERmain(TSfinalizeMatrix);
+			STARTGLOBALTIMERmain(TSfactorize);
 
             Index factorizeOutput = data.systemJacobian->FactorizeNew();// ignoreRedundantEquations, redundantEqStart);
 			if (factorizeOutput != -1)
@@ -1542,7 +1544,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 					SysError(s, PyErrorType::solverError);
 				}
 			}
-			//STOPGLOBALTIMER(TSfactorize);
+			STOPGLOBALTIMERmain(TSfactorize);
 			STOPTIMER(timer.factorization);
 
 			it.newtonJacobiCount++;

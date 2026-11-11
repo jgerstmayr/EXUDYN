@@ -1,0 +1,16 @@
+{
+  "number": 3423,
+  "title": "mbs.CreateHelicalJoint",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "A create function for ObjectJointHelicalZ as CreateRevoluteJoint: two bodies, the position and the axis in global or body frame, the pitch; the markers carry the rotation of the axis to z in their localHT (revision2026c step RG9.14.4).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 09:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "mbs.CreateHelicalJoint creates ObjectJointHelicalZ between two bodies from a position, an axis and the pitch, with the markers carrying the joint frame.",
+  "resolvedInVersion": "1.13.557"
+}

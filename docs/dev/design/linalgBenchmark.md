@@ -186,6 +186,33 @@ The performance tests (`exudev perf`, `exudev perf --fast`), total time in s:
 
 The results of all performance tests are unchanged.
 
+### 3.7 The share of FinalizeMatrix in the Newton step (#3420)
+
+`timer.factorization` of the Newton step holds `FinalizeMatrix` (`setFromTriplets`) and the factorization; the two
+parts are the global timers *finalize matrix* and *factorize* (`simulationSettings.show.globalTimers`, regular
+module). Three sparse models of many small objects (`EigenSparse`, generalized-$\alpha$, 100 steps of 1 ms, Exudyn
+1.13.553): a chain of rigid bodies (Euler parameters) on revolute joints, a chain of rigid bodies on
+RigidBodySpringDamper, a chain of mass points on spring-dampers; shares of the total solver time, full Newton (a
+Jacobian in every iteration) / modified Newton:
+
+| model | n | system size | total s | Jacobian | factorize | finalize |
+|---|---:|---:|---:|---:|---:|---:|
+| revolute chain | 10 | 130 | 0.012 / 0.007 | 18 % / 1 % | 53 % / 7 % | 5.1 % / 0.6 % |
+| revolute chain | 100 | 1300 | 0.122 / 0.061 | 18 % / 3 % | 56 % / 9 % | 4.2 % / 0.6 % |
+| revolute chain | 1000 | 13000 | 1.60 / 0.74 | 16 % / 5 % | 58 % / 18 % | 6.8 % / 2.1 % |
+| spring chain | 10 | 80 | 0.032 / 0.004 | 66 % / 3 % | 22 % / 1 % | 2.7 % / 0.1 % |
+| spring chain | 100 | 800 | 0.358 / 0.031 | 59 % / 3 % | 31 % / 1 % | 2.2 % / 0.1 % |
+| spring chain | 1000 | 8000 | 3.66 / 0.30 | 58 % / 3 % | 31 % / 1 % | 3.5 % / 0.1 % |
+| mass points | 10 | 30 | 0.0022 / 0.0013 | 23 % / 1 % | 32 % / 1 % | 4.4 % / 0.1 % |
+| mass points | 100 | 300 | 0.017 / 0.011 | 32 % / 1 % | 26 % / 1 % | 3.1 % / 0.0 % |
+| mass points | 1000 | 3000 | 0.160 / 0.109 | 35 % / 1 % | 21 % / 1 % | 2.0 % / 0.0 % |
+
+`FinalizeMatrix` is 2-7 % of the solver time with full Newton and below 2 % with modified Newton (the default): a
+pattern mode of the sparse Jacobian (G1) would gain at most these few percent, against an interface change of
+`GeneralMatrix` with a fallback for contact and switched constraints - **not worth it now**. What costs is the
+factorization (Eigen's `SparseLU`, 53-58 % of the revolute chain with full Newton) and the Jacobian of the
+RigidBodySpringDamper (58-66 % of its chain: about 10 us per connector and Jacobian, against 2 us for a revolute joint).
+
 ## 4. Eigen as the reference
 
 Eigen 3.3.7 compiled by MSVC is not a reference for every small product: `Matrix3d * Matrix3d` takes 41 ns with
