@@ -6431,6 +6431,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg21-6-9"></a>
+### RG21.6.9 — pathPlanningUR5.py: the floors at the height of the bases, the wall lower and transparent (2026-11-11, #3424)
+*(Maintainer 2026-11-11: the robot with the many obstacles and the objects seem to fly, possibly the ground is too low;
+the wall of the first robot lower and transparent, so that the robots and the trajectories are seen from one side;
+otherwise it works fine now - the final adjustments.)*
+
+- The cause: both floors had their top at z = -0.1, the UR5 base mesh begins at z = 0 (-0.003 to 0.021) and so do the
+  obstacles standing on the floor.
+- `Floor(size, color)`: the floor drawn with its top at z = 0, the box of the collision check 0.03 m lower - the capsule
+  of the shoulder (link 0, radius 0.0825) reaches 4 mm below the base, so a floor at z = 0 is nearer than the margin at
+  every configuration and `PlanToPose` finds no free goal (first run). The table is no longer one of the boxes of the
+  scenes; the boxes take an optional color.
+- The wall of the scene `wall`: 0.8 m instead of 1.6 m high, standing on the floor, `lightgrey` with alpha 0.5.
+- The scene `window` with seed 6: with the floor 0.07 m higher in the collision check, seed 1 found no path within
+  20000 points (seeds 2 and 5 neither; 3, 4, 6, 7 did, 6 the fastest, 0.29 s).
+- Run without windows: smallest distances during the simulation 0.0111 (wall), 0.0110 (shelf), 0.0113 (window) at the
+  margin 0.01, 0.0218 for the second robot at 0.02; the warnings of `ProfileJointPath` in the window scene are #3411.
+
 <a id="rg5-1-11"></a>
 ### RG5.1.11 — the share of FinalizeMatrix in the Newton step (2026-11-11, #3420)
 *(Maintainer 2026-11-11: do RG5.1.11.)*

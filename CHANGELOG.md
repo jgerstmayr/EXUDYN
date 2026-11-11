@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 534 | 1.13.558 |
+| 1.13 | Newborn | 535 | 1.13.559 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.559** `EXAMPLE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pathPlanningUR5.py: the floors at the height of the robot bases, the wall of the first robot lower and transparent (#3424)
+  - description: The floors of both robots had their top at z = -0.1, while the bases of the UR5 and the obstacles standing on the floor begin at z = 0, so robots and objects appeared to float. The wall of the first robot (1.6 m high, opaque) hid the robots and their trajectories when both are seen from one side. Change: the floors are drawn with their top at z = 0; the floor of the collision check lies 0.03 m lower, because the capsule of the shoulder reaches 4 mm below the base and would otherwise touch the floor at every configuration. The wall of the first robot is 0.8 m high and half transparent. The window scene uses another seed of the planner, as the narrow passage was not found with the previous one.
+  - **notes:** pathPlanningUR5.py: the floors are drawn with their top at z = 0, where the robot bases and the obstacles stand (the floor of the collision check lies 0.03 m lower, as the capsule of the shoulder reaches below the base); the wall of the first robot is 0.8 m high and half transparent; the window scene uses seed 6.
+  - date resolved: **2026-11-11 11:25**, date raised: 2026-11-11
 - **1.13.558** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Helical joints: a screw joint and a point on a helix (#3415)
   - description: A regular C++ joint like ObjectJointGeneric for a screw - the rotation about an axis coupled with the translation along it by the pitch - which also covers a motion on a screw curve with a radial offset to the axis, and so a motion on a circle; the parts of the joint can be locked separately. First an analysis of the constraint formulation (valid for all angles, the pitch zero included), of one or two joints and of their names and options (docs/dev/design/helicalJoint.md); then the implementation with analytic Jacobians, test models against analytic motions and MiniExamples.
   - **notes:** The helical (screw) joint ObjectJointHelicalZ with mbs.CreateHelicalJoint (\#3421-\#3423); its design in docs/dev/internals/helicalJoint.md. A joint for a point moving on a helix or another space curve is left to a general curve joint.

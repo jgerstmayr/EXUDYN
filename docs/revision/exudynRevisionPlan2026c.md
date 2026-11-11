@@ -4212,3 +4212,9 @@ CLOSED 2026-11-11 (#3408; maintainer: a much more complicated task with more obs
 #3416 (maintainer 2026-11-11: the top plate hides the scene too much - a quarter as wide in y and shorter in x; the pocket of the red blocks closed, the blocks at the sides shorter in y; the part on the tool looked strange and touched the obstacles - a sphere, smaller or with twice the distance to the obstacles, in particular at the pocket and at the target).
 
 CLOSED 2026-11-11 (#3416): the plate 1.3 x 0.2 m over the path of the turn, the arm beneath it; the pocket closed, 0.40 m wide; the part a sphere of radius 0.02 m and a collision shape of the last link, the second robot with twice the margin; smallest distance 0.0216 m. [log](exudynRevisionLog2026c.md#rg21-6-8)
+
+#### **CLOSED_RG21.6.9** pathPlanningUR5.py: the floors at the height of the bases, the wall of the first robot lower and transparent
+
+#3424 (maintainer 2026-11-11: the robot with the many obstacles and the objects seem to fly, the ground possibly too low; the wall of the first robot lower and transparent, so that both robots and their trajectories are seen from one side).
+
+CLOSED 2026-11-11 (#3424): the floors drawn with their top at z = 0, the floor of the collision check 0.03 m lower (the capsule of the shoulder reaches 4 mm below the base); the wall 0.8 m high, half transparent; the window scene with seed 6. [log](exudynRevisionLog2026c.md#rg21-6-9)

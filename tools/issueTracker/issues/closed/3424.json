@@ -1,0 +1,16 @@
+{
+  "number": 3424,
+  "title": "pathPlanningUR5.py: the floors at the height of the robot bases, the wall of the first robot lower and transparent",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "LOW",
+  "description": "The floors of both robots had their top at z = -0.1, while the bases of the UR5 and the obstacles standing on the floor begin at z = 0, so robots and objects appeared to float. The wall of the first robot (1.6 m high, opaque) hid the robots and their trajectories when both are seen from one side. Change: the floors are drawn with their top at z = 0; the floor of the collision check lies 0.03 m lower, because the capsule of the shoulder reaches 4 mm below the base and would otherwise touch the floor at every configuration. The wall of the first robot is 0.8 m high and half transparent. The window scene uses another seed of the planner, as the narrow passage was not found with the previous one.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 11:25",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/robotics/pathPlanningUR5.py",
+  "releaseNotes": "pathPlanningUR5.py: the floors are drawn with their top at z = 0, where the robot bases and the obstacles stand (the floor of the collision check lies 0.03 m lower, as the capsule of the shoulder reaches below the base); the wall of the first robot is 0.8 m high and half transparent; the window scene uses seed 6.",
+  "resolvedInVersion": "1.13.559"
+}

@@ -76,28 +76,32 @@ def Obstacle(kind, position, color, rotation=np.eye(3), **parameters):
         raise ValueError('Obstacle: no drawing for ' + kind)
     return (shape, exu.HT(rotation=rotation, translation=list(p)), drawing)
 
-#%%+++ the scenes of the first robot: the obstacles as (size of a box, position), the joint coordinates at the start and at the goal
-table = ([2, 2, 0.1], [0, 0, -0.15])
+def Floor(size, color):
+    """the floor of a robot, a box with its top at z=0, where the base stands; the capsule of the shoulder (link 0) reaches 4 mm below the base,
+    so the floor of the collision check is 0.03 m lower than drawn, which leaves the margins free at any configuration"""
+    (shape, HT, drawing) = Obstacle('Box', [0, 0, -0.5*size[2] - 0.03], color, size=size)
+    return (shape, HT, graphics.Brick(centerPoint=[0, 0, -0.5*size[2]], size=size, color=color))
+
+#%%+++ the scenes of the first robot: the obstacles as (size of a box, position[, color]), the joint coordinates at the start and at the goal
 scenes = {
     #the arm is stretched past the wall at the start and the goal, so it has to fold in front of the wall, closer to its base, to pass it
-    'wall': {'boxes': [table, ([0.05, 0.4, 1.6], [0.45, 0, 0.3])],
+    'wall': {'boxes': [([0.05, 0.4, 0.8], [0.45, 0, 0.4], graphics.color.lightgrey[:3] + [0.5])],
              'qStart': [-0.8, -1.2, 1.2, -1.5, -1.57, 0.], 'qGoal': [0.8, -1.2, 1.2, -1.5, -1.57, 0.], 'seed': 1},
     #the tool has to leave the upper compartment, pass the board in front of the shelf and enter the lower one
-    'shelf': {'boxes': [table] + [([0.3, 0.8, 0.03], [0.7, 0, z]) for z in [0.1, 0.5, 0.9]] + [([0.3, 0.03, 0.83], [0.7, y, 0.5]) for y in [-0.4, 0.4]] + [([0.03, 0.8, 0.83], [0.86, 0, 0.5])],
+    'shelf': {'boxes': [([0.3, 0.8, 0.03], [0.7, 0, z]) for z in [0.1, 0.5, 0.9]] + [([0.3, 0.03, 0.83], [0.7, y, 0.5]) for y in [-0.4, 0.4]] + [([0.03, 0.8, 0.83], [0.86, 0, 0.5])],
               'qStart': [0.071, -1.043, 0.653, -2.752, -1.642, 1.571], 'qGoal': [-0.445, -0.928, 1.535, -3.749, -1.126, 1.571], 'seed': 1},
     #the wrist has to pass an opening of 0.36 x 0.35 m; a narrow passage is hard for a random planner: other seeds may need more than the 20000 points of PlanJointPath
-    'window': {'boxes': [table, ([0.04, 0.42, 1.1], [0.3, -0.39, 0.45]), ([0.04, 0.42, 1.1], [0.3, 0.39, 0.45]), ([0.04, 0.36, 0.35], [0.3, 0, 0.075]), ([0.04, 0.36, 0.4], [0.3, 0, 0.8])],
-               'qStart': [1.137, -1.437, 2.145, -3.849, -1.137, 0.], 'qGoal': [-0.264, -1.436, 1.927, -3.633, -1.306, 1.571], 'seed': 1},
+    'window': {'boxes': [([0.04, 0.42, 1.1], [0.3, -0.39, 0.45]), ([0.04, 0.42, 1.1], [0.3, 0.39, 0.45]), ([0.04, 0.36, 0.35], [0.3, 0, 0.075]), ([0.04, 0.36, 0.4], [0.3, 0, 0.8])],
+               'qStart': [1.137, -1.437, 2.145, -3.849, -1.137, 0.], 'qGoal': [-0.264, -1.436, 1.927, -3.633, -1.306, 1.571], 'seed': 6},
 }
-obstacles1 = [Obstacle('Box', position, graphics.color.lightgrey if size[2] > 0.1 or size[0] < 1 else graphics.color.grey, size=size)
-              for (size, position) in scenes[scene]['boxes']]
+obstacles1 = [Floor([2, 2, 0.1], graphics.color.grey)] + [Obstacle('Box', box[1], box[2] if len(box) > 2 else graphics.color.lightgrey, size=box[0]) for box in scenes[scene]['boxes']]
 
 #%%+++ the scene of the second robot: pick in a pocket in front (+x), place on a column behind (-x), beneath a plate on the side (+y)
 #the pocket is open at the top only, so the part is lifted out; a wall on the side -y and the plate on the side +y make the robot turn beneath the plate,
 #where a lamp hangs and a cone and a pyramid stand; the plate is high enough that the elbow passes below it, too low to pass above it
 pyramid = [[-0.12, -0.12, 0], [0.12, -0.12, 0], [0.12, 0.12, 0], [-0.12, 0.12, 0], [0, 0, 0.3]]
 obstacles2 = [
-    Obstacle('Box', [0, 0, -0.15], graphics.color.grey, size=[2.4, 2.4, 0.1]),                  #floor
+    Floor([2.4, 2.4, 0.1], graphics.color.grey),
     Obstacle('Box', [0.56, 0.25, 0.15], graphics.color.brown, size=[0.36, 0.1, 0.3]),          #the pocket, closed around: two blocks at the sides,
     Obstacle('Box', [0.56, -0.25, 0.15], graphics.color.brown, size=[0.36, 0.1, 0.3]),
     Obstacle('Box', [0.35, 0., 0.09], graphics.color.brown, size=[0.06, 0.6, 0.18]),           #a lower one in front and
