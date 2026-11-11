@@ -1,0 +1,15 @@
+{
+  "number": 3436,
+  "title": "The chapter of the Python modules is called Exudyn Python Modules",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The reference manual listed the Python modules of the exudyn package under the heading Python Utility Functions, which undersells them; the heading and the texts naming the chapter (README.rst, pdfIndex.md, pyproject.toml, robotics.md) say Exudyn Python Modules.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 19:35",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The chapter of the reference manual with the Python modules of the exudyn package is called Exudyn Python Modules instead of Python Utility Functions.",
+  "resolvedInVersion": "1.13.569"
+}

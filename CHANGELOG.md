@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 544 | 1.13.568 |
+| 1.13 | Newborn | 545 | 1.13.569 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.569** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The chapter of the Python modules is called Exudyn Python Modules (#3436)
+  - description: The reference manual listed the Python modules of the exudyn package under the heading Python Utility Functions, which undersells them; the heading and the texts naming the chapter (README.rst, pdfIndex.md, pyproject.toml, robotics.md) say Exudyn Python Modules.
+  - **notes:** The chapter of the reference manual with the Python modules of the exudyn package is called Exudyn Python Modules instead of Python Utility Functions.
+  - date resolved: **2026-11-11 19:35**, date raised: 2026-11-11
 - **1.13.568** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` README and the PDF index link the YouTube playlists of the channel (#3435)
   - description: README.rst and pdfIndex.md linked one playlist of the Exudyn YouTube channel; they link the overview of all playlists, https://www.youtube.com/channel/UCsQD2bIPBXB\_4J23WtqKkVw/playlists.
   - **notes:** The YouTube link of README.rst and pdfIndex.md points to the playlists of the Exudyn channel.

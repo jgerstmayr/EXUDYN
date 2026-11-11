@@ -48,7 +48,7 @@ workflows, documentation, tests and examples.
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written (decision D11)
 
-+  Exudyn version = 1.13.568.dev1 (Newborn)
++  Exudyn version = 1.13.569.dev1 (Newborn)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg
@@ -89,7 +89,7 @@ How to cite:
 
 + Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, Vol. 60, pp. 533-561, 2024. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 
-The full documentation is the HTML documentation on `Read the Docs <https://exudyn.readthedocs.io/>`_ : the user manual, the reference manual of all items, the Python utility functions and the Python-C++ interface.
+The full documentation is the HTML documentation on `Read the Docs <https://exudyn.readthedocs.io/>`_ : the user manual, the reference manual of all items, the Exudyn Python modules and the Python-C++ interface.
 
 For license, see LICENSE.txt in the root github folder on github!
 

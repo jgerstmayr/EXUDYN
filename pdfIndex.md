@@ -42,7 +42,7 @@ into the documentation points at:
 - **YouTube** — the [playlists of tutorial videos](https://www.youtube.com/channel/UCsQD2bIPBXB_4J23WtqKkVw/playlists)
 
 What this document holds, and the HTML does too: the user manual, the reference manual of every
-item, the Python utility functions, the settings structures, the Python–C++ interface, the
+item, the Exudyn Python modules, the settings structures, the Python–C++ interface, the
 developer documentation, and — at the end, and deliberately — the **complete issue history**, which
 is where the reason for most changes is written down.
 

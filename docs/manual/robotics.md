@@ -29,7 +29,7 @@ without and with blending at the corners; raytraced, from the example staubliTX2
 | `exudyn.robotics.utilities` | `AddLidar`: a lidar of rays measured by general contact |
 | `exudyn.robotics.rosInterface` | the communication with ROS 1, see {ref}`sec-robotics-ros` |
 
-The functions are listed in the reference manual under the Python utility functions.
+The functions are listed in the reference manual under the Exudyn Python modules.
 
 ## A robot
 

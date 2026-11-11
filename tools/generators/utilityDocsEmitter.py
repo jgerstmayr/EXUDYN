@@ -166,9 +166,9 @@ def main():
     #the chapter label, which the manual references as sec:pythonUtilityFunctions
     indexText = Banner()
     indexText += MarkdownLabel('sec:pythonUtilityFunctions') + chr(10)
-    indexText += MarkdownHeading('Python Utility Functions', 0) + chr(10) + chr(10)
+    indexText += MarkdownHeading('Exudyn Python Modules', 0) + chr(10) + chr(10)
     indexText += '\n'.join([
-        'This chapter describes in every section the functions and classes of the utility modules.',
+        'This chapter describes in every section the functions and classes of one Python module of the exudyn package.',
         'These modules help to create multibody systems with the Exudyn core module. Functions are',
         'implemented in Python and can be changed, extended and verified by the user - **check the',
         'source code** by entering a function in Spyder and pressing **CTRL + left mouse button**.',

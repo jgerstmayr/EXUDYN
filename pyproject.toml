@@ -56,7 +56,7 @@ text = """
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  **Documentation**: the user manual, tutorials, the reference manual of all items and the Python utility functions on
++  **Documentation**: the user manual, tutorials, the reference manual of all items and the Exudyn Python modules on
    `Read the Docs <https://exudyn.readthedocs.io/>`_
 +  **Install**: ``pip install "exudyn[basic]"`` - Exudyn with scipy and matplotlib, recommended to start;
    ``pip install "exudyn[common]"`` for most features; see the
