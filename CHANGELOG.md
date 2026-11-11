@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 538 | 1.13.562 |
+| 1.13 | Newborn | 539 | 1.13.563 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.563** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.machines: a generated page of the reference manual (#3429)
+  - description: exudyn.machines (involute gears, ball bearings, the ISO metric threads) is not parsed by the generator of the utility pages, so the reference manual has no page for it; add machines.py to the parsed files of tools/generators/utilityDocsModel.py and make its docstrings fit the generated page.
+  - **notes:** exudyn.machines has a page in the reference manual: the involute functions, MetricThreadSizes and MetricThread, the ball bearing functions and the class InvoluteGear.
+  - date resolved: **2026-11-11 15:47**, date raised: 2026-11-11
 - **1.13.562** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics: screw threads (single- and multi-start, external and internal, run-outs, shafts) and hexagon prisms for heads and nuts (#3425)
   - description: Screws on ObjectJointHelicalZ have no graphics: exudyn.graphics has solids of revolution and extrusions, but no helical surface. Proposed: graphics.ScrewThread for external and internal threads of a given pitch and number of starts, with the profile as a normalized line segment or by name ('triangle', 'metric', 'trapezoid'), the thread running out at both ends into the shaft, contours of the shaft before and after the thread as in SolidOfRevolution, an outer cylinder for internal threads; graphics.HexagonPrism for heads and nuts. The recommendation and the questions are in revision2026c step RG6.24; the implementation waits for the decisions.
   - **notes:** exudyn.graphics.ScrewThread draws external and internal screw threads, single- or multi-start, right- or left-handed, with the profiles 'metric', 'triangle', 'trapezoid', 'square' or one given as points, cut, chamfered or running out at the ends, with contours of a shank before and after; HexagonPrism, Bolt and Nut assemble heads, shanks and nuts; exudyn.machines.MetricThread gives the ISO metric coarse threads M2 to M60 with the sizes of the hexagon bolt and nut. Test model screwGraphicsTest.py, with a nut running down a bolt on ObjectJointHelicalZ.

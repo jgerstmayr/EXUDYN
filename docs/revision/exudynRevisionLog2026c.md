@@ -6431,6 +6431,19 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-24-5"></a>
+### RG6.24.5 — the reference manual page of exudyn.machines (2026-11-11, #3429)
+
+- Maintainer 2026-11-11: "exudyn.machines has no generated documentation page => please add one".
+- `machines.py` added to `filesParsed` of tools/generators/utilityDocsModel.py; the page
+  docs/generated/pythonUtilities/machines.md has the involute functions, MetricThreadSizes, MetricThread, the ball
+  bearing functions and the class InvoluteGear, with the examples and test models that use them; it is listed in
+  utilitiesIndex.md.
+- The three docstrings of the involute had `\\tan` in a raw string, which reached the page as a line break of LaTeX
+  followed by "tan"; now one backslash. The module header names what it has (gears, bearings, threads).
+- Still not parsed, unchanged here: cMath.py, cUtilities.py, itemInterface.py and lieGroupIntegration.py (commented
+  out in the list).
+
 <a id="rg6-24"></a>
 ### RG6.24 — Screw threads, hexagon prisms, bolts and nuts in exudyn.graphics (2026-11-11, #3425)
 

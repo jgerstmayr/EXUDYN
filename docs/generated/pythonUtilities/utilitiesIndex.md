@@ -40,6 +40,7 @@ symbolics.utilities
 interactive
 kinematicTree
 lieGroupBasics
+machines
 misc.mainSystemExtensions
 particles
 physics

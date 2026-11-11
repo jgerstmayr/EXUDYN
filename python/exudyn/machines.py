@@ -2,9 +2,10 @@
 # This is an EXUDYN python utility library
 #
 # Details:  The machines library includes helper functions and classes for
-#           mechanical engineering and machine elements, in particular bearings, gears, mechanisms
+#           mechanical engineering and machine elements: involute gears, ball bearings and the
+#           ISO metric screw threads
 #
-# Authors:  Johannes Gerstmayr
+# Author:   Johannes Gerstmayr
 # Date:     2023-01-06
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -25,19 +26,19 @@ __all__ = [
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def Involute(x):
-    r"""compute involute (x being in radians): $y=\\tan(x)-x$;
+    r"""compute involute (x being in radians): $y=\tan(x)-x$;
     """
     if abs(x) < 0.02:
         return ApproxInvolute(x)
     return tan(x)-x
 
 def ApproxInvolute(x):
-    r"""Approximate involute for $|x| < 0.02$, being more accurate than tan: $y=\\tan(x)-x \approx (1/3) x^3 + (2/15) x^5$;
+    r"""Approximate involute for $|x| < 0.02$, being more accurate than tan: $y=\tan(x)-x \approx (1/3) x^3 + (2/15) x^5$;
     """
     return (1./3.) * x**3 + (2./15.) * x**5 + (17./315.) * x**7
 
 def InvInvolute(y, warn=True):
-    r"""compute inverse of involute, see Involute(x); computes $x$ for given $y$ in $y=\\tan(x)-x$ using Newton-Raphson method
+    r"""compute inverse of involute, see Involute(x); computes $x$ for given $y$ in $y=\tan(x)-x$ using Newton-Raphson method
 
     Args:
         y provides given value; if warn==True, a warning is displayed if no convergence is achieved

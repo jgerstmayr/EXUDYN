@@ -115,6 +115,7 @@ filesParsed=[
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
+             'machines.py',
              'misc/mainSystemExtensions.py', 
              'particles.py',
              'physics.py',

@@ -149,6 +149,7 @@ simulationSettings.solution.file.write = not testIsActive
 
 if not testIsActive:
     SC.visualizationSettings.view0.scene.drawWorldBasis = True
+    SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
     SC.visualizationSettings.openGL.multiSampling = 4
     SC.renderer.Start()
 mbs.SolveDynamic(simulationSettings)

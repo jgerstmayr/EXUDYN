@@ -1,0 +1,15 @@
+{
+  "number": 3429,
+  "title": "exudyn.machines: a generated page of the reference manual",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "exudyn.machines (involute gears, ball bearings, the ISO metric threads) is not parsed by the generator of the utility pages, so the reference manual has no page for it; add machines.py to the parsed files of tools/generators/utilityDocsModel.py and make its docstrings fit the generated page.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 15:47",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.machines has a page in the reference manual: the involute functions, MetricThreadSizes and MetricThread, the ball bearing functions and the class InvoluteGear.",
+  "resolvedInVersion": "1.13.563"
+}

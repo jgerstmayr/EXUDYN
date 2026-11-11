@@ -1030,6 +1030,10 @@ CLOSED 2026-11-11 (#3425): machines.MetricThread and MetricThreadSizes, M2 to M6
 
 CLOSED 2026-11-11 (#3425): test model screwGraphicsTest.py - the table, 14 graphics cases (radii, bounding boxes, orientation), 7 refusals, and a nut running down an M10 bolt on ObjectJointHelicalZ against the analytic solution (1.2e-5, the integration error of second order); it is the example when run alone. [log](exudynRevisionLog2026c.md#rg6-24)
 
+#### **CLOSED_RG6.24.5** Generate the reference manual page of exudyn.machines
+
+#3429. CLOSED 2026-11-11 (#3429): machines.py parsed by the generator of the utility pages; the docstrings of the involute with \tan in one backslash. [log](exudynRevisionLog2026c.md#rg6-24-5)
+
 ## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).
