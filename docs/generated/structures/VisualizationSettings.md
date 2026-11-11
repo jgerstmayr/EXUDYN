@@ -519,6 +519,7 @@ VSettingsScene has the following items:
 | `drawCoordinateSystem` | UInt | 2 | 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text |
 | `drawWorldBasis` | bool | False | true = draw world basis coordinate system at (0,0,0) |
 | `facesTransparent` | bool | False | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers |
+| `hideMbs` | ArrayIndex | [] | the numbers of the systems (as in SC.GetSystem(i), in the order of SC.AddSystem) whose graphics this view does not show: their faces, edges, lines, texts and shadows, the sensor traces of traces.sensorsMbsNumber, the zoom of this view and the raytracer image of this view leave them out; numbers without a system are ignored; e.g. [1] to show only mbs 0 in a view (#3442) |
 | `showFaceEdges` | bool | False | True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation |
 | `showFaces` | bool | True | True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation |
 | `showLines` | bool | True | True: show lines (other lines than face and mesh edges) |

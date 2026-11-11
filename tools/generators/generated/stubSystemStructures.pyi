@@ -948,6 +948,8 @@ class VSettingsScene:
     """true = draw world basis coordinate system at (0,0,0)."""
     facesTransparent: bool
     """True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers."""
+    hideMbs: List[int]
+    """the numbers of the systems (as in SC.GetSystem(i), in the order of SC.AddSystem) whose graphics this view does not show: their faces, edges, lines, texts and shadows, the sensor traces of traces.sensorsMbsNumber, the zoom of this view and the raytracer image of this view leave them out; numbers without a system are ignored; e.g. [1] to show only mbs 0 in a view (#3442)."""
     showFaceEdges: bool
     """True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation."""
     showFaces: bool

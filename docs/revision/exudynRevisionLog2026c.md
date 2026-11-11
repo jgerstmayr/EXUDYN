@@ -6431,6 +6431,56 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-9-9"></a>
+### RG5.9.9, RG6.25, RG5.11.2 — the substitution by rows, hideMbs, the scaling of the raytracer (2026-11-11, #3441, #3442, #3439)
+
+*(Maintainer 2026-11-11: "For RG5.10, I like to see a more detailed concept here in the chat, before you continue.
+Write that concept first, then do the suggested steps 1. - 3." The concept of RG5.10 was given in the chat and waits
+for the decisions on the name, the behaviour after an error and the file names; RG5.10 is not continued.)*
+
+**RG5.9.9, the substitution by rows (#3441)**:
+- `SparseLURows<Ordering>` in ParallelSubstitution.h/.cpp (explicitly instantiated for COLAMD and the nested
+  dissection): `factorize` invalidates the rows, `ExtractRows()` copies L and U into rows, `SolveRows` substitutes
+  serially; `SparseLUParallel` derives from it. `GeneralMatrixEigenSparse::solver` is a `SparseLURows<COLAMDOrdering>`,
+  the rows are extracted after each successful factorization if `exu.special.solver.sparseSolveByRows` (default True).
+- Measured (scratch rowsStudy.py, each model in its own process, the faster of two runs): the 5 performance models with
+  EigenSparse 22.21 -> 21.68 s, perf3DRigidBodies 1.401 -> 1.146 s (-18 %), perfConnectorInterface -5 %; 52 test
+  models 21.23 -> 20.64 s, gridGeomExactBeam2D -11 %, the contact models -6 %; +4 to +9 % only for models of a few
+  milliseconds. The study harness failed for ACFtest.py and linearFEMgenericODE2.py (working directory, `__file__`)
+  with both settings; sphereTriangleTest.py diverged with Eigen's solve in that run - it is excluded from the suite as
+  unstable (it changes with round-off).
+
+**RG6.25, view[0-3].scene.hideMbs (#3442)**, as recommended in the step: `SystemHiddenInView(viewID, system, settings)`
+in VisualizationSystemContainerBase.h, used in the draw loop of the renderer (faces, edges, lines, points, texts,
+shadows and the picking follow), in the zoom of a view (`GraphicsData::ComputeMaxScene` with the hidden systems,
+`ComputeZoomToItem`), the sensor traces (`SensorTraceLines` with the view) and the raytracer of the view.
+viewHideMbsTest.py (new): raytracer images with hideMbs = [1], [0, 1], [] and [5] against containers holding only the
+shown systems.
+
+**RG5.11.2, the scaling of the raytracer (#3439)** (scratch rtScale.py: the scene of raytracerNOGLFWtest.py at
+1200 x 1000, the fastest of three images, 16 cores / 32 logical processors):
+
+| threads | load balancing, 12 tiles/thread | without, 12 tiles/thread | load balancing, 48 tiles/thread |
+|---:|---:|---:|---:|
+| 1 | 4.660 | 4.667 | 4.631 |
+| 2 | 2.382 | 2.422 | 2.337 |
+| 4 | 1.245 | 1.467 | 1.222 |
+| 8 | 0.664 | 0.820 | 0.657 |
+| 16 | 0.437 | 0.585 | 0.419 |
+| 32 | 0.372 | 0.471 | 0.359 |
+| 64 | 0.368 | 0.421 | 0.358 |
+| 128 | 0.366 | 0.497 | 0.364 |
+
+- With load balancing the raytracer scales to the logical processors (12.6 times on 32) and gains nothing beyond.
+  Without it, each thread renders a fixed band of tiles; the best time is then at 64 threads, where the oversubscription
+  balances a little - the maintainer's observation. The raytracer took the flag from
+  `exudyn.special.solver.multiThreadingLoadBalancing`, which every solver sets from its `parallel.useLoadBalancing`.
+- Changed: `TaskManager::AcquireWorkers` takes a load balancing mode (1/0, or -1 for the flag); the raytracer always
+  balances: afterwards 0.369 s on 32 threads with the flag off as well (4: 1.262, 8: 0.685, 16: 0.444, 64: 0.367 s).
+- For Exudyn in general: a `ParallelFor` without load balancing splits statically and suffers from unequal work per
+  item. The default `raytracer.numberOfThreads = 8` gives 0.664 s here against 0.37 s with 32 - a candidate for a
+  default from the number of processors.
+
 <a id="rg5-9-7"></a>
 ### RG5.9.7 — the parallel substitution with a nested-dissection ordering, a prototype (2026-11-11, #3432, #3441)
 

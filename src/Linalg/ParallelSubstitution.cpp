@@ -191,6 +191,90 @@ void NestedDissection::Order(int n, const int* outerIndex, const int* innerIndex
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+template <typename OrderingType>
+bool SparseLURows<OrderingType>::ExtractRows(const std::vector<int>* positionNode)
+{
+	typedef typename Base::SCMatrix SCMatrix;
+	rowsReady = false;
+	int n = (int)this->rows();
+	//L strictly lower (unit diagonal) and the diagonal blocks of U are in the supernodes of m_Lstore, the rest of U
+	//in m_Ustore
+	std::vector<int> lCount(n + 1, 0), uCount(n + 1, 0);
+	uDiagonal.assign(n, 0.);
+	for (int j = 0; j < n; j++)
+	{
+		for (typename SCMatrix::InnerIterator it(this->m_Lstore, j); it; ++it)
+		{
+			int i = (int)it.index();
+			if (i > j) { lCount[i + 1]++; }
+			else if (i < j) { uCount[i + 1]++; }
+		}
+		for (Eigen::MappedSparseMatrix<double, Eigen::ColMajor, int>::InnerIterator it(this->m_Ustore, j); it; ++it) { uCount[it.index() + 1]++; }
+	}
+	for (int i = 0; i < n; i++) { lCount[i + 1] += lCount[i]; uCount[i + 1] += uCount[i]; }
+	lRowStart = lCount; uRowStart = uCount;
+	lColumns.resize(lCount[n]); lValues.resize(lCount[n]);
+	uColumns.resize(uCount[n]); uValues.resize(uCount[n]);
+	std::vector<int> lFill(lRowStart.begin(), lRowStart.end() - 1), uFill(uRowStart.begin(), uRowStart.end() - 1);
+	bool treeHolds = true;
+	for (int j = 0; j < n; j++)
+	{
+		for (typename SCMatrix::InnerIterator it(this->m_Lstore, j); it; ++it)
+		{
+			int i = (int)it.index();
+			if (i > j) //row i of the forward solve needs position j: its node must be below the node of i
+			{
+				lColumns[lFill[i]] = j; lValues[lFill[i]++] = it.value();
+				if (positionNode && !NestedDissection::IsAncestorOrSelf((*positionNode)[i], (*positionNode)[j])) { treeHolds = false; }
+			}
+			else if (i < j) //row i of the backward solve needs position j: its node must be above the node of i
+			{
+				uColumns[uFill[i]] = j; uValues[uFill[i]++] = it.value();
+				if (positionNode && !NestedDissection::IsAncestorOrSelf((*positionNode)[j], (*positionNode)[i])) { treeHolds = false; }
+			}
+			else { uDiagonal[j] = it.value(); }
+		}
+		for (Eigen::MappedSparseMatrix<double, Eigen::ColMajor, int>::InnerIterator it(this->m_Ustore, j); it; ++it)
+		{
+			int i = (int)it.index();
+			uColumns[uFill[i]] = j; uValues[uFill[i]++] = it.value();
+			if (positionNode && !NestedDissection::IsAncestorOrSelf((*positionNode)[j], (*positionNode)[i])) { treeHolds = false; }
+		}
+	}
+	y.resize(n);
+	rowsReady = true; //the rows also serve a serial solve if the tree does not hold
+	return treeHolds;
+}
+
+template <typename OrderingType>
+void SparseLURows<OrderingType>::SolveRows(const double* rhs, double* solution, int n)
+{
+	const auto& rowPermutation = this->m_perm_r.indices();
+	double* x = y.data();
+	for (int i = 0; i < n; i++) { x[rowPermutation(i)] = rhs[i]; } //y = Pr * b
+	const int* lStart = lRowStart.data(); const int* lCol = lColumns.data(); const double* lVal = lValues.data();
+	for (int i = 0; i < n; i++)
+	{
+		double sum = x[i];
+		for (int m = lStart[i]; m < lStart[i + 1]; m++) { sum -= lVal[m] * x[lCol[m]]; }
+		x[i] = sum;
+	}
+	const int* uStart = uRowStart.data(); const int* uCol = uColumns.data(); const double* uVal = uValues.data();
+	const double* diag = uDiagonal.data();
+	for (int i = n - 1; i >= 0; i--)
+	{
+		double sum = x[i];
+		for (int m = uStart[i]; m < uStart[i + 1]; m++) { sum -= uVal[m] * x[uCol[m]]; }
+		x[i] = sum / diag[i];
+	}
+	const auto& columnPermutation = this->m_perm_c.indices(); //column i of the matrix is at position m_perm_c(i)
+	for (int i = 0; i < n; i++) { solution[i] = x[columnPermutation(i)]; }
+}
+
+template class SparseLURows<Eigen::COLAMDOrdering<int> >;
+template class SparseLURows<NestedDissectionOrdering<int> >;
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 int SparseLUParallel::AnalyzeAndFactorize(const Eigen::SparseMatrix<double>& matrix, int numberOfThreads, double pivotThreshold)
 {
 	//a depth with about two subtrees per thread (1, 2 or 4 gave the same times on chains)
@@ -277,51 +361,7 @@ bool SparseLUParallel::Prepare()
 	//the tree node of each position: column i of the matrix is at position m_perm_c(i)
 	std::vector<int> positionNode(n);
 	for (int i = 0; i < n; i++) { positionNode[m_perm_c.indices()(i)] = columnNodes[i]; }
-
-	//the factors by rows: L strictly lower (unit diagonal), U strictly upper and its diagonal
-	std::vector<int> lCount(n + 1, 0), uCount(n + 1, 0);
-	uDiagonal.assign(n, 0.);
-	for (int j = 0; j < n; j++)
-	{
-		for (SCMatrix::InnerIterator it(m_Lstore, j); it; ++it)
-		{
-			int i = (int)it.index();
-			if (i > j) { lCount[i + 1]++; }
-			else if (i < j) { uCount[i + 1]++; }
-		}
-		for (Eigen::MappedSparseMatrix<double, Eigen::ColMajor, int>::InnerIterator it(m_Ustore, j); it; ++it) { uCount[it.index() + 1]++; }
-	}
-	for (int i = 0; i < n; i++) { lCount[i + 1] += lCount[i]; uCount[i + 1] += uCount[i]; }
-	lRowStart = lCount; uRowStart = uCount;
-	lColumns.resize(lCount[n]); lValues.resize(lCount[n]);
-	uColumns.resize(uCount[n]); uValues.resize(uCount[n]);
-	std::vector<int> lFill(lRowStart.begin(), lRowStart.end() - 1), uFill(uRowStart.begin(), uRowStart.end() - 1);
-	bool treeHolds = true;
-	for (int j = 0; j < n; j++)
-	{
-		for (SCMatrix::InnerIterator it(m_Lstore, j); it; ++it)
-		{
-			int i = (int)it.index();
-			if (i > j) //row i of the forward solve needs position j: its node must be below the node of i
-			{
-				lColumns[lFill[i]] = j; lValues[lFill[i]++] = it.value();
-				if (!NestedDissection::IsAncestorOrSelf(positionNode[i], positionNode[j])) { treeHolds = false; }
-			}
-			else if (i < j) //row i of the backward solve needs position j: its node must be above the node of i
-			{
-				uColumns[uFill[i]] = j; uValues[uFill[i]++] = it.value();
-				if (!NestedDissection::IsAncestorOrSelf(positionNode[j], positionNode[i])) { treeHolds = false; }
-			}
-			else { uDiagonal[j] = it.value(); }
-		}
-		for (Eigen::MappedSparseMatrix<double, Eigen::ColMajor, int>::InnerIterator it(m_Ustore, j); it; ++it)
-		{
-			int i = (int)it.index();
-			uColumns[uFill[i]] = j; uValues[uFill[i]++] = it.value();
-			if (!NestedDissection::IsAncestorOrSelf(positionNode[j], positionNode[i])) { treeHolds = false; }
-		}
-	}
-	if (!treeHolds) { return false; }
+	if (!ExtractRows(&positionNode)) { return false; }
 
 	//the schedule: the positions of each node in increasing order, the nodes of each depth
 	int maxId = 1;
@@ -348,7 +388,6 @@ bool SparseLUParallel::Prepare()
 			depthWork[d] += (lRowStart[p + 1] - lRowStart[p]) + (uRowStart[p + 1] - uRowStart[p]) + 1;
 		}
 	}
-	y.resize(n);
 	return true;
 }
 

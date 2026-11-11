@@ -1684,6 +1684,8 @@ class SpecialSolver:
     """the diagonal pivot threshold of the factorization with parallelSubstitution: a diagonal entry is taken as pivot if its magnitude is at least this fraction of the largest in its column, which keeps the subtrees independent; default=1e-3 (#3432)."""
     parallelSubstitutionSerial:int
     """the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)."""
+    sparseSolveByRows:bool
+    """if True (=default), EigenSparse copies the factors of SparseLU into rows after each factorization and solves forward and backward with them, which is about twice as fast as the supernodal solve of Eigen for the small supernodes of multibody systems; False: the solve of Eigen (#3441)."""
     @overload
     def PardisoInfo(self) -> dict: 
         """Whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)."""

@@ -343,5 +343,6 @@ userRigidBodyTest
 userTetrahedronTest
 userTypesTest
 velocityVerletTest
+viewHideMbsTest
 zoomToItemTest
 ```

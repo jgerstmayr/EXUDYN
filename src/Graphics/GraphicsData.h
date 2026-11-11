@@ -304,16 +304,18 @@ public:
 		return box;
 	}
 
+	//! hiddenSystems: the indices in graphicsDataList left out, the hideMbs of a view (#3442)
 	static Box3DF ComputeMaxScene(ResizableArray<GraphicsData*>* graphicsDataList, 
 		const Matrix3DF& rotationMV, const Float3& translationMV,
-		float minSceneSize, float emptySceneSize = 1.f)
+		float minSceneSize, float emptySceneSize = 1.f, const ArrayIndex* hiddenSystems = nullptr)
 	{
 		Box3DF box;
 		if (graphicsDataList != nullptr)// && state != nullptr && visSettings != nullptr)
 		{
-			for (auto graphicsData : *graphicsDataList)
+			for (Index system = 0; system < graphicsDataList->NumberOfItems(); system++)
 			{
-				box.Add(graphicsData->ComputeMaxScene( rotationMV.GetTransposed(), -translationMV)); //inverted transformation, as OpenGL works "inverted" here
+				if (hiddenSystems && hiddenSystems->GetIndexOfItem(system) != EXUstd::InvalidIndex) { continue; }
+				box.Add((*graphicsDataList)[system]->ComputeMaxScene( rotationMV.GetTransposed(), -translationMV)); //inverted transformation, as OpenGL works "inverted" here
 			}
 		}
 		if (box.Empty() || box.Radius() == 0.f)

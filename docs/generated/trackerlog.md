@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.573.dev1
+- Exudyn version = 1.13.576.dev1
 - last change = 2026-11-11
 - Number of issues = 3444
-- Number of resolved issues = 3350 (573 in current version)
+- Number of resolved issues = 3353 (576 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,15 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` Each view hides the graphics of the systems listed in view\[0-3\].scene.hideMbs (#3442)
-  - description: The views 0-3 of the render window show the same graphics; to show different things in different views, a list hideMbs of system numbers per view leaves out the graphics of those systems in that view: faces, edges, lines, texts and their shadows, the picking with the mouse, zoom all, the sensor traces and the raytracer of that view.
-  - date raised: 2026-11-11
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` SparseLU solves with the rows of its factors instead of the supernodal solve of Eigen (#3441)
-  - description: After a factorization of EigenSparse (COLAMD), the factors L and U are copied into rows and the forward and backward substitution run on them, as with special.solver.parallelSubstitution: there the serial substitution by rows was 1.6-2.8 times faster than the supernodal solve of Eigen on chains (small supernodes, vector copies); for modified Newton with many solves per factorization; the copy costs about 0.3 ms per factorization of 13000 unknowns. Measured against the solve of today on the performance and test models with sparse solvers.
-  - date raised: 2026-11-11
-- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` Study the scaling of the raytracer with the number of threads (#3439)
-  - description: The raytracer reaches its best speed only with 64-128 threads on a machine with 16 cores, although each thread gets small portions of work. Measure and explain the scaling (the static split of tasks without load balancing, the tiles per thread, the spinning workers, the memory access) and what it tells about the parallel loops of Exudyn in general.
-  - date raised: 2026-11-11
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
   - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.
   - date raised: 2026-11-11

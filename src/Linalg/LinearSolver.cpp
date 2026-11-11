@@ -557,6 +557,7 @@ Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, I
 		rv = solver.info();
 		if (!rv)  //success
 		{
+			if (pySpecial.solver.sparseSolveByRows) { solver.ExtractRows(); } //the substitution by rows (#3441)
 			if (reuseFailed) { analyzedPatternLastNNZ = 0; } //for next iteration, do not repeat once if failed
 			else { analyzedPatternLastNNZ = (Index)matrix.nonZeros(); }
 			SetMatrixIsFactorized(true);
@@ -755,10 +756,20 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 			solverParallel->SolveParallel(rhs.GetDataPointer(), solution.GetDataPointer(), (int)n);
 			return;
 		}
+		if (solverParallel->RowsReady()) //a factor couples subtrees: the serial substitution by rows
+		{
+			solverParallel->SolveRows(rhs.GetDataPointer(), solution.GetDataPointer(), (int)n);
+			return;
+		}
 		x = solverParallel->solve(b);
 	}
 	else if (!IsSymmetric())
 	{
+		if (solver.RowsReady()) //(#3441)
+		{
+			solver.SolveRows(rhs.GetDataPointer(), solution.GetDataPointer(), (int)n);
+			return;
+		}
 		x = solver.solve(b);
 	}
 	else

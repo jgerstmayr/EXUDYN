@@ -43,6 +43,18 @@ inline const VSettingsView& GetSettingsView(Index viewID, const VisualizationSet
 	return visualizationSettings.view0;
 }
 
+//! true if view viewID hides the graphics of system systemIndex, by view[viewID].scene.hideMbs; viewID < 0: no view,
+//! nothing hidden (#3442)
+inline bool SystemHiddenInView(Index viewID, Index systemIndex, const VisualizationSettings& visualizationSettings)
+{
+	if (viewID < 0) { return false; }
+	for (Index hidden : GetSettingsView(viewID, visualizationSettings).scene.hideMbs)
+	{
+		if (hidden == systemIndex) { return true; }
+	}
+	return false;
+}
+
 //! THE SAME, WRITABLE, and deliberately named differently rather than overloaded: the renderer
 //! writing INTO the settings is unusual - it happens once, when a window closes and the user asked
 //! for where it was to be remembered (#2689) - and a call that does
@@ -304,7 +316,8 @@ public:
 		}
 		Float3 translationMV(0.f); //don't add translation, as the center point is computed from scene dimensions!
 
-		Box3DF box = GraphicsData::ComputeMaxScene(graphicsDataList, rotationMV, translationMV, minSceneSize, 1.f);
+		Box3DF box = GraphicsData::ComputeMaxScene(graphicsDataList, rotationMV, translationMV, minSceneSize, 1.f,
+			&GetSettingsView(viewID, visSettings).scene.hideMbs); //without the systems hidden in this view (#3442)
 
 		//add basis dimensions to box!
 		for (Index viewID = 0; viewID < MAX_VIEWS_GLFW; viewID++)
@@ -372,9 +385,10 @@ public:
 			GetTrackedMarkerTransformation(VSC, GetSettingsView(viewID, visSettings), rotationMV, markerTranslationMV);
 		}
 		Box3DF box;
-		for (GraphicsData* data : *graphicsDataList)
+		for (Index system = 0; system < graphicsDataList->NumberOfItems(); system++)
 		{
-			box.Add(data->ComputeMaxScene(rotationMV.GetTransposed(), Float3(0.f), true, itemID)); //as ComputeMaxSceneSize
+			if (SystemHiddenInView(viewID, system, visSettings)) { continue; } //(#3442)
+			box.Add((*graphicsDataList)[system]->ComputeMaxScene(rotationMV.GetTransposed(), Float3(0.f), true, itemID)); //as ComputeMaxSceneSize
 		}
 		if (box.Empty()) { return false; }
 

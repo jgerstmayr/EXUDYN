@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 549 | 1.13.573 |
+| 1.13 | Newborn | 552 | 1.13.576 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.576** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Each view hides the graphics of the systems listed in view\[0-3\].scene.hideMbs (#3442)
+  - description: The views 0-3 of the render window show the same graphics; to show different things in different views, a list hideMbs of system numbers per view leaves out the graphics of those systems in that view: faces, edges, lines, texts and their shadows, the picking with the mouse, zoom all, the sensor traces and the raytracer of that view.
+  - **notes:** view0.scene.hideMbs ... view3.scene.hideMbs: a list of system numbers whose graphics a view does not show - faces, edges, lines, texts, shadows, picking, the zoom of the view, the sensor traces of those systems and the raytracer image of the view; e.g. different systems in different views of one render window.
+  - date resolved: **2026-11-11 22:33**, date raised: 2026-11-11
+- **1.13.575** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SparseLU solves with the rows of its factors instead of the supernodal solve of Eigen (#3441)
+  - description: After a factorization of EigenSparse (COLAMD), the factors L and U are copied into rows and the forward and backward substitution run on them, as with special.solver.parallelSubstitution: there the serial substitution by rows was 1.6-2.8 times faster than the supernodal solve of Eigen on chains (small supernodes, vector copies); for modified Newton with many solves per factorization; the copy costs about 0.3 ms per factorization of 13000 unknowns. Measured against the solve of today on the performance and test models with sparse solvers.
+  - **notes:** EigenSparse solves with the rows of the factors of SparseLU instead of the supernodal solve of Eigen: the solves are about twice as fast, the performance models with sparse solvers 2.4 % and the test models 2.8 % faster in total, up to 18 %; exu.special.solver.sparseSolveByRows = False switches back. Results change by round-off.
+  - date resolved: **2026-11-11 22:33**, date raised: 2026-11-11
+- **1.13.574** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Study the scaling of the raytracer with the number of threads (#3439)
+  - description: The raytracer reaches its best speed only with 64-128 threads on a machine with 16 cores, although each thread gets small portions of work. Measure and explain the scaling (the static split of tasks without load balancing, the tiles per thread, the spinning workers, the memory access) and what it tells about the parallel loops of Exudyn in general.
+  - **notes:** The raytracer always balances its tiles dynamically over its threads, whatever load balancing the last solver used; without it each thread rendered a fixed band of the image, and the raytracer needed 64-128 threads on 16 cores for its best time; now it reaches it with about the number of logical processors (0.37 s on 32 threads for the scene of raytracerNOGLFWtest.py at 1200 x 1000, 12.6 times faster than one thread).
+  - date resolved: **2026-11-11 22:33**, date raised: 2026-11-11
 - **1.13.573** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The convergence figure of the spatial slider-crank starts at larger steps (#3443)
   - description: The figure of the IFToMM spatial slider-crank in the solver study started at 2 h0 = 2e-3, where Radau5 already reached the floor of 1e-12; the solvers also run at 4 h0 ... 32 h0 (up to 3.2e-2, all converge there) for this figure, by solverConvergenceFigures.py --coarse; the figures of the means and the efficiency keep the common steps.
   - **notes:** The convergence figure of the IFToMM spatial slider-crank in the solver study starts at 32 h0 = 3.2e-2 instead of 2 h0, so that the convergence of the solvers shows before the errors reach the floor of 1e-12.

@@ -244,6 +244,17 @@ What it shows:
   factorization with COLAMD as well (a serial substitution with the rows of the factors, about 2 times faster solves
   for modified Newton) - proposed as a next step.
 
+### 4.2 The substitution by rows, the default (RG5.9.9, #3441)
+
+`SparseLURows<Ordering>` (ParallelSubstitution.h) is the base of both: Eigen's `SparseLU` whose `factorize` invalidates
+the rows and whose `ExtractRows()` copies L and U into rows after a successful factorization; `SolveRows` is the serial
+substitution. `GeneralMatrixEigenSparse` (EigenSparse, COLAMD) uses it if `exu.special.solver.sparseSolveByRows`
+(default True). Measured on the 5 performance models and 52 test models with EigenSparse (scratch rowsStudy.py, each in
+its own process, the faster of two runs): performance models 22.21 -> 21.68 s (-2.4 %; perf3DRigidBodies 1.40 -> 1.15 s,
+-18 %; perfConnectorInterface -5 %), test models 21.23 -> 20.64 s (-2.8 %; up to -11 % for gridGeomExactBeam2D); no
+model clearly slower (+4 to +9 % only for models of a few milliseconds). The gain is smaller than for the chains of §4.1,
+as most models spend little time in the solve.
+
 ## 5. The threads of the factorization (built, #3428)
 
 Exudyn's `ExuThreading::TaskManager` (`src/Utilities/Threading.h/.cpp`, after NGsolve) keeps `numberOfThreads - 1`
@@ -289,3 +300,4 @@ serial in Eigen. MKL's threads cannot be Exudyn's (MKL creates its own OpenMP or
    models with sparse solvers 1.6 % (at most 13 %).
 7. RG5.9.7 (#3432, closed): the parallel forward and backward substitution with a nested-dissection ordering (§4.1).
 8. RG5.9.8 (#3437, closed): persistent threads of the TaskManager, started by `exu.special.solver` (§5).
+9. RG5.9.9 (#3441, closed): the substitution by the rows of the factors for every SparseLU factorization (§4.2).

@@ -505,8 +505,9 @@ public:
 
 	//! the sensor traces of visualizationSettings.sensors.traces as lines - position trace, vectors and triads -, global;
 	//! the OpenGL renderer and the raytracer draw the same lines (#2877)
+	//! viewID >= 0: none if the system of the traces is hidden in that view (#3442)
 	static void SensorTraceLines(VisualizationSystemContainerBase* visualizationSystemContainer, const VisualizationSettings& visSettings,
-		ResizableArray<GLLine>& lines);
+		ResizableArray<GLLine>& lines, Index viewID = -1);
 
 
 };

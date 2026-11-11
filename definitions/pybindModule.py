@@ -371,6 +371,8 @@ pb.DefDataAccess('special.solver.parallelSubstitutionPivotThreshold','the diagon
                         dataType='float', isTopLevel = True)
 pb.DefDataAccess('special.solver.parallelSubstitutionSerial','the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)',
                         dataType='int', isTopLevel = True)
+pb.DefDataAccess('special.solver.sparseSolveByRows','if True (=default), EigenSparse copies the factors of SparseLU into rows after each factorization and solves forward and backward with them, which is about twice as fast as the supernodal solve of Eigen for the small supernodes of multibody systems; False: the solve of Eigen (#3441)',
+                        dataType='bool', isTopLevel = True)
 pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp
 pb.DefPyFunctionAccess(cClass='', pyName='special.solver.PardisoInfo', cName='unused',
                         description='whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)',

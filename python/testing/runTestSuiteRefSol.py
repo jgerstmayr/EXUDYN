@@ -66,18 +66,18 @@ def TestExamplesReferenceSolution():
         'raytracerBackFaceTest.py': 0.7, #new 2026-11-05: raytracer.advanced.backFaceColor (#3275)
         'stlFileImportTest.py': 10.398437499999995, #2026-11-05: the file outward as Exudyn, a check of orientTriangles (#3275), before 9.398437499999998; new 2026-11-05: graphics.FromSTLfile without numpy-stl, the mass properties of the mesh (#3264)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
-        'ANCFBeamTest.py': 1.0105101312118379, #2026-10-14: the strains in the symmetric basis of the slopes (#2992), +2.4e-5; before 1.010486312300453; 2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
+        'ANCFBeamTest.py': 1.0105101312118905, #2026-11-11: the substitution by the rows of the factors (#3441); before 1.0105101312118379; 2026-10-14: the strains in the symmetric basis of the slopes (#2992), +2.4e-5; before 1.010486312300453; 2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721794, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.6015588367721973;new 2023-12-13
         'ANCFCableBeamDampingTest.py': 0.1899233558939727, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992), +1.5e-11; before 0.18992335574301988; 2026-10-13: the symmetric basis of the slopes (#2228), +2.3e-11; before 0.1899233557201726; new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)
-        'ANCFbeltDrive.py': -0.0011715990135948151, #2026-11-06: the initial accelerations: the differences of fourth order in another order of summation (#303), before -0.0011715990134787968; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.0011715885324992126;new 2026-09-17: the model was retuned (16 elements
+        'ANCFbeltDrive.py': -0.0011715990135400256, #2026-11-11: the substitution by the rows of the factors (#3441); before -0.0011715990135948151; 2026-11-06: the initial accelerations: the differences of fourth order in another order of summation (#303), before -0.0011715990134787968; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.0011715885324992126;new 2026-09-17: the model was retuned (16 elements
                                                                 #per section, tEnd=0.1) and the result now comes from the
                                                                 #sensor rather than an ODE2 coordinate (#2368)
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
-        'ANCFgeneralContactCircle.py':-0.5816542531639006, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.581654253165756;new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
+        'ANCFgeneralContactCircle.py':-0.5816542531620952, #2026-11-11: the substitution by the rows of the factors (#3441); before -0.5816542531639006; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.581654253165756;new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
         'ANCFmovingRigidBodyTest.py':-0.1289309693499045,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
         'ANCFslidingAndALEjointTest.py':-4.426408394755268,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
-        'ballBearingTest.py':0.037852414010131834, #2026-11-06: the initial accelerations: the differences of fourth order in another order of summation (#303), before 0.037852414007063746; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 0.03785241401039906; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.037852414003386826; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.03785241403274696; 2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
+        'ballBearingTest.py':0.03785241400699037, #2026-11-11: the substitution by the rows of the factors (#3441); before 0.037852414010131834; 2026-11-06: the initial accelerations: the differences of fourth order in another order of summation (#303), before 0.037852414007063746; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 0.03785241401039906; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.037852414003386826; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.03785241403274696; 2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
         'bricardMechanism.py': 4.172189592784395, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 4.172189592784658; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.172189651042737; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306256; #2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306508;
         'carRollingDiscTest.py':-0.23940048804198077, #2026-11-10: the joints with analytic derivatives (#2884), before -0.2394004875461003; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before -0.23940048754619528; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before -0.23940048692143728; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before -0.2394004871711386
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228394,
@@ -101,9 +101,9 @@ def TestExamplesReferenceSolution():
         'createFunctionsTest.py':0.042288339698062435, #2026-11-06: the initial accelerations: the differences of fourth order in another order of summation (#303), before 0.042288339697577004; 2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289), before 0.04228833970121666; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.04228833966560139; new 2025-05-11
         'createRollingDiscPenaltyTest.py':2.1129927199922123,       #new 2025-02-27
         'createRollingDiscTest.py':4.009762936276704, #2026-11-06: the initial accelerations with C_q v of the velocity-level constraints (#574), before 4.009716209090303; new 2025-03-05
-        'createSphereQuadContact.py':1.1243943015734743, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 1.12439429771927; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.124394415274499; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 1.124394416977545; 2026-09-30: step size recommended also where a contact ends (#2109); before 1.1243776621604573;             #new 2025-06-29
+        'createSphereQuadContact.py':1.1243942987086257, #2026-11-11: the substitution by the rows of the factors (#3441); before 1.1243943015734743; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 1.12439429771927; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.124394415274499; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 1.124394416977545; 2026-09-30: step size recommended also where a contact ends (#2109); before 1.1243776621604573;             #new 2025-06-29
         'createSphereQuadContact2.py':0.15616582432923728, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 0.15616582432943793; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.15616582432918033; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 0.1561658243294339; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.15616582432943388;new 2025-07-05
-        'createSphereTriangleContact.py':4.840244058976285, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 4.840244059597701; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.840244058569561; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.840244058316264; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.840960219289836;        #new 2026-09-11; tEnd shortened 0.65->0.25 on adding
+        'createSphereTriangleContact.py':4.840244059447695, #2026-11-11: the substitution by the rows of the factors (#3441); before 4.840244058976285; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 4.840244059597701; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.840244058569561; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.840244058316264; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.840960219289836;        #new 2026-09-11; tEnd shortened 0.65->0.25 on adding
         'deleteItemsTest.py':-0.9860528006518324,                   #new 2025-05-10
         'distanceSensor.py':1.7491018054920742, #2026-11-04: RK44 with the clamped coordinates of the cable fixed in its stages (#3240), converged (4 times the steps: 6e-10), before 1.86776431077868
         'driveTrainTest.py':-9.269827527802477e-08, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before -9.269855494320467e-08; new 2023-05-20 (mainSystemExtensions); before:-9.269311940229841e-08,
@@ -137,7 +137,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamMarkerTest.py':0.22853106396053818, #2026-09-30: consistent mass matrix (#1273); #body markers on the 3D beam = loads on its nodes (#2730)
         'geometricallyExactBeamJacobianTest.py':4.282489188464191, #analytic against numerical Jacobian of the 3D beam (#1550)
         'geometricallyExactBeamCurvedTest.py':4.561491685469839, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
-        'geometricallyExactBeamRightAngleFrame.py':3.3061810769580746, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 3.306181715978533; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
+        'geometricallyExactBeamRightAngleFrame.py':3.3061810772089983, #2026-11-11: the substitution by the rows of the factors (#3441); before 3.3061810769580746; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 3.306181715978533; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'rightAngleFrame.py':4.371823197994703, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.3718231979938516; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
         'energiesFlexibleBodiesTest.py':5.850170605188874, #2026-11-02: the Jacobian of ObjectKinematicTree its own, with d(M q_tt)/dq (#3211), before 5.850170605200625; 2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992), +2.8e-10; before 5.850170604918973; 2026-10-05: the ANCF thin plate of the working copy 2026 (#2857), round-off; before 5.850170604919896; #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
@@ -293,7 +293,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamOutputTest.py':-6.07948751391636, #section forces, moments and strains of the 3D beam (#2753)
         'geometricallyExactBeamElbowCantilever.py':-5.579926018587773, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before -5.579926018617533; 2026-09-30: consistent mass matrix (#1273); #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
         'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)
-        'geometricallyExactBeam2DquadraticTest.py':0.7426300926718995, #the 3-node planar geometrically exact beam (#2208)
+        'geometricallyExactBeam2DquadraticTest.py':0.7426300926713576, #2026-11-11: the substitution by the rows of the factors (#3441); before 0.7426300926718995; the 3-node planar geometrically exact beam (#2208)
         'genericODE1duplicateNodeTest.py':3.103629126428439, #2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 3.1091750014354522; 2026-10-29: by a rhsUserFunction, so still numerical (#3143); #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
         'genericDAESymbolicTest.py':3.3727141116537247, #2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 3.372634031542532; new 2026-11-01: ObjectGenericDAE with recorded force and rhs user functions, their Jacobians in one pass against the numerical ones (#3189)
         'genericDAETest.py':4.960954116006587, #2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 4.961903224846149; new 2026-10-30: ObjectGenericDAE against ObjectGenericODE2, ObjectGenericODE1, a CoordinateConstraint and SolveGeneralizedAlpha (#3170)
@@ -340,6 +340,7 @@ def TestExamplesReferenceSolution():
         'pardisoSolverTest.py':6.488142024986682, #new 2026-11-11: LinearSolverType.PardisoMKL and the sleeping workers (#3431, #3428); the same with and without MKL
         'parallelSubstitutionTest.py':119.33631608827318, #new 2026-11-11: exu.special.solver.parallelSubstitution (#3432)
         'persistentThreadsTest.py':9.803795126547822, #new 2026-11-11: exu.special.solver.StartPersistentThreads (#3437)
+        'viewHideMbsTest.py':0.0, #new 2026-11-11: view0.scene.hideMbs, the number of failed checks (#3442)
         'reevingSystemTangentTest.py':3.025965077828625, #new 2026-11-11: the common tangent of two sheaves with non-parallel axes (#3412)
         'relativeRotationTranslationMechanism.py': 1.509631854432837, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.509631854432179; new 2026-09-11
         'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes
@@ -366,7 +367,7 @@ def TestExamplesReferenceSolution():
         'sliderCrankFloatingTest.py':0.5916491633788337,
         'solverExplicitODE1ODE2test.py':2.0696926769200483, #2026-11-06: the PI step size controller and the absolute values in the error scale of DOPRI5, smaller errors (#3245); before 3.3767933275918964; new 2022-07-11 (CState Parallel); 
         'sparseMatrixSpringDamperTest.py':-0.06779862812271391,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
-        'sphereTriangleTest2.py':4.356250090534689, #2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 4.356293936759868; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 4.356293936758741; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.356293936760721; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.356293935400209; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.35608275479331;                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
+        'sphereTriangleTest2.py':4.356250090522445, #2026-11-11: the substitution by the rows of the factors (#3441); before 4.356250090534689; 2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 4.356293936759868; 2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 4.356293936758741; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.356293936760721; 2026-11-02: the contacts on the connector interface with dv/dq (#3201); before 4.356293935400209; 2026-09-30: step size recommended also where a contact ends (#2109); before 4.35608275479331;                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
         'sphericalJointTest.py':4.4090804459244035, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.409080446574851; 2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 4.409080446575154;                  #new 2022-07-11 (CState Parallel);
         'springDamperUserFunctionTest.py':0.5062872273010876, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.5062872273010924;
         'stiffFlyballGovernor.py':0.8962488779109433, #2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 0.8962488779114737; 
@@ -821,33 +822,31 @@ def AVX2ReferenceSolutionUpdate():
 
     refSolAVX2 = {
         'generalContactFrictionTests.py':          12.022115875486731,        #drift 4.8e-03
+        'contactPrimitivesTableTest.py':           10.521724576125148,        #drift 6.2e-04
         'generalContactCylinderTest.py':           12.246589711797922,        #drift 3.1e-04
-        'sphereTriangleTest2.py':                  4.356258097407118,         #drift 8.0e-06
-        'explicitSolversPostNewtonTest.py': 4.557770844507367, #drift 6.1e-05 (fast module, 2026-11-09)
-        'robotFrictionEndStopsTest.py': 11.671115042362164, #drift 1.0e-13 (fast module, 2026-11-09)
-        'contactUserFunctionTest.py': 2.7852392407686537, #drift 3.5e-13 (fast module, 2026-11-09)
-        'convexConvexContactTest.py': 9.948739036525897, #drift 6.3e-10 (fast module, 2026-11-09)
-        'journalBearingTest.py': 8.789021646959824, #drift 5.4e-06 (fast module, 2026-11-09)
-        'contactPrimitivesTableTest.py': 10.521724576125148, #drift 6.2e-04 (fast module, 2026-11-09)
-        'sphereCylinderContactTest.py': 8.613788897623888, #drift 4.4e-13 (fast module, 2026-11-09)
-        'carRollingDiscTest.py': -0.23940048804187597, #drift 1.0e-13 (fast module, 2026-11-10, #2884)
-        'rollingDiscRollingFrictionTest.py': 7.475420024768965, #drift 1.5e-13 (fast module, 2026-11-11, the same at 1.13.548 before #3417)
-        'helicalJointTest.py': 62.32477543092194, #drift 1.8e-09 (fast module, 2026-11-11, #3422)
+        'explicitSolversPostNewtonTest.py':        4.557770844507367,         #drift 1.1e-04
+        'sphereTriangleTest2.py':                  4.356258097368413,         #drift 8.0e-06
+        'journalBearingTest.py':                   8.789021646959824,         #drift 5.4e-06
         'restartFileTest.py':                      -2.931848,                 #drift 1.0e-06
         'generalContactImplicit1.py':              0.7758156549599001,        #drift 8.9e-08
+        'ANCFbeltDrive.py':                        -0.0011715885324635744,    #drift 1.0e-08
         'rollingDiscTangentialForces.py':          1.0342017444582357,        #drift 4.4e-09
+        'createSphereQuadContact.py':              1.124394301928093,         #drift 3.2e-09
         'computeItemTest.py':                      71.26280786410713,         #drift 2.2e-09
+        'helicalJointTest.py':                     62.32477543092194,         #drift 1.8e-09
         'coordinateSpringDamperExt.py':            17.432698712456773,        #drift 1.7e-09
-        'createSphereQuadContact.py':              1.1243943000689443,        #drift 1.5e-09
-        'geometricallyExactBeamRightAngleFrame.py': 3.3061810764103385,        #drift 5.5e-10
+        'convexConvexContactTest.py':              9.948739036525897,         #drift 6.3e-10
+        'createSphereTriangleContact.py':          4.840244058935218,         #drift 5.1e-10
         'geometricallyExactBeamMassTest.py':       2.994207078782524,         #drift 3.6e-10
         'homogeneousTransformationParameterTest.py': 8.981932851070072,         #drift 3.5e-10
-        'createSphereTriangleContact.py':          4.840244059191676,         #drift 2.2e-10
+        'geometricallyExactBeamRightAngleFrame.py': 3.306181076888073,         #drift 3.2e-10
         'sliderCrank3Dbenchmark.py':               5.791191499538414,         #drift 1.5e-10
         'ObjectJointGeneric.py':                   -3.1340201971054413,       #drift 3.6e-11
         'userJointTest.py':                        28.411748466390463,        #drift 1.6e-11
         'fourBarMechanismIftomm.py':               0.17216652708895938,       #drift 8.9e-12
         'rigidBodySpringDamperIntrinsic.py':       0.5472368462946675,        #drift 5.8e-12
+        'ballBearingTest.py':                      0.03785241401156675,       #drift 4.6e-12
+        'ANCFgeneralContactCircle.py':             -0.5816542531657561,       #drift 3.7e-12
         'contactSphereTorusMomentumTest.py':       4.227231105378637,         #drift 2.7e-12
         'heavyTop.py':                             33.423125751719226,        #drift 2.6e-12
         'ObjectContactFrictionCircleCable2D.py':   -0.09630714358841744,      #drift 2.3e-12
@@ -855,24 +854,28 @@ def AVX2ReferenceSolutionUpdate():
         'connectorRigidBodySpringDamperTest.py':   0.1827622474313096,        #drift 6.4e-13
         'generalContactSpheresTest.py':            -1.1138547720263723,       #drift 6.3e-13
         'revoluteJointPrismaticJointTest.py':      1.253880679636323,         #drift 5.7e-13
+        'sphereCylinderContactTest.py':            8.613788897623888,         #drift 4.4e-13
         'userMarkerTest.py':                       -0.35693486535296615,      #drift 4.4e-13
-        'ballBearingTest.py':                      0.03785241401050154,       #drift 3.7e-13
-        'geometricallyExactBeam2DquadraticTest.py': 0.7426300926716076,        #drift 2.9e-13
+        'contactUserFunctionTest.py':              2.7852392407686537,        #drift 3.5e-13
         'mainSystemExtensionsTests.py':            57.6463944753733,          #drift 2.1e-13
         'userConnectorTest.py':                    0.3942810318185901,        #drift 2.1e-13
         'ObjectJointSpherical.py':                 -0.003786192075485726,     #drift 1.7e-13
+        'ANCFBeamTest.py':                         1.0105101312117202,        #drift 1.7e-13
         'contactComparisonTest.py':                4.773734739232184,         #drift 1.6e-13
+        'rollingDiscRollingFrictionTest.py':       7.475420024768965,         #drift 1.5e-13
         'bricardMechanism.py':                     4.172189592784257,         #drift 1.4e-13
         'userConnectorContactTest.py':             26.27081007873662,         #drift 1.3e-13
         'modelLibraryTest.py':                     18.490979056790795,        #drift 1.2e-13
-        'ANCFBeamTest.py':                         1.0105101312117235,        #drift 1.1e-13
+        'createSphereQuadContact2.py':             0.1561658243291206,        #drift 1.2e-13
         'symbolicItemOutputTest.py':               3.4207948324002095,        #drift 1.1e-13
-        'createSphereQuadContact2.py':             0.15616582432934165,       #drift 1.0e-13
+        'carRollingDiscTest.py':                   -0.23940048804187597,      #drift 1.0e-13
+        'robotFrictionEndStopsTest.py':            11.671115042362164,        #drift 1.0e-13
         'energiesFlexibleBodiesTest.py':           5.850170605188781,         #drift 9.3e-14
         'genericODE2test.py':                      0.03604546349916921,       #drift 8.0e-14
         'userRigidBodyTest.py':                    13.47575502137632,         #drift 7.3e-14
         'generalContactTriangleMomentumTest.py':   4.035299999516811,         #drift 7.0e-14
         'distanceSensor.py':                       1.7491018054920164,        #drift 5.8e-14
+        'geometricallyExactBeam2DquadraticTest.py': 0.7426300926714137,        #drift 5.6e-14
         'genericJointUserFunctionTest.py':         1.1922383980561477,        #drift 5.6e-14
         }
 

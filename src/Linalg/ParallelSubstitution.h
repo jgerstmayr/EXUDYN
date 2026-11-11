@@ -76,24 +76,43 @@ public:
 	}
 };
 
-//! SparseLU with the nested-dissection ordering and a parallel substitution (#3432)
-class SparseLUParallel : public Eigen::SparseLU<Eigen::SparseMatrix<double>, NestedDissectionOrdering<int> >
+//! Eigen's SparseLU whose factors are copied into rows after a factorization, for a faster substitution: the
+//! supernodal solve of Eigen is slow for the small supernodes of multibody systems (#3441)
+template <typename OrderingType>
+class SparseLURows : public Eigen::SparseLU<Eigen::SparseMatrix<double>, OrderingType>
 {
-	typedef Eigen::SparseLU<Eigen::SparseMatrix<double>, NestedDissectionOrdering<int> > Base;
-
-	int maxDepth = 0;
-	std::vector<int> columnNodes;		//!< the tree node of each column of the matrix
-	std::vector<int> columnPositions;	//!< the position of each column in the nested-dissection ordering
-	bool prepared = false;				//!< the rows of the factors are ready and the tree holds
+	typedef Eigen::SparseLU<Eigen::SparseMatrix<double>, OrderingType> Base;
+protected:
+	bool rowsReady = false;				//!< the rows hold the factors of the last factorization
 	//the factors by rows, in the positions of the factorization:
 	std::vector<int> lRowStart, lColumns; std::vector<double> lValues; //!< L without its unit diagonal
 	std::vector<int> uRowStart, uColumns; std::vector<double> uValues; //!< U without its diagonal
 	std::vector<double> uDiagonal;
+	std::vector<double> y;				//!< work vector
+public:
+	//! copy the factors of the last factorization into rows; with positionNode (the tree node of each position), false
+	//! if a dependency of the substitution crosses the tree
+	bool ExtractRows(const std::vector<int>* positionNode = nullptr);
+	//! the factorization of Eigen; the rows are invalid until ExtractRows
+	void factorize(const Eigen::SparseMatrix<double>& matrix) { rowsReady = false; Base::factorize(matrix); }
+	//! the rows are invalid, e.g. after a failed factorization
+	void InvalidateRows() { rowsReady = false; }
+	bool RowsReady() const { return rowsReady; }
+	//! the serial substitution with the rows; rhs may be solution
+	void SolveRows(const double* rhs, double* solution, int n);
+};
+
+//! SparseLU with the nested-dissection ordering and a parallel substitution (#3432)
+class SparseLUParallel : public SparseLURows<NestedDissectionOrdering<int> >
+{
+	int maxDepth = 0;
+	std::vector<int> columnNodes;		//!< the tree node of each column of the matrix
+	std::vector<int> columnPositions;	//!< the position of each column in the nested-dissection ordering
+	bool prepared = false;				//!< the rows of the factors are ready and the tree holds
 	//the schedule: the tree nodes per depth, the positions per tree node
 	std::vector<std::vector<int>> depthNodes;	//!< node ids of each depth
 	std::vector<int> nodeStart, nodePositions;	//!< nodePositions[nodeStart[id] ... nodeStart[id+1]-1], increasing
 	std::vector<double> depthWork;				//!< the nonzeros of the rows of each depth
-	std::vector<double> y;						//!< work vector
 	std::vector<std::vector<int>> groups;		//!< from SetStructuralGroups
 	Eigen::SparseMatrix<double> unionPattern;	//!< the union of the patterns seen, which is ordered
 	std::vector<int> analyzedOuter, analyzedInner; //!< the pattern of the last analysis
@@ -101,7 +120,6 @@ class SparseLUParallel : public Eigen::SparseLU<Eigen::SparseMatrix<double>, Nes
 public:
 	int numberOfOrderings = 0;					//!< nested-dissection orderings computed
 
-public:
 	//! the groups of unknowns that may be coupled (the coordinates of an object); their cliques join the pattern ordered
 	void SetStructuralGroups(const std::vector<std::vector<int>>& groupsInit) { groups = groupsInit; analyzedDepth = -1; unionPattern.resize(0, 0); }
 	//! analyze (ordering for numberOfThreads) and factorize; returns Eigen's info(), 0 = success

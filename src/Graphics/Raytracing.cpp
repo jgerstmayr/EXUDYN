@@ -1078,11 +1078,12 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 bool inSoftwareRenderer = false;
 //! software renderer used instead of OpenGL renderer
 void Raytracer::SensorTraceLines(VisualizationSystemContainerBase* visualizationSystemContainer, const VisualizationSettings& visSettings,
-	ResizableArray<GLLine>& lines)
+	ResizableArray<GLLine>& lines, Index viewID)
 {
 	lines.SetNumberOfItems(0);
 	const VSettingsTraces& traces = visSettings.sensors.traces;
 	if (!traces.showPositionTrace && !traces.showVectors && !traces.showTriads) { return; }
+	if (SystemHiddenInView(viewID, traces.sensorsMbsNumber, visSettings)) { return; } //view[viewID].scene.hideMbs (#3442)
 
 	const ArrayIndex& positionSensors = traces.listOfPositionSensors;
 	const ArrayIndex& vectorSensors = traces.listOfVectorSensors;
@@ -1257,8 +1258,11 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	const bool showTextures = visSettings->openGL.showTextures;
 ResizableArray<GLLine> triangles6Edges;
 	ResizableArray<GLLine> lines3Split;			//the quadratic lines, split likewise
-	for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
+	const ResizableArray<GraphicsData*>& systemsGraphicsData = basicVisualizationSystemContainer->GetGraphicsDataList();
+	for (Index system = 0; system < systemsGraphicsData.NumberOfItems(); system++)
 	{
+		if (SystemHiddenInView(viewID, system, *visSettings)) { continue; } //view[viewID].scene.hideMbs (#3442)
+		GraphicsData* data = systemsGraphicsData[system];
 		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
 			settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
 		texturedAsPlain.SetNumberOfItems(0); //the textured triangles as plain ones, with their texture in triangleTextures (#3034)
@@ -1377,7 +1381,7 @@ ResizableArray<GLLine> triangles6Edges;
 	if (RTS.showLines) //the sensor traces, as the OpenGL renderer draws them (#2877)
 	{
 		ResizableArray<GLLine> traceLines;
-		SensorTraceLines(basicVisualizationSystemContainer, *visSettings, traceLines);
+		SensorTraceLines(basicVisualizationSystemContainer, *visSettings, traceLines, viewID);
 		for (const GLLine& line : traceLines)
 		{
 			GLLine lineNew(line);
@@ -1588,7 +1592,9 @@ ResizableArray<GLLine> triangles6Edges;
 		if (RTS.numberOfThreads > 1)
 		{
 			STDstring threadsMessage;
-			workersAcquired = ExuThreading::TaskManager::AcquireWorkers(RTS.numberOfThreads, false, threadsMessage, workersTicket);
+			//the tiles are always balanced dynamically, whatever the last solver used: without it, each thread renders a fixed
+			//band of the image and the raytracer needed 64-128 threads on 16 cores for its best time (#3439)
+			workersAcquired = ExuThreading::TaskManager::AcquireWorkers(RTS.numberOfThreads, false, threadsMessage, workersTicket, 1);
 			if (workersAcquired == ExuThreading::workersBusy)
 			{
 				if (RTS.verbose) { PrintDelayed("Raytracer: multi-threading: TaskManager already/still running (in solver?); do not use multithreading for solver"); }
@@ -1795,8 +1801,11 @@ ResizableArray<GLLine> triangles6Edges;
 			float globalFontSize = GetSettingsView(viewID, *visSettings).window.globalFontSize;
 			bool alwaysInFront = true;
 			RTVector3D pos;
-			for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
+			const ResizableArray<GraphicsData*>& systemsGraphicsData = basicVisualizationSystemContainer->GetGraphicsDataList();
+			for (Index system = 0; system < systemsGraphicsData.NumberOfItems(); system++)
 			{
+				if (SystemHiddenInView(viewID, system, *visSettings)) { continue; } //(#3442)
+				const GraphicsData* data = systemsGraphicsData[system];
 				for (const GLText& text : data->glTexts)
 				{
 					TransformVertexRM(text.point, RTS.modelViewRM, pos);

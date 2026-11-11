@@ -222,8 +222,9 @@ namespace ExuThreading {
 		//! take the threads for a parallel computation with numberOfThreads: the persistent workers if their number agrees,
 		//! otherwise a task manager of its own (the persistent workers stop until ReleaseWorkers, and message says so);
 		//! if threads are in use: workersBusy, or with takeOver they are stopped (message says so); the result goes to
-		//! ReleaseWorkers (#3437)
-		static WorkersAcquired AcquireWorkers(Index numberOfThreads, bool takeOver, STDstring& message, Index& ticket);
+		//! ReleaseWorkers (#3437); loadBalancing: 1 or 0 for this computation, -1: exudyn.special.solver.multiThreadingLoadBalancing
+		static WorkersAcquired AcquireWorkers(Index numberOfThreads, bool takeOver, STDstring& message, Index& ticket,
+			Index loadBalancingMode = -1);
 		//! give back the threads of AcquireWorkers with its ticket: persistent workers sleep again, a task manager of its
 		//! own stops; threads taken over by another computation in the meantime are left alone (#2237, #3437)
 		static void ReleaseWorkers(WorkersAcquired acquired, Index ticket);

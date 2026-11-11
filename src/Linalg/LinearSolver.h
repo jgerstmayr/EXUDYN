@@ -503,7 +503,7 @@ private:
 #ifdef USE_EIGEN_SPARSE_SOLVER
 	EigenSparseMatrix matrix;	 //this is the sparse matrix built from triplets
 	SparseTripletVector triplets; //this contains a redundant set of matrix entries
-	Eigen::SparseLU<Eigen::SparseMatrix<Real>, Eigen::COLAMDOrdering<int> >   solver; //this is the solver for the matrix
+	SparseLURows<Eigen::COLAMDOrdering<int> >   solver; //this is the solver for the matrix: Eigen's SparseLU, solved by the rows of its factors (#3441)
 #ifdef USE_SYMMETRIC_SOLVER
 	Eigen::SimplicialLDLT<Eigen::SparseMatrix<Real>, 1>   solverSymmetric; //this is the symmetric solver for the matrix
 	//Eigen::SimplicialLLT<Eigen::SparseMatrix<Real>, 0>   solverSymmetric; //this is the symmetric solver for the matrix

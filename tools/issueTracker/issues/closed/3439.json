@@ -1,0 +1,15 @@
+{
+  "number": 3439,
+  "title": "Study the scaling of the raytracer with the number of threads",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "The raytracer reaches its best speed only with 64-128 threads on a machine with 16 cores, although each thread gets small portions of work. Measure and explain the scaling (the static split of tasks without load balancing, the tiles per thread, the spinning workers, the memory access) and what it tells about the parallel loops of Exudyn in general.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 22:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer always balances its tiles dynamically over its threads, whatever load balancing the last solver used; without it each thread rendered a fixed band of the image, and the raytracer needed 64-128 threads on 16 cores for its best time; now it reaches it with about the number of logical processors (0.37 s on 32 threads for the scene of raytracerNOGLFWtest.py at 1200 x 1000, 12.6 times faster than one thread).",
+  "resolvedInVersion": "1.13.574"
+}

@@ -2184,6 +2184,8 @@ class VSettingsScene:
     """true = draw world basis coordinate system at (0,0,0)."""
     facesTransparent: bool
     """True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers."""
+    hideMbs: List[int]
+    """the numbers of the systems (as in SC.GetSystem(i), in the order of SC.AddSystem) whose graphics this view does not show: their faces, edges, lines, texts and shadows, the sensor traces of traces.sensorsMbsNumber, the zoom of this view and the raytracer image of this view leave them out; numbers without a system are ignored; e.g. [1] to show only mbs 0 in a view (#3442)."""
     showFaceEdges: bool
     """True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation."""
     showFaces: bool
@@ -4836,6 +4838,8 @@ class SpecialSolver:
     """the diagonal pivot threshold of the factorization with parallelSubstitution: a diagonal entry is taken as pivot if its magnitude is at least this fraction of the largest in its column, which keeps the subtrees independent; default=1e-3 (#3432)."""
     parallelSubstitutionSerial:int
     """the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)."""
+    sparseSolveByRows:bool
+    """if True (=default), EigenSparse copies the factors of SparseLU into rows after each factorization and solves forward and backward with them, which is about twice as fast as the supernodal solve of Eigen for the small supernodes of multibody systems; False: the solve of Eigen (#3441)."""
     @overload
     def PardisoInfo(self) -> dict: 
         """Whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)."""

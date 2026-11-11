@@ -84,6 +84,7 @@ public:
     bool parallelSubstitution;              //!< EigenSparse with a nested-dissection ordering and the substitution on the threads (#3432)
     Real parallelSubstitutionPivotThreshold; //!< the diagonal pivot threshold of that factorization (#3432)
     Index parallelSubstitutionSerial;       //!< factorizations solved serially: a pivot coupled the subtrees, or the factorization failed (#3432)
+    bool sparseSolveByRows;                 //!< EigenSparse solves with the rows of its factors instead of Eigen's supernodal solve (#3441)
 
     PySpecialSolver()
     {
@@ -107,6 +108,7 @@ public:
         parallelSubstitution = false;
         parallelSubstitutionPivotThreshold = 1e-3;
         parallelSubstitutionSerial = 0;
+        sparseSolveByRows = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -131,6 +133,7 @@ public:
         os << "  parallelSubstitution = " << parallelSubstitution << "\n";
         os << "  parallelSubstitutionPivotThreshold = " << parallelSubstitutionPivotThreshold << "\n";
         os << "  parallelSubstitutionSerial = " << parallelSubstitutionSerial << "\n";
+        os << "  sparseSolveByRows = " << sparseSolveByRows << "\n";
 
         os << "\n";
     }

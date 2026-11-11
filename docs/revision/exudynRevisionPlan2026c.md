@@ -68,11 +68,9 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
-  - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution (1 open sub-step)
+  - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
-  - RG5.11 Raytracer: threads parallel to the solver, and its scaling with the number of threads (2 open sub-steps)
-- **RG6** Graphics and rendering
-  - RG6.25 Hide the graphics of chosen systems in a view: view[0-3].scene.hideMbs
+  - RG5.11 Raytracer: threads parallel to the solver, and its scaling with the number of threads (1 open sub-step)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -114,8 +112,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 15 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG5 | OPEN | 13 | Performance |
+| RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -694,9 +692,11 @@ CLOSED 2026-11-11 (#3432), prototype, experimental: exu.special.solver.parallelS
 
 CLOSED 2026-11-11 (#3437): exu.special.solver.StartPersistentThreads(n), StopPersistentThreads(), PersistentThreads(); a parked task manager (detached from task_manager, GetNumThreads() 1 outside a computation, workers asleep on the condition variable of RG5.9.3); TaskManager::AcquireWorkers / ReleaseWorkers with a ticket for the solvers, the raytracer and the linear algebra benchmark - persistent workers if the number agrees, otherwise threads of its own with a warning, and the persistent ones again after it; an atexit hook stops them; 0.2-0.8 ms saved per solve (40-70 % of a solve of one step, 4-8 % of 20 steps of 2000 bodies); test model persistentThreadsTest.py. [log](exudynRevisionLog2026c.md#rg5-9-8)
 
-#### **OPEN_RG5.9.9** Solve with the rows of the factors of SparseLU instead of Eigen's supernodal solve
+#### **CLOSED_RG5.9.9** Solve with the rows of the factors of SparseLU instead of Eigen's supernodal solve
 
 #3441. Proposed from RG5.9.7: the serial substitution by the rows of the factors was 1.6-2.8 times faster than the supernodal solve of Eigen on chains; for every EigenSparse factorization (COLAMD), for modified Newton with many solves per factorization; the copy of the factors costs about 0.3 ms per factorization of 13000 unknowns; measured on the performance and test models with sparse solvers before it becomes the default.
+
+CLOSED 2026-11-11 (#3441): SparseLURows<Ordering> (Eigen's SparseLU with the factors copied into rows after each factorization, factorize invalidates them) is the solver of EigenSparse and the base of the parallel substitution; exu.special.solver.sparseSolveByRows (default True) switches back to Eigen's solve. Performance models 22.21 -> 21.68 s (perf3DRigidBodies -18 %), 52 test models 21.23 -> 20.64 s (up to -11 %), no model clearly slower. [log](exudynRevisionLog2026c.md#rg5-9-9)
 
 ### **OPEN_RG5.10** Solve the systems of one SystemContainer in parallel, each on its own thread
 
@@ -716,11 +716,13 @@ Approved by the maintainer 2026-11-11: the raytracer shall run in parallel to th
 
 #3438. The raytracer is started from the main thread and from the renderer thread; the TaskManager is one global object, so during a solve the raytracer falls back to one thread, and one started in the renderer thread during a solve crashes at once. A pool of threads for the raytracer next to the solver's.
 
-#### **OPEN_RG5.11.2** Measure and explain the scaling of the raytracer with the number of threads
+#### **CLOSED_RG5.11.2** Measure and explain the scaling of the raytracer with the number of threads
 
 #3439. Best speed only with 64-128 threads on 16 cores. Candidates: the static split of the tiles when load balancing is off (multiThreadingLoadBalancing is taken from the last solver), the tiles per thread, the workers that spin with yield, the memory traffic of the tiles; the result applies to ParallelFor in general.
 
-## **OPEN_RG6** Graphics and rendering
+CLOSED 2026-11-11 (#3439): measured (raytracerNOGLFWtest.py scene, 1200 x 1000, 16 cores / 32 logical processors): with load balancing 4.66 s on 1 thread, 0.664 s on 8, 0.437 s on 16, 0.372 s on 32, no gain beyond (12.6 times); without load balancing each thread renders a fixed band of tiles - 0.585 s on 16, 0.471 on 32, best 0.421 s on 64 threads, the oversubscription balancing a little: the observed need for 64-128 threads. The raytracer took the flag from exudyn.special.solver.multiThreadingLoadBalancing, which every solver overwrites with its parallel.useLoadBalancing; it now always balances its tiles (AcquireWorkers with a load balancing mode): 0.369 s on 32 threads either way. For Exudyn in general: a ParallelFor without load balancing splits statically and suffers from unequal work. The default raytracer.numberOfThreads = 8 leaves half the speed on a machine like this (0.664 against 0.37 s). [log](exudynRevisionLog2026c.md#rg5-9-9)
+
+## **CLOSED_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -1082,13 +1084,15 @@ CLOSED 2026-11-11 (#3425): test model screwGraphicsTest.py - the table, 14 graph
 
 #3429. CLOSED 2026-11-11 (#3429): machines.py parsed by the generator of the utility pages; the docstrings of the involute with \tan in one backslash. [log](exudynRevisionLog2026c.md#rg6-24-5)
 
-### **OPEN_RG6.25** Hide the graphics of chosen systems in a view: view[0-3].scene.hideMbs
+### **CLOSED_RG6.25** Hide the graphics of chosen systems in a view: view[0-3].scene.hideMbs
 
 #3442. Requested by the maintainer 2026-11-11: different things in different views; first the evaluation whether this is problematic or inefficient for the renderer.
 
 Evaluation (2026-11-11, from the code): no problem and no cost. Each system has its own GraphicsData (its VisualizationSystem), and the renderer's graphicsDataList holds one pointer per system, appended in the order of SC.AddSystem (VisualizationSystemContainer::Append), so its index is the number of the mbs. Nothing is collected per view: all views draw the same list in GlfwRenderer::RenderGraphicsData(viewID), one loop over the systems. Hiding is a test per system and view in that loop - no filtering when the graphics are collected, no copy, and a hidden system even saves drawing time. Inside the same loop are the faces, edges, lines, points, texts and spheres, the shadow volumes (DrawTrianglesWithShadow per GraphicsData) and the picking with the mouse (selection mode), so they follow at once. Outside it, and to be filtered alike for a consistent view: zoom all and zoom to an item (RenderState::ComputeMaxSceneSize and ComputeZoomToItem over the list), the sensor traces (Raytracer::SensorTraceLines over all systems; a trace belongs to the system of its sensor) and the raytracer of the view (Raytracer::SoftwareRenderer(viewID), which builds its scene from GetGraphicsDataList()). Shared by all systems and not affected: the scopes, the contour color bar, the lights, the world basis.
 
 Recommendation: a member hideMbs of VSettingsScene - so view0.scene.hideMbs ... view3.scene.hideMbs - of type TArrayIndex(size=-1) with the default [] (the type is used in the visualization settings already); a list of system numbers rather than of MainSystems, as the settings are plain data; numbers beyond the systems are ignored. One helper IsHidden(viewID, systemIndex) used in the five places above. A test model with two systems and hideMbs in view 1, checked by the raytracer images of view 0 and view 1 (no window) or by the graphics data the raytracer receives.
+
+CLOSED 2026-11-11 (#3442): view[0-3].scene.hideMbs (TArrayIndex, default []); SystemHiddenInView(viewID, system, settings) in GlfwRenderer::RenderGraphicsData (faces, edges, lines, points, texts, shadows, picking), RenderState::ComputeMaxSceneSize/ComputeZoomToItem (GraphicsData::ComputeMaxScene with the hidden systems), Raytracer::SensorTraceLines (viewID) and Raytracer::SoftwareRenderer (triangles, lines, texts); test model viewHideMbsTest.py with raytracer images against containers holding only the shown systems. [log](exudynRevisionLog2026c.md#rg5-9-9)
 
 ## **OPEN_RG7** Python user items
 

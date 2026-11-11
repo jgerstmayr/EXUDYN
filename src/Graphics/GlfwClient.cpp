@@ -2936,7 +2936,7 @@ void GlfwRenderer::RenderSensorTraces(Index viewID)
 
         //the lines are built where the raytracer builds them too (#2877)
         static ResizableArray<GLLine> traceLines;
-        Raytracer::SensorTraceLines(basicVisualizationSystemContainer, *visSettings, traceLines);
+        Raytracer::SensorTraceLines(basicVisualizationSystemContainer, *visSettings, traceLines, viewID);
         glBegin(GL_LINES);
         for (const GLLine& line : traceLines)
         {
@@ -3025,8 +3025,10 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 				EXUstd::Minimum(0.8f,otherColor[3] * 1.5f) });
 		}
 
-		for (auto data : *graphicsDataList)
+		for (Index system = 0; system < graphicsDataList->NumberOfItems(); system++)
 		{
+			if (SystemHiddenInView(viewID, system, *visSettings)) { continue; } //view[viewID].scene.hideMbs (#3442)
+			GraphicsData* data = (*graphicsDataList)[system];
 			//the 6-node triangles are drawn as their split, with the settings of now (#2709)
 			EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
 				settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
@@ -3292,7 +3294,7 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-		} //for (auto data : *graphicsDataList)
+		} //for (system ...)
 		if (selectionMode)
 		{
 			glLoadName(EXUstd::InvalidIndex); //to have some name in

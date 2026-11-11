@@ -114,8 +114,10 @@ namespace ExuThreading {
 		return true;
 	}
 
-	WorkersAcquired TaskManager::AcquireWorkers(Index numberOfThreads, bool takeOver, STDstring& message, Index& ticket)
+	WorkersAcquired TaskManager::AcquireWorkers(Index numberOfThreads, bool takeOver, STDstring& message, Index& ticket,
+		Index loadBalancingMode)
 	{
+		bool balance = loadBalancingMode < 0 ? pySpecial.solver.multiThreadingLoadBalancing : (loadBalancingMode != 0);
 		std::lock_guard<std::mutex> lock(poolMutex);
 		ticket = ++ticketCounter;
 		if (task_manager) //another computation uses the threads, or one did not release them
@@ -132,7 +134,7 @@ namespace ExuThreading {
 				task_manager = parkedManager;
 				parkedManager = nullptr;
 				num_threads = numberOfThreads;
-				loadBalancing = pySpecial.solver.multiThreadingLoadBalancing;
+				loadBalancing = balance;
 				attachedTicket = ticket;
 				return workersPersistent; //the first job wakes them
 			}
@@ -146,6 +148,7 @@ namespace ExuThreading {
 		{
 			num_threads = numberOfThreads;
 			EnterTaskManager();
+			loadBalancing = balance; //read by the workers at every job
 			attachedTicket = ticket;
 			return workersOwn;
 		}

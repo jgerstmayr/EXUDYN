@@ -1197,6 +1197,10 @@ definitions.append(StructureDefinition(
             pythonName='showLines',
             defaultValue=True,
             description=r'True: show lines (other lines than face and mesh edges)'),
+        StructureParameter(type=TArrayIndex(size=-1),
+            pythonName='hideMbs',
+            defaultValue='ArrayIndex()',
+            description=r'the numbers of the systems (as in SC.GetSystem(i), in the order of SC.AddSystem) whose graphics this view does not show: their faces, edges, lines, texts and shadows, the sensor traces of traces.sensorsMbsNumber, the zoom of this view and the raytracer image of this view leave them out; numbers without a system are ignored; e.g. [1] to show only mbs 0 in a view (#3442)'),
         ],
     ))
 

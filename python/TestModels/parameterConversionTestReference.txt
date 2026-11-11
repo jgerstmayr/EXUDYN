@@ -109,9 +109,13 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectKinematicTree: linkParents(class,dict,set)
   SensorUserFunction: itemNumbers(class,dict,set)
   VisualizationSettings.sensors.traces: listOfPositionSensors(attribute,dict) listOfTriadSensors(attribute,dict) listOfVectorSensors(attribute,dict)
+  VisualizationSettings.view0.scene: hideMbs(attribute,dict)
   VisualizationSettings.view0.window: renderWindowPosition(attribute,dict) renderWindowSize(attribute,dict)
+  VisualizationSettings.view1.scene: hideMbs(attribute,dict)
   VisualizationSettings.view1.window: renderWindowPosition(attribute,dict) renderWindowSize(attribute,dict)
+  VisualizationSettings.view2.scene: hideMbs(attribute,dict)
   VisualizationSettings.view2.window: renderWindowPosition(attribute,dict) renderWindowSize(attribute,dict)
+  VisualizationSettings.view3.scene: hideMbs(attribute,dict)
   VisualizationSettings.view3.window: renderWindowPosition(attribute,dict) renderWindowSize(attribute,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list0=[] !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
