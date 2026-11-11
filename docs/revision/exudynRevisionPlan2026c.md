@@ -68,8 +68,9 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
+  - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution (5 open sub-steps)
 - **RG6** Graphics and rendering
-  - RG6.24 Screw threads and hexagon prisms in exudyn.graphics, for the helical joint
+  - RG6.24 Screw threads and hexagon prisms in exudyn.graphics, for the helical joint (4 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -111,8 +112,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 9 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG5 | OPEN | 15 | Performance |
+| RG6 | OPEN | 5 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -645,6 +646,34 @@ From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a perf
 
 #1910, moved from RG13.2. After RG5.8.1: where the items add reference and current coordinates today and what that costs; where total coordinates would be formed (once per step, per Newton iteration, per evaluation), stored or linked (currentState.ODE2CoordsTotal, an option of the solver); a proposal only if the gain exceeds the vector addition and the memory.
 
+### **OPEN_RG5.9** Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution
+
+Maintainer 2026-11-11: MKL installed by the user (e.g. pip) and used by the C++ through the API, not in the wheel, for the performance gains; the problems of PARDISO determined in an extra study - possibly the format, or other causes; resolvable at least for some classes of problems; the solver checked at least at one of the first steps that it produces a useful factorization. Exudyn's threads cannot be passed to the solvers: for a large system the Exudyn threads idle or stopped, the factorization multithreaded, then back to the Exudyn threads - ideally the solver takes the existing threads. The back-substitution is serial and done much more often than the factorization - whether it can be done by hand at least for Eigen. Design note: [sparseSolvers.md](../dev/design/sparseSolvers.md).
+
+#### **CLOSED_RG5.9.1** Design and evaluate MKL PARDISO at run time, the threads of the factorization and a parallel back-substitution
+
+#3427. CLOSED 2026-11-11 (#3427): docs/dev/design/sparseSolvers.md - MKL loaded at run time from the environment (no build dependency), the solver type PardisoMKL with Eigen's matrix passed without a copy, a residual check and the fallback to SparseLU, the settings; the study of the failures (half of the stored entries are numerical noise, condition up to 2e11); the back-substitution has about 3 unknowns per level in chains - not parallelizable by levels; the workers sleeping during a factorization, and independent subsystems on Exudyn's own threads. [log](exudynRevisionLog2026c.md#rg5-9-1)
+
+#### **OPEN_RG5.9.2** Study the failures of PARDISO on Exudyn's Jacobians: the classes and settings for which it is reliable
+
+Hypotheses H1-H6 of sparseSolvers.md section 3 (format, scaling, conditioning, numerical noise, saddle-point pivots, settings) on exported Jacobians of ODE models, constrained test models and the extreme chain; result: the classes and the settings, the default iparm of the solver type.
+
+#### **OPEN_RG5.9.3** Let the workers of the TaskManager sleep during a factorization
+
+#3428: SuspendWorkers and ResumeWorkers implemented (a condition variable after the spin loop), called around factorizations above a size; the wake-up measured; option A of sparseSolvers.md section 5.
+
+#### **OPEN_RG5.9.4** Add the linear solver type PardisoMKL, loaded at run time, with the residual check and the fallback
+
+sparseSolvers.md section 2; after RG5.9.2 and RG5.9.3; a test model that runs where MKL is available.
+
+#### **OPEN_RG5.9.5** Factorize and solve independent subsystems in parallel on Exudyn's threads
+
+#3428: the connected components of the Jacobian, each with its own SparseLU in a ParallelFor, also for the back-substitution; option C of sparseSolvers.md section 5.
+
+#### **OPEN_RG5.9.6** Reuse the analyzed pattern of SparseLU by default, with a pattern independent of numerical zeros
+
+linalgBenchmark.md section 3.9 (20-31 % of the factorization where the pattern stays), sparseSolvers.md section 1 (half of the stored entries are noise and come and go).
+
 ## **OPEN_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
@@ -999,6 +1028,26 @@ CLOSED 2026-11-10 (#3401 resolved): idle = paused or no new state for 0.3 s, a n
 5. Should `ObjectJointHelicalZ` draw a thread itself (C++, `VObjectJointHelicalZ`, with the pitch of the joint), or does the thread stay graphics data of the bodies, the joint drawing its axis and helix as now?
 
 Sub-steps when decided: (1) `ScrewThread` with the named profiles and the run-out, external and internal, (2) the envelope and the contours before and after, (3) `HexagonPrism`, (4) the test model and an example with the helical joint, the graphics regression references.
+
+**Decisions (maintainer 2026-11-11):** (1) ScrewThread, Bolt and Nut - ideal for all use cases; a Bolt with shaft length zero draws only the head, the HexagonPrism; (2) the profile depends on the base diameter: simplest is to start a screw at the outer diameter and let the profile go inside from 0 to 1 (or the other way round); if the base is neither the outer nor the inner diameter, absolute profiles are simpler to understand - the recommended way left to Claude; (3) the typical envelope at the end of a screw, a chamfer on the thread, would be doable - otherwise the suggestion, but only one way; (4) the ISO table from M2 to about M60, the data and the handling function in exudyn.machines, split from the graphics; (5) as now: the bodies draw the ScrewThread, the joint its axis and helix.
+
+**Resulting design:** the profile is measured from the base diameter inward for an external thread (the major diameter, v = 0 the crest, v = 1 the root at the depth h) and outward for an internal one (the minor diameter); h absolute with a default per named profile. One way for the ends: run-out and chamfer lengths at both ends (parameters), built internally as the clamp of the thread radius; the shaft before and after as contours. exudyn.machines.MetricThread('M10') gives the diameter, pitch and the hexagon sizes (ISO 261/262, 4014, 4032) in metres.
+
+#### **OPEN_RG6.24.1** graphics.ScrewThread: external and internal threads, the named profiles, multi-start, run-out and chamfer
+
+#3425.
+
+#### **OPEN_RG6.24.2** graphics.HexagonPrism, graphics.Bolt and graphics.Nut
+
+#3425.
+
+#### **OPEN_RG6.24.3** exudyn.machines.MetricThread: ISO metric coarse threads M2 to M60 with the hexagon sizes
+
+#3425.
+
+#### **OPEN_RG6.24.4** A test model of the screw graphics and an example of a bolt and a nut on ObjectJointHelicalZ
+
+#3425.
 
 ## **OPEN_RG7** Python user items
 

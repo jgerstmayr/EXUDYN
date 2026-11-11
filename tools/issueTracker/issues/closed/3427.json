@@ -1,0 +1,16 @@
+{
+  "number": 3427,
+  "title": "Design of a sparse solver by MKL PARDISO loaded at run time, evaluation of its failures and of the back-substitution",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "MKL PARDISO factorizes Exudyn's sparse Jacobians 2.5-24 times faster than Eigen's SparseLU when its analysis is kept, but returned wrong solutions or failed on index-3 constrained chains (linalgBenchmark.md section 3.9). Design, before an implementation: MKL installed by the user (pip or conda) and loaded by the C++ at run time - no build dependency, no MKL in the wheel; the solver type, its settings, the hand-over of Eigen's compressed matrix without a copy, the residual check after a factorization with a fallback to SparseLU; a study of the causes of the failures (format, scaling, conditioning, numerical noise in the Jacobian, saddle-point pivots, settings); whether the serial back-substitution can be parallelized. Design note docs/dev/design/sparseSolvers.md.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 14:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/design/sparseSolvers.md",
+  "releaseNotes": "Designed and evaluated (docs/dev/design/sparseSolvers.md), Exudyn unchanged: a solver type PardisoMKL whose MKL the user installs (pip or conda) and the C++ loads at run time - no build dependency, nothing in the wheel - with Eigen's compressed matrix passed without a copy, a residual check after the factorization and a fallback to SparseLU; a study of the failures of PARDISO (half of the stored Jacobian entries are numerical noise, conditions up to 2e11, equilibration did not help); the back-substitution of chain-like systems has about 3 unknowns per level and is not parallelized by levels - independent subsystems solved on Exudyn's threads instead.",
+  "resolvedInVersion": "1.13.561"
+}

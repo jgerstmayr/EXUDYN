@@ -297,6 +297,9 @@ Exudyn and scipy's `splu` (SuperLU, COLAMD). Microseconds per call, regular modu
   25 % of the solver time. With modified Newton (the default) the factorization is 1-18 % of the solver time (§3.7), and
   the gain is at most that.
 
+The way without Python - MKL installed by the user and loaded by the C++ at run time - and the study of the failures
+are designed in [sparseSolvers.md](sparseSolvers.md) (RG5.9).
+
 **Result**: MKL PARDISO is fast but not reliable on the Jacobians of index-3 constraints, which are Exudyn's common case;
 from Python it needs a C++ hook and loses its gain on small systems to the hand-over. Not now. If a faster sparse
 solver is wanted, the candidates are (1) the reuse of the symbolic analysis of `SparseLU` between Jacobians, which

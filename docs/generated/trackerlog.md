@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.560.dev1
+- Exudyn version = 1.13.561.dev1
 - last change = 2026-11-11
-- Number of issues = 3427
-- Number of resolved issues = 3337 (560 in current version)
+- Number of issues = 3429
+- Number of resolved issues = 3338 (561 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` The threads during the sparse factorization: Exudyn's workers spin while the factorization runs, and cannot be given to an external solver (#3428)
+  - description: The workers of ExuThreading::TaskManager wait for jobs by spinning with yield, also during the factorization of the system Jacobian, which is serial in Eigen; SuspendWorkers and ResumeWorkers are empty stubs. A multi-threaded external solver (MKL PARDISO with OpenMP or TBB threads) would compete with them for the cores, and MKL cannot use Exudyn's threads. Options (docs/dev/design/sparseSolvers.md section 5): the workers sleep on a condition variable during a factorization (SuspendWorkers/ResumeWorkers implemented, the wake-up measured); and models of independent subsystems factorized and solved per connected component in a ParallelFor on Exudyn's own threads, which also parallelizes the back-substitution where a level-scheduled solve cannot (chains have about 3 unknowns per level).
+  - date raised: 2026-11-11
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` graphics: screw threads (single- and multi-start, external and internal, run-outs, shafts) and hexagon prisms for heads and nuts (#3425)
   - description: Screws on ObjectJointHelicalZ have no graphics: exudyn.graphics has solids of revolution and extrusions, but no helical surface. Proposed: graphics.ScrewThread for external and internal threads of a given pitch and number of starts, with the profile as a normalized line segment or by name ('triangle', 'metric', 'trapezoid'), the thread running out at both ends into the shaft, contours of the shaft before and after the thread as in SolidOfRevolution, an outer cylinder for internal threads; graphics.HexagonPrism for heads and nuts. The recommendation and the questions are in revision2026c step RG6.24; the implementation waits for the decisions.
   - date raised: 2026-11-11

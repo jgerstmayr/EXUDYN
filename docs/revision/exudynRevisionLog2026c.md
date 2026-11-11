@@ -6431,6 +6431,28 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-9-1"></a>
+### RG5.9.1 — MKL PARDISO at run time, the threads of the factorization, the back-substitution: design (2026-11-11, #3427)
+*(Maintainer 2026-11-11: MKL installed e.g. by pip and available to the C++ of Exudyn through its API, not in the wheel,
+considered for the performance gains; the design with the interfaces and settings described clearly; the problems of
+PARDISO - possibly the triplet format, or other causes - determined in a planned study, resolvable at least for some
+classes of problems; the solver checked at least at one of the first steps; a separate issue for the threads, which
+cannot be passed to the solvers - Exudyn's threads idle or stopped for a multithreaded factorization, ideally the solver
+takes the existing threads; whether the serial back-substitution, done much more often than the factorization, can be
+done by hand at least for Eigen. Start with the design, evaluation and recommendation step and an issue.)*
+
+- `docs/dev/design/sparseSolvers.md` (new): §1 the shares of factorization and back-substitution with modified and full
+  Newton (scratch solveShare.py), the numerical noise in the Jacobians (46 % / 67 % of the stored entries below
+  1e-14 of their row maximum) and the condition numbers (scratch cond.py); §2 the run-time loading of `mkl_rt`, the
+  solver type `PardisoMKL`, the settings, the matrix passed as the CSR of the transpose, the residual check and the
+  fallback; §3 the study H1-H6 - Ruiz equilibration tried on the chain of 1000 bodies, no improvement (the entries
+  span 1e-48 to 2), condition 2e11; §4 the level sets of the triangular factors (scratch levels.py): chains about 3
+  unknowns per level, a 32 x 32 grid 16 per level over 190 levels, independent pendulums 3250 - no level-scheduled
+  solve; §5 the TaskManager's spinning workers, the options sleep / stop / components / MKL's threads; §6 the steps.
+- Plan: RG5.9 with RG5.9.1-RG5.9.6; #3428 raised for the threads (RG5.9.3, RG5.9.5); `linalgBenchmark.md` §3.9 links
+  the note.
+- RG6.24: the maintainer's decisions on the screw graphics and the resulting design; sub-steps RG6.24.1-RG6.24.4.
+
 <a id="rg5-1-12"></a>
 ### RG5.1.12 — Eigen 5.0.1 and MKL PARDISO from Python, evaluated (2026-11-11, #3426)
 *(Maintainer 2026-11-11: the current eigen-5.0.1.zip is in tmp - try whether it helps; check the bugs mentioned on the

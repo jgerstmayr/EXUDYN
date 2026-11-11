@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 536 | 1.13.560 |
+| 1.13 | Newborn | 537 | 1.13.561 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.561** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Design of a sparse solver by MKL PARDISO loaded at run time, evaluation of its failures and of the back-substitution (#3427)
+  - description: MKL PARDISO factorizes Exudyn's sparse Jacobians 2.5-24 times faster than Eigen's SparseLU when its analysis is kept, but returned wrong solutions or failed on index-3 constrained chains (linalgBenchmark.md section 3.9). Design, before an implementation: MKL installed by the user (pip or conda) and loaded by the C++ at run time - no build dependency, no MKL in the wheel; the solver type, its settings, the hand-over of Eigen's compressed matrix without a copy, the residual check after a factorization with a fallback to SparseLU; a study of the causes of the failures (format, scaling, conditioning, numerical noise in the Jacobian, saddle-point pivots, settings); whether the serial back-substitution can be parallelized. Design note docs/dev/design/sparseSolvers.md.
+  - **notes:** Designed and evaluated (docs/dev/design/sparseSolvers.md), Exudyn unchanged: a solver type PardisoMKL whose MKL the user installs (pip or conda) and the C++ loads at run time - no build dependency, nothing in the wheel - with Eigen's compressed matrix passed without a copy, a residual check after the factorization and a fallback to SparseLU; a study of the failures of PARDISO (half of the stored Jacobian entries are numerical noise, conditions up to 2e11, equilibration did not help); the back-substitution of chain-like systems has about 3 unknowns per level and is not parallelized by levels - independent subsystems solved on Exudyn's threads instead.
+  - date resolved: **2026-11-11 14:02**, date raised: 2026-11-11
 - **1.13.560** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Evaluate Eigen 5.0.1 instead of 3.3.7, and MKL PARDISO from Python for the factorization of the system Jacobian (#3426)
   - description: Exudyn vendors Eigen 3.3.7; Eigen 5.0.1 (2025-11) requires C++14 and is MPL2 only. Evaluate, before changing Exudyn: whether Exudyn builds with 5.0.1 unchanged, the linear algebra benchmark and the sparse factorization of the system Jacobian with both versions in the regular and the fast module, the test suite results, and the known bugs of 5.0.x as far as they concern Exudyn. Further, whether the factorization can be done by Intel MKL (PARDISO) through Python - the hooks of the solver, the cost of handing the Jacobian over, the speed and the reliability on Exudyn's Jacobians. Results in docs/dev/design/linalgBenchmark.md.
   - **notes:** Evaluated, Exudyn unchanged (docs/dev/design/linalgBenchmark.md sections 3.8 and 3.9): Eigen 5.0.1 builds unchanged, but the sparse factorization and setFromTriplets are as fast as with 3.3.7, small fixed-size products are slower, and 10 test results move by round-off - kept at 3.3.7. MKL PARDISO factorizes 2.5-24 times faster when its analysis is kept, but fails or returns wrong solutions on the Jacobians of index-3 constraints, and the solver has no hook to hand a Newton increment back from Python - not used. The existing setting linearSolver.reuseAnalyzedPattern shortens the sparse factorization by 20-31 % where the pattern stays.
