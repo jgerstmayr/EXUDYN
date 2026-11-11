@@ -155,7 +155,7 @@ center of a user mass point, is on a marker of the body (#3207).
 |---|---|
 | CreateGround | the built-in ObjectGround |
 | CreateMassPoint | ObjectUserBody on NodePoint: $\Mm = m\Im$, position $\qv + \pLoc$, Jacobian $\Im$, mass integral |
-| CreateRigidBody | ObjectUserBody on NodeRigidBodyRxyz: the mass matrix with the coupling of a center of mass and the quadratic velocity terms of CObjectRigidBody, written once with exudyn.symbolics.kinematics for numbers and recordings (#3128); Euler parameters and Lie group nodes refused |
+| CreateRigidBody | ObjectUserBody on NodeRigidBodyEP (the default) or NodeRigidBodyRxyz: the mass matrix with the coupling of a center of mass and the quadratic velocity terms of CObjectRigidBody, written once with exudyn.symbolics.kinematics for numbers and recordings (#3128); the Euler parameter constraint as algebraic equation (#3238); Lie group nodes refused |
 | CreateSpringDamper, CreateCartesianSpringDamper | ObjectConnectorUser on two position markers with the forceUserFunction of the marker states (#3119, #3193) |
 | CreateTorsionalSpringDamper | ObjectConnectorUser on two rigid markers, the turns in a data node with `unlimitedRotations` (#3218) |
 | CreateRigidBodySpringDamper | ObjectConnectorUser on two rigid markers, the joint rotations among the parameters, Tait-Bryan or intrinsic (#3193) |

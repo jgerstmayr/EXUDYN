@@ -26,8 +26,8 @@ The parameters of the item; in a dictionary, its type is 'JointSpherical':
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker! |
-| **constrainedAxes** | ArrayIndex | 3 | [1,1,1] | (symbol: $\jv=[j_0,\,\ldots,\,j_2]$) flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **constrainedAxes** | ArrayIndex | 3 | [1,1,1] | (symbol: $\jv=[j_0,\,j_1,\,j_2]$) flag, which determines which of the three translation axes (0,1,2) are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointSpherical |  |  | parameters for visualization of item |
 

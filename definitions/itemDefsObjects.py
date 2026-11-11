@@ -16549,7 +16549,7 @@ definitions.append(ItemDefinition(
     | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
     | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
     | joint J1 orientation | $\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$ | joint $J1$ rotation matrix |
-    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,\LU{0}{\tv_{z1}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
     | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
     | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
     | marker m0 velocity | $\LU{b}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
@@ -17052,7 +17052,7 @@ definitions.append(ItemDefinition(
     | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
     | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
     | joint J1 orientation | $\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$ | joint $J1$ rotation matrix |
-    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,\LU{0}{\tv_{z1}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
     | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
     | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
     | marker m0 velocity | $\LU{b}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
@@ -17354,11 +17354,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TArrayIndex(ItemMarker, size=2), destination=DestComp+DestParam,
             pythonName='markerNumbers',
             defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
-            description=r"""$[m0,m1]\tp$list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!"""),
+            description=r"""$[m0,m1]\tp$list of markers used in connector"""),
         ItemParameter(type=TArrayIndex(size=3), destination=DestComp+DestParam,
             pythonName='constrainedAxes',
             defaultValue='ArrayIndex({1,1,1})',
-            description=r"""$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis"""),
+            description=r"""$\jv=[j_0,\,j_1,\,j_2]$flag, which determines which of the three translation axes (0,1,2) are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,

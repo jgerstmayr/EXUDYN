@@ -6431,6 +6431,75 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-1-8"></a>
+### RG5.1.8 — local sums over data pointers: matrix times vector, MultAdd and +=/-=, J^T K J (2026-11-11, #3417)
+*(Maintainer 2026-11-11: start with RG5.1.8 and do until RG5.1.10; the performance suite before and after.)*
+
+- `MultMatrixVectorTemplate` (`Matrix.h`): the sum of a row in a local of the result's type, written once, the row
+  stride hoisted. `VectorBase::MultAdd`, `operator+=`, `operator-=` (`Vector.h`) and `ConstSizeVectorBase` `+=`, `-=`,
+  `MultAdd` (`ConstSizeVector.h`): the size and the data pointers in locals - MSVC has no type-based alias analysis and
+  reloaded `numberOfItems` and `data` after every store, so the loops were not vectorized.
+  `MultMatrixTransposedMatrixTemplate`: rank-1 updates row by row over the data pointers; the Add variant keeps a local
+  sum per entry (`result + sum` unchanged), over the data pointers.
+- Every sum keeps its order: all 438 results of the test suite in the regular module are the same bits as before.
+  The fast module fails `rollingDiscRollingFrictionTest.py` (new today, #926) by 1.5e-13 - the same value at HEAD
+  before the change (stash, fast build, rerun); entered in `AVX2ReferenceSolutionUpdate`.
+- `RunLinalgBenchmark`, regular / fast, before -> after (ns): `Vector MultAdd` n = 100 64 / 29 -> 13 / 7, n = 500
+  348 / 179 -> 58 / 27; `Vector +=` 3-4 times from n = 100; matrix times vector and the dense solve 2-2.5 times at
+  n = 6-12, 4.5 at 24, 6-7.5 from 48 (now 0.19 ns per multiply-add, Eigen 0.05-0.1); $\Jm\tp\Km\Jm$ 1.5 times at n = 6,
+  2.3 at 12, 3.2-3.5 at 24; `ConstSizeMatrix<36> * ConstSizeVector<6>` 2 times. Tables in
+  `docs/dev/design/linalgBenchmark.md` §3.6.
+
+<a id="rg5-1-9"></a>
+### RG5.1.9 — SlimVector index loops, Matrix3D products unrolled (2026-11-11, #3418)
+
+- `SlimVector.h`: the scalar constructor, `+= -= *= /=` (also with `VectorBase`), binary and unary `+ -`, the scalar
+  products and the dot product as index loops over `dataSize` instead of range-based loops over iterators; the cross
+  product written into the data instead of constructed from an initializer list (with its size check).
+- `ConstSizeMatrix.h`: `Matrix3D * Matrix3D` (the `dataSize == 9` case of the generic product, by `if constexpr`, when
+  all sizes are 3) and `Matrix3D * Vector3D`, `Vector3D * Matrix3D` unrolled over the data pointers, each sum from 0
+  in the order before.
+- Benchmark, regular / fast: `SlimVector<3> +` 5.5 / 5.7 -> 2.8 / 2.7 ns (Eigen 0.8), the cross product 10.1 / 10.0 ->
+  4.4 / 4.3 (Eigen 4.2), `Matrix3D * Matrix3D` 21.3 / 17.9 -> 7.6 / 8.3 (prototype 8.1), `HT * v` 8.4 -> 6.1;
+  `Matrix3D * Vector3D` in the regular module 7.2 -> 6.5 (the two size checks remain). Results the same bits.
+- Not done: the replacement of `A.GetTransposed() * v` by `v * A` in the item code (64 places; the same bits, a change of
+  callers) - left as part of L5 in the design note.
+
+<a id="rg5-1-10"></a>
+### RG5.1.10 — the triplets of AddSubmatrix from the data pointers (2026-11-11, #3419)
+
+- `LinearSolver.cpp`: one template `AppendSubmatrixTriplets<transposed>` for `AddSubmatrix`, `AddSubmatrixTransposed`
+  and their `WithFactor` variants: the sizes of `LTGrows`/`LTGcolumns` checked once, values and indices read from the
+  data pointers, the triplet array enlarged once per call; the order of the triplets and `factor*value` as before
+  (`1*value` is the same bits as the former branch without the factor).
+- Benchmark: 10 objects 4135 / 1481 -> 1364 / 1407 ns, 1000 objects 350 / 159 -> 145 / 150 us - the regular module as
+  fast as the fast one; `setFromTriplets` is now 86 % of the sparse assembly (G1, RG5.1.11).
+- Performance tests (`exudev perf`, `--fast`, the same machine before and after RG5.1.8-RG5.1.10): regular 49.06 ->
+  43.69 s (-11 %), fast 40.87 -> 35.51 s (-13 %); perfObjectFFRFreducedOrder -34 % / -15 %, perfUserFunctions -23 % /
+  -30 %, perfLargeMassSpringChain -9 % / -10 %, perfConnectorInterface -11 % / -15 %; all results unchanged.
+
+<a id="rg14-6-2"></a>
+### RG14.6.2 — CommonTangentOf2Circles: the length of nB, the convergence (2026-11-11, #3412)
+
+- `Geometry.h`: `nBlen = nB.GetL2Norm()` (was the length of nA); the function returns `lastError <= tol`, i.e. true if
+  the residual of the returned `rA`, `rB` is below the tolerance, instead of `nIt != maxIt` (a convergence in the 8th
+  iteration was a failure, 8 iterations without convergence a success). The issue spoke of a second Newton loop of the
+  same pattern in the file; there is none.
+- `reevingSystemTangentTest.py` (new): two sheaves on the ground, the axis of the second tilted towards the first; the
+  rope length (`Distance`) against the tangent computed in the test by another parametrization (the line normal to
+  both radius vectors, Newton with a difference Jacobian): 3.025965077828625 both, before the fix 3.0083055912100445.
+- `reevingSystemSpringsTest.py`: 2.2155575717433043 -> 2.2156643963423805 - its sheaves rotate, so their axes are not
+  exactly parallel.
+
+<a id="rg14-6-3"></a>
+### RG14.6.3 — three text errors (2026-11-11, #3413)
+
+- ObjectJointSpherical: `constrainedAxes` describes three translation axes (it spoke of rotation axes 3-5); its
+  `markerNumbers` text was the one of the rolling disc (coin, ground marker) - the plain text of the other joints.
+- The stray `v` in $\LU{0,J1}{\Rot}$ of ObjectJointGeneric, and the same in ObjectJointPrismaticX.
+- `docs/dev/internals/userItems.md` §7, CreateRigidBody: on NodeRigidBodyEP (the default) or NodeRigidBodyRxyz, the
+  Euler parameter constraint as algebraic equation (#3238); only Lie group nodes refused.
+
 <a id="rg5-1-7"></a>
 ### RG5.1.7 — the linear algebra benchmark for small systems, regular and fast module, Eigen as reference (2026-11-11, #3414)
 *(Maintainer 2026-11-11: RG5.1 has to be done again, also with the fast module, so that both cases are known - a

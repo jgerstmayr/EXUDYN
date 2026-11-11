@@ -334,7 +334,8 @@ def TestExamplesReferenceSolution():
         'plotSensorTest.py':1.0,
         'postNewtonStepContactTest.py':0.057286638346409235,
         'raytracerNOGLFWtest.py':0.28013531271596,                  #2026-10-10: the edges of the bricks in front of the focal plane are drawn (#2951); before 0.28161678591179; 2026-10-01: the node of the rigid body is raytraced as a sphere (#2709); new 2026-01-03
-        'reevingSystemSpringsTest.py':2.2155575717433043, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 2.215557571743304;new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
+        'reevingSystemSpringsTest.py':2.2156643963423805, #2026-11-11: the common tangent of two sheaves normalizes nB by its own length (#3412), before 2.2155575717433043; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 2.215557571743304;new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
+        'reevingSystemTangentTest.py':3.025965077828625, #new 2026-11-11: the common tangent of two sheaves with non-parallel axes (#3412)
         'relativeRotationTranslationMechanism.py': 1.509631854432837, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.509631854432179; new 2026-09-11
         'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes
         'revoluteJointPrismaticJointTest.py':1.2538806796368958, #2026-11-02: the rigid body's own Jacobian by automatic differentiation (#3209), before 1.253880679636072; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.253880679925025; 2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 1.2538806799241744;    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
@@ -824,6 +825,7 @@ def AVX2ReferenceSolutionUpdate():
         'contactPrimitivesTableTest.py': 10.521724576125148, #drift 6.2e-04 (fast module, 2026-11-09)
         'sphereCylinderContactTest.py': 8.613788897623888, #drift 4.4e-13 (fast module, 2026-11-09)
         'carRollingDiscTest.py': -0.23940048804187597, #drift 1.0e-13 (fast module, 2026-11-10, #2884)
+        'rollingDiscRollingFrictionTest.py': 7.475420024768965, #drift 1.5e-13 (fast module, 2026-11-11, the same at 1.13.548 before #3417)
         'restartFileTest.py':                      -2.931848,                 #drift 1.0e-06
         'generalContactImplicit1.py':              0.7758156549599001,        #drift 8.9e-08
         'rollingDiscTangentialForces.py':          1.0342017444582357,        #drift 4.4e-09

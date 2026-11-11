@@ -518,7 +518,7 @@ namespace EGeometry {
 		Vector3D nB = aB.CrossProduct(c0);
 		//nA needs to be normalized!!!
 		Real nAlen = nA.GetL2Norm();
-		Real nBlen = nA.GetL2Norm();
+		Real nBlen = nB.GetL2Norm();
 		if (nAlen == 0. || nBlen == 0.)
 		{
 			if (throwException) { CHECKandTHROWstring("CommonTangentOf2Circles: axes may not be parallel to vector between circle midpoints"); }
@@ -583,8 +583,7 @@ namespace EGeometry {
 
 			//pout << "it" << nIt << ", phiA=" << phiA << ", phiB=" << phiB << ", rA=" << rA << ", rB=" << rB << ", err=" << lastError << "\n";
 		}
-		if (nIt == maxIt) { return false; }
-		return true;
+		return lastError <= tol; //converged if the residual of the returned rA, rB is below the tolerance (#3412)
 	}
 
 

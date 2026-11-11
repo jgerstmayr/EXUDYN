@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.548.dev1
+- Exudyn version = 1.13.553.dev1
 - last change = 2026-11-11
-- Number of issues = 3417
-- Number of resolved issues = 3325 (548 in current version)
+- Number of issues = 3420
+- Number of resolved issues = 3330 (553 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9042,9 +9042,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` Helical joints: a screw joint and a point on a helix (#3415)
   - description: A regular C++ joint like ObjectJointGeneric for a screw - the rotation about an axis coupled with the translation along it by the pitch - which also covers a motion on a screw curve with a radial offset to the axis, and so a motion on a circle; the parts of the joint can be locked separately. First an analysis of the constraint formulation (valid for all angles, the pitch zero included), of one or two joints and of their names and options (docs/dev/design/helicalJoint.md); then the implementation with analytic Jacobians, test models against analytic motions and MiniExamples.
   - date raised: 2026-11-11
-- `DOCU` `LOW EFF` `raised by: Claude-JG` Three text errors in item descriptions and in userItems.md (#3413)
-  - description: (1) definitions/itemDefsObjects.py, ObjectJointSpherical, constrainedAxes: the description speaks of translation (0,1,2) and rotation (3,4,5) axes, the array has three entries. (2) ObjectJointGeneric, detailedDescription, the table of joint J1 orientation vectors: a stray v in v\\tv\_{z1}, which should be \\LU{0}{\\tv\_{z1}} as the other two. (3) docs/dev/internals/userItems.md, section 7, the table row of CreateRigidBody: Euler parameter nodes are said to be refused, while userItems.py supports NodeRigidBodyEP (\#3238). Found in the analyses of revision2026c steps RG9.14.1 and RG14.6.1.
-  - date raised: 2026-11-11
 - `CHECK` `raised by: Claude-JG` A real training run of spotReinforcementLearning.py (#3388)
   - description: The example on the floating base has been run with stubs of gym and stable\_baselines3 only. Decided: installed and trained later.
   - date raised: 2026-11-09
@@ -9372,9 +9369,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` CommonTangentOf2Circles normalizes nB by the length of nA and misreports its convergence (#3412)
-  - description: In src/Linalg/Geometry.h, CommonTangentOf2Circles (used by ObjectConnectorReevingSystemSprings for the tangent points of a rope between two sheaves): (1) Real nBlen = nA.GetL2Norm(); - nB is divided by the length of nA, so for sheaves whose axes are not parallel nB is not a unit vector and the tangent points are wrong; with parallel axes both lengths are equal and the result is right. (2) The Newton loop runs while (lastError \> tol && nIt++ \< maxIt) and then returns false if nIt == maxIt: a convergence in the 8th iteration is reported as failure, and 8 iterations without convergence end with nIt = 9 and are reported as success; the same pattern at the second Newton loop of the file. Found in the evaluation of the reeving system as user item (revision2026c step RG14.6.1). Fix and a test with non-parallel sheave axes against a geometric construction.
-  - date raised: 2026-11-11
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ProfileJointPath keeps a line of length zero between two blends, and divides by zero (#3411)
   - description: robotPathPlanningTest.py prints a numpy RuntimeWarning (divide by zero) from ProfileJointPath.GetBasicProfile, in Largest (h = 2(p\_j - p\_i)) and in pDDot = (pDot\[1:\]\*\*2 - pDot\[:-1\]\*\*2)/(2 np.diff(p)). Cause: \_Segments keeps a line between two rounded corners if np.any(end != start), an exact comparison; when the blends of two neighbouring waypoints meet at the middle of the segment - on paths of RRT-Connect, whose waypoints are equally far apart (0.163 rad there), with a blend radius of half the distance or more - the end of the first and the start of the second blend differ by rounding only, and a line of length about 1e-17 becomes a segment whose path parameters are equal. Found 5 such segments of 75 in the first, 8 of 124 in the second path of the test. The checks of the test pass (the trajectory is not visibly wrong), but inf enters the bounds of the accelerations. Fix: drop a line shorter than a tolerance relative to the path length; then check that no interval of p has length zero.
   - date raised: 2026-11-11

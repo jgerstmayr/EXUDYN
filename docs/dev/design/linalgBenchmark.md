@@ -131,6 +131,61 @@ product of 3 takes 13.2 ns against 2.5 ns in `Real` - 5 times for 13 values.
 Per object (fast module): 148 ns to append the 144 triplets, 510 ns of `setFromTriplets`, 55 ns to add the 144 values
 into a pattern whose positions are known.
 
+### 3.6 After the local recommendations L1-L6 (#3417, #3418, #3419)
+
+The same machine and call, Exudyn 1.13.548.dev1; **before** and **after**, each regular / fast, ns per call. The order of
+every sum is the one before: all 438 results of the test suite in the regular module are the same bits (except the one
+of #3412), the fast module passes its references.
+
+| operation | n | before | after |
+|---|---:|---:|---:|
+| `Vector +=` | 24 | 6.5 / 5.3 | 4.4 / 3.6 |
+| `Vector +=` | 100 | 47.9 / 20.0 | 12.8 / 6.9 |
+| `Vector +=` | 500 | 223 / 99.0 | 57.5 / 26.8 |
+| `Vector MultAdd` | 24 | 9.8 / 6.5 | 4.7 / 3.5 |
+| `Vector MultAdd` | 100 | 64.0 / 28.9 | 13.1 / 7.1 |
+| `Vector MultAdd` | 500 | 348 / 179 | 57.9 / 27.0 |
+| `ConstSizeVector +=` | 24 | 5.6 / 5.1 | 3.5 / 3.4 |
+| `Matrix * Vector` | 12 | 115 / 72.8 | 29.5 / 29.3 |
+| `Matrix * Vector` | 24 | 518 / 366 | 112 / 111 |
+| `Matrix * Vector` | 100 | 14.5u / 14.3u | 1.9u / 1.9u |
+| `Matrix * Vector` | 500 | 512u / 505u | 79.6u / 80.3u |
+| dense solve (inverse * rhs) | 24 | 518 / 376 | 116 / 115 |
+| $\Jm\tp\Km\Jm$, `ResizableMatrix` | 6 | 90.7 / 101 | 59.6 / 55.5 |
+| $\Jm\tp\Km\Jm$, `ResizableMatrix` | 12 | 298 / 350 | 131 / 192 |
+| $\Jm\tp\Km\Jm$, `ResizableMatrix` | 24 | 1.1u / 1.2u | 333 / 329 |
+| `ConstSizeMatrix<36> * ConstSizeVector<6>` | 6 | 25.0 / 18.8 | 12.2 / 11.5 |
+| `SlimVector<3> +` (`v = v + w*s`) | 3 | 5.5 / 5.7 | 2.8 / 2.7 |
+| `SlimVector<3>` cross product | 3 | 10.1 / 10.0 | 4.4 / 4.3 |
+| `Matrix3D * Vector3D` | 3 | 7.2 / 3.9 | 6.5 / 4.0 |
+| `Matrix3D * Matrix3D` | 3 | 21.3 / 17.9 | 7.6 / 8.3 |
+| `AddSubmatrix` 12 x 12 into triplets, 10 objects | 10 | 4.1u / 1.5u | 1.4u / 1.4u |
+| `AddSubmatrix` 12 x 12 into triplets, 1000 objects | 1000 | 350u / 159u | 145u / 150u |
+| `AddSubmatrix` + `FinalizeMatrix`, 1000 objects | 1000 | 1.24 ms / 1.06 ms | 1.04 ms / 1.08 ms |
+
+Matrix times vector is 0.19 ns per multiply-add from n = 100 on, Eigen 0.05-0.1; `Matrix3D * Matrix3D` is as fast as
+the prototype; `AddSubmatrix` is as fast in the regular module as in the fast one; `setFromTriplets` is now 86 % of the
+sparse assembly. Single differences of 20-30 % in both directions between two runs of an unchanged kernel (e.g.
+`ResizableVectorParallel` at n = 24-100) are the noise of this benchmark.
+
+The performance tests (`exudev perf`, `exudev perf --fast`), total time in s:
+
+| test | regular before | after | fast before | after |
+|---|---:|---:|---:|---:|
+| perfRigidPendulum.py | 4.73 | 4.59 | 2.81 | 2.65 |
+| perfSpringDamperExplicit.py | 4.89 | 4.58 | 3.36 | 2.67 |
+| perfSpringDamperUserFunction.py | 2.08 | 2.12 | 1.91 | 1.63 |
+| perfUserFunctions.py | 6.44 | 4.98 | 5.87 | 4.11 |
+| generalContactSpheresPerf.py | 10.26 | 9.68 | 9.71 | 9.00 |
+| perf3DRigidBodies.py | 1.99 | 1.94 | 1.80 | 1.81 |
+| perfObjectFFRFreducedOrder.py | 4.47 | 2.97 | 2.51 | 2.13 |
+| perfLargeMassSpringChain.py | 11.69 | 10.63 | 10.65 | 9.57 |
+| perfConnectorInterface.py | 1.35 | 1.20 | 1.22 | 1.03 |
+| perfAccessFunctionsAD.py | 1.15 | 1.00 | 1.03 | 0.92 |
+| **total** | **49.06** | **43.69 (-11 %)** | **40.87** | **35.51 (-13 %)** |
+
+The results of all performance tests are unchanged.
+
 ## 4. Eigen as the reference
 
 Eigen 3.3.7 compiled by MSVC is not a reference for every small product: `Matrix3d * Matrix3d` takes 41 ns with
@@ -192,6 +247,9 @@ of the references).
 
 L1-L3 are the ones with the clearest evidence; L4/L5 touch the most-used types and need the most careful check of the
 results (the order of the sums must stay where the test references are bitwise).
+
+L1-L3 are implemented by #3417, L4 and the products of L5 by #3418 (the replacement of `A.GetTransposed() * v` by
+`v * A` in the item code, 64 places, is not done), L6 by #3419; the results in §3.6.
 
 ### 6.2 Global - changes of classes or interfaces, second
 

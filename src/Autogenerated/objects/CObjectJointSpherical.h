@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-10  21:43:04 (last modified)
+* @date         2026-11-11  07:37:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,8 +27,8 @@
 class CObjectJointSphericalParameters // AUTO:
 {
 public: // AUTO:
-    ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m1\f$ is the moving coin rigid body and \f$m0\f$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!
-    ArrayIndex constrainedAxes;                   //!< AUTO: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for \f$j_i\f$, two values are possible: 0=free axis, 1=constrained axis
+    ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
+    ArrayIndex constrainedAxes;                   //!< AUTO: flag, which determines which of the three translation axes (0,1,2) are constrained; for \f$j_i\f$, two values are possible: 0=free axis, 1=constrained axis
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectJointSphericalParameters()

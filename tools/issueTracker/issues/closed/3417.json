@@ -1,0 +1,16 @@
+{
+  "number": 3417,
+  "title": "Local sums over data pointers in MultMatrixVectorTemplate, VectorBase MultAdd/+=/-= and MultMatrixTransposedMatrixTemplate",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Recommendations L1-L3 of docs/dev/design/linalgBenchmark.md: MultMatrixVectorTemplate adds each term into result[i] (1.45-2 ns per multiply-add, 8-27 times Eigen from n = 24, the solve of the dense solver), VectorBase::MultAdd and the operators += and -= of VectorBase and ConstSizeVectorBase read the size and the data through members inside the loop and are not vectorized (0.36 ns per element against 0.08), MultMatrixTransposedMatrixTemplate runs the rows innermost through operator() (J^T K J 2.6 times the prototype). The loops are rewritten over local pointers and sizes, with the order of every sum unchanged so that the results stay the same bits; measured by RunLinalgBenchmark in the regular and the fast module and by the performance tests (revision2026c step RG5.1.8).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 07:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/Matrix.h",
+  "releaseNotes": "Matrix times vector, VectorBase/ConstSizeVector MultAdd, += and -=, and transposed matrix times matrix as loops over local sizes and data pointers with the order of every sum unchanged: the same results, MultAdd 3-7 times, matrix times vector and the dense solve 2-7.5 times, J^T K J 1.5-3.5 times faster.",
+  "resolvedInVersion": "1.13.551"
+}

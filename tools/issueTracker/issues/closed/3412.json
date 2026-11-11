@@ -2,12 +2,16 @@
   "number": 3412,
   "title": "CommonTangentOf2Circles normalizes nB by the length of nA and misreports its convergence",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "In src/Linalg/Geometry.h, CommonTangentOf2Circles (used by ObjectConnectorReevingSystemSprings for the tangent points of a rope between two sheaves): (1) Real nBlen = nA.GetL2Norm(); - nB is divided by the length of nA, so for sheaves whose axes are not parallel nB is not a unit vector and the tangent points are wrong; with parallel axes both lengths are equal and the result is right. (2) The Newton loop runs while (lastError > tol && nIt++ < maxIt) and then returns false if nIt == maxIt: a convergence in the 8th iteration is reported as failure, and 8 iterations without convergence end with nIt = 9 and are reported as success; the same pattern at the second Newton loop of the file. Found in the evaluation of the reeving system as user item (revision2026c step RG14.6.1). Fix and a test with non-parallel sheave axes against a geometric construction.",
   "dateRaised": "2026-11-11",
   "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 07:53",
+  "resolvedAuthor": "Claude-JG",
   "file": "src/Linalg/Geometry.h",
-  "line": "521"
+  "line": "521",
+  "releaseNotes": "CommonTangentOf2Circles (the tangent points of ObjectConnectorReevingSystemSprings) normalizes nB by its own length, so that sheaves with non-parallel axes get the right tangent, and reports convergence when the residual of the returned points is below the tolerance; reevingSystemTangentTest.py; the result of reevingSystemSpringsTest.py changes by 1.1e-4.",
+  "resolvedInVersion": "1.13.549"
 }

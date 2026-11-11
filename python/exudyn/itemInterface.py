@@ -9149,9 +9149,9 @@ class ObjectJointSpherical:
     Args:
         name: constraints's unique name
 
-        markerNumbers: list of markers used in connector; :math:`m1` is the moving coin rigid body and :math:`m0` is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!; type: ArrayMarkerIndex
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
+        constrainedAxes: flag, which determines which of the three translation axes (0,1,2) are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 

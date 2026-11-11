@@ -1,0 +1,16 @@
+{
+  "number": 3418,
+  "title": "Index loops in the operators of SlimVector and unrolled 3x3 products of Matrix3D",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Recommendations L4, L5 of docs/dev/design/linalgBenchmark.md: the operators + - * of SlimVector loop over iterators of the result and the cross product is constructed from an initializer list (SlimVector<3> + 7 times, the cross product 2.4 times Eigen); Matrix3D * Matrix3D and Matrix3D * Vector3D go through the checked operator() (2.2 times the prototype). Plain index loops over the compile-time size, the cross product written into the data, and the 3x3 products unrolled over the data pointers, the order of the sums unchanged (revision2026c step RG5.1.9).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 07:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/SlimVector.h",
+  "releaseNotes": "SlimVector operators as index loops over the compile-time size, the cross product written into the data, Matrix3D * Matrix3D and Matrix3D * Vector3D unrolled with the same order of sums: SlimVector + and the cross product 2.3 times, Matrix3D * Matrix3D 2.2-2.8 times faster.",
+  "resolvedInVersion": "1.13.552"
+}

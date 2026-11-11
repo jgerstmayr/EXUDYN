@@ -1135,20 +1135,22 @@ namespace EXUmath {
 
 		result.SetNumberOfItems(matrix.NumberOfRows());
 
-		auto* mm = matrix.GetDataPointer();
+		//sum of each row in a local, written once; the order of the sums is unchanged (#3417)
+		const auto* mm = matrix.GetDataPointer();
 		const auto* vv = vector.GetDataPointer();
-		Index resultLength = result.NumberOfItems();
-		Index vectorLength = vector.NumberOfItems();
+		auto* rr = result.GetDataPointer();
+		const Index resultLength = result.NumberOfItems();
+		const Index vectorLength = vector.NumberOfItems();
 
 		for (Index i = 0; i < resultLength; i++)
 		{
-			result[i] = 0;
-			auto* mr = &mm[i*matrix.NumberOfColumns()];
-			//auto* mr = &mm[i*vectorLength];
+			const auto* mr = &mm[i*vectorLength];
+			std::remove_reference_t<decltype(rr[0])> value = 0; //the type of the result, as before
 			for (Index j = 0; j < vectorLength; j++)
 			{
-				result[i] += mr[j] * vv[j];
+				value += mr[j] * vv[j];
 			}
+			rr[i] = value;
 		}
 	}
 
@@ -1390,19 +1392,29 @@ namespace EXUmath {
 		CHECKandTHROW(m1.NumberOfRows() == m2.NumberOfRows(),
 			"MultMatrixTransposedMatrixTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
 
-		result.SetNumberOfRowsAndColumns(m1.NumberOfColumns(), m2.NumberOfColumns());
+		const Index rows = m1.NumberOfRows();
+		const Index columns1 = m1.NumberOfColumns();
+		const Index columns2 = m2.NumberOfColumns();
+		result.SetNumberOfRowsAndColumns(columns1, columns2);
 
-		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		//rank-1 updates row by row over the data pointers; every entry sums over k = 0, 1, ... from 0, as before (#3417)
+		const auto* p1 = m1.GetDataPointer();
+		const auto* p2 = m2.GetDataPointer();
+		auto* pr = result.GetDataPointer();
+		for (Index q = 0; q < columns1*columns2; q++) { pr[q] = 0.; }
+
+		for (Index k = 0; k < rows; k++)
 		{
-			for (Index j = 0; j < m1.NumberOfColumns(); j++)
+			const auto* row1 = &p1[k*columns1];
+			const auto* row2 = &p2[k*columns2];
+			for (Index j = 0; j < columns1; j++)
 			{
-				//auto value = (decltype(result(0, 0)))0.; //in this way, we can determine double or float! ==> TEST
-				Real value = 0.; //in this way, we can determine double or float! ==> TEST
-				for (Index k = 0; k < m1.NumberOfRows(); k++)
+				const Real factor = row1[j];
+				auto* rowResult = &pr[j*columns2];
+				for (Index i = 0; i < columns2; i++)
 				{
-					value += m1(k, j)*m2(k, i);
+					rowResult[i] += factor * row2[i];
 				}
-				result(j, i) = value;
 			}
 		}
 	}
@@ -1415,18 +1427,24 @@ namespace EXUmath {
 			(result.NumberOfRows() == m1.NumberOfColumns()) && (result.NumberOfColumns() == m2.NumberOfColumns()),
 			"MultMatrixTransposedMatrixAddTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
 
-		//result.SetNumberOfRowsAndColumns(m1.NumberOfColumns(), m2.NumberOfColumns());
+		//the sum of an entry in a local, added once - the order of result + sum unchanged; data pointers (#3417)
+		const Index rows = m1.NumberOfRows();
+		const Index columns1 = m1.NumberOfColumns();
+		const Index columns2 = m2.NumberOfColumns();
+		const auto* p1 = m1.GetDataPointer();
+		const auto* p2 = m2.GetDataPointer();
+		auto* pr = result.GetDataPointer();
 
-		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		for (Index j = 0; j < columns1; j++)
 		{
-			for (Index j = 0; j < m1.NumberOfColumns(); j++)
+			for (Index i = 0; i < columns2; i++)
 			{
 				Real value = 0.;
-				for (Index k = 0; k < m1.NumberOfRows(); k++)
+				for (Index k = 0; k < rows; k++)
 				{
-					value += m1(k, j)*m2(k, i);
+					value += p1[k*columns1 + j] * p2[k*columns2 + i];
 				}
-				result(j, i) += value;
+				pr[j*columns2 + i] += value;
 			}
 		}
 	}

@@ -63,7 +63,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.1 Write a linear algebra micro-benchmark that every build carries (6 open sub-steps)
+  - RG5.1 Write a linear algebra micro-benchmark that every build carries (3 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
@@ -92,7 +92,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG14.3 Run the arrays of the uniform evaluation by CuPy on the GPU
   - RG14.4 Evaluate the kinds by one Numba-compiled function per kind, with explicit integration
   - RG14.5 Export the equations of motion as C++ and Python - the programs, the sparsity pattern and the scatter -, the CPU reference of the GPU tests
-  - RG14.6 User items of GenericJoint, HydraulicActuatorSimple, ReevingSystemSprings and ObjectFFRFreducedOrder for the advanced GPU tests (2 open sub-steps)
+  - RG14.6 User items of GenericJoint, HydraulicActuatorSimple, ReevingSystemSprings and ObjectFFRFreducedOrder for the advanced GPU tests
 - **RG19** Revision of the robotics submodule
   - RG19.14 A floating base for legged robots; wheeled robots keep their joints x, y and the rotation (1 open sub-step)
   - RG19.15 The joint torque loads: the test models on SetControl now, the deprecated parameters removed at the end of the deprecation period (1 open sub-step)
@@ -110,7 +110,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 13 | Performance |
+| RG5 | OPEN | 10 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -119,7 +119,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG11 | CLOSED | 0 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | CLOSED | 0 | Total coordinates |
-| RG14 | OPEN | 8 | Uniform evaluation of symbolic systems on the CPU and the GPU |
+| RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
 | RG19 | OPEN | 5 | Revision of the robotics submodule |
 | RG20 | OPEN | 2 | Advanced solvers |
 | RG21 | CLOSED | 0 | Path planning and navigation of robots |
@@ -542,17 +542,23 @@ From #3414.
 
 CLOSED 2026-11-11 (#3414): RunLinalgBenchmark with sizes 3 to 500, Eigen (dynamic and fixed), a prototype of compile-time size, J^T f and J^T K J, AutoDiff<12>, the dense solver and the assembly into triplets against a known pattern; both modules; docs/dev/design/linalgBenchmark.md with the causes in the code and the recommendations L1-L6 (local) and G1-G6 (global). [log](exudynRevisionLog2026c.md#rg5-1-7)
 
-#### **OPEN_RG5.1.8** Write the loops of MultMatrixVectorTemplate, VectorBase MultAdd and +=, and MultMatrixTransposedMatrixTemplate as local sums over pointers
+#### **CLOSED_RG5.1.8** Write the loops of MultMatrixVectorTemplate, VectorBase MultAdd and +=, and MultMatrixTransposedMatrixTemplate as local sums over pointers
 
 Recommendations L1-L3 of docs/dev/design/linalgBenchmark.md: matrix times vector 5-20 times from n = 12 (the solve of the dense solver), Vector MultAdd 2-4 times, J^T K J 2.5 times; measured by the benchmark in both modules and by exudev perf; the test suite references kept.
 
-#### **OPEN_RG5.1.9** Unroll the operators of SlimVector and the products of Matrix3D
+CLOSED 2026-11-11 (#3417): local sums and sizes over data pointers, the order of every sum unchanged (the test suite the same bits); Vector MultAdd 3-7 times, += 2-4 times, matrix times vector and the dense solve 2-7.5 times, J^T K J 1.5-3.5 times. [log](exudynRevisionLog2026c.md#rg5-1-8)
+
+#### **CLOSED_RG5.1.9** Unroll the operators of SlimVector and the products of Matrix3D
 
 Recommendations L4, L5 of docs/dev/design/linalgBenchmark.md: SlimVector<3> + 7 times, cross product 2.4 times, Matrix3D * Matrix3D 2.2 times slower than the reference; the order of the sums checked against the bitwise references of the test suite.
 
-#### **OPEN_RG5.1.10** Append the triplets of AddSubmatrix from the data pointer of the local matrix
+CLOSED 2026-11-11 (#3418): SlimVector operators as index loops, the cross product into the data, Matrix3D * Matrix3D and Matrix3D * Vector3D unrolled; SlimVector + and the cross product 2.3 times, Matrix3D * Matrix3D 2.2-2.8 times (as the prototype); A.GetTransposed()*v in the item code not replaced. [log](exudynRevisionLog2026c.md#rg5-1-9)
+
+#### **CLOSED_RG5.1.10** Append the triplets of AddSubmatrix from the data pointer of the local matrix
 
 Recommendation L6 of docs/dev/design/linalgBenchmark.md: 2.8 times in the regular module.
+
+CLOSED 2026-11-11 (#3419): one template for the four AddSubmatrix variants, sizes checked once, the triplets from the data pointers; 2.5 times in the regular module, now as fast as the fast one; performance tests after RG5.1.8-RG5.1.10: regular -11 %, fast -13 %. [log](exudynRevisionLog2026c.md#rg5-1-10)
 
 #### **OPEN_RG5.1.11** Measure the share of FinalizeMatrix in the Newton step and decide on keeping the pattern of the sparse Jacobian
 
@@ -3536,13 +3542,17 @@ Maintainer 2026-11-11: evaluate first, in a design file userItems2.md that is me
 
 CLOSED 2026-11-11 (#3200): docs/dev/design/userItems2.md - the rules of a recording, the interfaces at hand, per item the user item kind, approach, limits and effort; five interface extensions E1-E5 (E3, MarkerBodyUser recorded, serves the kinematic tree and the FFRF body); order: the rolling disc, the generic joint, the recordable contact pairs and the beam without extension first; finite cylinder contacts by GJK not recordable; the 17 proposed sub-steps wait for the maintainer's decision. [log](exudynRevisionLog2026c.md#rg14-6-1)
 
-#### **OPEN_RG14.6.2** Fix CommonTangentOf2Circles: the length of nB and the count of the Newton iterations
+#### **CLOSED_RG14.6.2** Fix CommonTangentOf2Circles: the length of nB and the count of the Newton iterations
 
 #3412, found in RG14.6.1 (the reeving system as user item compares with the built-in item, which uses it).
 
-#### **OPEN_RG14.6.3** Correct three text errors of the joint descriptions and of userItems.md
+CLOSED 2026-11-11 (#3412): nB normalized by its own length, converged = the last residual below the tolerance; reevingSystemTangentTest.py against an independent construction; reevingSystemSpringsTest.py moves by 1.1e-4. [log](exudynRevisionLog2026c.md#rg14-6-2)
+
+#### **CLOSED_RG14.6.3** Correct three text errors of the joint descriptions and of userItems.md
 
 #3413, found in RG14.6.1 and RG9.14.1.
+
+CLOSED 2026-11-11 (#3413): ObjectJointSpherical constrainedAxes and markerNumbers, the stray v in ObjectJointGeneric and ObjectJointPrismaticX, the CreateRigidBody row of userItems.md. [log](exudynRevisionLog2026c.md#rg14-6-3)
 
 ## **OPEN_RG19** Revision of the robotics submodule
 

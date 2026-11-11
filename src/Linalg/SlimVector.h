@@ -96,7 +96,7 @@ public:
 	//! constructor with a single scalar value used for all vector components.
 	SlimVectorBase(T scalarValue) 
 	{
-        for (auto &item : *this) { item = scalarValue; }
+		for (Index i = 0; i < dataSize; i++) { data[i] = scalarValue; }
     }
 
     //! initializer list: e.g. SlimVectorBase<T, 3> ({1.0, 3.14, 5.5}); dataSize must exactly match the initializer_list.size() which is different from ConstSizeVector
@@ -279,20 +279,15 @@ public:
     //! add vector v to *this vector (for each component); both vectors must have same size
 	inline SlimVectorBase<T,dataSize>& operator+= (const SlimVectorBase<T, dataSize>& v)
     {
-        Index cnt = 0;
-        for (auto item : v) {
-			data[cnt++] += item;
-        }
+		//index loops over the compile-time size, unrolled by the compiler (#3418)
+		for (Index i = 0; i < dataSize; i++) { data[i] += v.data[i]; }
         return *this;
     }
 
     //! substract vector v from *this vector (for each component); both vectors must have same size
 	inline SlimVectorBase<T, dataSize>& operator-= (const SlimVectorBase<T, dataSize>& v)
     {
-        Index cnt = 0;
-        for (auto item : v) {
-			data[cnt++] -= item;
-        }
+		for (Index i = 0; i < dataSize; i++) { data[i] -= v.data[i]; }
         return *this;
     }
 
@@ -300,10 +295,8 @@ public:
 	inline SlimVectorBase<T, dataSize>& operator+= (const VectorBase<T>& v)
 	{
 		CHECKandTHROW(v.NumberOfItems() == dataSize, "ERROR: SlimVectorBase operator+= with VectorBase size mismatch");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] += item;
-		}
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < dataSize; i++) { data[i] += vd[i]; }
 		return *this;
 	}
 
@@ -311,27 +304,21 @@ public:
 	inline SlimVectorBase<T, dataSize>& operator-= (const VectorBase<T>& v)
 	{
 		CHECKandTHROW(v.NumberOfItems() == dataSize, "ERROR: SlimVectorBase operator-= with VectorBase size mismatch");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] -= item;
-		}
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < dataSize; i++) { data[i] -= vd[i]; }
 		return *this;
 	}
 
 	//! scalar multiply vector *this with scalar (for each component)
 	inline SlimVectorBase<T, dataSize>& operator*= (T scalar)
     {
-        for (auto &item : *this) {
-            item *= scalar;
-        }
+		for (Index i = 0; i < dataSize; i++) { data[i] *= scalar; }
         return *this;
     }
     //! scalar division of vector v through scalar (for each component)
 	inline SlimVectorBase<T, dataSize>& operator/= (T scalar)
     {
-        for (auto &item : *this) {
-            item /= scalar;
-        }
+		for (Index i = 0; i < dataSize; i++) { data[i] /= scalar; }
         return *this;
     }
 
@@ -339,11 +326,7 @@ public:
 	inline friend SlimVectorBase<T, dataSize> operator+ (const SlimVectorBase<T, dataSize>& v1, const SlimVectorBase<T, dataSize>& v2)
     {
 		SlimVectorBase<T, dataSize> result;
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = v1.data[cnt] + v2.data[cnt];
-            cnt++;
-        }
+		for (Index i = 0; i < dataSize; i++) { result.data[i] = v1.data[i] + v2.data[i]; }
         return result;
     }
 
@@ -351,11 +334,7 @@ public:
 	inline friend SlimVectorBase<T, dataSize> operator- (const SlimVectorBase<T, dataSize>& v1, const SlimVectorBase<T, dataSize>& v2)
 	{
 		SlimVectorBase<T, dataSize> result;
-		Index cnt = 0;
-		for (auto &item : result) {
-			item = v1.data[cnt] - v2.data[cnt];
-			cnt++;
-		}
+		for (Index i = 0; i < dataSize; i++) { result.data[i] = v1.data[i] - v2.data[i]; }
 		return result;
 	}
 
@@ -363,11 +342,7 @@ public:
 	inline friend SlimVectorBase<T, dataSize> operator- (const SlimVectorBase<T, dataSize>& v1)
 	{
 		SlimVectorBase<T, dataSize> result;
-		Index cnt = 0;
-		for (auto &item : result) {
-			item = -v1.data[cnt];
-			cnt++;
-		}
+		for (Index i = 0; i < dataSize; i++) { result.data[i] = -v1.data[i]; }
 		return result;
 	}
 
@@ -375,10 +350,7 @@ public:
 	inline friend SlimVectorBase<T, dataSize> operator* (const SlimVectorBase<T, dataSize>& v, T scalar)
     {
         SlimVectorBase<T, dataSize> result;
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = scalar * v.data[cnt++];
-        }
+		for (Index i = 0; i < dataSize; i++) { result.data[i] = scalar * v.data[i]; }
         return result;
     }
 
@@ -386,10 +358,7 @@ public:
 	inline friend SlimVectorBase<T, dataSize> operator* (T scalar, const SlimVectorBase<T, dataSize>& v)
     {
         SlimVectorBase<T, dataSize> result;
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = scalar * v.data[cnt++];
-        }
+		for (Index i = 0; i < dataSize; i++) { result.data[i] = scalar * v.data[i]; }
         return result;
     }
 
@@ -397,10 +366,7 @@ public:
 	inline friend T operator* (const SlimVectorBase<T, dataSize>& v1, const SlimVectorBase<T, dataSize>& v2)
     {
         T result = 0;
-        Index cnt = 0;
-        for (auto &item : v1) {
-            result += item * v2.data[cnt++];
-        }
+		for (Index i = 0; i < dataSize; i++) { result += v1.data[i] * v2.data[i]; }
         return result;
     }
 
@@ -584,9 +550,11 @@ public:
 	{
 		static_assert((dataSize == 3), "SlimVectorBase::CrossProduct: only implemented for 3D case");
 
-		return SlimVectorBase<T, dataSize>({ data[1] * v.data[2] - data[2] * v.data[1],
-			data[2] * v.data[0] - data[0] * v.data[2],
-			data[0] * v.data[1] - data[1] * v.data[0] });
+		SlimVectorBase<T, dataSize> result; //written into the data, without an initializer list (#3418)
+		result.data[0] = data[1] * v.data[2] - data[2] * v.data[1];
+		result.data[1] = data[2] * v.data[0] - data[0] * v.data[2];
+		result.data[2] = data[0] * v.data[1] - data[1] * v.data[0];
+		return result;
 	}
 
 	inline T CrossProduct2D(const SlimVectorBase& v) const

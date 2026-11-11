@@ -1,0 +1,16 @@
+{
+  "number": 3419,
+  "title": "AddSubmatrix of GeneralMatrixEigenSparse appends the triplets from the data pointers",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Recommendation L6 of docs/dev/design/linalgBenchmark.md: AddSubmatrix and AddSubmatrixTransposed of GeneralMatrixEigenSparse read the local matrix and the index arrays through checked access per entry, 2.8 times slower in the regular module than in the fast one (4135 against 1481 ns for 10 objects). The sizes are checked once, the values and indices read from the data pointers, the triplet array reserved once per call (revision2026c step RG5.1.10).",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 07:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/LinearSolver.cpp",
+  "releaseNotes": "The AddSubmatrix variants of GeneralMatrixEigenSparse check the sizes once and append the triplets from the data pointers: 2.5 times faster in the regular module; with #3417 and #3418 the performance tests take 11 % (regular) and 13 % (fast module) less time.",
+  "resolvedInVersion": "1.13.553"
+}

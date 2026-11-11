@@ -323,10 +323,9 @@ public:
 	ConstSizeVectorBase& operator+=(const ConstSizeVectorBase& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "ConstSizeVectorBase::operator+=: incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] += item;
-		}
+		const Index n = NumberOfItems();
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { data[i] += vd[i]; }
 		return *this;
 	}
 
@@ -334,10 +333,9 @@ public:
 	ConstSizeVectorBase& operator+=(const SlimVectorBase<T, dataSize>& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "ConstSizeVectorBase::operator+=(SlimVectorBase): incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] += item;
-		}
+		const Index n = NumberOfItems();
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { data[i] += vd[i]; }
 		return *this;
 	}
 
@@ -345,10 +343,9 @@ public:
 	ConstSizeVectorBase& operator+=(const VectorBase<T>& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "ConstSizeVectorBase::operator+=(VectorBase): incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] += item;
-		}
+		const Index n = NumberOfItems();
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { data[i] += vd[i]; }
 		return *this;
 	}
 
@@ -356,10 +353,9 @@ public:
 	ConstSizeVectorBase& operator-=(const ConstSizeVectorBase& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "ConstSizeVectorBase::operator-=: incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] -= item;
-		}
+		const Index n = NumberOfItems();
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { data[i] -= vd[i]; }
 		return *this;
 	}
 
@@ -367,10 +363,9 @@ public:
 	ConstSizeVectorBase& operator-=(const SlimVectorBase<T, dataSize>& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "ConstSizeVectorBase::operator-=(SlimVectorBase): incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			data[cnt++] -= item;
-		}
+		const Index n = NumberOfItems();
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { data[i] -= vd[i]; }
 		return *this;
 	}
 
@@ -549,10 +544,8 @@ public:
 	void MultAdd(T scalar, const ConstSizeVectorBase& v)
 	{
 		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "ConstSizeVectorBase::MultAdd: incompatible size of vectors");
-		for (Index i = 0; i < NumberOfItems(); i++)
-		{
-			data[i] += scalar * v.data[i];
-		}
+		const Index n = NumberOfItems(); //a local size: the loop can be vectorized (#3417)
+		for (Index i = 0; i < n; i++) { data[i] += scalar * v.data[i]; }
 	}
 
 	//! multiply components of this vector with components of other vector

@@ -388,10 +388,11 @@ public:
 	VectorBase& operator+=(const Tvector& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(Tvector): incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			this->GetUnsafe(cnt++) += item;
-		}
+		//local size and pointers: the loop can be vectorized (#3417)
+		const Index n = NumberOfItems();
+		T* d = data;
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { d[i] += vd[i]; }
 		return *this;
 	}
 	////! add ConstSizeVectorBase v to *this vector (for each component); both vectors must have same size
@@ -412,11 +413,11 @@ public:
 	//VectorBase& operator-=(const VectorBase& v)
     {
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=: incompatible size of vectors");
-        Index cnt = 0;
-        for (auto item : v) {
-            this->GetUnsafe(cnt++) -= item;
-        }
-        return *this;
+		const Index n = NumberOfItems();
+		T* d = data;
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { d[i] -= vd[i]; }
+		return *this;
     }
 
 	//! subtract SlimVector v from *this vector (for each component); both vectors must have same size
@@ -424,10 +425,9 @@ public:
 	VectorBase& operator-=(const SlimVectorBase<T, dataSize>& v)
 	{
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=(SlimVectorBase): incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			this->GetUnsafe(cnt++) -= item;
-		}
+		T* d = data;
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < dataSize; i++) { d[i] -= vd[i]; }
 		return *this;
 	}
 
@@ -553,10 +553,11 @@ public:
 	void MultAdd(T scalar, const Tvector& v)
 	{
 		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultAdd: incompatible size of vectors");
-		for (Index i = 0; i < NumberOfItems(); i++)
-		{
-			data[i] += scalar * v[i];
-		}
+		//local size and pointers: the loop can be vectorized (#3417)
+		const Index n = NumberOfItems();
+		T* d = data;
+		const T* vd = v.GetDataPointer();
+		for (Index i = 0; i < n; i++) { d[i] += scalar * vd[i]; }
 	}
 
 	//! multiply components of this vector with components of other vector

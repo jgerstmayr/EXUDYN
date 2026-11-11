@@ -410,7 +410,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInverseKinematics.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`robotics/serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/robotics/serialRobotInverseKinematics.py) (Ex), [`reevingSystemTangentTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/reevingSystemTangentTest.py) (TM)
 
 
 (sec-graphics-quad)=

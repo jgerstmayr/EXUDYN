@@ -589,6 +589,25 @@ public:
 
 		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfRows(), m2.NumberOfColumns());
 
+		if constexpr (dataSize == 9) //Matrix3D: the 3x3 product unrolled over the data, each sum in the same order (#3418)
+		{
+			if (m1.NumberOfRows() == 3 && m1.NumberOfColumns() == 3 && m2.NumberOfColumns() == 3)
+			{
+				const T* a = m1.data;
+				const T* b = m2.data;
+				T* r = result.data;
+				for (Index j = 0; j < 3; j++)
+				{
+					const T* aj = &a[3 * j];
+					T value0 = 0; value0 += aj[0] * b[0]; value0 += aj[1] * b[3]; value0 += aj[2] * b[6];
+					T value1 = 0; value1 += aj[0] * b[1]; value1 += aj[1] * b[4]; value1 += aj[2] * b[7];
+					T value2 = 0; value2 += aj[0] * b[2]; value2 += aj[1] * b[5]; value2 += aj[2] * b[8];
+					r[3 * j] = value0; r[3 * j + 1] = value1; r[3 * j + 2] = value2;
+				}
+				return result;
+			}
+		}
+
 		for (Index i = 0; i < m2.NumberOfColumns(); i++)
 		{
 			for (Index j = 0; j < m1.NumberOfRows(); j++)
@@ -1022,14 +1041,17 @@ SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const Sl
 
     SlimVectorBase<T, 3> result; //no initialization for SlimVector
 
-    for (Index i = 0; i < result.NumberOfItems(); i++)
+    //unrolled over the data, each sum in the same order (#3418)
+    const T* m = matrix.GetDataPointer();
+    const T2* v = vector.GetDataPointer();
+    T* r = result.GetDataPointer();
+    for (Index i = 0; i < 3; i++)
     {
         T resultRow = 0;
-        for (Index j = 0; j < vector.NumberOfItems(); j++)
-        {
-            resultRow += matrix(i, j)*vector[j];
-        }
-        result[i] = resultRow;
+        resultRow += m[3 * i] * v[0];
+        resultRow += m[3 * i + 1] * v[1];
+        resultRow += m[3 * i + 2] * v[2];
+        r[i] = resultRow;
     }
     return result;
 }
@@ -1045,14 +1067,17 @@ SlimVectorBase<T, 3> operator*(const SlimVectorBase<T2, 3>& vector, const ConstS
 
     SlimVectorBase<T, 3> result; //no initialization for SlimVector
 
-    for (Index i = 0; i < result.NumberOfItems(); i++)
+    //unrolled over the data, each sum in the same order (#3418)
+    const T* m = matrix.GetDataPointer();
+    const T2* v = vector.GetDataPointer();
+    T* r = result.GetDataPointer();
+    for (Index i = 0; i < 3; i++)
     {
         T resultRow = 0;
-        for (Index j = 0; j < vector.NumberOfItems(); j++)
-        {
-            resultRow += vector[j] * matrix(j, i);
-        }
-        result[i] = resultRow;
+        resultRow += v[0] * m[i];
+        resultRow += v[1] * m[3 + i];
+        resultRow += v[2] * m[6 + i];
+        r[i] = resultRow;
     }
     return result;
 }

@@ -222,6 +222,37 @@ void GeneralMatrixEigenSparse::AddDiagonalMatrix(Real diagValue, Index numberOfR
 }
 
 
+//! append the triplets of factor*submatrix (transposed: factor*submatrix^T) to triplets, from the data pointers;
+//! row i of the result goes to rowIndices[i]+rowOffset (rowIndices == nullptr: i+rowOffset), columns likewise;
+//! zeros are skipped; the order of the triplets is the one of the loops before (#3419)
+template<bool transposed>
+inline void AppendSubmatrixTriplets(SparseTripletVector& triplets, const Matrix& submatrix, Real factor,
+	const Index* rowIndices, const Index* columnIndices, Index rowOffset, Index columnOffset)
+{
+	const Index rows = submatrix.NumberOfRows();
+	const Index columns = submatrix.NumberOfColumns();
+	const Real* values = submatrix.GetDataPointer();
+	triplets.EnlargeMaxNumberOfItemsTo(triplets.NumberOfItems() + rows * columns);
+
+	for (Index i = 0; i < rows; i++)
+	{
+		const Real* row = &values[i*columns];
+		for (Index j = 0; j < columns; j++)
+		{
+			const Real value = row[j];
+			if (value != 0.)
+			{
+				//the row of the submatrix is the column of the result for transposed
+				const Index resultRow = transposed ? j : i;
+				const Index resultColumn = transposed ? i : j;
+				const Index globalRow = (rowIndices ? rowIndices[resultRow] : resultRow) + rowOffset;
+				const Index globalColumn = (columnIndices ? columnIndices[resultColumn] : resultColumn) + columnOffset;
+				triplets.AppendPure(SparseTriplet((StorageIndex)globalRow, (StorageIndex)globalColumn, factor*value));
+			}
+		}
+	}
+}
+
 //! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 //! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 //! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
@@ -229,35 +260,10 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 {
 	//only allowed in triplet mode:
 	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
+	CHECKandTHROW(LTGrows.NumberOfItems() >= submatrix.NumberOfRows() && LTGcolumns.NumberOfItems() >= submatrix.NumberOfColumns(),
+		"GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): LTGrows or LTGcolumns too short");
 
-	if (factor == 1. && rowOffset == 0 && columnOffset == 0)
-	{
-		for (Index i = 0; i < submatrix.NumberOfRows(); i++)
-		{
-			for (Index j = 0; j < submatrix.NumberOfColumns(); j++)
-			{
-				Real value = submatrix(i, j);
-				if (value != 0.)
-				{
-					triplets.AppendPure(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
-				}
-			}
-		}
-	}
-	else
-	{
-		for (Index i = 0; i < submatrix.NumberOfRows(); i++)
-		{
-			for (Index j = 0; j < submatrix.NumberOfColumns(); j++)
-			{
-				Real value = submatrix(i, j);
-				if (value != 0.)
-				{
-					triplets.AppendPure(SparseTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
-				}
-			}
-		}
-	}
+	AppendSubmatrixTriplets<false>(triplets, submatrix, factor, LTGrows.GetDataPointer(), LTGcolumns.GetDataPointer(), rowOffset, columnOffset);
 }
 
 //! add sparse triplets to dense or sparse matrix
@@ -279,36 +285,11 @@ void GeneralMatrixEigenSparse::AddSparseTriplets(const SparseTripletVector& othe
 void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset, Index columnOffset)
 {
 	//only allowed in triplet mode:
-	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
+	CHECKandTHROW(LTGrows.NumberOfItems() >= submatrix.NumberOfColumns() && LTGcolumns.NumberOfItems() >= submatrix.NumberOfRows(),
+		"GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): LTGrows or LTGcolumns too short");
 
-	if (factor == 1. && rowOffset == 0 && columnOffset == 0)
-	{
-		for (Index j = 0; j < submatrix.NumberOfRows(); j++)
-		{
-			for (Index i = 0; i < submatrix.NumberOfColumns(); i++)
-			{
-				Real value = submatrix(j, i);
-				if (value != 0.)
-				{
-					triplets.AppendPure(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
-				}
-			}
-		}
-	}
-	else
-	{
-		for (Index j = 0; j < submatrix.NumberOfRows(); j++)
-		{
-			for (Index i = 0; i < submatrix.NumberOfColumns(); i++)
-			{
-				Real value = submatrix(j, i);
-				if (value != 0.)
-				{
-					triplets.AppendPure(SparseTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
-				}
-			}
-		}
-	}
+	AppendSubmatrixTriplets<true>(triplets, submatrix, factor, LTGrows.GetDataPointer(), LTGcolumns.GetDataPointer(), rowOffset, columnOffset);
 }
 
 //! add (possibly) smaller factor*Matrix to this matrix; 
@@ -317,18 +298,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixWithFactor(const Matrix& submatrix, R
 {
 	//only allowed in triplet mode:
 	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrixWithFactor(...): only possible in triplet mode!");
-	for (Index i = 0; i < submatrix.NumberOfRows(); i++)
-	{
-		for (Index j = 0; j < submatrix.NumberOfColumns(); j++)
-		{
-			Real value = submatrix(i, j);
-			if (value != 0.)
-			{
-				triplets.AppendPure(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
-			}
-		}
-	}
-
+	AppendSubmatrixTriplets<false>(triplets, submatrix, factor, nullptr, nullptr, rowOffset, columnOffset);
 }
 
 //! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
@@ -337,17 +307,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(const Matrix& su
 {
 	//only allowed in triplet mode:
 	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(...): only possible in triplet mode!");
-	for (Index j = 0; j < submatrix.NumberOfRows(); j++)
-	{
-		for (Index i = 0; i < submatrix.NumberOfColumns(); i++)
-		{
-			Real value = submatrix(j, i);
-			if (value != 0.)
-			{
-				triplets.AppendPure(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
-			}
-		}
-	}
+	AppendSubmatrixTriplets<true>(triplets, submatrix, factor, nullptr, nullptr, rowOffset, columnOffset);
 }
 
 

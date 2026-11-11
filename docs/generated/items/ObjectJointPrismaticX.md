@@ -88,7 +88,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
 | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
 | joint J1 orientation | $\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$ | joint $J1$ rotation matrix |
-| joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+| joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,\LU{0}{\tv_{z1}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
 | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
 | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
 | marker m0 velocity | $\LU{b}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |

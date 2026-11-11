@@ -193,6 +193,7 @@ raytracerBackFaceTest
 raytracerNOGLFWtest
 reduceURDFrobotDataTest
 reevingSystemSpringsTest
+reevingSystemTangentTest
 relativeRotationTranslationMechanism
 rendererControlsTest
 rendererDictionaryTest

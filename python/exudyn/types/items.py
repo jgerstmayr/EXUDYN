@@ -1738,8 +1738,8 @@ items = {
     'outputVariables': ['Position', 'Velocity', 'Displacement', 'Force', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
-      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector; :math:`m1` is the moving coin rigid body and :math:`m0` is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!'},
-      'constrainedAxes': {'type': 'ArrayIndex', 'size': '3', 'range': '', 'default': '[1,1,1]', 'mustBeGiven': False, 'description': 'flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis'},
+      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
+      'constrainedAxes': {'type': 'ArrayIndex', 'size': '3', 'range': '', 'default': '[1,1,1]', 'mustBeGiven': False, 'description': 'flag, which determines which of the three translation axes (0,1,2) are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis'},
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
     },
     'visualization': {
