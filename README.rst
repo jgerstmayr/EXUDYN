@@ -48,7 +48,7 @@ workflows, documentation, tests and examples.
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written (decision D11)
 
-+  Exudyn version = 1.13.567.dev1 (Newborn)
++  Exudyn version = 1.13.568.dev1 (Newborn)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg
@@ -99,7 +99,7 @@ In addition to the tutorials in the documentation, many ( **250+** ) examples ca
 
 Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 
-Tutorial videos can be found in the `YouTube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
+Tutorial videos can be found in the `YouTube channel of Exudyn <https://www.youtube.com/channel/UCsQD2bIPBXB_4J23WtqKkVw/playlists>`_ !
 
 **NOTE**: **NumPy** switched to version 2.x which causes problems with packages that are not adapted to NumPy 2.x. 
 The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) may cause problems, therefore you could still use Numpy 1.26 (not available for Python >= 3.13).

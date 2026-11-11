@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 543 | 1.13.567 |
+| 1.13 | Newborn | 544 | 1.13.568 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.568** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` README and the PDF index link the YouTube playlists of the channel (#3435)
+  - description: README.rst and pdfIndex.md linked one playlist of the Exudyn YouTube channel; they link the overview of all playlists, https://www.youtube.com/channel/UCsQD2bIPBXB\_4J23WtqKkVw/playlists.
+  - **notes:** The YouTube link of README.rst and pdfIndex.md points to the playlists of the Exudyn channel.
+  - date resolved: **2026-11-11 19:04**, date raised: 2026-11-11
 - **1.13.567** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Measure what linearSolver.reuseAnalyzedPattern gives in the performance models and the test models with sparse solvers (#3434)
   - description: Before making the reuse of the analyzed pattern of SparseLU the default: the wall time of every performance model and test model that uses EigenSparse, with the flag off and on (the faster of two runs each), and whether the results change.
   - **notes:** Measured: linearSolver.reuseAnalyzedPattern=True leaves the performance models with sparse solvers unchanged and saves 1.6 % on the test models with sparse solvers (at most 13 %); it stays off by default.

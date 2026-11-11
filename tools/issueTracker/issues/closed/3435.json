@@ -1,0 +1,15 @@
+{
+  "number": 3435,
+  "title": "README and the PDF index link the YouTube playlists of the channel",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "README.rst and pdfIndex.md linked one playlist of the Exudyn YouTube channel; they link the overview of all playlists, https://www.youtube.com/channel/UCsQD2bIPBXB_4J23WtqKkVw/playlists.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 19:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The YouTube link of README.rst and pdfIndex.md points to the playlists of the Exudyn channel.",
+  "resolvedInVersion": "1.13.568"
+}

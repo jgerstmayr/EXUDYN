@@ -39,7 +39,7 @@ into the documentation points at:
 - **Read the Docs** — <https://exudyn.readthedocs.io/>
 - **GitHub** — <https://github.com/jgerstmayr/EXUDYN>
 - **PyPI** — <https://pypi.org/project/exudyn/>
-- **YouTube** — the [tutorial videos](https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx)
+- **YouTube** — the [playlists of tutorial videos](https://www.youtube.com/channel/UCsQD2bIPBXB_4J23WtqKkVw/playlists)
 
 What this document holds, and the HTML does too: the user manual, the reference manual of every
 item, the Python utility functions, the settings structures, the Python–C++ interface, the
