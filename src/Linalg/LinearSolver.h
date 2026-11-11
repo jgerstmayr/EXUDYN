@@ -51,6 +51,7 @@ class PardisoSolver; //Linalg/PardisoMKL.h, MKL PARDISO loaded at run time (#343
 	#include "../Eigen/Dense"
 	//#include "Eigen/SuperLUSupport"
 	#include "../Eigen/SparseLU"
+	#include "Linalg/ParallelSubstitution.h" //SparseLU with a nested-dissection ordering and a parallel substitution (#3432)
 #ifdef USE_SYMMETRIC_SOLVER
 	#include "../Eigen/SparseCholesky"
 #endif
@@ -145,6 +146,9 @@ public:
 	virtual bool IsSymmetric() const { return false; }
 	virtual void SetReuseAnalyzedPattern(bool flag) { }
 	virtual bool GetReuseAnalyzedPattern() const { return false; }
+	//! the groups of unknowns that may be coupled (the coordinates of an object), for orderings that need the
+	//! structural pattern, as exact zeros are dropped (#3432)
+	virtual void SetStructuralGroups(const std::vector<std::vector<int>>& groups) { }
 
 	//don't do the following; use casting!
 	////! get (read) matrix as dense exudyn Matrix; this function should be used rarly, as it disables the compatibility to other matrix formats
@@ -493,6 +497,8 @@ private:
 	bool pardisoCheckNextSolve;     //!< true: the next Solve checks the residual of PARDISO (#3431)
 	Index pardisoFactorizations;    //!< factorizations by PARDISO since its last analysis (#3431)
 	std::shared_ptr<PardisoSolver> pardisoSolver; //!< created at the first factorization with PARDISO (#3431)
+	std::shared_ptr<SparseLUParallel> solverParallel; //!< SparseLU with nested dissection, special.solver.parallelSubstitution (#3432)
+	bool parallelSubstitutionActive = false; //!< the last factorization is the one of solverParallel (#3432)
 	//data for Eigen sparse matrix storage:
 #ifdef USE_EIGEN_SPARSE_SOLVER
 	EigenSparseMatrix matrix;	 //this is the sparse matrix built from triplets
@@ -548,6 +554,7 @@ public:
 
 	//! reuse pattern for faster computation [experimental]
 	virtual void SetReuseAnalyzedPattern(bool flag) override { reuseAnalyzedPattern = flag; }
+	virtual void SetStructuralGroups(const std::vector<std::vector<int>>& groups) override;
 	virtual bool GetReuseAnalyzedPattern() const override { return reuseAnalyzedPattern; }
 
 	//! factorize and solve with MKL PARDISO instead of SparseLU (LinearSolverType::PardisoMKL); resets a fallback (#3431)

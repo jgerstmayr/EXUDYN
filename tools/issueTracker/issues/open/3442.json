@@ -1,0 +1,11 @@
+{
+  "number": 3442,
+  "title": "Each view hides the graphics of the systems listed in view[0-3].scene.hideMbs",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "The views 0-3 of the render window show the same graphics; to show different things in different views, a list hideMbs of system numbers per view leaves out the graphics of those systems in that view: faces, edges, lines, texts and their shadows, the picking with the mouse, zoom all, the sensor traces and the raytracer of that view.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10"
+}

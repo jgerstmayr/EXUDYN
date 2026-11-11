@@ -490,6 +490,12 @@ bool GeneralMatrixEigenSparse::FactorizePardiso()
 	return true;
 }
 
+void GeneralMatrixEigenSparse::SetStructuralGroups(const std::vector<std::vector<int>>& groups)
+{
+	if (!solverParallel) { solverParallel = std::make_shared<SparseLUParallel>(); }
+	solverParallel->SetStructuralGroups(groups);
+}
+
 //! factorize matrix (invert, SparseLU, etc.); -1=success
 Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
@@ -500,6 +506,23 @@ Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, I
 	{
 		SetMatrixIsFactorized(true);
 		return -1;
+	}
+
+	parallelSubstitutionActive = false;
+	if (!IsSymmetric() && pySpecial.solver.parallelSubstitution) //experimental (#3432)
+	{
+		if (!solverParallel) { solverParallel = std::make_shared<SparseLUParallel>(); }
+		matrix.makeCompressed();
+		int numberOfThreads = (int)EXUstd::Maximum(ExuThreading::TaskManager::GetNumThreads(), (Index)1);
+		if (solverParallel->AnalyzeAndFactorize(matrix, numberOfThreads, pySpecial.solver.parallelSubstitutionPivotThreshold) == 0)
+		{
+			if (!solverParallel->Prepared()) { pySpecial.solver.parallelSubstitutionSerial++; }
+			parallelSubstitutionActive = true;
+			analyzedPatternLastNNZ = 0;
+			SetMatrixIsFactorized(true);
+			return -1;
+		}
+		pySpecial.solver.parallelSubstitutionSerial++; //failed with the small pivot threshold: SparseLU as usual
 	}
 
 	Index rv = 0;
@@ -725,7 +748,16 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 
 
 	Eigen::VectorXd x;
-	if (!IsSymmetric())
+	if (parallelSubstitutionActive) //(#3432)
+	{
+		if (solverParallel->Prepared())
+		{
+			solverParallel->SolveParallel(rhs.GetDataPointer(), solution.GetDataPointer(), (int)n);
+			return;
+		}
+		x = solverParallel->solve(b);
+	}
+	else if (!IsSymmetric())
 	{
 		x = solver.solve(b);
 	}

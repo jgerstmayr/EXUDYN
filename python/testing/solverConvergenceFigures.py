@@ -16,6 +16,7 @@
 # Usage:    python python/testing/solverConvergenceFigures.py               compute and write the figures
 #           python python/testing/solverConvergenceFigures.py --replot      the figures from the stored data
 #           python python/testing/solverConvergenceFigures.py --adaptive    the runs with automatic step size again
+#           python python/testing/solverConvergenceFigures.py --coarse      the runs at the coarse steps again
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-11-06
@@ -53,6 +54,9 @@ groupTitles = {'ODE2': 'ODE2 coordinates', 'ODE2_t': 'ODE2 velocities', 'ODE1': 
                'AE': 'algebraic coordinates'}
 stepFactors = [2., 1., 0.5, 0.25, 0.125, 0.0625]
 refinedFactors = [2.**-5, 2.**-6, 2.**-7] #only the figure of the algebraic coordinates
+#larger steps for the convergence figure of a model whose errors reach the floor already at 2 h0; a step that does
+#not converge is left out; not in the figures of the means and the efficiency, which compare the models at stepFactors
+coarseFactors = {'sliderCrank3D': [32., 16., 8., 4.]}
 vanishingReference = 1e-10 #the L2 norm below which a reference group counts as zero
 tolerances = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10]
 
@@ -186,6 +190,19 @@ def AdaptiveRuns(model, entry):
         print('  ', solverName, [r['steps'] for r in rows], flush=True)
 
 
+def CoarseRuns(model, entry):
+    """the implicit and explicit solvers at the steps coarseFactors[model]*h0, into entry['coarse']"""
+    unconstrained = entry['reference']['groups']['AE'] is None
+    entry['coarse'] = {}
+    for solverName in implicitSolvers + (explicitSolvers if unconstrained else []):
+        rows = []
+        for factor in coarseFactors.get(model, []):
+            run = Run(model, solverName, stepSize=entry['h0']*factor)
+            rows.append({'h': entry['h0']*factor, 'errors': Errors(run[0], entry['reference']['groups']) if run else None})
+        entry['coarse'][solverName] = rows
+        print('  ', solverName, ['{:.1e}'.format(r['errors']['ODE2']) if r['errors'] else '-' for r in rows], flush=True)
+
+
 def Compute(models):
     data = json.load(open(dataFile)) if os.path.exists(dataFile) else {} #a run continues where a previous one stopped
     for model in models:
@@ -213,6 +230,8 @@ def Compute(models):
                     rows.append({'h': h0*factor, 'errors': Errors(run[0], reference['groups']) if run else None})
                 entry['refined'][solverName] = rows
         AdaptiveRuns(model, entry)
+        if model in coarseFactors:
+            CoarseRuns(model, entry)
         data[model] = entry
         os.makedirs(outputDirectory, exist_ok=True)
         with open(dataFile, 'w') as file:
@@ -281,7 +300,8 @@ def Plot(data):
         present = Present(model)
         (figure, axes, leftAxes, legendAxis) = Subplots(len(present), 3.3, 3.2)
         for (axis, g) in zip(axes, present):
-            for (solverName, rows) in entry['fixed'].items():
+            for (solverName, fixedRows) in entry['fixed'].items():
+                rows = entry.get('coarse', {}).get(solverName, []) + fixedRows #the coarse steps first
                 if solverName not in lowOrderExplicitSolvers:
                     Line(axis, [r['h'] for r in rows], [r['errors'][g] if r['errors'] else None for r in rows], solverName,
                          dashed=solverName in explicitSolvers)
@@ -400,8 +420,17 @@ if __name__ == '__main__':
     parser.add_argument('--replot', action='store_true', help='plot the stored data')
     parser.add_argument('--adaptive', action='store_true', help='the runs with automatic step size again, then plot')
     parser.add_argument('--models', nargs='*', default=studyModels, help='only these models, no figures')
+    parser.add_argument('--coarse', action='store_true', help='the runs at the coarse steps (coarseFactors) again, then plot')
     arguments = parser.parse_args()
-    if arguments.adaptive:
+    if arguments.coarse:
+        data = json.load(open(dataFile))
+        for model in coarseFactors:
+            print('model', model, flush=True)
+            CoarseRuns(model, data[model])
+        with open(dataFile, 'w') as file:
+            json.dump(data, file, indent=1)
+        print('written:', Plot(data))
+    elif arguments.adaptive:
         data = json.load(open(dataFile))
         for model in data:
             print('model', model, flush=True)

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 547 | 1.13.571 |
+| 1.13 | Newborn | 549 | 1.13.573 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.573** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The convergence figure of the spatial slider-crank starts at larger steps (#3443)
+  - description: The figure of the IFToMM spatial slider-crank in the solver study started at 2 h0 = 2e-3, where Radau5 already reached the floor of 1e-12; the solvers also run at 4 h0 ... 32 h0 (up to 3.2e-2, all converge there) for this figure, by solverConvergenceFigures.py --coarse; the figures of the means and the efficiency keep the common steps.
+  - **notes:** The convergence figure of the IFToMM spatial slider-crank in the solver study starts at 32 h0 = 3.2e-2 instead of 2 h0, so that the convergence of the solvers shows before the errors reach the floor of 1e-12.
+  - date resolved: **2026-11-11 21:31**, date raised: 2026-11-11
+- **1.13.572** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A parallel forward and backward substitution of the sparse solver with a nested-dissection ordering (#3432)
+  - description: With modified Newton and a Jacobian that hardly changes, the back-substitution is done far more often than the factorization; with the minimum-degree or COLAMD orderings of today, chains have 2-7 unknowns per level of the triangular solves, but a nested-dissection ordering gives speedup bounds of 18-60 at about twice the fill; an ordering by nested dissection (without METIS), the factors in a plain format after each factorization and the substitution by subtrees of the elimination tree on Exudyn's threads, measured against the serial solve of SparseLU (design docs/dev/design/sparseSolvers.md section 4).
+  - **notes:** exu.special.solver.parallelSubstitution (experimental, default False): EigenSparse factorizes with a nested-dissection ordering on the Jacobian pattern and the coordinates of each object, and the forward and backward substitution run by the subtrees of the ordering on the threads; the solves are 1.8-4.4 times faster than with SparseLU on 8 threads, the factorization slower on several threads; modified Newton on large chains 9-13 % faster in total, small systems and full Newton slower; parallelSubstitutionPivotThreshold and parallelSubstitutionSerial in exu.special.solver.
+  - date resolved: **2026-11-11 21:31**, date raised: 2026-11-11
 - **1.13.571** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` What the systems of one SystemContainer share, before they are solved in parallel (#3440)
   - description: A pre-analysis for \#3433: the global and static state, the GIL, the output, the errors, the files and the renderer interplay that two solvers on threads of their own would share, classified as to be made per system or locked, safe, or unclear, with the hardest obstacles.
   - **notes:** Pre-analysis of solving the systems of one SystemContainer in parallel (docs/dev/design/systemContainerParallel.md): the solve does not release the GIL today; the shared state to be made per solver or locked (task manager, thread ids, timers, output, errors, renderer queues, file names), the safe parts and the main obstacles.

@@ -365,6 +365,12 @@ pb.DefDataAccess('special.solver.pardisoParameters','a dict {index: value} of en
                         dataType='dict', isTopLevel = True)
 pb.DefDataAccess('special.solver.pardisoFallbacks','the number of fallbacks from PARDISO to SparseLU since the import of exudyn; it can be set to 0 (#3431)',
                         dataType='int', isTopLevel = True)
+pb.DefDataAccess('special.solver.parallelSubstitution','experimental: if True, EigenSparse factorizes with a nested-dissection ordering (on the coordinates of the objects and the pattern of the Jacobian) and a diagonal pivot threshold of parallelSubstitutionPivotThreshold, and the forward and backward substitution run by the subtrees of the ordering on the threads of parallel.numberOfThreads; the substitution is 2-4 times faster than that of SparseLU, the factorization slower on several threads, so it pays with modified Newton and many solves per factorization; default=False (#3432)',
+                        dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.solver.parallelSubstitutionPivotThreshold','the diagonal pivot threshold of the factorization with parallelSubstitution: a diagonal entry is taken as pivot if its magnitude is at least this fraction of the largest in its column, which keeps the subtrees independent; default=1e-3 (#3432)',
+                        dataType='float', isTopLevel = True)
+pb.DefDataAccess('special.solver.parallelSubstitutionSerial','the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)',
+                        dataType='int', isTopLevel = True)
 pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp
 pb.DefPyFunctionAccess(cClass='', pyName='special.solver.PardisoInfo', cName='unused',
                         description='whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)',

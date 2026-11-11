@@ -1,0 +1,15 @@
+{
+  "number": 3443,
+  "title": "The convergence figure of the spatial slider-crank starts at larger steps",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The figure of the IFToMM spatial slider-crank in the solver study started at 2 h0 = 2e-3, where Radau5 already reached the floor of 1e-12; the solvers also run at 4 h0 ... 32 h0 (up to 3.2e-2, all converge there) for this figure, by solverConvergenceFigures.py --coarse; the figures of the means and the efficiency keep the common steps.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 21:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The convergence figure of the IFToMM spatial slider-crank in the solver study starts at 32 h0 = 3.2e-2 instead of 2 h0, so that the convergence of the solvers shows before the errors reach the floor of 1e-12.",
+  "resolvedInVersion": "1.13.573"
+}

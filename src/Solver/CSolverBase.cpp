@@ -409,6 +409,20 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
 	data.systemJacobian->SetNumberOfRowsAndColumns(data.nSys, data.nSys);
 	data.jacobianAE->SetNumberOfRowsAndColumns(data.nODE2, data.nAE);
+	if (pySpecial.solver.parallelSubstitution) //the coordinates of each object may be coupled: the structural pattern (#3432)
+	{
+		const CSystemData& systemData = computationalSystem.GetSystemData();
+		std::vector<std::vector<int>> groups;
+		for (Index j = 0; j < systemData.GetLocalToGlobalODE2().NumberOfItems(); j++)
+		{
+			std::vector<int> group;
+			for (Index i : systemData.GetLocalToGlobalODE2()[j]) { group.push_back((int)i); }
+			for (Index i : systemData.GetLocalToGlobalODE1()[j]) { group.push_back((int)(data.nODE2 + i)); }
+			for (Index i : systemData.GetLocalToGlobalAE()[j]) { group.push_back((int)(data.nODE2 + data.nODE1 + i)); }
+			if (group.size() > 1) { groups.push_back(std::move(group)); }
+		}
+		data.systemJacobian->SetStructuralGroups(groups);
+	}
 
 
 	data.systemResidual.SetNumberOfItems(data.nSys);

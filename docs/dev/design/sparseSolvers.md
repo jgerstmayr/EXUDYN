@@ -3,7 +3,7 @@
 A design note of revision2026c step RG5.9 (#3427, #3428, #3430, #3431, #3432): what the sparse linear solver of the
 implicit solvers costs, how an external solver (Intel MKL PARDISO) is used without a build dependency (built), why it
 failed on some of Exudyn's Jacobians (studied), how the factorization uses threads while Exudyn's own workers sleep
-(built), and how the back-substitution can run in parallel (open). It follows `linalgBenchmark.md` §3.7-§3.9, where the
+(built), and how the back-substitution runs in parallel (prototype, experimental). It follows `linalgBenchmark.md` §3.7-§3.9, where the
 measurements of the factorization and the first PARDISO results are, and leaves the repository when the steps close
 (WORKFLOW.md §8.4).
 
@@ -190,6 +190,60 @@ ordering by nested dissection (no METIS), Eigen's `SparseLU` with it as a custom
 plain format after each factorization, and the substitution by subtrees of the elimination tree on Exudyn's threads;
 measured against the serial solve.
 
+### 4.1 The prototype (RG5.9.7, #3432)
+
+Built as `exu.special.solver.parallelSubstitution` (experimental, default False), `src/Linalg/ParallelSubstitution.h/.cpp`:
+`SparseLUParallel` is Eigen's `SparseLU` with an ordering functor `NestedDissectionOrdering`; after each factorization
+the supernodal L and the U of Eigen are copied into rows (CSR), and the solve runs the tree nodes depth by depth - the
+forward substitution from the leaves up, the backward one from the root down, the nodes of one depth in a
+`ParallelFor`, a depth with little work serially.
+
+What it took, each found by measuring:
+- **Row pivoting** (Eigen pivots partially, threshold 1.0) couples the subtrees: the static-pivoting bound above was
+  optimistic. With the scratch study ndTree.py / ndLift.py (SuperLU with the symmetric permutation): the multipliers
+  and other unknowns with a zero diagonal must be eliminated after their neighbours - they are **lifted into the
+  highest tree node of their neighbours with a nonzero diagonal** and ordered last in it - and the diagonal pivot
+  threshold is lowered to 1e-3 (`parallelSubstitutionPivotThreshold`); then no dependency crosses the tree. Lifting
+  along neighbours that are lifted themselves carried the first Euler parameters (zero diagonal at the reference
+  rotation) of a whole chain into the root; only the nodes of the dissection decide.
+- **The pattern** changes from one Jacobian to the next, as exact zeros are dropped: an ordering of the pattern seen
+  was crossed by new entries in 77 of 80 factorizations, also on the union of the patterns and on the squared graph.
+  The solver hands the linear solver the **coordinates of each object** (`GeneralMatrix::SetStructuralGroups`, from
+  the local-to-global indices of ODE2, ODE1 and AE), and the ordering works on the pattern joined with their cliques:
+  one ordering per simulation; when the pattern changes, Eigen's analysis only renews its elimination tree with the
+  ordering kept. Keeping the zeros in the Jacobian instead made the factorization 1.8 times slower.
+- A factor that couples two subtrees anyway is detected after the factorization, solved serially
+  (`parallelSubstitutionSerial`), and ordered anew next time; a failed factorization falls back to SparseLU.
+
+Measured (scratch psubBench.py, the fastest of three runs, times in s: total, factorization, solve; the results agree
+to 1e-9):
+
+| model | Newton | factorizations / solves | SparseLU 1 thread | SparseLU 8 threads | ND 1 thread | ND 8 threads | ND 16 threads |
+|---|---|---|---|---|---|---|---|
+| revolute chain 100 | modified | 399 / 4941 | 0.695 (0.143, 0.110) | 0.464 (0.152, 0.114) | 0.675 (0.156, 0.041) | 0.568 (0.254, 0.044) | 0.623 (0.255, 0.083) |
+| | full | 2762 / 2762 | 1.699 (1.010, 0.067) | 1.437 (1.029, 0.067) | 1.627 (0.978, 0.024) | 1.869 (1.520, 0.032) | 1.907 (1.561, 0.057) |
+| revolute chain 1000 | modified | 80 / 943 | 1.597 (0.359, 0.244) | 0.973 (0.406, 0.262) | 1.538 (0.357, 0.102) | 0.852 (0.434, 0.059) | 0.806 (0.482, 0.059) |
+| | full | 527 / 527 | 3.638 (2.264, 0.138) | 2.888 (2.399, 0.142) | 3.495 (2.100, 0.055) | 3.156 (2.783, 0.031) | 3.213 (2.913, 0.037) |
+| mass point chain 1000 | modified | 1 / 3577 | 1.634 (0.000, 0.091) | 0.537 (0.001, 0.095) | 1.591 (0.000, 0.055) | 0.468 (0.001, 0.053) | 0.427 (0.001, 0.079) |
+| | full | 1410 / 1410 | 2.267 (0.547, 0.041) | 1.111 (0.665, 0.045) | 2.214 (0.511, 0.026) | 1.150 (0.751, 0.022) | 1.009 (0.687, 0.034) |
+| mass point chain 10000 | modified | 1 / 197 | 1.114 (0.006, 0.059) | 0.303 (0.007, 0.061) | 1.111 (0.005, 0.029) | 0.275 (0.007, 0.019) | 0.204 (0.007, 0.020) |
+| | full | 100 / 100 | 2.014 (0.544, 0.032) | 0.967 (0.580, 0.032) | 1.947 (0.478, 0.015) | 0.832 (0.531, 0.011) | 0.786 (0.576, 0.012) |
+
+What it shows:
+- **The solve by rows alone** - one thread, no parallelism - is 1.6-2.8 times faster than the supernodal solve of
+  Eigen's SparseLU (the chains have small supernodes, and Exudyn copies the vectors around it). The threads add 0.9-1.7 on
+  top: a solve takes 10-60 microseconds, so the parallel loops, the permutations and the serial top of the tree weigh.
+  Together: 1.8-4.4 times faster solves than SparseLU on 8 threads.
+- **The factorization** with the nested-dissection ordering is as fast as with COLAMD on one thread, but up to 70 %
+  slower on 8 threads for the chain of 100 bodies and 7-16 % for 1000 (the deeper dissection and the spinning workers;
+  sleeping workers, RG5.9.3, gave back a part).
+- In total, on 8 threads against SparseLU on 8 threads: modified Newton on the chains of 1000 and 10000 is 9-13 %
+  faster, full Newton on the chain of 10000 mass points 14 %; the chain of 100 bodies and full Newton on the chain of
+  1000 bodies are slower. The option stays experimental and off.
+- The largest gain that does not depend on the threads is the solve by rows: it would apply to every SparseLU
+  factorization with COLAMD as well (a serial substitution with the rows of the factors, about 2 times faster solves
+  for modified Newton) - proposed as a next step.
+
 ## 5. The threads of the factorization (built, #3428)
 
 Exudyn's `ExuThreading::TaskManager` (`src/Utilities/Threading.h/.cpp`, after NGsolve) keeps `numberOfThreads - 1`
@@ -233,5 +287,5 @@ serial in Eigen. MKL's threads cannot be Exudyn's (MKL creates its own OpenMP or
 5. RG5.9.5 (closed, not done): independent subsystems; RG5.10 (#3433) solves systems of one SystemContainer in parallel.
 6. RG5.9.6 (#3434, closed): `reuseAnalyzedPattern` by default - not done: the performance models gain nothing, the test
    models with sparse solvers 1.6 % (at most 13 %).
-7. RG5.9.7 (#3432): the parallel forward and backward substitution with a nested-dissection ordering (§4).
+7. RG5.9.7 (#3432, closed): the parallel forward and backward substitution with a nested-dissection ordering (§4.1).
 8. RG5.9.8 (#3437, closed): persistent threads of the TaskManager, started by `exu.special.solver` (§5).

@@ -908,7 +908,8 @@ mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.LobattoIII
 The figures of this section are computed by `python/testing/solverConvergenceFigures.py` on the small models of
 `python/TestModels/modelLibrary.py` (#3305). To repeat the study, run this script in a checkout of the repository; the
 option `--replot` draws the figures again from the stored results `solverStudy.json`. Each solver runs with the steps $2 h_0, h_0, \ldots, h_0/16$, where
-$h_0$ is the step of the model's fast run. The error is taken at the end time per group of coordinates - the ODE2
+$h_0$ is the step of the model's fast run; the spatial slider-crank, whose errors reach the floor early, also with
+$4 h_0, \ldots, 32 h_0$ in its own figure (option `--coarse`). The error is taken at the end time per group of coordinates - the ODE2
 coordinates, their velocities, the ODE1 coordinates and the algebraic coordinates (the Lagrange multipliers) - as the L2 norm of the
 difference to a reference solution, divided by the L2 norm of the group in the reference. The reference is
 `LobattoIIIC4GGL` (`RK67` without constraints) at $h_0/128$, extrapolated by Richardson. Its Lagrange multipliers are
@@ -1031,8 +1032,8 @@ so they have no relative error and are not shown (#3311)
 ```{figure} /docs/figures/solverStudy/convergence_sliderCrank3D.*
 :width: 80%
 
-The spatial slider-crank of the IFToMM benchmark with Lie group nodes; the errors of the Runge-Kutta solvers reach
-the floor of $10^{-12}$ at the smaller steps
+The spatial slider-crank of the IFToMM benchmark with Lie group nodes, with steps up to $32 h_0$; the errors of the
+Runge-Kutta solvers reach the floor of $10^{-12}$ below $h = 10^{-3}$
 ```
 
 ```{figure} /docs/figures/solverStudy/convergence_kinematicTree.*

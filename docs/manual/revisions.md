@@ -27,7 +27,8 @@ changes without it. The residual is checked after the factorizations, and a fail
 SparseLU with a warning; the settings are in `exu.special.solver` (#3431). With several threads,
 `exu.special.solver.suspendWorkersDuringFactorization` lets the worker threads sleep during a factorization (#3428).
 `exu.special.solver.StartPersistentThreads(n)` keeps `n` threads for all solvers with `parallel.numberOfThreads = n`,
-sleeping between the runs (#3437).
+sleeping between the runs (#3437). `exu.special.solver.parallelSubstitution` (experimental) solves the factors of
+`EigenSparse` by the subtrees of a nested-dissection ordering on the threads (#3432).
 
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running

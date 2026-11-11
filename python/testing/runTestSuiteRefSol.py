@@ -338,6 +338,7 @@ def TestExamplesReferenceSolution():
         'helicalJointTest.py':62.32477542908185, #new 2026-11-11 (#3421, #3422)
         'screwGraphicsTest.py':0.9068896323640016, #new 2026-11-11 (#3425)
         'pardisoSolverTest.py':6.488142024986682, #new 2026-11-11: LinearSolverType.PardisoMKL and the sleeping workers (#3431, #3428); the same with and without MKL
+        'parallelSubstitutionTest.py':119.33631608827318, #new 2026-11-11: exu.special.solver.parallelSubstitution (#3432)
         'persistentThreadsTest.py':9.803795126547822, #new 2026-11-11: exu.special.solver.StartPersistentThreads (#3437)
         'reevingSystemTangentTest.py':3.025965077828625, #new 2026-11-11: the common tangent of two sheaves with non-parallel axes (#3412)
         'relativeRotationTranslationMechanism.py': 1.509631854432837, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.509631854432179; new 2026-09-11

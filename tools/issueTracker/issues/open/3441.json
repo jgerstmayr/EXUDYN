@@ -1,0 +1,11 @@
+{
+  "number": 3441,
+  "title": "SparseLU solves with the rows of its factors instead of the supernodal solve of Eigen",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "After a factorization of EigenSparse (COLAMD), the factors L and U are copied into rows and the forward and backward substitution run on them, as with special.solver.parallelSubstitution: there the serial substitution by rows was 1.6-2.8 times faster than the supernodal solve of Eigen on chains (small supernodes, vector copies); for modified Newton with many solves per factorization; the copy costs about 0.3 ms per factorization of 13000 unknowns. Measured against the solve of today on the performance and test models with sparse solvers.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10"
+}

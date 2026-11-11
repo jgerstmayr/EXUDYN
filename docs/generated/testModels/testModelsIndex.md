@@ -183,6 +183,7 @@ objectGenericODE2Test
 ode1LoadsJacobianTest
 orientTrianglesTest
 outputInterpolationOrderTest
+parallelSubstitutionTest
 parameterConversionTest
 pardisoSolverTest
 PARTS_ATEs_moving

@@ -659,6 +659,9 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("pardisoFallback", &PySpecialSolver::pardisoFallback)
 		.def_readwrite("pardisoParameters", &PySpecialSolver::pardisoParameters)
 		.def_readwrite("pardisoFallbacks", &PySpecialSolver::pardisoFallbacks)
+		.def_readwrite("parallelSubstitution", &PySpecialSolver::parallelSubstitution)
+		.def_readwrite("parallelSubstitutionPivotThreshold", &PySpecialSolver::parallelSubstitutionPivotThreshold)
+		.def_readwrite("parallelSubstitutionSerial", &PySpecialSolver::parallelSubstitutionSerial)
 		.def_static("PardisoInfo", []() {
 			std::string message;
 			bool available = PardisoLibrary::Load(message);

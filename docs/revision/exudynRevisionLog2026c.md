@@ -6431,6 +6431,45 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-9-7"></a>
+### RG5.9.7 — the parallel substitution with a nested-dissection ordering, a prototype (2026-11-11, #3432, #3441)
+
+*(Maintainer 2026-11-11: "RG5.9.7, the parallel back-substitution: => try that".)*
+
+Built as `exu.special.solver.parallelSubstitution` (experimental, default False), with
+`parallelSubstitutionPivotThreshold` (1e-3) and the counter `parallelSubstitutionSerial`; details and the table in
+sparseSolvers.md section 4.1:
+- `src/Linalg/ParallelSubstitution.h/.cpp` (new; vcxproj, filters, sources.json by gen_sources.py): `NestedDissection`
+  (breadth-first level separators, components split into halves, a depth of about two subtrees per thread),
+  `NestedDissectionOrdering` (the ordering functor of Eigen), `SparseLUParallel` (Eigen's `SparseLU` with it: the
+  factors copied into rows after each factorization, the tree checked, the substitution depth by depth in a
+  `ParallelFor`). `GeneralMatrixEigenSparse::FactorizeNew` and `Solve` use it if the flag is set; a failed
+  factorization falls back to SparseLU.
+- On the way, from scratch studies (ndTree.py, ndLift.py: SuperLU with partial pivoting):
+  - the bound of 18-60 of section 4 assumed no row pivoting; with Eigen's partial pivoting the subtrees were coupled
+    (thousands of crossing dependencies). Unknowns with a zero diagonal (multipliers, and the first Euler parameter at
+    the reference rotation) are lifted into the highest tree node of their neighbours with a nonzero diagonal and
+    ordered last there, and the diagonal pivot threshold is 1e-3: no crossing left on the chains, fill 16 % above
+    COLAMD for the revolute chain. A first version lifted along lifted neighbours and carried the Euler parameters of
+    half a chain into the root (3520 unknowns there instead of 21).
+  - the pattern of the Jacobian changes, as Exudyn drops exact zeros: an ordering of the pattern seen was crossed by
+    new entries in 77 of 80 factorizations - also with the union of the patterns and on the squared graph; keeping
+    the zeros in the assembly gave a constant pattern but a factorization 1.8 times slower. The solver now passes the
+    coordinates of each object (`GeneralMatrix::SetStructuralGroups`, from the local-to-global indices of ODE2, ODE1
+    and AE) and the ordering works on the pattern joined with their cliques: one ordering per simulation; when the
+    pattern changes only Eigen's elimination tree is renewed.
+- Measured (scratch psubBench.py, the fastest of three runs): the solves are 1.8-4.4 times faster than with SparseLU
+  on 8 threads, but 1.6-2.8 of that comes from the rows alone (one thread; Eigen's supernodal solve is slow for small
+  supernodes) and only 0.9-1.7 from the threads (a solve takes 10-60 microseconds); the factorization is as fast as
+  with COLAMD on one thread and slower on 8 threads (up to 70 % for 100 bodies, 7-16 % for 1000). In total, on 8
+  threads: modified Newton on chains of 1000 and 10000 bodies 9-13 % faster, full Newton on 10000 mass points 14 %;
+  100 bodies and full Newton on 1000 bodies slower. Experimental, off.
+- parallelSubstitutionTest.py (new): revolute chain and mass point chain, modified and full Newton, 1 and 4 threads,
+  against EigenSparse, no serial fallback; performanceErrors.md, revisions.md.
+- The row solve alone is the larger and thread-independent gain: proposed as RG5.9.9 (#3441), the serial
+  substitution by the rows of the factors for every SparseLU factorization, to be measured before it becomes the
+  default.
+
 <a id="rg5-9-8"></a>
 ### RG5.9.8, RG5.10.1, RG5.11 — persistent threads, what the systems of a SystemContainer share, the raytracer steps (2026-11-11, #3437, #3438, #3439, #3440)
 

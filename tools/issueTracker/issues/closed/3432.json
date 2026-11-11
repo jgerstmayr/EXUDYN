@@ -2,10 +2,14 @@
   "number": 3432,
   "title": "A parallel forward and backward substitution of the sparse solver with a nested-dissection ordering",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "With modified Newton and a Jacobian that hardly changes, the back-substitution is done far more often than the factorization; with the minimum-degree or COLAMD orderings of today, chains have 2-7 unknowns per level of the triangular solves, but a nested-dissection ordering gives speedup bounds of 18-60 at about twice the fill; an ordering by nested dissection (without METIS), the factors in a plain format after each factorization and the substitution by subtrees of the elimination tree on Exudyn's threads, measured against the serial solve of SparseLU (design docs/dev/design/sparseSolvers.md section 4).",
   "dateRaised": "2026-11-11",
-  "deadline": "2027-05-10"
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-11 21:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exu.special.solver.parallelSubstitution (experimental, default False): EigenSparse factorizes with a nested-dissection ordering on the Jacobian pattern and the coordinates of each object, and the forward and backward substitution run by the subtrees of the ordering on the threads; the solves are 1.8-4.4 times faster than with SparseLU on 8 threads, the factorization slower on several threads; modified Newton on large chains 9-13 % faster in total, small systems and full Newton slower; parallelSubstitutionPivotThreshold and parallelSubstitutionSerial in exu.special.solver.",
+  "resolvedInVersion": "1.13.572"
 }

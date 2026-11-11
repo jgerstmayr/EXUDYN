@@ -1678,6 +1678,12 @@ class SpecialSolver:
     """a dict {index: value} of entries of the parameter array iparm of PARDISO, written after pardisoinit and the defaults of Exudyn (iparm[1] = 0, the minimum degree ordering, and iparm[23] = 0, the one-level factorization, which were reliable on all Jacobians studied); for experts; assign a whole dict, as a change of a returned dict is lost; default={} (#3431)."""
     pardisoFallbacks:int
     """the number of fallbacks from PARDISO to SparseLU since the import of exudyn; it can be set to 0 (#3431)."""
+    parallelSubstitution:bool
+    """experimental: if True, EigenSparse factorizes with a nested-dissection ordering (on the coordinates of the objects and the pattern of the Jacobian) and a diagonal pivot threshold of parallelSubstitutionPivotThreshold, and the forward and backward substitution run by the subtrees of the ordering on the threads of parallel.numberOfThreads; the substitution is 2-4 times faster than that of SparseLU, the factorization slower on several threads, so it pays with modified Newton and many solves per factorization; default=False (#3432)."""
+    parallelSubstitutionPivotThreshold:float
+    """the diagonal pivot threshold of the factorization with parallelSubstitution: a diagonal entry is taken as pivot if its magnitude is at least this fraction of the largest in its column, which keeps the subtrees independent; default=1e-3 (#3432)."""
+    parallelSubstitutionSerial:int
+    """the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)."""
     @overload
     def PardisoInfo(self) -> dict: 
         """Whether Intel MKL PARDISO, LinearSolverType.PardisoMKL, is available: the MKL runtime library is searched in the environment variable EXUDYN_MKL_LIBRARY (a full path), in the environment of Python (sys.prefix, sys.base_prefix) and in the system search path, and loaded once; returns a dict with available (bool), library (the path or name loaded), version (of MKL) and message (why it is not available) (#3431)."""

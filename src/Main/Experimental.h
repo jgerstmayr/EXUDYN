@@ -81,6 +81,9 @@ public:
     bool pardisoFallback;                   //!< false: an error instead of the fallback (#3431)
     std::map<Index, Index> pardisoParameters; //!< iparm entries written after pardisoinit and Exudyn's defaults (#3431)
     Index pardisoFallbacks;                 //!< number of fallbacks from PARDISO to SparseLU since the import (#3431)
+    bool parallelSubstitution;              //!< EigenSparse with a nested-dissection ordering and the substitution on the threads (#3432)
+    Real parallelSubstitutionPivotThreshold; //!< the diagonal pivot threshold of that factorization (#3432)
+    Index parallelSubstitutionSerial;       //!< factorizations solved serially: a pivot coupled the subtrees, or the factorization failed (#3432)
 
     PySpecialSolver()
     {
@@ -101,6 +104,9 @@ public:
         pardisoFallback = true;
         pardisoParameters.clear();
         pardisoFallbacks = 0;
+        parallelSubstitution = false;
+        parallelSubstitutionPivotThreshold = 1e-3;
+        parallelSubstitutionSerial = 0;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -122,6 +128,9 @@ public:
         for (const auto& item : pardisoParameters) { os << item.first << ": " << item.second << ", "; }
         os << "}\n";
         os << "  pardisoFallbacks = " << pardisoFallbacks << "\n";
+        os << "  parallelSubstitution = " << parallelSubstitution << "\n";
+        os << "  parallelSubstitutionPivotThreshold = " << parallelSubstitutionPivotThreshold << "\n";
+        os << "  parallelSubstitutionSerial = " << parallelSubstitutionSerial << "\n";
 
         os << "\n";
     }
