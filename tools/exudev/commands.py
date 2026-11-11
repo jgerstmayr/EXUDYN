@@ -936,7 +936,14 @@ def PerformanceHistory(options):
     environment = TargetEnvironments(options, 'P313')[0][1]
     if options.history_add:
         logDirectory = os.path.join(runner.RepositoryRoot(), 'python', 'logs', 'performance')
-        paths = [path if os.path.exists(path) else os.path.join(logDirectory, path) for path in options.history_add]
+        #a wildcard is expanded here, as cmd.exe passes it on unexpanded
+        paths = []
+        for path in options.history_add:
+            if os.path.exists(path):
+                paths.append(path)
+                continue
+            matches = sorted(glob.glob(path)) or sorted(glob.glob(os.path.join(logDirectory, path)))
+            paths += matches if matches else [os.path.join(logDirectory, path)]
         steps += [Step('add ' + str(len(paths)) + ' log(s) to the performance history',
                        argv=runner.InEnvironment(environment, ['python', 'performanceHistory.py', 'add'] + paths, options),
                        cwd=ModelsDirectory())]

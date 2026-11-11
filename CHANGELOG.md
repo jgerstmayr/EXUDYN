@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 552 | 1.13.576 |
+| 1.13 | Newborn | 553 | 1.13.577 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.577** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev perf --history-add expands wildcards (#3444)
+  - description: In cmd.exe a wildcard reaches exudev unexpanded, so 'exudev perf --history-add performanceLog\_V1.13.5\*' gave the literal pattern to performanceHistory.py, which failed with OSError (invalid argument). exudev now expands wildcards itself, as given or relative to python/logs/performance; the help names it. The logs of 1.13.190 to 1.13.548 (Python 3.13, regular and fast module) were added to performanceHistory.json.
+  - **notes:** exudev perf --history-add expands wildcards itself (cmd.exe passes them on unexpanded), as given or relative to python/logs/performance.
+  - date resolved: **2026-11-12 00:43**, date raised: 2026-11-12
 - **1.13.576** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Each view hides the graphics of the systems listed in view\[0-3\].scene.hideMbs (#3442)
   - description: The views 0-3 of the render window show the same graphics; to show different things in different views, a list hideMbs of system numbers per view leaves out the graphics of those systems in that view: faces, edges, lines, texts and their shadows, the picking with the mouse, zoom all, the sensor traces and the raytracer of that view.
   - **notes:** view0.scene.hideMbs ... view3.scene.hideMbs: a list of system numbers whose graphics a view does not show - faces, edges, lines, texts, shadows, picking, the zoom of the view, the sensor traces of those systems and the raytracer image of the view; e.g. different systems in different views of one render window.

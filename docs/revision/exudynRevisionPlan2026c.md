@@ -626,6 +626,12 @@ results; the history holds 24 entries. [log](exudynRevisionLog2026c.md#rg5-6-3)
 CLOSED 2026-10-24 (#3081; maintainer: the data is recorded now): removed with its use in the runner and its test;
 `--tolerant` stays for versions with the names of today. [log](exudynRevisionLog2026c.md#rg5-6-3)
 
+#### **CLOSED_RG5.6.5** Accept wildcards in exudev perf --history-add, and add the logs since 1.13.183
+
+Maintainer 2026-11-12: the performance history could not be updated from the existing logs with exudev. In cmd.exe a wildcard reaches exudev unexpanded, and performanceHistory.py failed on the literal pattern.
+
+CLOSED 2026-11-12 (#3444): exudev expands the wildcards of `--history-add` (as given or relative to python/logs/performance); the 19 logs 1.13.190 - 1.13.548 (Python 3.13; regular, and fast for 408, 427, 515, 548) added, 43 entries in 3 series.
+
 ### **CLOSED_RG5.7** Find the slowdown of generalContactSpheresPerf.py between 1.13.190 and 1.13.309 by its timers and a bisection of the builds; a simple fix right away
 
 #3232 (maintainer 2026-11-02: the analysis first, a simple fix right away).

@@ -403,7 +403,8 @@ def BuildParsers():
                              help='--mini: compare two logs instead of running')
     performance.add_argument('--history-add', nargs='+', metavar='LOG',
                              help='add these performance logs to python/logs/performance/performanceHistory.json '
-                                  'instead of running, and write the report (#3079)')
+                                  'instead of running, and write the report (#3079); a path relative to that '
+                                  'directory and wildcards are accepted, e.g. "performanceLog_V1.13.5*"')
     performance.add_argument('--history-report', action='store_true',
                              help='write performanceHistory.md and its plots from performanceHistory.json (#3079)')
     performance.add_argument('extra', nargs=argparse.REMAINDER,
