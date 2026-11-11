@@ -2,11 +2,15 @@
   "number": 3425,
   "title": "graphics: screw threads (single- and multi-start, external and internal, run-outs, shafts) and hexagon prisms for heads and nuts",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Screws on ObjectJointHelicalZ have no graphics: exudyn.graphics has solids of revolution and extrusions, but no helical surface. Proposed: graphics.ScrewThread for external and internal threads of a given pitch and number of starts, with the profile as a normalized line segment or by name ('triangle', 'metric', 'trapezoid'), the thread running out at both ends into the shaft, contours of the shaft before and after the thread as in SolidOfRevolution, an outer cylinder for internal threads; graphics.HexagonPrism for heads and nuts. The recommendation and the questions are in revision2026c step RG6.24; the implementation waits for the decisions.",
   "dateRaised": "2026-11-11",
   "deadline": "2027-05-10",
-  "file": "python/exudyn/graphics.py"
+  "dateResolved": "2026-11-11 14:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/graphics.py",
+  "releaseNotes": "exudyn.graphics.ScrewThread draws external and internal screw threads, single- or multi-start, right- or left-handed, with the profiles 'metric', 'triangle', 'trapezoid', 'square' or one given as points, cut, chamfered or running out at the ends, with contours of a shank before and after; HexagonPrism, Bolt and Nut assemble heads, shanks and nuts; exudyn.machines.MetricThread gives the ISO metric coarse threads M2 to M60 with the sizes of the hexagon bolt and nut. Test model screwGraphicsTest.py, with a nut running down a bolt on ObjectJointHelicalZ.",
+  "resolvedInVersion": "1.13.562"
 }

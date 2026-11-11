@@ -149,4 +149,4 @@ exu.sys['testResult'] = mbs.GetObjectOutput(oJoint, exu.OutputVariableType.Rotat
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`helicalJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/helicalJointTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`helicalJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/helicalJointTest.py) (TM), [`screwGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/screwGraphicsTest.py) (TM)

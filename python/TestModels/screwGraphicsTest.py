@@ -1,0 +1,162 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The screw graphics (#3425): machines.MetricThread, the ISO metric coarse threads M2 to M60 with the sizes of
+#           the hexagon bolt and nut; graphics.ScrewThread external and internal, with the profiles 'metric', 'triangle',
+#           'trapezoid', 'square' and one given as points, single- and multi-start, right- and left-handed, cut,
+#           chamfered and running out, with contours of a shank before and after; graphics.HexagonPrism, Bolt and Nut.
+#           Checked: the radii of the thread between the root and the major diameter, the bounding boxes, the number of
+#           triangles, the orientation of the triangles and what the functions refuse. Then a nut (a rigid body) runs
+#           down a vertical M10 bolt under gravity on ObjectJointHelicalZ with the pitch of the thread, against the
+#           analytic solution z = z0 - a t^2/2, a = g m / (m + Jzz/h^2), to the integration error. Run alone, it draws the bolt and the nut and opens
+#           the SolutionViewer.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-11
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+import exudyn.machines as machines
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
+import numpy as np
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
+
+u = 0. #the test result: sums of checked quantities
+errors = 0 #the number of failed checks
+
+def Check(condition, text):
+    global errors
+    if not condition:
+        errors += 1
+        exu.Print('screwGraphicsTest: FAILED:', text)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(1) the ISO table
+sizes = machines.MetricThreadSizes()
+Check(sizes[0] == 'M2' and sizes[-1] == 'M60' and len(sizes) == 26, 'MetricThreadSizes')
+M10 = machines.MetricThread('M10')
+Check(M10['pitch'] == 0.0015 and M10['widthAcrossFlats'] == 0.016 and M10['headHeight'] == 0.0064, 'M10')
+Check(abs(machines.MetricThread(2.5)['pitch'] - 0.00045) < 1e-18, 'M2.5 by number')
+H = cMath.sqrt(3)/2*M10['pitch']
+Check(abs(M10['depth'] - 5/8*H) < 1e-15 and abs(M10['minorDiameter'] - (0.010 - 5/4*H)) < 1e-15, 'depth, minor diameter')
+u += sum(machines.MetricThread(s)['pitch'] for s in sizes)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(2) the graphics
+def Points(g):
+    return np.array(g['points']).reshape(-1, 3)
+
+def Triangles(g):
+    return len(np.array(g.get('triangles', [])).reshape(-1, 3)) + len(np.array(g.get('triangles6', [])).reshape(-1, 6))
+
+def Radii(g, axisXY=[0, 0]):
+    p = Points(g)
+    return np.sqrt((p[:, 0] - axisXY[0])**2 + (p[:, 1] - axisXY[1])**2)
+
+R = 0.005
+h = M10['depth']
+cases = {
+    'cut': graphics.ScrewThread([0,0,0], [0,0,0.02], 0.010, 0.0015),
+    'chamfer, runOut': graphics.ScrewThread([0,0,0], [0,0,0.02], 0.010, 0.0015, chamfer=[0, 0.001], runOut=[0.003, 0], nSegmentDivisions=2),
+    'two starts, left-handed, along x': graphics.ScrewThread([0,0,0], [0.02,0,0], 0.010, 0.0015, starts=2, rightHanded=False, chamfer=[0.001, 0.001]),
+    'triangle': graphics.ScrewThread([0,0,0], [0,0,0.02], 0.010, 0.0015, profile='triangle'),
+    'trapezoid': graphics.ScrewThread([0,0,0], [0,0,0.05], 0.020, 0.004, profile='trapezoid', chamfer=[0.002, 0.002]),
+    'square': graphics.ScrewThread([0,0,0], [0,0,0.05], 0.020, 0.004, profile='square'),
+    'given points': graphics.ScrewThread([0,0,0], [0,0,0.02], 0.010, 0.002, profile=[[0, 0], [0.2, 0], [0.5, 1], [1, 0]], depth=0.0008),
+    'internal': graphics.ScrewThread([0,0,0], [0,0,0.01], 0.010, 0.0015, internal=True, outerDiameter=0.02, chamfer=[0.0008, 0.0008]),
+    'contours': graphics.ScrewThread([0,0,0], [0,0,0.02], 0.010, 0.0015, runOut=[0.003, 0], chamfer=[0, 0.0008],
+                                     contourBefore=[[-0.01, 0], [-0.01, R], [0, R]], contourAfter=[[0, R - h], [0, 0]]),
+    'hexagon': graphics.HexagonPrism([0,0,0], [0,0,0.0064], 0.016),
+    'hexagon with bore': graphics.HexagonPrism([0,0,0], [0,0,0.0064], 0.016, boreDiameter=0.01),
+    'bolt': graphics.Bolt([0,0,0], [0,0,-1], 0.04, size='M10', threadLength=0.026),
+    'bolt, head only': graphics.Bolt([0,0,0], [0,0,-1], 0, size='M10'),
+    'nut': graphics.Nut([0,0,0.02], [0,0,1], size='M10'),
+    }
+for (name, g) in cases.items():
+    Check(graphics.CheckTriangleOrientation(g)['consistent'], name + ': orientation of the triangles')
+    bb = np.array(graphics.BoundingBox(g))
+    u += Triangles(g)*1e-6 + np.sum(np.abs(bb))
+
+#the radii of the threads: between the root and the major diameter
+for name in ['cut', 'chamfer, runOut', 'triangle']:
+    r = Radii(cases[name])
+    depth = 0.5*cMath.sqrt(3)*0.0015 if name == 'triangle' else h
+    Check(r.max() <= R*(1 + 1e-14) and r[r > 1e-12].min() >= (R - depth)*(1 - 1e-14), name + ': radii')
+r = Radii(cases['internal'])
+Check(abs(r.max() - 0.01) < 1e-14 and r.min() >= (R - h)*(1 - 1e-14), 'internal: radii')
+p = Points(cases['two starts, left-handed, along x'])
+Check(abs(p[:, 0].min()) < 1e-15 and abs(p[:, 0].max() - 0.02) < 1e-15, 'along x: the axial extent')
+bb = np.array(graphics.BoundingBox(cases['bolt']))
+s = M10['widthAcrossFlats']
+Check(np.allclose(bb, [[-s/cMath.sqrt(3), -0.5*s, -0.04], [s/cMath.sqrt(3), 0.5*s, M10['headHeight']]], atol=1e-15), 'bolt: bounding box')
+Check(Triangles(cases['bolt, head only']) == Triangles(cases['hexagon']), 'bolt with length 0: only the head')
+bb = np.array(graphics.BoundingBox(cases['nut']))
+Check(abs(bb[1, 2] - bb[0, 2] - M10['nutHeight']) < 1e-15, 'nut: height')
+
+#what the functions refuse
+def Refused(function):
+    try:
+        function()
+    except ValueError:
+        return True
+    return False
+Check(Refused(lambda: machines.MetricThread('M11')), 'unknown size')
+Check(Refused(lambda: graphics.ScrewThread([0,0,0], [0,0,0.02], 0.01, 0.0015, profile='acme')), 'unknown profile')
+Check(Refused(lambda: graphics.ScrewThread([0,0,0], [0,0,0.02], 0.01, 0.0015, chamfer=[0.001, 0], runOut=[0.001, 0])), 'chamfer and runOut at one end')
+Check(Refused(lambda: graphics.ScrewThread([0,0,0], [0,0,0.02], 0.01, 0.0015, profile=[[0, 0], [0.6, 1], [0.4, 1], [1, 0]], depth=0.001)), 'overhanging profile')
+Check(Refused(lambda: graphics.ScrewThread([0,0,0], [0,0,0.02], 0.01, 0.0015, profile=[[0, 0], [0.5, 1], [1, 0]])), 'profile as points without depth')
+Check(Refused(lambda: graphics.ScrewThread([0,0,0], [0,0,0.01], 0.01, 0.0015, internal=True, outerDiameter=0.01)), 'outer diameter too small')
+Check(Refused(lambda: graphics.Bolt([0,0,0], [0,0,1], 0.02)), 'bolt without size')
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(3) a nut runs down a vertical M10 bolt under gravity on the helical joint with the pitch of the thread
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+g = 9.81
+pitchPerRadian = M10['pitch']/(2*np.pi) #right-hand thread: a positive turn about +z moves up
+boltLength = 0.06
+oGround = mbs.CreateGround(graphicsDataList=[graphics.Bolt([0, 0, boltLength], [0, 0, -1], boltLength, size='M10', color=graphics.color.grey, nTiles=48)])
+m = M10['nutHeight']
+inertia = InertiaCylinder(density=7800, length=m, outerRadius=0.5*s, axis=2, innerRadius=R)
+z0 = 0.045
+nut = mbs.CreateRigidBody(referencePosition=[0, 0, z0], inertia=inertia, gravity=[0, 0, -g],
+                          graphicsDataList=[graphics.Nut([0, 0, -0.5*m], [0, 0, 1], size='M10', color=graphics.color.steelblue, nTiles=48)])
+mbs.CreateHelicalJoint(itemNumbers=[oGround, nut], position=[0, 0, z0], axis=[0, 0, 1], pitch=pitchPerRadian, show=False)
+sensorPosition = mbs.AddSensor(SensorBody(bodyNumber=nut, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
+mbs.Assemble()
+
+endTime = 2.
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 2000
+simulationSettings.timeIntegration.endTime = endTime
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-12
+simulationSettings.solution.file.write = not testIsActive
+
+if not testIsActive:
+    SC.visualizationSettings.view0.scene.drawWorldBasis = True
+    SC.visualizationSettings.openGL.multiSampling = 4
+    SC.renderer.Start()
+mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    SC.renderer.Stop()
+    mbs.SolutionViewer()
+
+Jzz = inertia.Inertia()[2, 2]
+a = g*inertia.Mass()/(inertia.Mass() + Jzz/pitchPerRadian**2)
+zAnalytic = z0 - 0.5*a*endTime**2
+zSimulated = mbs.GetSensorValues(sensorPosition)[2]
+exu.Print('screwGraphicsTest: the nut at t =', endTime, ': z =', zSimulated, ', analytic', zAnalytic, ', difference', zSimulated - zAnalytic)
+#the difference is the integration error, of second order: 4.6e-5, 1.2e-5, 2.9e-6 with 1000, 2000, 4000 steps
+Check(abs(zSimulated - zAnalytic) < 1.5e-5, 'nut on the helical joint against the analytic solution')
+u += zSimulated
+
+exu.Print('screwGraphicsTest: failed checks:', errors)
+u += errors
+exu.Print('solution of screwGraphicsTest=', u)
+exu.sys['testResult'] = u

@@ -69,8 +69,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
   - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution (5 open sub-steps)
-- **RG6** Graphics and rendering
-  - RG6.24 Screw threads and hexagon prisms in exudyn.graphics, for the helical joint (4 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -113,7 +111,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
 | RG5 | OPEN | 15 | Performance |
-| RG6 | OPEN | 5 | Graphics and rendering |
+| RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -674,7 +672,7 @@ sparseSolvers.md section 2; after RG5.9.2 and RG5.9.3; a test model that runs wh
 
 linalgBenchmark.md section 3.9 (20-31 % of the factorization where the pattern stays), sparseSolvers.md section 1 (half of the stored entries are noise and come and go).
 
-## **OPEN_RG6** Graphics and rendering
+## **CLOSED_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -1002,52 +1000,35 @@ Sub-steps when decided: (1) the idle flag and the override in the render state, 
 
 CLOSED 2026-11-10 (#3401 resolved): idle = paused or no new state for 0.3 s, a new state resets; RenderState::scopeViews with the override and the last drawn ranges and plot areas; wheel, SHIFT, CTRL, drag and double click; GUI.md and the mouse table. [log](exudynRevisionLog2026c.md#rg6-22)
 
-### **OPEN_RG6.24** Screw threads and hexagon prisms in exudyn.graphics, for the helical joint
+### **CLOSED_RG6.24** Screw threads and hexagon prisms in exudyn.graphics, for the helical joint
 
-#3425 (maintainer 2026-11-11: a visualization of screws for the helical joint, similar to `SolidOfRevolution`: single- and multi-start threads of a given pitch as a function in `exudyn.graphics`; the thread profile as a line segment normalized to the pitch (and the height), with the basic profiles 'triangle' (simplified metric), 'metric' and 'trapezoid' by name; the thread running out over a length at both ends into a cylinder, with lists of shaft diameters before and after the thread as in `SolidOfRevolution`, so that a taper or the shaft itself is drawn as well; internal threads with an outer cylinder of a given radius; hexagonal heads, simplified as an extruded hexagon. Recommendation and questions first; the implementation after the maintainer checked them).
+#3425 (maintainer 2026-11-11: a visualization of screws for the helical joint, similar to `SolidOfRevolution`: single- and multi-start threads with a profile normalized to the pitch, named profiles, run-outs into a cylinder, shaft contours before and after, internal threads, hexagonal heads; the recommendation and the questions first, the implementation after the maintainer checked them). The recommendation, the questions and the decisions: [log](exudynRevisionLog2026c.md#rg6-24).
 
-**Recommendation (to be decided before the implementation):**
-- **Two functions**: `graphics.ScrewThread(...)` for external and internal threads, and `graphics.HexagonPrism(...)` for heads and nuts. A screw is the thread plus a hexagon prism; the example of the step shows a bolt with nut on the helical joint. A `Bolt`/`Nut` convenience function is left out until it is needed.
-- **The surface is one radius function** $r(\varphi, s)$ on a helical grid: with the lead $L = n_{starts} P$, a point at angle $\varphi$ and helical coordinate $s$ lies at $z = s + L\varphi/(2\pi)$ and radius $r = r_{root} \pm h\,f(u)$, $u = (s \bmod P)/P$, where $f$ is the normalized profile (+ external, - internal). The grid lines of constant $s$ are the breakpoints of the profile, so crests, roots and flanks are exact (sharp edges by doubled points with their own normals), multi-start comes from $L = n_{starts}P$ without extra code, and left-hand threads from the sign of $L$. The mesh is closed and made of plain triangles (`FromPointsAndTrigs`), $n_{Tiles}$ around times the points of the profile per pitch.
-- **The profile**: a list (or numpy array) of points $[u, v]$, $u \in [0,1]$ along one pitch, $v \in [0,1]$ from the root (0) to the crest (1), piecewise linear and periodic ($v(0) = v(1)$); a vertical flank is two points of the same $u$, an overhanging flank (decreasing $u$) is refused. The height $h$ is absolute, by default from the pitch for the named profiles, so the flank angle follows from $h$ and $P$:
-  - `'triangle'`: the sharp 60 degree V, $h = 0.866P$;
-  - `'metric'`: ISO 68-1 with the flat crest $P/8$ and the root $P/4$ (rounded root drawn flat), $h = 0.6134P$ external, $0.5413P$ internal;
-  - `'trapezoid'`: ISO 2904 (Tr), 30 degrees, $h = 0.5P$ (+ clearance), crest and root flats $0.366P$;
-  - possibly `'square'` and `'buttress'` (ISO 3030, 3/30 degrees) as they cost one line each.
-- **Run-out, chamfers and shafts by an envelope**: the thread radius is clamped between `rMin(z)` and `rMax(z)`, two piecewise linear contours given as lists of `[z, r]` (as the contour of `SolidOfRevolution`). A machined run-out is `rMin` rising from the root to the major diameter over `runOutLength`; a chamfer at the tip is `rMax` falling. `contourBefore` and `contourAfter` (lists of `[z, r]`, z relative to the start and the end of the thread) are drawn as solids of revolution and meet the thread seamlessly, because the envelope ends at their radius. A plain `runOutLength=[l0, l1]` builds the envelope for the common case, so the lists are only needed for a shaft or a taper. The clamped edges do not lie on grid lines, so a chamfer is faceted at coarse `nTiles` - acceptable for the visualization.
-- **Internal thread**: the same surface with the profile turned over (crest at the minor diameter) and the normals inward; `outerDiameter` gives the outer cylinder, the end faces are rings between the thread and the outer cylinder.
-- **HexagonPrism**: `pAxis, vAxis, widthAcrossFlats, height`, optional `boreDiameter` (a nut, by `SolidExtrusion` with an inner circle) and a 30 degree chamfer of the edges as an option later (the intersection with a cone, by the same clamp).
-- **Parameters of ScrewThread**: `pAxis, vAxis, length, majorDiameter, pitch, profile='metric', height=None, starts=1, rightHanded=True, internal=False, outerDiameter=None, runOutLength=[0,0], contourBefore=None, contourAfter=None, rMin=None, rMax=None, color, nTiles=32, alternatingColor=None, addEdges=False`. Size: an M10 thread of 50 mm with 32 tiles and 8 profile points is about 17000 quads, 34000 triangles.
-- **Test model** with the bounding boxes, the number of triangles and a fingerprint of the points (graphics regression), the closedness of the mesh, and the helical joint drawn with a bolt and a nut whose rotation matches the pitch.
+CLOSED 2026-11-11 (#3425): ScrewThread, HexagonPrism, Bolt, Nut in exudyn.graphics, MetricThread in exudyn.machines, test model screwGraphicsTest.py. [log](exudynRevisionLog2026c.md#rg6-24)
 
-**Questions:**
-1. Two functions `ScrewThread` and `HexagonPrism`, or also `Bolt`/`Nut` that assemble head, shaft and thread?
-2. The height of the profile absolute (default from the pitch per named profile), or relative to the pitch?
-3. The envelope by `rMin`/`rMax` contours (general) plus `runOutLength` (simple) - or only the simple parameters?
-4. A small table of ISO coarse threads (`'M10'` -> 10 mm, pitch 1.5 mm), or always diameter and pitch?
-5. Should `ObjectJointHelicalZ` draw a thread itself (C++, `VObjectJointHelicalZ`, with the pitch of the joint), or does the thread stay graphics data of the bodies, the joint drawing its axis and helix as now?
-
-Sub-steps when decided: (1) `ScrewThread` with the named profiles and the run-out, external and internal, (2) the envelope and the contours before and after, (3) `HexagonPrism`, (4) the test model and an example with the helical joint, the graphics regression references.
-
-**Decisions (maintainer 2026-11-11):** (1) ScrewThread, Bolt and Nut - ideal for all use cases; a Bolt with shaft length zero draws only the head, the HexagonPrism; (2) the profile depends on the base diameter: simplest is to start a screw at the outer diameter and let the profile go inside from 0 to 1 (or the other way round); if the base is neither the outer nor the inner diameter, absolute profiles are simpler to understand - the recommended way left to Claude; (3) the typical envelope at the end of a screw, a chamfer on the thread, would be doable - otherwise the suggestion, but only one way; (4) the ISO table from M2 to about M60, the data and the handling function in exudyn.machines, split from the graphics; (5) as now: the bodies draw the ScrewThread, the joint its axis and helix.
-
-**Resulting design:** the profile is measured from the base diameter inward for an external thread (the major diameter, v = 0 the crest, v = 1 the root at the depth h) and outward for an internal one (the minor diameter); h absolute with a default per named profile. One way for the ends: run-out and chamfer lengths at both ends (parameters), built internally as the clamp of the thread radius; the shaft before and after as contours. exudyn.machines.MetricThread('M10') gives the diameter, pitch and the hexagon sizes (ISO 261/262, 4014, 4032) in metres.
-
-#### **OPEN_RG6.24.1** graphics.ScrewThread: external and internal threads, the named profiles, multi-start, run-out and chamfer
+#### **CLOSED_RG6.24.1** graphics.ScrewThread: external and internal threads, the named profiles, multi-start, run-out and chamfer
 
 #3425.
 
-#### **OPEN_RG6.24.2** graphics.HexagonPrism, graphics.Bolt and graphics.Nut
+CLOSED 2026-11-11 (#3425): graphics.ScrewThread - the helical sweep of the profile on a grid of the angle and the helical coordinate, sharp at the corners of the profile, the depth bounded by chamfers, run-outs and cut ends; external and internal (the same surface, the material outside), multi-start, left-handed; contours before and after as solids of revolution. [log](exudynRevisionLog2026c.md#rg6-24)
+
+#### **CLOSED_RG6.24.2** graphics.HexagonPrism, graphics.Bolt and graphics.Nut
 
 #3425.
 
-#### **OPEN_RG6.24.3** exudyn.machines.MetricThread: ISO metric coarse threads M2 to M60 with the hexagon sizes
+CLOSED 2026-11-11 (#3425): HexagonPrism with an optional bore; Bolt (head, shank, thread with run-out and chamfer; length 0 only the head) and Nut (hexagon and countersunk internal thread with a clearance). [log](exudynRevisionLog2026c.md#rg6-24)
+
+#### **CLOSED_RG6.24.3** exudyn.machines.MetricThread: ISO metric coarse threads M2 to M60 with the hexagon sizes
 
 #3425.
 
-#### **OPEN_RG6.24.4** A test model of the screw graphics and an example of a bolt and a nut on ObjectJointHelicalZ
+CLOSED 2026-11-11 (#3425): machines.MetricThread and MetricThreadSizes, M2 to M60 (26 sizes), pitch, depth, minor diameter, width across flats, head and nut height in metres. [log](exudynRevisionLog2026c.md#rg6-24)
+
+#### **CLOSED_RG6.24.4** A test model of the screw graphics and an example of a bolt and a nut on ObjectJointHelicalZ
 
 #3425.
+
+CLOSED 2026-11-11 (#3425): test model screwGraphicsTest.py - the table, 14 graphics cases (radii, bounding boxes, orientation), 7 refusals, and a nut running down an M10 bolt on ObjectJointHelicalZ against the analytic solution (1.2e-5, the integration error of second order); it is the example when run alone. [log](exudynRevisionLog2026c.md#rg6-24)
 
 ## **OPEN_RG7** Python user items
 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 537 | 1.13.561 |
+| 1.13 | Newborn | 538 | 1.13.562 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.562** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics: screw threads (single- and multi-start, external and internal, run-outs, shafts) and hexagon prisms for heads and nuts (#3425)
+  - description: Screws on ObjectJointHelicalZ have no graphics: exudyn.graphics has solids of revolution and extrusions, but no helical surface. Proposed: graphics.ScrewThread for external and internal threads of a given pitch and number of starts, with the profile as a normalized line segment or by name ('triangle', 'metric', 'trapezoid'), the thread running out at both ends into the shaft, contours of the shaft before and after the thread as in SolidOfRevolution, an outer cylinder for internal threads; graphics.HexagonPrism for heads and nuts. The recommendation and the questions are in revision2026c step RG6.24; the implementation waits for the decisions.
+  - **notes:** exudyn.graphics.ScrewThread draws external and internal screw threads, single- or multi-start, right- or left-handed, with the profiles 'metric', 'triangle', 'trapezoid', 'square' or one given as points, cut, chamfered or running out at the ends, with contours of a shank before and after; HexagonPrism, Bolt and Nut assemble heads, shanks and nuts; exudyn.machines.MetricThread gives the ISO metric coarse threads M2 to M60 with the sizes of the hexagon bolt and nut. Test model screwGraphicsTest.py, with a nut running down a bolt on ObjectJointHelicalZ.
+  - date resolved: **2026-11-11 14:16**, date raised: 2026-11-11
 - **1.13.561** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Design of a sparse solver by MKL PARDISO loaded at run time, evaluation of its failures and of the back-substitution (#3427)
   - description: MKL PARDISO factorizes Exudyn's sparse Jacobians 2.5-24 times faster than Eigen's SparseLU when its analysis is kept, but returned wrong solutions or failed on index-3 constrained chains (linalgBenchmark.md section 3.9). Design, before an implementation: MKL installed by the user (pip or conda) and loaded by the C++ at run time - no build dependency, no MKL in the wheel; the solver type, its settings, the hand-over of Eigen's compressed matrix without a copy, the residual check after a factorization with a fallback to SparseLU; a study of the causes of the failures (format, scaling, conditioning, numerical noise in the Jacobian, saddle-point pivots, settings); whether the serial back-substitution can be parallelized. Design note docs/dev/design/sparseSolvers.md.
   - **notes:** Designed and evaluated (docs/dev/design/sparseSolvers.md), Exudyn unchanged: a solver type PardisoMKL whose MKL the user installs (pip or conda) and the C++ loads at run time - no build dependency, nothing in the wheel - with Eigen's compressed matrix passed without a copy, a residual check after the factorization and a fallback to SparseLU; a study of the failures of PARDISO (half of the stored Jacobian entries are numerical noise, conditions up to 2e11, equilibration did not help); the back-substitution of chain-like systems has about 3 unknowns per level and is not parallelized by levels - independent subsystems solved on Exudyn's threads instead.

@@ -21,6 +21,12 @@ that holds the measured facts and the decisions.
 $z$-axis of marker 0 and moves along it by the pitch per radian; the five constraints can be switched off one by one
 (with the coupling off it is the cylindrical joint, with the pitch zero the revolute joint) (#3421, #3423).
 
+**Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
+left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running
+out at the ends; `graphics.HexagonPrism`, `graphics.Bolt` and `graphics.Nut` assemble heads, shanks and nuts;
+`machines.MetricThread('M10')` gives the ISO metric coarse threads M2 to M60 with the sizes of the hexagon bolt and nut
+(#3425).
+
 **The reeving system** (`ObjectConnectorReevingSystemSprings`) computes the rope between two sheaves with axes that are
 not parallel correctly; the tangent points were wrong for such sheaves (#3412).
 

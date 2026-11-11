@@ -229,6 +229,7 @@ rotatingTableTest
 rotationMarkerDeprecationTest
 scissorPrismaticRevolute2D
 scopeTest
+screwGraphicsTest
 sensorUserFunctionItemsTest
 sensorUserFunctionTest
 serialRobotTest

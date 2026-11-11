@@ -336,6 +336,7 @@ def TestExamplesReferenceSolution():
         'raytracerNOGLFWtest.py':0.28013531271596,                  #2026-10-10: the edges of the bricks in front of the focal plane are drawn (#2951); before 0.28161678591179; 2026-10-01: the node of the rigid body is raytraced as a sphere (#2709); new 2026-01-03
         'reevingSystemSpringsTest.py':2.2156643963423805, #2026-11-11: the common tangent of two sheaves normalizes nB by its own length (#3412), before 2.2155575717433043; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 2.215557571743304;new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'helicalJointTest.py':62.32477542908185, #new 2026-11-11 (#3421, #3422)
+        'screwGraphicsTest.py':0.9068896323640016, #new 2026-11-11 (#3425)
         'reevingSystemTangentTest.py':3.025965077828625, #new 2026-11-11: the common tangent of two sheaves with non-parallel axes (#3412)
         'relativeRotationTranslationMechanism.py': 1.509631854432837, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.509631854432179; new 2026-09-11
         'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes

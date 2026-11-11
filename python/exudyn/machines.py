@@ -19,8 +19,8 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'Involute', 'ApproxInvolute', 'InvInvolute', 'InvoluteGear', 'GetBallBearingData',
-    'CreateBallBearing',
+    'Involute', 'ApproxInvolute', 'InvInvolute', 'InvoluteGear', 'MetricThreadSizes', 'MetricThread',
+    'GetBallBearingData', 'CreateBallBearing',
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -275,6 +275,56 @@ class InvoluteGear:
                 pLast = p
         
         return np.array(gearFixed)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#SCREW THREADS
+
+#ISO metric coarse threads in mm: size -> (pitch, width across flats s, head height k, nut height m);
+#nominal values of ISO 261/262 (pitch), ISO 4014 (s, k of the hexagon head) and ISO 4032 (m of the hexagon nut)
+_metricCoarseThreads = {
+    'M2': (0.4, 4, 1.4, 1.6),       'M2.5': (0.45, 5, 1.7, 2),     'M3': (0.5, 5.5, 2, 2.4),
+    'M4': (0.7, 7, 2.8, 3.2),       'M5': (0.8, 8, 3.5, 4.7),      'M6': (1, 10, 4, 5.2),
+    'M8': (1.25, 13, 5.3, 6.8),     'M10': (1.5, 16, 6.4, 8.4),    'M12': (1.75, 18, 7.5, 10.8),
+    'M14': (2, 21, 8.8, 12.8),      'M16': (2, 24, 10, 14.8),      'M18': (2.5, 27, 11.5, 15.8),
+    'M20': (2.5, 30, 12.5, 18),     'M22': (2.5, 34, 14, 19.4),    'M24': (3, 36, 15, 21.5),
+    'M27': (3, 41, 17, 23.8),       'M30': (3.5, 46, 18.7, 25.6),  'M33': (3.5, 50, 21, 28.7),
+    'M36': (4, 55, 22.5, 31),       'M39': (4, 60, 25, 33.4),      'M42': (4.5, 65, 26, 34),
+    'M45': (4.5, 70, 28, 36),       'M48': (5, 75, 30, 38),        'M52': (5, 80, 33, 42),
+    'M56': (5.5, 85, 35, 45),       'M60': (5.5, 90, 38, 48),
+    }
+
+def MetricThreadSizes():
+    """the sizes of the ISO metric coarse threads known to MetricThread, from M2 to M60
+
+    Returns:
+        list of strings, e.g. ['M2', 'M2.5', 'M3', ...]
+    """
+    return list(_metricCoarseThreads.keys())
+
+def MetricThread(size):
+    r"""the data of an ISO metric coarse thread and of its hexagon bolt and nut, in metres; nominal values for drawing
+    and rough design: the pitch by ISO 261/262, the width across flats and the head height by ISO 4014, the nut height
+    by ISO 4032; the depth is that of the basic profile of ISO 68-1, $5/8 H$ with $H = \sqrt{3}/2\,P$
+
+    Args:
+        size: the size as string, 'M2' ... 'M60' (see MetricThreadSizes()), or the nominal diameter in mm as a number
+
+    Returns:
+        dict with 'size', 'nominalDiameter', 'pitch', 'depth', 'minorDiameter' (the basic minor diameter $d - 2\cdot 5/8 H$),
+        'widthAcrossFlats', 'headHeight', 'nutHeight', all lengths in metres
+
+    Example:
+        d = machines.MetricThread('M10') #d['pitch'] = 0.0015, d['widthAcrossFlats'] = 0.016
+    """
+    name = size if isinstance(size, str) else 'M' + ('%g' % size)
+    if name not in _metricCoarseThreads:
+        raise ValueError("MetricThread: unknown size '" + str(size) + "'; known are " + ', '.join(MetricThreadSizes()))
+    (pitch, s, k, m) = _metricCoarseThreads[name]
+    d = float(name[1:])
+    depth = 5/8*sqrt(3)/2*pitch
+    return {'size': name, 'nominalDiameter': 1e-3*d, 'pitch': 1e-3*pitch, 'depth': 1e-3*depth,
+            'minorDiameter': 1e-3*(d - 2*depth), 'widthAcrossFlats': 1e-3*s, 'headHeight': 1e-3*k, 'nutHeight': 1e-3*m}
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

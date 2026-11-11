@@ -38,7 +38,8 @@ __all__ = [
     'colorList', 'Sphere', 'Spheres', 'Triangles6ToTriangles', 'SpheresToTriangleList', 'Lines',
     'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder', 'Tube', 'Torus', 'RigidLink', 'Capsule',
     'SolidOfRevolution', 'Arrow', 'Basis', 'Frame', 'Quad', 'CheckerBoard', 'SolidExtrusion',
-    'LinkedCylinders', 'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle',
+    'LinkedCylinders', 'BallBearingRings', 'InvoluteGear', 'ToothedRack',
+    'ScrewThread', 'HexagonPrism', 'Bolt', 'Nut', 'BoundingBoxSingle',
     'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move',
     'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles', 'OrientTriangles', 'CheckTriangleOrientation',
     'NGsolveMesh2PointsAndTrigs', 'ImageFromFile', 'ProjectTexture',
@@ -2369,6 +2370,382 @@ def ToothedRack(module, nTeeth, width, toothHeight, rackBaseHeight,
     return graphicsData
 
 
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#SCREWS: thread, hexagon, bolt and nut (#3425)
+
+#the named thread profiles: points [u, v], u along one pitch (0...1), v the depth from the major diameter (0) to the
+#root (1); and the default depth in units of the pitch
+_tanFlank15 = 0.5*tan(radians(15)) #the axial width of a flank of the trapezoidal thread (30 degrees), per pitch
+_threadProfiles = {
+    'triangle': ([[0, 0], [0.5, 1], [1, 0]], 0.5*cMath.sqrt(3)),
+    'metric': ([[0, 0], [1/16, 0], [3/8, 1], [5/8, 1], [15/16, 0], [1, 0]], 5/8*0.5*cMath.sqrt(3)),
+    'trapezoid': ([[0, 0], [0.25 - 0.5*_tanFlank15, 0], [0.25 + 0.5*_tanFlank15, 1], [0.75 - 0.5*_tanFlank15, 1],
+                   [0.75 + 0.5*_tanFlank15, 0], [1, 0]], 0.5),
+    'square': ([[0, 0], [0.25, 0], [0.25, 1], [0.75, 1], [0.75, 0], [1, 0]], 0.5),
+    }
+
+def _ThreadProfile(profile, pitch, depth):
+    """the profile as arrays u, v and the depth; profile is a name of _threadProfiles or a list of points [u, v]"""
+    if isinstance(profile, str):
+        if profile not in _threadProfiles:
+            raise ValueError("ScrewThread: unknown profile '" + profile + "'; known are " + ', '.join(_threadProfiles.keys()))
+        (points, depthFactor) = _threadProfiles[profile]
+        if depth is None:
+            depth = depthFactor*pitch
+    else:
+        points = profile
+        if depth is None:
+            raise ValueError('ScrewThread: a profile given as points needs the depth')
+    points = np.array(points, dtype=float)
+    if points.ndim != 2 or points.shape[1] != 2 or len(points) < 3:
+        raise ValueError('ScrewThread: the profile must be at least 3 points [u, v]')
+    (u, v) = (points[:, 0], points[:, 1])
+    if u[0] != 0 or u[-1] != 1 or np.any(np.diff(u) < 0):
+        raise ValueError('ScrewThread: the profile must run from u = 0 to u = 1 without going back (an overhanging flank is not possible)')
+    if v[0] != v[-1] or np.any(v < 0) or np.any(v > 1):
+        raise ValueError('ScrewThread: the profile must have v between 0 and 1 and the same v at u = 0 and u = 1')
+    if depth <= 0 or pitch <= 0:
+        raise ValueError('ScrewThread: pitch and depth must be positive')
+    return (u, v, depth)
+
+def _Annulus(z, r0, r1, normalZ, nTiles, phi0=0.):
+    """points, normals and triangles of a ring between the radii r0 < r1 in the plane z, normal along +z (normalZ=1)
+    or -z (normalZ=-1); r0 = 0 gives a disc"""
+    phi = phi0 + 2*pi*np.arange(nTiles + 1)/nTiles
+    (c, s) = (cMath.cos(phi), cMath.sin(phi))
+    points = np.vstack([np.column_stack([r0*c, r0*s, np.full(nTiles + 1, z)]),
+                        np.column_stack([r1*c, r1*s, np.full(nTiles + 1, z)])])
+    normals = np.tile([0., 0., float(normalZ)], (2*(nTiles + 1), 1))
+    trigs = []
+    for i in range(nTiles):
+        (a, b, cc, d) = (i, nTiles + 1 + i, nTiles + 2 + i, i + 1) #inner i, outer i, outer i+1, inner i+1
+        trigs += [[a, b, cc], [a, cc, d]] if normalZ > 0 else [[a, cc, b], [a, d, cc]]
+    return (points, normals, np.array(trigs))
+
+def _CylinderMantle(z0, z1, radius, inward, nTiles):
+    """points, normals and triangles of the mantle of a cylinder about z from z0 to z1, the normals outward or inward"""
+    phi = 2*pi*np.arange(nTiles + 1)/nTiles
+    (c, s) = (cMath.cos(phi), cMath.sin(phi))
+    points = np.vstack([np.column_stack([radius*c, radius*s, np.full(nTiles + 1, z0)]),
+                        np.column_stack([radius*c, radius*s, np.full(nTiles + 1, z1)])])
+    sign = -1. if inward else 1.
+    normals = sign*np.vstack([np.column_stack([c, s, np.zeros(nTiles + 1)])]*2)
+    trigs = []
+    for i in range(nTiles):
+        (a, b, cc, d) = (i, i + 1, nTiles + 2 + i, nTiles + 1 + i) #bottom i, bottom i+1, top i+1, top i
+        trigs += [[a, b, cc], [a, cc, d]] if not inward else [[a, cc, b], [a, d, cc]]
+    return (points, normals, np.array(trigs))
+
+def _AppendMesh(mesh, part):
+    """append (points, normals, triangles) part to the lists of mesh"""
+    offset = sum(len(p) for p in mesh[0])
+    mesh[0].append(np.asarray(part[0], dtype=float))
+    mesh[1].append(np.asarray(part[1], dtype=float))
+    mesh[2].append(np.asarray(part[2], dtype=int) + offset)
+
+def _MeshToGraphics(mesh, pAxis, A, color):
+    """the local mesh moved to pAxis and turned by A (columns: the local axes), as GraphicsData"""
+    points = np.vstack(mesh[0]) @ A.T + np.array(pAxis, dtype=float)
+    normals = np.vstack(mesh[1]) @ A.T
+    return FromPointsAndTrigs(points, np.vstack(mesh[2]), color=color, normals=normals)
+
+def _AxisFrame(vAxis):
+    """the length of vAxis and the rotation matrix whose columns are the local x, y and z (= vAxis) axes"""
+    [v0, n1, n2] = ComputeOrthonormalBasisVectors(vAxis)
+    return (cMath.norm(np.array(vAxis, dtype=float)), np.column_stack([n1, n2, v0]))
+
+@_ReturnsRows
+def ScrewThread(pAxis, vAxis, nominalDiameter, pitch, profile='metric', depth=None, starts=1, rightHanded=True,
+                internal=False, outerDiameter=None, chamfer=[0., 0.], runOut=[0., 0.], radialOffset=0.,
+                contourBefore=None, contourAfter=None, color=[0.,0.,0.,1.], nTiles=32, nSegmentDivisions=1):
+    r"""graphics data of a screw thread, external (a bolt) or internal (a nut), single- or multi-start, with the
+    profile given by name or as points; the thread surface is the helical sweep of the profile, sharp at its corners,
+    with the ends cut, chamfered or running out; for ObjectJointHelicalZ, a turn about the axis by $\varphi$ moves along
+    it by $p\,n_{starts}\varphi/(2\pi)$, the pitch per radian of the joint is $p\,n_{starts}/(2\pi)$ (#3425)
+
+    Args:
+        pAxis: the point on the axis where the thread starts (3D list or np.array)
+        vAxis: the axis vector; its length is the length of the thread (as for Cylinder)
+        nominalDiameter: the major diameter of the external thread (the nominal diameter, e.g. 0.010 for M10); an internal thread uses the same surface, so that a nut of the same nominal diameter fits; see machines.MetricThread
+        pitch: the axial distance of neighbouring threads
+        profile: 'metric' (ISO 68-1 basic profile, 60 degrees, depth 5/8 H), 'triangle' (sharp 60 degree V, depth H = 0.866 pitch), 'trapezoid' (ISO 2904, 30 degrees, depth 0.5 pitch), 'square' (depth 0.5 pitch), or a list of points [u, v] over one pitch: u from 0 to 1 along the axis, not decreasing (two points of the same u give a flank normal to the axis), v the depth from the major diameter (0) to the root (1), the same v at u = 0 and u = 1
+        depth: the depth of the thread from the major diameter to the root; None: the default of the named profile; needed for a profile given as points
+        starts: the number of starts (thread entries); the lead, the advance per turn, is starts*pitch
+        rightHanded: True for a right-hand thread, False for a left-hand thread
+        internal: True for an internal thread (a nut, a threaded hole): the normals point to the axis, and the material is outside
+        outerDiameter: for an internal thread: the diameter of an outer cylinder, drawn with the end faces between it and the thread; None: no outer surface (e.g. Nut, which draws a hexagon)
+        chamfer: the axial lengths [at the start, at the end] of a 45 degree like chamfer: for an external thread the depth goes to the full depth at the end face, for an internal one (a countersink) to zero; 0: the thread is cut by the end face, drawn approximately (the profile ends in a short ramp on the face)
+        runOut: the axial lengths [at the start, at the end] over which the thread runs out: an external thread into the cylinder of the nominal diameter, an internal one into the cylinder of the root; at an end either chamfer or runOut may be given, not both
+        radialOffset: added to all radii, e.g. a small clearance of a nut so that its surface does not coincide with the bolt
+        contourBefore: None or a contour as in SolidOfRevolution, [x, radius] with x along the axis relative to the start of the thread (x <= 0), from the axis towards the thread, drawn as solid of revolution (a shank, a taper, a collar); its last point is the start of the thread; the end face of the thread is not drawn then
+        contourAfter: None or a contour as in SolidOfRevolution, x relative to the end of the thread (x >= 0), from the thread towards the axis; the end face of the thread is not drawn then
+        color: provided as list of 4 RGBA values
+        nTiles: the number of segments per turn
+        nSegmentDivisions: the number of divisions of each straight segment of the profile; more than 1 gives smoother chamfers and run-outs
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+
+    Example:
+        #an M10 bolt thread of 30 mm with a chamfer at the tip; data from machines.MetricThread('M10')
+        g = graphics.ScrewThread(pAxis=[0,0,0], vAxis=[0,0,0.03], nominalDiameter=0.010, pitch=0.0015,
+                                 chamfer=[0, 0.001], color=graphics.color.grey)
+    """
+    (L, A) = _AxisFrame(vAxis)
+    if L <= 0:
+        raise ValueError('ScrewThread: vAxis must not be zero')
+    if starts < 1 or int(starts) != starts:
+        raise ValueError('ScrewThread: starts must be a positive integer')
+    if nTiles < 3:
+        raise ValueError('ScrewThread: nTiles must be at least 3')
+    (u, v, h) = _ThreadProfile(profile, pitch, depth)
+    for end in [0, 1]:
+        if chamfer[end] < 0 or runOut[end] < 0:
+            raise ValueError('ScrewThread: chamfer and runOut must not be negative')
+        if chamfer[end] > 0 and runOut[end] > 0:
+            raise ValueError('ScrewThread: at the ' + ['start', 'end'][end] + ' either chamfer or runOut may be given, not both')
+    lead = starts*pitch*(1. if rightHanded else -1.)
+    R = 0.5*nominalDiameter + radialOffset
+    #per end the lengths over which the lower bound of the depth falls from h to 0 (removing material of an external
+    #thread) and over which the upper bound rises from 0 to h; a cut end is a lower (external) or upper (internal)
+    #bound at the end face only
+    (lowerLength, upperLength) = (runOut, chamfer) if internal else (chamfer, runOut)
+
+    def Depth(z, d):
+        """the depth d of the profile, bounded by the chamfers, run-outs and cut ends at the axial position z in [0, L]"""
+        lower = np.zeros_like(z)
+        upper = np.full_like(z, h)
+        for (end, dist) in [(0, z), (1, L - z)]:
+            if lowerLength[end] > 0:
+                lower = np.maximum(lower, h*np.clip(1. - dist/lowerLength[end], 0., 1.))
+            elif upperLength[end] == 0 and not internal:
+                lower = np.where(dist <= 0, h, lower)
+            if upperLength[end] > 0:
+                upper = np.minimum(upper, h*np.clip(dist/upperLength[end], 0., 1.))
+            elif lowerLength[end] == 0 and internal:
+                upper = np.where(dist <= 0, 0., upper)
+        return np.minimum(np.maximum(d, lower), upper)
+
+    def Point(phi, s, d):
+        """the local point of the thread surface at the angle phi, the helical coordinate s and the profile depth d"""
+        z = np.clip(s + lead*phi/(2*pi), 0., L)
+        r = R - Depth(z, d)
+        return np.stack([r*cMath.cos(phi), r*cMath.sin(phi), z], axis=-1)
+
+    mesh = ([], [], [])
+    sMin = -max(lead, 0.)
+    sMax = L + max(-lead, 0.)
+    phi = 2*pi*np.arange(nTiles + 1)/nTiles
+    t = np.arange(nSegmentDivisions + 1)/nSegmentDivisions
+    (PHI, T) = np.meshgrid(phi, t) #rows: t, columns: phi
+    (dPhi, dT) = (1e-5, 1e-5)
+    nCols = nTiles + 1
+    quads = []
+    for j in range(nSegmentDivisions):
+        for i in range(nTiles):
+            (a, b, c, d) = (j*nCols + i, j*nCols + i + 1, (j + 1)*nCols + i + 1, (j + 1)*nCols + i)
+            quads += [[a, c, b], [a, d, c]] if internal else [[a, b, c], [a, c, d]]
+    quads = np.array(quads)
+    for k in range(int(np.floor(sMin/pitch)), int(np.ceil(sMax/pitch))):
+        for j in range(len(u) - 1):
+            (s0, s1) = ((k + u[j])*pitch, (k + u[j + 1])*pitch)
+            if s1 < sMin or s0 > sMax or (s1 == s0 and v[j] == v[j + 1]):
+                continue
+            def StripPoint(phiValues, tValues):
+                return Point(phiValues, s0 + tValues*(s1 - s0), h*(v[j] + tValues*(v[j + 1] - v[j])))
+            points = StripPoint(PHI, T)
+            tangentPhi = StripPoint(PHI + dPhi, T) - StripPoint(PHI - dPhi, T)
+            (tPlus, tMinus) = (np.minimum(T + dT, 1.), np.maximum(T - dT, 0.))
+            tangentT = StripPoint(PHI, tPlus) - StripPoint(PHI, tMinus)
+            normals = np.cross(tangentPhi, tangentT)*(-1. if internal else 1.)
+            lengths = np.linalg.norm(normals, axis=-1)
+            radial = np.stack([cMath.cos(PHI), cMath.sin(PHI), np.zeros_like(PHI)], axis=-1)*(-1. if internal else 1.)
+            normals = np.where(lengths[..., None] > 1e-30, normals/np.maximum(lengths, 1e-300)[..., None], radial)
+            _AppendMesh(mesh, (points.reshape(-1, 3), normals.reshape(-1, 3), quads))
+
+    #the end faces: the thread ends in a circle at each end
+    (rStart, rEnd) = (R - Depth(np.array([0.]), 0.5*h)[0], R - Depth(np.array([L]), 0.5*h)[0])
+    if internal:
+        if outerDiameter is not None:
+            rOuter = 0.5*outerDiameter
+            if rOuter <= max(R, rStart, rEnd):
+                raise ValueError('ScrewThread: outerDiameter must be larger than the thread')
+            if contourBefore is None:
+                _AppendMesh(mesh, _Annulus(0., rStart, rOuter, -1, nTiles))
+            if contourAfter is None:
+                _AppendMesh(mesh, _Annulus(L, rEnd, rOuter, 1, nTiles))
+            _AppendMesh(mesh, _CylinderMantle(0., L, rOuter, False, nTiles))
+    else:
+        if contourBefore is None:
+            _AppendMesh(mesh, _Annulus(0., 0., rStart, -1, nTiles))
+        if contourAfter is None:
+            _AppendMesh(mesh, _Annulus(L, 0., rEnd, 1, nTiles))
+    g = _MeshToGraphics(mesh, pAxis, A, color)
+
+    #the contours before and after the thread, as solids of revolution
+    axisUnit = A[:, 2]
+    if contourBefore is not None:
+        g = MergeTriangleLists(g, SolidOfRevolution(pAxis, axisUnit, contourBefore, color=color, nTiles=nTiles))
+    if contourAfter is not None:
+        pEnd = np.array(pAxis, dtype=float) + L*axisUnit
+        g = MergeTriangleLists(g, SolidOfRevolution(pEnd, axisUnit, contourAfter, color=color, nTiles=nTiles))
+    return g
+
+@_ReturnsRows
+def HexagonPrism(pAxis, vAxis, widthAcrossFlats, boreDiameter=0., drawBore=True, color=[0.,0.,0.,1.], nTiles=36):
+    """graphics data of a hexagonal prism, the head of a bolt or a nut, optionally with a bore; one corner of the hexagon
+    lies on the local x axis of ComputeOrthonormalBasisVectors(vAxis) (#3425)
+
+    Args:
+        pAxis: the center of the first end face (3D list or np.array)
+        vAxis: the axis vector; its length is the height of the prism
+        widthAcrossFlats: the distance of opposite flats (the size of the wrench)
+        boreDiameter: the diameter of a bore along the axis; 0: no bore
+        drawBore: if False, the wall of the bore is not drawn - for a nut, whose thread is the bore
+        color: provided as list of 4 RGBA values
+        nTiles: the number of segments of the end faces and of the bore; rounded up to a multiple of 6
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+
+    Example:
+        g = graphics.HexagonPrism(pAxis=[0,0,0], vAxis=[0,0,0.0064], widthAcrossFlats=0.016, color=graphics.color.grey)
+    """
+    (H, A) = _AxisFrame(vAxis)
+    if H <= 0:
+        raise ValueError('HexagonPrism: vAxis must not be zero')
+    rCorner = widthAcrossFlats/cMath.sqrt(3)
+    rBore = 0.5*boreDiameter
+    if rBore < 0 or rBore >= 0.5*widthAcrossFlats:
+        raise ValueError('HexagonPrism: boreDiameter must be between 0 and widthAcrossFlats')
+    nTiles = 6*int(np.ceil(max(nTiles, 6)/6))
+    mesh = ([], [], [])
+    #the six flats, each with its own normal
+    for k in range(6):
+        (a0, a1) = (k*pi/3, (k + 1)*pi/3)
+        (p0, p1) = (rCorner*np.array([cMath.cos(a0), cMath.sin(a0)]), rCorner*np.array([cMath.cos(a1), cMath.sin(a1)]))
+        n = np.array([cMath.cos(a0 + pi/6), cMath.sin(a0 + pi/6), 0.])
+        points = [[p0[0], p0[1], 0], [p1[0], p1[1], 0], [p1[0], p1[1], H], [p0[0], p0[1], H]]
+        _AppendMesh(mesh, (points, [n]*4, [[0, 1, 2], [0, 2, 3]]))
+    #the end faces: between the bore (or the center) and the hexagon, at the same angles
+    phi = 2*pi*np.arange(nTiles + 1)/nTiles
+    flatAngle = (np.floor(phi/(pi/3)) + 0.5)*(pi/3)
+    rHexagon = 0.5*widthAcrossFlats/cMath.cos(phi - flatAngle)
+    for (z, normalZ) in [(0., -1), (H, 1)]:
+        (points, normals, trigs) = _Annulus(z, rBore, 1., normalZ, nTiles)
+        points[nTiles + 1:, 0:2] *= rHexagon[:, None] #the outer ring scaled from radius 1 to the hexagon
+        _AppendMesh(mesh, (points, normals, trigs))
+    if rBore > 0 and drawBore:
+        _AppendMesh(mesh, _CylinderMantle(0., H, rBore, True, nTiles))
+    return _MeshToGraphics(mesh, pAxis, A, color)
+
+def _ThreadData(size, nominalDiameter, pitch, function):
+    """the data of the size of machines.MetricThread, with nominalDiameter and pitch overriding it"""
+    if size is not None:
+        import exudyn.machines as machines #here, as machines need not be loaded with graphics
+        data = machines.MetricThread(size)
+    elif nominalDiameter is not None and pitch is not None:
+        data = {'nominalDiameter': nominalDiameter, 'pitch': pitch}
+    else:
+        raise ValueError(function + ': give size (e.g. "M10") or nominalDiameter and pitch')
+    if nominalDiameter is not None:
+        data['nominalDiameter'] = nominalDiameter
+    if pitch is not None:
+        data['pitch'] = pitch
+    return data
+
+@_ReturnsRows
+def Bolt(pAxis, vAxis, length, size=None, nominalDiameter=None, pitch=None, threadLength=None, headHeight=None,
+         widthAcrossFlats=None, profile='metric', starts=1, rightHanded=True, color=[0.,0.,0.,1.], nTiles=36):
+    """graphics data of a hexagon bolt: the head, an unthreaded shank and the thread with a chamfer at the tip; with
+    length 0 only the head (#3425)
+
+    Args:
+        pAxis: the point on the axis at the bearing face of the head, where the shaft starts (3D list or np.array)
+        vAxis: the direction of the shaft, from the head to the tip; its length is not used
+        length: the length of the shaft below the head; 0: only the head is drawn
+        size: the size of an ISO metric coarse thread, e.g. 'M10' (machines.MetricThread), giving the defaults of nominalDiameter, pitch, headHeight and widthAcrossFlats
+        nominalDiameter: the nominal diameter; overrides that of size
+        pitch: the pitch; overrides that of size
+        threadLength: the length of the thread at the tip; None: the whole shaft is threaded; else the shank above it has the nominal diameter, and the thread runs out into it over two pitches
+        headHeight: the height of the head; None: from size, or 0.7 nominalDiameter
+        widthAcrossFlats: the width across flats of the head; None: from size, or 1.6 nominalDiameter
+        profile: the thread profile, see ScrewThread
+        starts: the number of starts, see ScrewThread
+        rightHanded: True for a right-hand thread
+        color: provided as list of 4 RGBA values
+        nTiles: the number of segments per turn and of the head; a multiple of 6 is best
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+
+    Example:
+        g = graphics.Bolt(pAxis=[0,0,0], vAxis=[0,0,-1], length=0.04, size='M10', threadLength=0.026,
+                          color=graphics.color.grey)
+    """
+    data = _ThreadData(size, nominalDiameter, pitch, 'Bolt')
+    d = data['nominalDiameter']
+    k = headHeight if headHeight is not None else data.get('headHeight', 0.7*d)
+    s = widthAcrossFlats if widthAcrossFlats is not None else data.get('widthAcrossFlats', 1.6*d)
+    (_, A) = _AxisFrame(vAxis)
+    e = A[:, 2]
+    p0 = np.array(pAxis, dtype=float)
+    g = HexagonPrism(p0 - k*e, k*e, s, color=color, nTiles=nTiles)
+    if length > 0:
+        b = length if threadLength is None else min(threadLength, length)
+        shank = length - b
+        (_, _, h) = _ThreadProfile(profile, data['pitch'], None if isinstance(profile, str) else data.get('depth'))
+        if shank > 0:
+            g = MergeTriangleLists(g, Cylinder(p0, shank*e, 0.5*d, color=color, nTiles=nTiles))
+        if b > 0:
+            runOutLength = min(2*data['pitch'], 0.5*b) if shank > 0 else 0.
+            thread = ScrewThread(p0 + shank*e, b*e, d, data['pitch'], profile=profile, depth=h, starts=starts,
+                                 rightHanded=rightHanded, chamfer=[0., min(h, 0.5*b)], runOut=[runOutLength, 0.],
+                                 color=color, nTiles=nTiles)
+            g = MergeTriangleLists(g, thread)
+    return g
+
+@_ReturnsRows
+def Nut(pAxis, vAxis, size=None, nominalDiameter=None, pitch=None, height=None, widthAcrossFlats=None,
+        profile='metric', starts=1, rightHanded=True, clearance=None, color=[0.,0.,0.,1.], nTiles=36):
+    """graphics data of a hexagon nut: the hexagon and the internal thread, countersunk at both faces (#3425)
+
+    Args:
+        pAxis: the center of the first face of the nut (3D list or np.array)
+        vAxis: the direction of the axis; its length is not used
+        size: the size of an ISO metric coarse thread, e.g. 'M10' (machines.MetricThread), giving the defaults of nominalDiameter, pitch, height and widthAcrossFlats
+        nominalDiameter: the nominal diameter; overrides that of size
+        pitch: the pitch; overrides that of size
+        height: the height of the nut; None: from size, or 0.8 nominalDiameter
+        widthAcrossFlats: the width across flats; None: from size, or 1.6 nominalDiameter
+        profile: the thread profile, see ScrewThread
+        starts: the number of starts, see ScrewThread
+        rightHanded: True for a right-hand thread
+        clearance: the radial clearance of the thread, so that a bolt of the same size drawn inside does not coincide with it; None: 0.02 pitch
+        color: provided as list of 4 RGBA values
+        nTiles: the number of segments per turn and of the hexagon; a multiple of 6 is best
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+
+    Example:
+        g = graphics.Nut(pAxis=[0,0,0.02], vAxis=[0,0,1], size='M10', color=graphics.color.grey)
+    """
+    data = _ThreadData(size, nominalDiameter, pitch, 'Nut')
+    d = data['nominalDiameter']
+    m = height if height is not None else data.get('nutHeight', 0.8*d)
+    s = widthAcrossFlats if widthAcrossFlats is not None else data.get('widthAcrossFlats', 1.6*d)
+    c = clearance if clearance is not None else 0.02*data['pitch']
+    (_, A) = _AxisFrame(vAxis)
+    e = A[:, 2]
+    (_, _, h) = _ThreadProfile(profile, data['pitch'], None if isinstance(profile, str) else data.get('depth'))
+    countersink = min(h, 0.25*m)
+    thread = ScrewThread(pAxis, m*e, d, data['pitch'], profile=profile, depth=h, starts=starts, rightHanded=rightHanded,
+                         internal=True, chamfer=[countersink, countersink], radialOffset=c, color=color, nTiles=nTiles)
+    hexagon = HexagonPrism(pAxis, m*e, s, boreDiameter=d + 2*c, drawBore=False, color=color, nTiles=nTiles)
+    return MergeTriangleLists(hexagon, thread)
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
