@@ -46,6 +46,13 @@ inline RTVector3D ColorRGBA2RGB(const RTVector4D& color4)
 typedef VSettingsMaterial GLMaterial;
 typedef std::array<RTfloat, MAX_LIGHTS_GLFW> ShadowValue;
 
+//! the points of a triangle as the intersection test needs them: v0 and the two edges, 36 bytes instead of the 128 of
+//! a GLTriangle, in the order of the triangles, so that the traversal stays in the cache (#3474)
+struct RTCompactTriangle
+{
+	RTVector3D v0, edge1, edge2;
+};
+
 //! RaytracingLight: parameters have same meaning as in openGL.light
 class RaytracingLight
 {
@@ -148,6 +155,14 @@ public:
 	static constexpr Index maxNThreads = 256;
 	mutable ArrayIndex tempTrigIndices[maxNThreads];
 	mutable ArrayIndex tempSearchTreeBins[maxNThreads];
+
+	//! the search tree as one flat array (CSR): the items of cell g are binItems[binOffsets[g]] ... binItems[binOffsets[g+1]-1],
+	//! and the triangles in their compact form (#3474)
+	ArrayIndex binOffsets;
+	ArrayIndex binItems;
+	ResizableArray<RTCompactTriangle> compactTriangles;
+	//! per thread and light the item that blocked the last shadow ray, tested first by the next one; -1 = none (#3474)
+	mutable Index lastOccluder[maxNThreads][MAX_LIGHTS_GLFW];
 
 	//! some temporary structures for rendering:
 	ResizableArray<unsigned char> finalImageAA; //! for antializing, final smoothed image
@@ -273,7 +288,7 @@ public:
 
 	//! ray-triangle intersection, the geometry only: true and t, u, v if the ray hits the triangle (#3468)
 	inline bool IntersectRayWithTriangleGeometry(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
-		const GLTriangle& triangle, const RaytracingSettings& RTS, RTfloat& t, RTfloat& u, RTfloat& v);
+		const RTCompactTriangle& triangle, const RaytracingSettings& RTS, RTfloat& t, RTfloat& u, RTfloat& v);
 
 	//! the shading data of a hit of a triangle at u, v: normal, color, material, alpha and the side; computed only for a
 	//! hit that is closer than the closest one so far (#3468)
@@ -302,9 +317,19 @@ public:
 		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& closestHit,
 		bool returnOnSingleHit = false, RTfloat minDistanceZ = std::numeric_limits<RTfloat>::lowest());
 
-	//! check if point is in shadow with given light
-	bool IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles, 
-		const RaytracingSettings& RTS, RTfloat maxDistance);
+	//! the cells of the grid crossed by a ray, in their order, until visit(item) returns true or the next cell begins
+	//! beyond cutOffDistance, which visit may decrease; each item once per ray as far as the mailbox remembers (#3468, #3474)
+	template<class TVisit>
+	void TraverseGrid(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const RaytracingSettings& RTS,
+		const RTfloat& cutOffDistance, const TVisit& visit) const;
+
+	//! check if point is in shadow of light lightID; the item that blocked the last shadow ray of this thread and light
+	//! is tested first (#3474)
+	bool IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles,
+		const RaytracingSettings& RTS, RTfloat maxDistance, Index lightID);
+
+	//! the flat search tree and the compact triangles from RTS.searchTree and the triangles (#3474)
+	void BuildFlatSearchTree(const ResizableArray<GLTriangle>& triangles);
 
 	//! basic static triangle (colorbar)
 	bool IsStaticTriangle(Index triangleIndex) const

@@ -6431,6 +6431,21 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-26-7"></a>
+### RG6.26.7, RG6.26.8 — raytracer: last-occluder cache, flat grid, compact triangles (2026-11-12, #3474)
+
+*(Maintainer 2026-11-12: do the suggested next steps.)*
+
+- RTS.lastOccluder per thread and light, tested first by IsInShadow (new argument lightID), reset per image in
+  BuildFlatSearchTree; RTS.binOffsets/binItems (CSR) and RTS.compactTriangles (v0, edge1, edge2); TraverseGrid, one
+  template with the mailbox and the cut-off, for IntersectRayWithTriangles (closest hit and any hit); the disabled
+  full line search removed.
+- Bitwise: the images of the benchmark equal those of the commit before (compared as arrays without the version
+  text). A first comparison flagged every image as changed: the MD5 of the benchmark included the version text, which
+  had moved from 1.13.602 to 1.13.604; the MD5 now covers the upper 90 %, `--save` writes the images.
+- Timing, best of 7: 0 to -5 % (N = 13, S = 3: 0.110 -> 0.106 s), far below the estimates; the scene's 21172
+  triangles fit the cache and most shadow rays are lit. Kept (bitwise). raytracerImprovements.md section 6.1.
+
 <a id="rg6-26-2"></a>
 ### RG6.26.2-RG6.26.6 — raytracer: the image-preserving speedups and the precomputation (2026-11-12, #3468, #3469)
 

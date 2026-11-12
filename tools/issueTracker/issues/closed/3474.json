@@ -1,0 +1,15 @@
+{
+  "number": 3474,
+  "title": "Raytracer: a last-occluder cache for shadow rays, a flat search grid and compact triangles",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "raytracerImprovements.md O6 and O2/I4: the item that blocked the last shadow ray of a thread and light is tested first; the cells of the grid as one flat index array with offsets instead of an array per cell; the triangle test reads v0 and the two edges (36 bytes) instead of the GLTriangle (128 bytes), which is used only for the shading of the closest hit. The image stays bitwise.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 21:50",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer tests the item that blocked the last shadow ray first, keeps its search grid in one flat array and tests triangles from a compact copy of their points; the images stay the same.",
+  "resolvedInVersion": "1.13.605"
+}

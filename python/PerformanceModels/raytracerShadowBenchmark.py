@@ -5,11 +5,11 @@
 #           results must agree on every platform): the scene of TestModels/raytracerNOGLFWtest.py at 1200 x 1000,
 #           the ten bodies on their circle, an oblique light with a radius, a chrome floor with reflections.
 #           Each configuration (no shadow, hard shadow, soft shadows per pixel and at reduced resolution, a light
-#           without radius) is rendered several times; the best time and an MD5 of the image are printed, so
+#           without radius) is rendered several times; the best time and an MD5 of the image (the upper 90 %, without the version text) are printed, so
 #           that a change of the raytracer is checked for speed and for an unchanged image (#3468).
 #           Arguments: --out FILE writes the results as JSON, --compare FILE compares with such a file,
 #           --reference adds the mean difference to a reference with 240 shadow samples per pixel (slow),
-#           --repeat N the number of images per configuration (default 3).
+#           --repeat N the number of images per configuration (default 3), --save DIRECTORY the images as .npy.
 #           The design and the measurements: docs/dev/design/raytracerImprovements.md.
 #
 # Author:   Johannes Gerstmayr
@@ -97,8 +97,11 @@ if __name__ == '__main__':
     for name, configuration in configurations.items():
         Configure(*configuration)
         timeBest, image = Render(repeat)
-        md5 = hashlib.md5(np.ascontiguousarray(image).tobytes()).hexdigest()
+        rows = int(0.9 * image.shape[0]) #without the version text at the bottom, which changes with every version
+        md5 = hashlib.md5(np.ascontiguousarray(image[:rows]).tobytes()).hexdigest()
         results[name] = {'time': timeBest, 'md5': md5}
+        if Argument('--save') is not None:
+            np.save(os.path.join(Argument('--save'), name.replace(',', '').replace(' ', '_').replace('=', '') + '.npy'), image)
         line = '%-26s %9.4f  %-32s' % (name, timeBest, md5)
         if reference is not None:
             results[name]['difference'] = MeanDifference(image, reference)

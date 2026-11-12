@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 575 | 1.13.604 |
+| 1.13 | Newborn | 576 | 1.13.605 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.605** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: a last-occluder cache for shadow rays, a flat search grid and compact triangles (#3474)
+  - description: raytracerImprovements.md O6 and O2/I4: the item that blocked the last shadow ray of a thread and light is tested first; the cells of the grid as one flat index array with offsets instead of an array per cell; the triangle test reads v0 and the two edges (36 bytes) instead of the GLTriangle (128 bytes), which is used only for the shading of the closest hit. The image stays bitwise.
+  - **notes:** The raytracer tests the item that blocked the last shadow ray first, keeps its search grid in one flat array and tests triangles from a compact copy of their points; the images stay the same.
+  - date resolved: **2026-11-12 21:50**, date raised: 2026-11-12
 - **1.13.604** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: precompute shadows at reduced resolution only if a light has a radius (#3469)
   - description: The low-resolution shadow pass (shadowScalingFactor \> 1) also runs when no light qualifies for soft shadows (lightRadius 0, a directional light, no shadow): 24 % of the time for a blurred hard shadow. It shall run only if a light casts soft shadows; other configurations get the hard shadow at full resolution, which changes their images.
   - **notes:** The raytracer precomputes the shadow at reduced resolution only if a light casts soft shadows (a light with a position and lightRadius \> 0); otherwise the hard shadow is computed at full resolution instead of being blurred.

@@ -52,8 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The remaining image-preserving raytracer speedups** (RG6.26.7 occluder cache, RG6.26.8 flat grid), then the
-   image-changing group (RG6.26.9-RG6.26.11) and the correctness points (RG6.26.13-RG6.26.15): agreed on 2026-11-12.
+2. **The image-changing raytracer group** (RG6.26.9-RG6.26.11) with the correctness points (RG6.26.13-RG6.26.15): agreed on
+   2026-11-12, one update of the reference image.
 3. **The linear algebra cleanup** (RG5.2.8.1, RG5.2.8.2) and the transposed view (RG5.2.7.2): no computation changes.
 4. **The two Linux differences** (RG4.29): before the rehearsal, so that the Linux jobs can be green.
 5. **The larger open work**, once the next release is planned: the plugin interface (RG8).
@@ -70,7 +70,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
-  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (10 open sub-steps)
+  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (8 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -116,7 +116,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 15 | Performance |
-| RG6 | OPEN | 11 | Graphics and rendering |
+| RG6 | OPEN | 9 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -1362,13 +1362,17 @@ CLOSED 2026-11-12 (#3468): bitwise (MD5 of the benchmark images); see raytracerI
 
 CLOSED 2026-11-12 (#3468): bitwise (MD5 of the benchmark images); see raytracerImprovements.md section 6. [log](exudynRevisionLog2026c.md#rg6-26-2)
 
-#### **OPEN_RG6.26.7** A last-occluder cache per thread and light for shadow rays
+#### **CLOSED_RG6.26.7** A last-occluder cache per thread and light for shadow rays
 
 O6: the triangle that blocked the previous shadow ray tested first; umbra samples cost one test.
 
-#### **OPEN_RG6.26.8** A flat (CSR) grid and a compact triangle array for the traversal
+CLOSED 2026-11-12 (#3474): bitwise; 0 to -5 % in the benchmark scene (far less than estimated: its triangles fit the cache, most shadow rays are lit); raytracerImprovements.md section 6.1. [log](exudynRevisionLog2026c.md#rg6-26-7)
+
+#### **CLOSED_RG6.26.8** A flat (CSR) grid and a compact triangle array for the traversal
 
 O2, I4: the bins as one index array with offsets, the triangle points in 36-48 bytes; GLTriangle only for the shading; bitwise if the order of the tests is kept.
+
+CLOSED 2026-11-12 (#3474): bitwise; 0 to -5 % in the benchmark scene (far less than estimated: its triangles fit the cache, most shadow rays are lit); raytracerImprovements.md section 6.1. [log](exudynRevisionLog2026c.md#rg6-26-7)
 
 #### **OPEN_RG6.26.9** Stratified disk samples with a rotation per pixel
 

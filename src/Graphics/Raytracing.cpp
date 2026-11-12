@@ -178,14 +178,11 @@ Raytracer::~Raytracer()
 //! ray-triangle intersection (Moeller-Trumbore), the geometry only; the shading of the hit is ShadeTriangleHit, called
 //! only for a hit closer than the closest one so far (#3468)
 inline bool Raytracer::IntersectRayWithTriangleGeometry(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
-	const GLTriangle& triangle, const RaytracingSettings& RTS, RTfloat& t, RTfloat& u, RTfloat& v)
+	const RTCompactTriangle& triangle, const RaytracingSettings& RTS, RTfloat& t, RTfloat& u, RTfloat& v)
 {
-	const RTVector3D& v0 = triangle.points[0];
-	const RTVector3D& v1 = triangle.points[1];
-	const RTVector3D& v2 = triangle.points[2];
-
-	RTVector3D edge1 = v1 - v0;
-	RTVector3D edge2 = v2 - v0;
+	const RTVector3D& v0 = triangle.v0;
+	const RTVector3D& edge1 = triangle.edge1; //v1 - v0, computed once per image
+	const RTVector3D& edge2 = triangle.edge2; //v2 - v0
 	RTVector3D pVec = rayDirection.CrossProduct(edge2);
 	RTfloat det = edge1 * pVec;
 
@@ -284,7 +281,7 @@ inline bool Raytracer::IntersectRayWithItem(const RTVector3D& rayOrigin, const R
 	if (iInd < triangles.NumberOfItems())
 	{
 		RTfloat t, u, v;
-		if (!IntersectRayWithTriangleGeometry(rayOrigin, rayDirection, triangles[iInd], RTS, t, u, v)) { return false; }
+		if (!IntersectRayWithTriangleGeometry(rayOrigin, rayDirection, RTS.compactTriangles[iInd], RTS, t, u, v)) { return false; }
 		if (!(t < closestDistance && t * (-rayDirection[2]) >= minDistanceZ)) { return false; }
 		ShadeTriangleHit(rayDirection, triangles[iInd], RTS, t, u, v, result);
 		if (iInd < triangleTextures.NumberOfItems() && triangleTextures[iInd] >= 0) { ApplyTexture(triangleTextures[iInd], result); }
@@ -294,16 +291,56 @@ inline bool Raytracer::IntersectRayWithItem(const RTVector3D& rayOrigin, const R
 	return result.hit && result.distance < closestDistance && result.distance * (-rayDirection[2]) >= minDistanceZ;
 }
 
-//! check if point is in shadow with given light
-bool Raytracer::IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles, 
-	const RaytracingSettings& RTS, RTfloat maxDistance) 
+//! check if point is in shadow of light lightID: any item between point and the light; the item that blocked the last
+//! shadow ray of this thread and light first, as neighbouring pixels and samples are mostly blocked by the same (#3474)
+bool Raytracer::IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles,
+	const RaytracingSettings& RTS, RTfloat maxDistance, Index lightID)
 {
 	IntersectionResult shadowHit;
+	Index& lastOccluder = RTS.lastOccluder[raytracerThreadIndex][lightID];
+	if (lastOccluder >= 0 && IntersectRayWithItem(point, lightDirection, lastOccluder, triangles, RTS, maxDistance,
+		std::numeric_limits<RTfloat>::lowest(), shadowHit))
+	{
+		return true;
+	}
 	IntersectRayWithTriangles(point, lightDirection, maxDistance, triangles, RTS, shadowHit, true);
-
-	return (shadowHit.hit && shadowHit.distance < maxDistance);
+	if (shadowHit.hit) { lastOccluder = shadowHit.triangleIndex; }
+	return shadowHit.hit;
 }
 
+//! the flat search tree (CSR) and the compact triangles, after RTS.searchTree is filled (#3474)
+void Raytracer::BuildFlatSearchTree(const ResizableArray<GLTriangle>& triangles)
+{
+	Index nCells = RTS.searchTree.NumberOfCells();
+	RTS.binOffsets.SetNumberOfItems(nCells + 1);
+	Index count = 0;
+	for (Index g = 0; g < nCells; g++)
+	{
+		RTS.binOffsets[g] = count;
+		count += RTS.searchTree.GetItemsOfBin(g).NumberOfItems();
+	}
+	RTS.binOffsets[nCells] = count;
+	RTS.binItems.SetNumberOfItems(count);
+	for (Index g = 0; g < nCells; g++)
+	{
+		Index offset = RTS.binOffsets[g];
+		for (Index item : RTS.searchTree.GetItemsOfBin(g)) { RTS.binItems[offset++] = item; }
+	}
+
+	RTS.compactTriangles.SetNumberOfItems(triangles.NumberOfItems());
+	for (Index i = 0; i < triangles.NumberOfItems(); i++)
+	{
+		const GLTriangle& triangle = triangles[i];
+		RTS.compactTriangles[i].v0 = triangle.points[0];
+		RTS.compactTriangles[i].edge1 = triangle.points[1] - triangle.points[0];
+		RTS.compactTriangles[i].edge2 = triangle.points[2] - triangle.points[0];
+	}
+
+	for (Index thread = 0; thread < RaytracingSettings::maxNThreads; thread++)
+	{
+		for (Index light = 0; light < MAX_LIGHTS_GLFW; light++) { RTS.lastOccluder[thread][light] = -1; }
+	}
+}
 
 //refraction for transparency
 RTVector3D Raytracer::Refract(const RTVector3D& I, const RTVector3D& N, RTfloat eta) 
@@ -326,91 +363,79 @@ RTVector3D Raytracer::Refract(const RTVector3D& I, const RTVector3D& N, RTfloat 
 	return I * etaRatio + n * (etaRatio * cosi - std::sqrt(k));
 }
 
+template<class TVisit>
+void Raytracer::TraverseGrid(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const RaytracingSettings& RTS,
+	const RTfloat& cutOffDistance, const TVisit& visit) const
+{
+	Index stepX = 0, stepY = 0, stepZ = 0;
+	RTfloat tDeltaX = 0, tDeltaY = 0, tDeltaZ = 0;
+	Index ix = 0, iy = 0, iz = 0;
+	RTfloat tMaxX = 0, tMaxY = 0, tMaxZ = 0;
+
+	RTfloat tEntry = 0; //the ray enters the grid at rayOrigin + tEntry*rayDirection
+	bool search = RTS.searchTree.GetBinsCrossedByLineInit(rayOrigin, rayDirection, RTS.tempSearchTreeBins[raytracerThreadIndex],
+		stepX, stepY, stepZ,
+		tDeltaX, tDeltaY, tDeltaZ,
+		ix, iy, iz,
+		tMaxX, tMaxY, tMaxZ, &tEntry);
+
+	Index sx = RTS.searchTree.SizeX();
+	Index sy = RTS.searchTree.SizeY();
+	Index sz = RTS.searchTree.SizeZ();
+
+	//a triangle that lies in several cells is tested once per ray: the items tested last, by their index modulo
+	//the size (mailboxing); testing it again would give the same hit, which is not closer (#3468)
+	constexpr Index mailboxSize = 32;
+	Index mailbox[mailboxSize];
+	for (Index& item : mailbox) { item = -1; }
+
+	RTfloat tCell = 0; //the cell is entered at tEntry + tCell
+	RTfloat cutOffMargin = 20.f*RTS.epsilon;
+	const Index* items = RTS.binItems.GetDataPointer();
+	const Index* offsets = RTS.binOffsets.GetDataPointer();
+
+	// Traverse until the ray exits the box, or until the cells lie beyond cutOffDistance (#3468)
+	while (search && ix >= 0 && ix < sx && iy >= 0 && iy < sy && iz >= 0 && iz < sz)
+	{
+		if (tEntry + tCell > cutOffDistance * (1.f + 1e-4f) + cutOffMargin) { return; } //a margin for the round-off of t
+
+		Index cell = RTS.searchTree.GlobalIndex(ix, iy, iz);
+		for (Index k = offsets[cell]; k < offsets[cell + 1]; k++)
+		{
+			Index iInd = items[k];
+			Index& slot = mailbox[iInd & (mailboxSize - 1)];
+			if (slot == iInd) { continue; }
+			slot = iInd;
+			if (visit(iInd)) { return; }
+		}
+
+		tCell = EXUstd::Minimum(tMaxX, EXUstd::Minimum(tMaxY, tMaxZ));
+		search = RTS.searchTree.GetBinsCrossedByLineUpdate(
+			stepX, stepY, stepZ,
+			tDeltaX, tDeltaY, tDeltaZ,
+			ix, iy, iz,
+			tMaxX, tMaxY, tMaxZ);
+	}
+}
+
 void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, RTfloat rayLength,
 	const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& closestHit,
 	bool returnOnSingleHit, RTfloat minDistanceZ)
 {
-	Index threadID = raytracerThreadIndex;
-
-	constexpr bool useFullLineSearch = false; //false is faster but can have problems
-
 	IntersectionResult hit;
 	closestHit.Init();
 	closestHit.distance = rayLength; //for lights, we do not look for anything beyond rayLength
 
-	if (useFullLineSearch)
-	{
-		RTS.searchTree.GetBinsCrossedByLine(rayOrigin, rayDirection, RTS.tempSearchTreeBins[threadID]);
-		for (Index binInd : RTS.tempSearchTreeBins[threadID])
+	TraverseGrid(rayOrigin, rayDirection, RTS, closestHit.distance, [&](Index iInd)
 		{
-			const ArrayIndex& trigIndices = RTS.searchTree.GetItemsOfBin(binInd);
-			for (Index iInd : trigIndices)
+			if (IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, closestHit.distance, minDistanceZ, hit))
 			{
-				if (IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, closestHit.distance, minDistanceZ, hit))
-				{
-					closestHit = hit;
-					closestHit.triangleIndex = iInd;
-					if (returnOnSingleHit || IsStaticTriangle(closestHit.triangleIndex)) { return; }
-				}
+				closestHit = hit;
+				closestHit.triangleIndex = iInd;
+				if (returnOnSingleHit || IsStaticTriangle(closestHit.triangleIndex)) { return true; }
 			}
-		}
-	}
-	else
-	{
-		//RTfloat tmax = 0;
-		Index stepX = 0, stepY = 0, stepZ = 0;
-		RTfloat tDeltaX = 0, tDeltaY = 0, tDeltaZ = 0;
-		Index ix = 0, iy = 0, iz = 0;
-		RTfloat tMaxX = 0, tMaxY = 0, tMaxZ = 0;
-
-		RTfloat tEntry = 0; //the ray enters the grid at rayOrigin + tEntry*rayDirection
-		bool search = RTS.searchTree.GetBinsCrossedByLineInit(rayOrigin, rayDirection, RTS.tempSearchTreeBins[threadID],
-			stepX, stepY, stepZ,
-			tDeltaX, tDeltaY, tDeltaZ,
-			ix, iy, iz,
-			tMaxX, tMaxY, tMaxZ, &tEntry);
-
-		Index sx = RTS.searchTree.SizeX();
-		Index sy = RTS.searchTree.SizeY();
-		Index sz = RTS.searchTree.SizeZ();
-
-		//a triangle that lies in several cells is tested once per ray: the items tested last, by their index modulo
-		//the size (mailboxing); testing it again would give the same hit, which is not closer (#3468)
-		constexpr Index mailboxSize = 32;
-		Index mailbox[mailboxSize];
-		for (Index& item : mailbox) { item = -1; }
-
-		RTfloat tCell = 0; //the cell is entered at tEntry + tCell
-		RTfloat cutOffMargin = 20.f*RTS.epsilon;
-
-		// Traverse until the ray exits the box, or until the cells lie beyond the closest hit or beyond rayLength,
-		//to which closestHit.distance is initialized (#3468)
-		while (search && ix >= 0 && ix < sx && iy >= 0 && iy < sy && iz >= 0 && iz < sz)
-		{
-			if (tEntry + tCell > closestHit.distance * (1.f + 1e-4f) + cutOffMargin) { return; } //a margin for the round-off of t
-
-			const ArrayIndex& trigIndices = RTS.searchTree.GetItemsOfBin(RTS.searchTree.GlobalIndex(ix, iy, iz));
-			for (Index iInd : trigIndices)
-			{
-				Index& slot = mailbox[iInd & (mailboxSize - 1)];
-				if (slot == iInd) { continue; }
-				slot = iInd;
-				if (IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, closestHit.distance, minDistanceZ, hit))
-				{
-					closestHit = hit;
-					closestHit.triangleIndex = iInd;
-					if (returnOnSingleHit || IsStaticTriangle(closestHit.triangleIndex)) { return; }
-				}
-			}
-
-			tCell = EXUstd::Minimum(tMaxX, EXUstd::Minimum(tMaxY, tMaxZ));
-			search = RTS.searchTree.GetBinsCrossedByLineUpdate(
-				stepX, stepY, stepZ,
-				tDeltaX, tDeltaY, tDeltaZ,
-				ix, iy, iz,
-				tMaxX, tMaxY, tMaxZ);
-		}
-	}
+			return false;
+		});
 }
 
 
@@ -605,7 +630,7 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 			{
 				if (light.shadow)
 				{
-					if (IsInShadow(hitPoint + lightDir * 0.01f, lightDir, triangles, RTS, lightDistance)) 
+					if (IsInShadow(hitPoint + lightDir * 0.01f, lightDir, triangles, RTS, lightDistance, lightID)) 
 					{
 						continue;
 					}
@@ -1615,6 +1640,7 @@ ResizableArray<GLLine> triangles6Edges;
 			sBox.Add(sphere.point - Float3({ sphere.radius, sphere.radius, sphere.radius }));
 			RTS.searchTree.AddItem(sBox, graphicsData.glTriangles.NumberOfItems() + i);
 		}
+		BuildFlatSearchTree(graphicsData.glTriangles);
 
 		//std::cout << "searchTree box=" << RTS.searchTree.GetBox() << "\n";
 		//std::cout << "box3D=" << box3D << "\n";

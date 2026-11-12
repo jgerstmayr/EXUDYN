@@ -324,3 +324,29 @@ The test suite is unchanged (the checksum of raytracerNOGLFWtest.py and the rayt
 part of section 2 is gone; what remains at N = 13, S = 3 over the hard shadow is the shadow rays of the low-resolution
 pass. The per-pixel path is still N/4 primary passes: that is for the adaptive sampling (RG6.26.10) and the
 stratified samples (RG6.26.9).
+
+### 6.1 The last-occluder cache and the flat grid (RG6.26.7, RG6.26.8, #3474)
+
+- `RTS.lastOccluder[thread][light]`: the item that blocked the last shadow ray of this thread and light, tested first
+  by `IsInShadow`; reset with every image.
+- `BuildFlatSearchTree`: the items of all cells in one array `binItems` with `binOffsets` (CSR), and
+  `compactTriangles` (v0 and the two edges, 36 bytes) for the geometric test; the `GLTriangle` is read only to shade
+  the closest hit. The traversal is one template, `TraverseGrid`, with the mailbox and the cut-off, for the closest
+  hit and for shadow rays; the unused full line search is removed.
+
+The images are bitwise the same. The benchmark's MD5 now covers the upper 90 % of the image, as the version text at
+the bottom changes with each version (a first comparison across a version change reported every image as changed).
+Best of seven images against the commit before:
+
+| configuration | before [s] | after [s] | change |
+|---|---:|---:|---:|
+| no shadow | 0.0599 | 0.0590 | -1.6 % |
+| hard shadow | 0.0844 | 0.0815 | -3.4 % |
+| N = 13, S = 3 | 0.1103 | 0.1060 | -3.9 % |
+| N = 50, S = 3 | 0.1705 | 0.1653 | -3.1 % |
+| N = 13, per pixel | 0.2668 | 0.2667 | 0 % |
+| `lightRadius = 0` | 0.0881 | 0.0834 | -5.2 % |
+
+Far less than estimated in section 4 (O6: 10-20 %, O2: 1.3-2x): the scene has 21172 triangles, whose data fits the
+cache anyway, and most shadow rays reach the light, where the cache costs one test and saves nothing. Both are kept,
+being bitwise and cheaper in scenes with many triangles and large umbras.
