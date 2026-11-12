@@ -622,7 +622,7 @@ namespace ContactCylinder {
 			FacePoints(cylinder, trianglePoints[0], triangleNormal, face, points);
 			//the distance: the lowest point of the cylinder along the normal, its support point
 			Vector3D lowest = cylinder.frame.GetTranslation() + cylinder.frame.GetRotation() *
-				cylinder.Shape().SupportCore(cylinder.frame.GetRotation().GetTransposed() * (-1. * triangleNormal));
+				cylinder.Shape().SupportCore(Transposed(cylinder.frame.GetRotation()) * (-1. * triangleNormal));
 			points.closest.distance = triangleNormal * (lowest - trianglePoints[0]);
 			points.closest.point0 = lowest;
 			points.closest.point1 = lowest - points.closest.distance * triangleNormal;

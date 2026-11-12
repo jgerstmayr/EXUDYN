@@ -6520,6 +6520,20 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg5-2-7-3"></a>
+### RG5.2.7.3, RG5.2.7.4 — Transposed(A) * x in the item code, SlimVector::MultAdd (2026-11-13, #3483, #3484)
+
+*(Maintainer 2026-11-12: do the suggested next steps.)*
+
+- #3483: scratch p_transposed.py replaced `X.GetTransposed() *` by `Transposed(X) *` in 25 files (63 places, the operand
+  found backwards over identifiers, ., ->, :: and parentheses; graphics, tests and the benchmark left out); the 2x2
+  matrix of ObjectConnectorRollingDiscPenalty (ConstSizeMatrix<4>, no view) went back, which the compiler showed. The
+  test suite: the 448 result lines unchanged; exudev perf regular 39.98 -> 39.65 s (-0.8 %, noise; the products are a
+  few ns each). The descriptions of 19 items marked as checked (only the spelling of the products changed).
+- #3484: SlimVectorBase::MultAdd(scalar, v); unit test bitwise against += scalar * v. Not yet used.
+- Linux check of RG4.29 (a local clone of 05df2f09b in WSL, venvP313): 341 test models and 108 mini examples
+  successful, 2 skipped (h5py).
+
 <a id="rg4-29"></a>
 ### RG4.29 — the two Linux differences: Python pow and the platform BLAS (2026-11-13, #3465, #3482)
 

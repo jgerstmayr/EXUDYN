@@ -541,7 +541,7 @@ void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, Temporary
 
 		kinematics[k].frame = HomogeneousTransformationBase<DRealRigidMarkers>(rotation, position);
 		kinematics[k].velocity = velocity;
-		kinematics[k].angularVelocityLocal = rotation.GetTransposed() * angularVelocity;
+		kinematics[k].angularVelocityLocal = Transposed(rotation) * angularVelocity;
 	}
 
 	SlimVectorBase<DRealRigidMarkers, 3> forces[2], torques[2];
@@ -654,7 +654,7 @@ void ConnectorJacobianODE2RigidMarkersNumerical(const CSystemData& cSystemData, 
 				{
 					Vector3D increment({ 0., 0., 0. });
 					increment[direction - 3] = eps;
-					perturbed[k].angularVelocityLocal += A.GetTransposed() * increment;
+					perturbed[k].angularVelocityLocal += Transposed(A) * increment;
 				}
 
 				connector.ComputeConnectorForceRigid(perturbed, t, forces1, torques1);

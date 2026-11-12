@@ -285,7 +285,7 @@ public:
 		result.GetTranslation() = RotateVectorTransposed(p);
 		if (!(HasNoRotation() && other.HasNoRotation()))
 		{
-			result.SetRotationMatrix(GetRotation().GetTransposed() * other.GetRotation());
+			result.SetRotationMatrix(Transposed(GetRotation()) * other.GetRotation());
 		}
 		return result;
 	}
@@ -296,7 +296,7 @@ public:
 		PyHT result;
 		result.GetTranslation() = (1. - factor) * GetTranslation() + factor * other.GetTranslation();
 		Matrix3D A0 = GetRotation();
-		Vector3D v = EXUlie::LogSO3Vector(Matrix3D(A0.GetTransposed() * other.GetRotation()));
+		Vector3D v = EXUlie::LogSO3Vector(Matrix3D(Transposed(A0) * other.GetRotation()));
 		result.SetRotationMatrixChecked(A0 * EXUlie::ExpSO3(factor * v));
 		return result;
 	}

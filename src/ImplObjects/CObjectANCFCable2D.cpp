@@ -922,7 +922,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 	}
 	case OutputVariableType::VelocityLocal:
 	{
-		value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed() * 
+		value.CopyFrom(Transposed(GetRotationMatrix(localPosition, configuration)) * 
 			GetVelocity(localPosition, configuration)); break;
 	}
 	case OutputVariableType::Acceleration:

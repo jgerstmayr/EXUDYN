@@ -33,9 +33,9 @@ void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(FlatArray<const 
 	Matrix3DBase<TReal> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 
 	//relative rotation
-	Matrix3DBase<TReal> relRot = A0all.GetTransposed() * A1all;
+	Matrix3DBase<TReal> relRot = Transposed(A0all) * A1all;
 	SlimVectorBase<TReal, 3> vLocRot = RigidBodyMath::RotationMatrix2RotXYZTemplate(relRot);
-	SlimVectorBase<TReal, 3> vLocAngVel = A0all.GetTransposed()*(A1*markers[1].angularVelocityLocal - A0 * markers[0].angularVelocityLocal);
+	SlimVectorBase<TReal, 3> vLocAngVel = Transposed(A0all) *(A1*markers[1].angularVelocityLocal - A0 * markers[0].angularVelocityLocal);
 	angle = vLocRot[2]; //z-component
 	if (angle > EXUstd::pi) {angle -= 2. * EXUstd::pi; }
 	omega = vLocAngVel[2]; //z-component

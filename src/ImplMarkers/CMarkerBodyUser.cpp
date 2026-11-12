@@ -118,7 +118,7 @@ void CMarkerBodyUser::GetAngularVelocityLocal(const CSystemData& cSystemData, Ve
 	Vector3D omega;
 	GetRotationMatrix(cSystemData, rotationMatrix, configuration);
 	GetAngularVelocity(cSystemData, omega, configuration);
-	angularVelocity = rotationMatrix.GetTransposed() * omega;
+	angularVelocity = Transposed(rotationMatrix) * omega;
 }
 
 //! position, velocity and position Jacobian; with a rotationMatrixUserFunction also rotation, angular velocity and rotation
@@ -135,7 +135,7 @@ void CMarkerBodyUser::ComputeMarkerData(const CSystemData& cSystemData, bool com
 	{
 		EvaluateRotationMatrix(cSystemData, markerData.orientation, t, qRef, q, q_t);
 		EvaluateRotationJacobian(cSystemData, markerData.rotationJacobian, t, qRef, q, q_t);
-		markerData.angularVelocityLocal = markerData.orientation.GetTransposed() * MarkerBodyUserJacobianTimesVector(markerData.rotationJacobian, q_t);
+		markerData.angularVelocityLocal = Transposed(markerData.orientation) * MarkerBodyUserJacobianTimesVector(markerData.rotationJacobian, q_t);
 	}
 	markerData.velocityAvailable = true;
 	if (!computeJacobian)

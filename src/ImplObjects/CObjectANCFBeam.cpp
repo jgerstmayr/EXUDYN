@@ -294,7 +294,7 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 			//CHECKandTHROW(Winv.Invert(), "CObjectANCFBeam::PreComputeMassTerms: cross section inertia seems to be singular");
 
 			Matrix3D Winv({ 0.5,0.,0., 0.,1.,0., 0.,0.,1. });
-			Matrix3D WIW = Winv.GetTransposed()*parameters.crossSectionInertia*Winv;
+			Matrix3D WIW = Transposed(Winv) *parameters.crossSectionInertia*Winv;
 			cnt = 0;
 			for (auto item : EXUmath::gaussRuleOrder3Points) //shape functions are linear, so order 3 shall be enough!
 			{
@@ -965,7 +965,7 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 	}
 	case OutputVariableType::VelocityLocal:
 	{
-		value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed() * 
+		value.CopyFrom(Transposed(GetRotationMatrix(localPosition, configuration)) * 
 			GetVelocity(localPosition, configuration)); break;
 	}
 	case OutputVariableType::Acceleration:
@@ -1169,7 +1169,7 @@ Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, Conf
 //! the angular velocity in the frame of the cross section (#2768)
 Vector3D CObjectANCFBeam::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	return GetRotationMatrix(localPosition, configuration).GetTransposed() * GetAngularVelocity(localPosition, configuration);
+	return Transposed(GetRotationMatrix(localPosition, configuration)) * GetAngularVelocity(localPosition, configuration);
 }
 
 ////! return configuration dependent angular acceleration of node; returns always a 3D Vector

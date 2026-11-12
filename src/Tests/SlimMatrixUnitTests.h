@@ -266,6 +266,17 @@ const lest::test slimMatrix_specific_test[] =
 		EXPECT_THROWS(EXUmath::MultMatrixMatrixToSubmatrix(JtK, J, block, 2 * n - 1, 0));
 	},
 
+	CASE("SlimVector::MultAdd bitwise as += scalar * v (#3484)")
+	{
+		Vector6D a({ 0.1, -0.2, 0.33, 0.47, -0.51, 0.6 });
+		Vector6D b({ 1.3, 0.7, -0.11, 0.29, 2.1, -0.37 });
+		Vector6D viaOperator = a;
+		viaOperator += 0.37 * b;
+		Vector6D viaMultAdd = a;
+		viaMultAdd.MultAdd(0.37, b);
+		EXPECT(SlimVectorTestSame(viaMultAdd, viaOperator));
+	},
+
 	CASE("SlimMatrix: inverse, determinant, trace, skew matrix, transposing, rows and columns")
 	{
 		SlimMatrix<3, 3> A;

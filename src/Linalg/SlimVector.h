@@ -291,6 +291,12 @@ public:
         return *this;
     }
 
+	//! add scalar * v to *this without a temporary vector; the same bits as *this += scalar * v (#3484)
+	inline void MultAdd(T scalar, const SlimVectorBase<T, dataSize>& v)
+	{
+		for (Index i = 0; i < dataSize; i++) { data[i] += scalar * v.data[i]; }
+	}
+
 	//! add vector v to *this vector (for each component); both vectors must have same size
 	inline SlimVectorBase<T, dataSize>& operator+= (const VectorBase<T>& v)
 	{

@@ -60,14 +60,14 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(FlatArray<c
 	else
 	{
 		Ajoint = A0all;
-		vLocPos = Ajoint.GetTransposed() * (p1 - p0); //vLocPos transformed to marker0 local coordinate system, where springs are defined
-		Matrix3DBase<TReal> relRot = Ajoint.GetTransposed() * A1all;
+		vLocPos = Transposed(Ajoint) * (p1 - p0); //vLocPos transformed to marker0 local coordinate system, where springs are defined
+		Matrix3DBase<TReal> relRot = Transposed(Ajoint) * A1all;
 		vLocRot = RigidBodyMath::RotationMatrix2RotXYZTemplate(relRot);
 	}
 
 	//relative velocities: same in all formulations
-	vLocVel = Ajoint.GetTransposed() * (markers[1].velocity - markers[0].velocity);
-	vLocAngVel = Ajoint.GetTransposed()*(A1*markers[1].angularVelocityLocal - A0 * markers[0].angularVelocityLocal);
+	vLocVel = Transposed(Ajoint) * (markers[1].velocity - markers[0].velocity);
+	vLocAngVel = Transposed(Ajoint) *(A1*markers[1].angularVelocityLocal - A0 * markers[0].angularVelocityLocal);
 
 
 	if (vLocRot[0] > EXUstd::pi) { vLocRot[0] -= 2.*EXUstd::pi; }

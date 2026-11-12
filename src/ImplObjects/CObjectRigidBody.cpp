@@ -661,7 +661,7 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 
 
 	//dGlocalT{(\tilde uLocal)*A^T*f}dq:
-	Vector3D v = A.GetTransposed() * force;
+	Vector3D v = Transposed(A) * force;
 	v = localPosition.CrossProduct(v); //(\tilde uLocal)*A^T*f
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates> dGlocalTv_q;
 	((CNodeRigidBody*)GetCNode(0))->GetGlocalTv_q(v, dGlocalTv_q);
@@ -691,7 +691,7 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 	ResizableConstVector radial_q; //the 7 coordinates of a rigid node in its local data: no allocation per call (#3312)
 	if (RigidBodyNodeRadialKinematics(*(const CNodeODE2*)GetCNode(0), localPosition, radial, radialRotation, radial_q))
 	{
-		const Vector3D w = localPosition.CrossProduct(radialRotation.GetTransposed() * force);
+		const Vector3D w = localPosition.CrossProduct(Transposed(radialRotation) * force);
 		for (Index i = 0; i < nRot; i++)
 		{
 			Real value_i = 0.;
@@ -756,7 +756,7 @@ void CObjectRigidBody::AddPositionForce(const Vector3D& localPosition, const Vec
 	const CNodeRigidBody* node = (const CNodeRigidBody*)GetCNode(0);
 	for (Index i = 0; i < nDim3D; i++) { ode2Lhs[i] += force[i]; }
 
-	Vector3D momentLocal = localPosition.CrossProduct(node->GetRotationMatrix().GetTransposed() * force);
+	Vector3D momentLocal = localPosition.CrossProduct(Transposed(node->GetRotationMatrix()) * force);
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 	node->GetGlocal(Glocal);
 	for (Index j = 0; j < node->GetNumberOfRotationCoordinates(); j++)
@@ -784,7 +784,7 @@ void CObjectRigidBody::AddForceTorque(const Vector3D& localPosition, const Vecto
 	const Matrix3D& A = temp.rotation;
 	const ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>& Glocal = temp.Glocal;
 	const ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>& G = temp.G;
-	Vector3D momentLocal = localPosition.CrossProduct(A.GetTransposed() * force);
+	Vector3D momentLocal = localPosition.CrossProduct(Transposed(A) * force);
 	for (Index j = 0; j < Glocal.NumberOfColumns(); j++)
 	{
 		ode2Lhs[nDisplacementCoordinates + j] += Glocal(0, j)*momentLocal[0] + Glocal(1, j)*momentLocal[1] + Glocal(2, j)*momentLocal[2]
@@ -799,9 +799,9 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
-	case OutputVariableType::VelocityLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetVelocity(localPosition, configuration)); break; //inefficient, but useful
+	case OutputVariableType::VelocityLocal: value.CopyFrom(Transposed(GetRotationMatrix(localPosition, configuration)) *GetVelocity(localPosition, configuration)); break; //inefficient, but useful
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
-	case OutputVariableType::AccelerationLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetAcceleration(localPosition, configuration)); break;
+	case OutputVariableType::AccelerationLocal: value.CopyFrom(Transposed(GetRotationMatrix(localPosition, configuration)) *GetAcceleration(localPosition, configuration)); break;
 
 	case OutputVariableType::Rotation: {
 		Matrix3D rotMat = GetRotationMatrix(localPosition, configuration);
@@ -812,7 +812,7 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(localPosition, configuration)); break;
 	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(localPosition, configuration)); break;
-	case OutputVariableType::AngularAccelerationLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetAngularAcceleration(localPosition, configuration)); break;
+	case OutputVariableType::AngularAccelerationLocal: value.CopyFrom(Transposed(GetRotationMatrix(localPosition, configuration)) *GetAngularAcceleration(localPosition, configuration)); break;
 
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(localPosition, configuration);

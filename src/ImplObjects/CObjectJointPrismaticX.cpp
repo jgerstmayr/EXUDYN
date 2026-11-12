@@ -67,13 +67,13 @@ void CObjectJointPrismaticX::GetOutputVariableConnector(OutputVariableType varia
 	Matrix3D A1all = (A1*A1off);
 
 	//use difference of positions in local joint J0 coordinates
-	Vector3D vPosLocal = A0all.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
-	Vector3D vVelLocal = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+	Vector3D vPosLocal = Transposed(A0all) *(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
+	Vector3D vVelLocal = Transposed(A0all) *(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
 
-	Vector3D angVelLocal = A0all.GetTransposed()*(A1*markerData.GetMarkerData(1).angularVelocityLocal - A0 * markerData.GetMarkerData(0).angularVelocityLocal); //difference of global angular velocities, projected into J0
+	Vector3D angVelLocal = Transposed(A0all) *(A1*markerData.GetMarkerData(1).angularVelocityLocal - A0 * markerData.GetMarkerData(0).angularVelocityLocal); //difference of global angular velocities, projected into J0
 
 	//compute relative rotation, J0-fixed:
-	Matrix3D relRot = A0all.GetTransposed() * A1all;
+	Matrix3D relRot = Transposed(A0all) * A1all;
 	Vector3D vLocRot = RigidBodyMath::RotationMatrix2RotXYZ(relRot);
 
 	if (vLocRot[0] > EXUstd::pi) { vLocRot[0] -= 2.*EXUstd::pi; }

@@ -2618,7 +2618,7 @@ void CSolverBase::SetStateWithinStep(CSystem& computationalSystem, Real T)
 			omega0[j] = s0.ODE2Coords_t[off + j];
 			omega1[j] = s1.ODE2Coords_t[off + j];
 		}
-		Vector3D relativeRotation = EXUlie::LogSO3Vector(EXUlie::ExpSO3(theta0).GetTransposed() * EXUlie::ExpSO3(theta1));
+		Vector3D relativeRotation = EXUlie::LogSO3Vector(Transposed(EXUlie::ExpSO3(theta0)) * EXUlie::ExpSO3(theta1));
 		Vector3D psi_x1 = h * (EXUlie::TExpSO3Inv(relativeRotation) * omega1); //the derivative of psi by x at the end
 		Vector3D psi_x0 = h * omega0;
 		Vector3D psi = h01 * relativeRotation + h10 * psi_x0 + h11 * psi_x1;

@@ -176,9 +176,9 @@ void CObjectJointHelicalZ::GetOutputVariableConnector(OutputVariableType variabl
 	const Vector3D& p0 = markerData.GetMarkerData(0).position;
 	const Vector3D& p1 = markerData.GetMarkerData(1).position;
 
-	Vector3D vPosLocal = A0.GetTransposed()*(p1 - p0);
-	Vector3D vVelLocal = A0.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
-	Vector3D angVelLocal = A0.GetTransposed()*(A1*markerData.GetMarkerData(1).angularVelocityLocal - A0 * markerData.GetMarkerData(0).angularVelocityLocal);
+	Vector3D vPosLocal = Transposed(A0) *(p1 - p0);
+	Vector3D vVelLocal = Transposed(A0) *(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+	Vector3D angVelLocal = Transposed(A0) *(A1*markerData.GetMarkerData(1).angularVelocityLocal - A0 * markerData.GetMarkerData(0).angularVelocityLocal);
 
 	switch (variableType)
 	{
@@ -192,7 +192,7 @@ void CObjectJointHelicalZ::GetOutputVariableConnector(OutputVariableType variabl
 	case OutputVariableType::Rotation:
 	{
 		//Tait-Bryan angles for the tilts, the angle on the turn of the axial position about z
-		Vector3D vLocRot = RigidBodyMath::RotationMatrix2RotXYZ(A0.GetTransposed() * A1);
+		Vector3D vLocRot = RigidBodyMath::RotationMatrix2RotXYZ(Transposed(A0) * A1);
 		if (vLocRot[0] > EXUstd::pi) { vLocRot[0] -= 2.*EXUstd::pi; }
 		if (vLocRot[1] > EXUstd::pi) { vLocRot[1] -= 2.*EXUstd::pi; }
 		const Vector3D x1 = A1.GetColumnVector<3>(0);

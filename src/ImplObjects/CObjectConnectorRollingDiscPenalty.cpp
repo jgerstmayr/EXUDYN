@@ -200,7 +200,7 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 	//	wLateral[0], wLateral[1], wLateral[2],
 	//	w2[0], w2[1], w2[2],
 	//	w3[0], w3[1], w3[2]});
-	Vector3D vSlip = AJ1.GetTransposed()*vC; //splip velocity in special joint coordinates; computed by neglegting the rotation of the wheel for the contact point
+	Vector3D vSlip = Transposed(AJ1) *vC; //splip velocity in special joint coordinates; computed by neglegting the rotation of the wheel for the contact point
 
 	Vector3D vTrail = RollingDiscTrailVelocity(markerData, parameters.discAxis, parameters.discRadius, parameters.planeNormal, pC, w2); //#926
 

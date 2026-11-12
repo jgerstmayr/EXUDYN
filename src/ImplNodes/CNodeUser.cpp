@@ -159,7 +159,7 @@ Vector3D CNodeUser::GetAngularVelocity(ConfigurationType configuration) const
 Vector3D CNodeUser::GetAngularVelocityLocal(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
-	return GetRotationMatrix(configuration).GetTransposed()*GetAngularVelocity(configuration);
+	return Transposed(GetRotationMatrix(configuration)) *GetAngularVelocity(configuration);
 }
 
 //! d(J_rot^T v)/dq by central differences of the rotation Jacobian; the step follows the rule of

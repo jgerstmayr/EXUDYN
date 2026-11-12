@@ -100,13 +100,13 @@ void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType vari
 		//the joint frames are the marker frames (#2870)
 		case OutputVariableType::Position: value.CopyFrom(p0); break;
 		case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
-		case OutputVariableType::DisplacementLocal: value.CopyFrom(A0.GetTransposed() * (p1 - p0)); break;
+		case OutputVariableType::DisplacementLocal: value.CopyFrom(Transposed(A0) * (p1 - p0)); break;
 		case OutputVariableType::HomogeneousTransformation: ConnectorOutputVariableFrame(A0, p0, value); break;
 		case OutputVariableType::HomogeneousTransformationLocal: ConnectorOutputVariableFrameLocal(A0, p0, A1, p1, value); break;
 		case OutputVariableType::ForceLocal: //the force normal to the axis from the first multiplier, on marker 0 as for the other joints (#2870)
 		{
 			Vector3D n1 = A1 * parameters.normalMarker1;
-			value.CopyFrom(A0.GetTransposed() * (GetCurrentAEcoordinate(0) * n1));
+			value.CopyFrom(Transposed(A0) * (GetCurrentAEcoordinate(0) * n1));
 			break;
 		}
 		case OutputVariableType::Distance: //the position of marker 1 along the (normalized) prismatic axis (#2735)
@@ -119,7 +119,7 @@ void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType vari
 		}
 		case OutputVariableType::Rotation: //the rotation of marker 1 relative to marker 0 about z (#2735)
 		{
-			Matrix3D A01 = A0.GetTransposed() * A1;
+			Matrix3D A01 = Transposed(A0) * A1;
 			value.SetVector({ EM::Atan2(A01(1, 0), A01(0, 0)) });
 			break;
 		}

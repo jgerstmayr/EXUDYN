@@ -1946,7 +1946,7 @@ Vector3D CObjectANCFThinPlate::GetAngularVelocity(const Vector3D& localPosition,
 //! the angular velocity in the frame of the slopes
 Vector3D CObjectANCFThinPlate::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-    return GetRotationMatrix(localPosition, configuration).GetTransposed() * GetAngularVelocity(localPosition, configuration);
+    return Transposed(GetRotationMatrix(localPosition, configuration)) * GetAngularVelocity(localPosition, configuration);
 }
 
 //! the rotation Jacobian d(omega)/d(q_t), 3 x n: the rotation Jacobian of the symmetric basis by the slopes, chained with

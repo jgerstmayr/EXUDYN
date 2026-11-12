@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 588 | 1.13.617 |
+| 1.13 | Newborn | 590 | 1.13.619 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.619** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SlimVectorBase::MultAdd (#3484)
+  - description: expressionTemplates.md E2 (ET.4): v.MultAdd(factor, w) adds factor\*w to a SlimVector without a temporary, as VectorBase and ConstSizeVectorBase do; the same bits as v += factor\*w.
+  - **notes:** SlimVector (Vector3D, Vector6D, ...) has MultAdd(factor, v), as Vector and ConstSizeVector.
+  - date resolved: **2026-11-13 00:45**, date raised: 2026-11-13
+- **1.13.618** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Transposed(A) \* x in the item code instead of A.GetTransposed() \* x (#3483)
+  - description: expressionTemplates.md ET.3: the 62 products with a transposed Matrix3D in markers, nodes, joints, connectors, bodies, the solver and HomogeneousTransformation use the view of \#3479 instead of forming the transposed; the 2x2 matrix of ObjectConnectorRollingDiscPenalty and the float matrices of the graphics keep GetTransposed(). Results bitwise.
+  - **notes:** The C++ items compute the products with a transposed rotation matrix by Transposed(A) \* x, without forming the transposed; the results are the same.
+  - date resolved: **2026-11-13 00:45**, date raised: 2026-11-13
 - **1.13.617** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux: Python pow and the platform BLAS (#3482)
   - description: The causes of \#3465: the user function of journalBearingTest.py uses Python's \*\* (the pow of the C library, UCRT and glibc round differently), and mbs.CreateRigidBody computes the local initial angular velocity of a rotation vector node by np.dot (MKL on Windows, OpenBLAS on Linux round differently: the last bit of one component of the connecting rod). Both models amplify such a bit to 7e-6 and 8e-10. The user function is written with products; CreateRigidBody transforms the angular velocity by a sum in a fixed order, as the other node types do in C++.
   - **notes:** mbs.CreateRigidBody computes the initial angular velocity of a rotation vector node without np.dot, so that the model has the same initial values on every platform (np.dot uses the BLAS of the platform, whose last bit differs); journalBearingTest.py's user function uses products instead of \*\* and numpy.

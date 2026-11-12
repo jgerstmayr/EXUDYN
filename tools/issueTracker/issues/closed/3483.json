@@ -1,0 +1,15 @@
+{
+  "number": 3483,
+  "title": "Transposed(A) * x in the item code instead of A.GetTransposed() * x",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "expressionTemplates.md ET.3: the 62 products with a transposed Matrix3D in markers, nodes, joints, connectors, bodies, the solver and HomogeneousTransformation use the view of #3479 instead of forming the transposed; the 2x2 matrix of ObjectConnectorRollingDiscPenalty and the float matrices of the graphics keep GetTransposed(). Results bitwise.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 00:45",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The C++ items compute the products with a transposed rotation matrix by Transposed(A) * x, without forming the transposed; the results are the same.",
+  "resolvedInVersion": "1.13.618"
+}

@@ -250,7 +250,7 @@ Vector3D CObjectUserBody::GetAngularVelocity(const Vector3D& localPosition, Conf
 Vector3D CObjectUserBody::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
-	return GetRotationMatrix(localPosition, configuration).GetTransposed()*GetAngularVelocity(localPosition, configuration);
+	return Transposed(GetRotationMatrix(localPosition, configuration)) *GetAngularVelocity(localPosition, configuration);
 }
 
 void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const

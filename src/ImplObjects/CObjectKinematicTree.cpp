@@ -956,9 +956,9 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPositionKinematicTree(localPosition, linkNumber, configuration) - 
 		GetPositionKinematicTree(localPosition, linkNumber, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocityKinematicTree(localPosition, linkNumber, configuration)); break;
-	case OutputVariableType::VelocityLocal: value.CopyFrom(GetRotationMatrixKinematicTree(linkNumber, configuration).GetTransposed()*GetVelocityKinematicTree(localPosition, linkNumber, configuration)); break; //inefficient, but useful
+	case OutputVariableType::VelocityLocal: value.CopyFrom(Transposed(GetRotationMatrixKinematicTree(linkNumber, configuration)) *GetVelocityKinematicTree(localPosition, linkNumber, configuration)); break; //inefficient, but useful
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAccelerationKinematicTree(localPosition, linkNumber, configuration)); break;
-	case OutputVariableType::AccelerationLocal: value.CopyFrom(GetRotationMatrixKinematicTree(linkNumber, configuration).GetTransposed()*
+	case OutputVariableType::AccelerationLocal: value.CopyFrom(Transposed(GetRotationMatrixKinematicTree(linkNumber, configuration)) *
 		GetAccelerationKinematicTree(localPosition, linkNumber, configuration)); break;
 
 	case OutputVariableType::Rotation: {
@@ -975,7 +975,7 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocityKinematicTree(linkNumber, configuration)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocalKinematicTree(linkNumber, configuration)); break;
 	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAccelerationKinematicTree(linkNumber, configuration)); break;
-	case OutputVariableType::AngularAccelerationLocal: value.CopyFrom(GetRotationMatrixKinematicTree(linkNumber, configuration).GetTransposed()*
+	case OutputVariableType::AngularAccelerationLocal: value.CopyFrom(Transposed(GetRotationMatrixKinematicTree(linkNumber, configuration)) *
 		GetAngularAccelerationKinematicTree(linkNumber, configuration)); break;
 
 	default:

@@ -1,0 +1,15 @@
+{
+  "number": 3484,
+  "title": "SlimVectorBase::MultAdd",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "expressionTemplates.md E2 (ET.4): v.MultAdd(factor, w) adds factor*w to a SlimVector without a temporary, as VectorBase and ConstSizeVectorBase do; the same bits as v += factor*w.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 00:45",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SlimVector (Vector3D, Vector6D, ...) has MultAdd(factor, v), as Vector and ConstSizeVector.",
+  "resolvedInVersion": "1.13.619"
+}

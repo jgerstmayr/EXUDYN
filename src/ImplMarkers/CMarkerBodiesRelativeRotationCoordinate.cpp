@@ -94,9 +94,9 @@ void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerData(const CSystemDat
 		}
 	}
 
-	Matrix3D Arel = A0.GetTransposed() * A1;
+	Matrix3D Arel = Transposed(A0) * A1;
 	Matrix3D Abasis = EXUmath::ComputeOrthogonalBasisX(parameters.axis0); //rotation axis = first column = local x-axis
-	Matrix3D AbasisRel = Abasis.GetTransposed() * Arel * Abasis;
+	Matrix3D AbasisRel = Transposed(Abasis) * Arel * Abasis;
 
 	Real value = EM::Atan2(AbasisRel(2, 1), AbasisRel(1, 1)) - parameters.offset; //angle in -pi..+pi
 	//pout << "phi=" << value << "\n";

@@ -99,7 +99,7 @@ Vector3D CNodePointSlope12::GetAngularVelocity(ConfigurationType configuration) 
 //! the angular velocity in the frame of the slopes
 Vector3D CNodePointSlope12::GetAngularVelocityLocal(ConfigurationType configuration) const
 {
-	return GetRotationMatrix(configuration).GetTransposed() * GetAngularVelocity(configuration);
+	return Transposed(GetRotationMatrix(configuration)) * GetAngularVelocity(configuration);
 }
 
 //! d(omega)/d(q_t), 3 x 9: the rotation Jacobian of the symmetric basis on the slope coordinates (#2228)

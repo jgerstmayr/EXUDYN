@@ -921,7 +921,7 @@ Vector3D CObjectBeamGeometricallyExact::GetAngularVelocity(const Vector3D& local
 //! the angular velocity in the frame of the cross section at localPosition, as MarkerBodyRigid needs it (#2730)
 Vector3D CObjectBeamGeometricallyExact::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	return GetLocalPositionFrame(localPosition, configuration).GetRotation().GetTransposed() * GetAngularVelocity(localPosition, configuration);
+	return Transposed(GetLocalPositionFrame(localPosition, configuration).GetRotation()) * GetAngularVelocity(localPosition, configuration);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
