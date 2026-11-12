@@ -52,9 +52,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The decision on the total coordinates** (RG5.8.2), on the baseline of docs/dev/design/solverBaseline.md.
-3. **The fixed-size matrices** (RG5.2), after the maintainer's evaluation of docs/dev/design/linalgFixedSize.md; the
-   interfaces of the superelement markers (RG5.4.2).
+2. **The superelement markers** (RG5.4.2): their interface cleaned up, then the interface sums precomputed; the analytic
+   Jacobian of ObjectFFRF (RG5.4.3).
+3. **The fixed-size matrices** (RG5.2), after the maintainer's evaluation of docs/dev/design/linalgFixedSize.md.
 4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
@@ -65,9 +65,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
-  - RG5.4 Store the superelement matrices as sparse triplets for larger meshes (2 open sub-steps)
+  - RG5.4 Store the superelement matrices as sparse triplets for larger meshes (3 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
-  - RG5.8 Total coordinates, only if they give a performance gain (1 open sub-step)
   - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
   - RG5.11 Raytracer: threads parallel to the solver, and its scaling with the number of threads (1 open sub-step)
@@ -112,7 +111,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 11 | Performance |
+| RG5 | OPEN | 10 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -601,6 +600,8 @@ CLOSED 2026-11-01 (maintainer 2026-11-01: the Jacobians revised as a whole): mov
 
 Maintainer 2026-11-12: try, with a fallback option; check whether sparse triplets in the interface need a change of the initialization of the Python objects. Analysis: docs/dev/design/superElementSparse.md - no change of the Python side needed (FEM.py transports triplets already); #2182 gains nothing (proposed to close); the cost is in the mass matrix and the numerical Jacobian of ObjectFFRF and in the markers on reduced-order bodies (#2184).
 
+#2182 CLOSED 2026-11-12, won't fix (maintainer 2026-11-12).
+
 #### **CLOSED_RG5.4.1** The mass matrix of ObjectFFRF as sparse triplets, with a fallback
 
 #2183. CLOSED 2026-11-12 (#2183): MatrixContainer::AppendSubmatrixAsTriplets and AppendTripletsWithOffset; CObjectFFRF::ComputeMassMatrix appends its blocks and the triplets of massMatrixFF in global indices if exu.special.solver.superElementSparseMassMatrix (default True, experimental); ComputeItem(..., MassMatrix) for sparse mass matrices; mass matrix 8-20 times faster (1525 nodes: 1.571 -> 0.080 s for 20 steps), total 6-13 %; test model objectFFRFsparseMassMatrixTest.py. [log](exudynRevisionLog2026c.md#rg5-8-1)
@@ -609,9 +610,19 @@ Maintainer 2026-11-12: try, with a fallback option; check whether sparse triplet
 
 #2184. The sums over the interface nodes are linear in the modal coordinates with constant weights; computed once at Assemble (a new CMarker::InitializeMarker), a marker costs O(nModes) instead of O(nodes x nModes); both rotation variants; a fallback flag; a performance case with interfaces of 500-2000 nodes (docs/dev/design/superElementSparse.md section 5.1).
 
+##### **OPEN_RG5.4.2.1** Clean up the interface between the superelement markers and the superelements
+
+#3450. Maintainer 2026-11-12: first clean up the existing code; the interface between marker and superelement is adapted; a test with a varying number of modes (mostly the eigenmodes).
+
 #### **OPEN_RG5.4.3** An analytic Jacobian of ObjectFFRF as sparse triplets
 
 #3447. The numerical Jacobian is the largest cost of ObjectFFRF on larger meshes after #2183 (7.9 of 24 s for 1525 nodes).
+
+#### **CLOSED_RG5.4.4** ObjectFFRF.sparseMassMatrix instead of exudyn.special.solver.superElementSparseMassMatrix
+
+#3449. Maintainer 2026-11-12: the switch belongs to ObjectFFRF, with a fitting name.
+
+CLOSED 2026-11-12 (#3449): the parameter sparseMassMatrix of ObjectFFRF (default True) replaces exu.special.solver.superElementSparseMassMatrix, which is removed (introduced after 1.13.0, not released). [log](exudynRevisionLog2026c.md#rg5-9-11)
 
 ### **OPEN_RG5.5** Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 
@@ -664,9 +675,11 @@ Analysis 2026-11-02 (same machine, builds side by side): the slowdown is smaller
 
 CLOSED 2026-11-03 (#3232 closed, won't fix; maintainer 2026-11-03): not relevant now - the new contact module will treat the rigid bodies (particles), their loads and markers in a completely different and more efficient way, possibly with CUDA. The precomputed load data is not done.
 
-### **OPEN_RG5.8** Total coordinates, only if they give a performance gain
+### **CLOSED_RG5.8** Total coordinates, only if they give a performance gain
 
 From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a performance gain is expected). Total coordinates (reference plus current) beside the Current and Reference configurations, in the system data, the solvers, the items and the user functions. Today every item adds the reference to the current coordinates itself; the total coordinates would be formed once per update, at the cost of one vector addition and its memory. Only done if the baseline shows that the repeated additions cost more than that. The decision between total and relative coordinates in the user functions (RG7.3.4 point 13, userFunctionBoundary.md section 10) follows from it.
+
+CLOSED 2026-11-12: the baseline measured (RG5.8.1), total coordinates not done (RG5.8.2).
 
 #### **CLOSED_RG5.8.1** Measure the solvers on more models, solvers and configurations, as the baseline
 
@@ -674,9 +687,11 @@ From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a perf
 
 CLOSED 2026-11-12 (#3002): solverBaseline.py repaired (the drift check of TrapezoidalIndex2 off, explicit solvers skipped for models with constraints, the ratios in the summary, the module in the file name) and run on both modules: 420 cases each, none failed; docs/dev/design/solverBaseline.md. Fast module 5-25 % faster; 4 threads slower up to 42 coordinates, faster from about 300; EigenDense 2.6-18 times slower at 400-650 coordinates; full Newton 1.2-8.6 times; a vector addition of all coordinates per evaluation is 0.06 % of a step of the cheapest case. [log](exudynRevisionLog2026c.md#rg5-8-1)
 
-#### **OPEN_RG5.8.2** Evaluate whether and how total coordinates give a performance gain
+#### **CLOSED_RG5.8.2** Evaluate whether and how total coordinates give a performance gain
 
 #1910, moved from RG13.2. After RG5.8.1: where the items add reference and current coordinates today and what that costs; where total coordinates would be formed (once per step, per Newton iteration, per evaluation), stored or linked (currentState.ODE2CoordsTotal, an option of the solver); a proposal only if the gain exceeds the vector addition and the memory.
+
+CLOSED 2026-11-12 (#1910, won't fix; maintainer 2026-11-12): a vector addition of all coordinates per evaluation is 0.06 % of a step of the cheapest case of the baseline (docs/dev/design/solverBaseline.md).
 
 ### **OPEN_RG5.9** Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution
 
@@ -735,6 +750,12 @@ CLOSED 2026-11-11 (#3441): SparseLURows<Ordering> (Eigen's SparseLU with the fac
 #3446. Maintainer 2026-11-12, on the flags of exudyn.special added in RG5.9: these are experimental flags or flags that do not belong to the simulationSettings (operations outside the solver routines); otherwise settings are preferably in simulationSettings or visualizationSettings, which keeps them consistent and reproducible. Not a hard rule, as there are exceptions, but the common way, in CLAUDE.md and CODING_STYLE.md.
 
 CLOSED 2026-11-12 (#3446): CODING_STYLE.md section 1 and CLAUDE.md (a new section 'The common way - not hard rules'): a new setting goes into simulationSettings or visualizationSettings; exudyn.special for experimental flags and for what acts outside the solver routines or across simulations; a setting put into exudyn.special for another reason says why in its description.
+
+#### **CLOSED_RG5.9.11** linearSolver.dropThreshold: leave out the near-zero entries of the sparse Newton Jacobian
+
+#3448. Maintainer 2026-11-12: the near-zero entries of the sparse matrices get a threshold. In the chains of rigid bodies and the contact model of solverBaseline.py, 14-55 % of the nonzeros of the Newton Jacobian are below 1e-12 times the largest entry of their row and their column.
+
+CLOSED 2026-11-12 (#3448): simulationSettings.linearSolver.dropThreshold (default 0: only exact zeros), relative to the smaller of the largest magnitudes of the row and the column, applied by GeneralMatrixEigenSparse::FinalizeMatrix (Eigen prune) to the Newton Jacobian only. Measured with 1e-12 (scratch dropBench.py): rigid body spring-damper chain of 50 bodies with full Newton 13-17 % faster (factorization 0.266 -> 0.150 s), revolute chain of 50 bodies with full Newton 13 % slower (factorization 0.136 -> 0.163 s: the ordering of the pattern without the small entries is worse), modified Newton unchanged; Newton iterations and results equal to 1e-13 everywhere. So the default stays 0. Test model linearSolverDropThresholdTest.py. [log](exudynRevisionLog2026c.md#rg5-9-11)
 
 ### **OPEN_RG5.10** Solve the systems of one SystemContainer in parallel, each on its own thread
 

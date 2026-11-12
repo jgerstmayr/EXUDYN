@@ -1552,6 +1552,14 @@ inline py::dict GetDictionaryWithTypeInfo(const LinearSolverSettings& data) {
     structureDict["structureDescription"] = "Settings for linear solver, both dense and sparse (Eigen).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.dropThreshold;
+    d["type"] = "UReal";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "[ONLY for the sparse solvers] relative threshold for the entries of the Newton Jacobian: an entry whose magnitude is at most dropThreshold times the smaller of the largest magnitudes in its row and in its column is left out before the factorization; such entries are round-off of rotations and of numerical derivatives and cost fill-in; the solution is not changed, as the residual is computed exactly, only the convergence of the Newton iteration can be; 0: only exact zeros are left out";
+    structureDict["dropThreshold"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.ignoreSingularJacobian;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -1596,6 +1604,7 @@ inline py::dict GetDictionaryWithTypeInfo(const LinearSolverSettings& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const LinearSolverSettings& data) {
     auto structureDict = py::dict();
+    structureDict["dropThreshold"] = data.dropThreshold;
     structureDict["ignoreSingularJacobian"] = data.ignoreSingularJacobian;
     structureDict["pivotThreshold"] = data.pivotThreshold;
     structureDict["reuseAnalyzedPattern"] = data.reuseAnalyzedPattern;
@@ -1606,6 +1615,7 @@ inline py::dict GetDictionary(const LinearSolverSettings& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(LinearSolverSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["dropThreshold"], data.dropThreshold, EPyUtils::RangeCheck::nonNegative, "LinearSolverSettings.dropThreshold");
     EPyUtils::FromPython(d["ignoreSingularJacobian"], data.ignoreSingularJacobian, "LinearSolverSettings.ignoreSingularJacobian");
     EPyUtils::FromPython(d["pivotThreshold"], data.pivotThreshold, EPyUtils::RangeCheck::nonNegative, "LinearSolverSettings.pivotThreshold");
     EPyUtils::FromPython(d["reuseAnalyzedPattern"], data.reuseAnalyzedPattern, "LinearSolverSettings.reuseAnalyzedPattern");

@@ -1,0 +1,77 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  simulationSettings.linearSolver.dropThreshold (#3448): a chain of 20 rigid bodies on rigid body
+#           spring-dampers, falling under gravity, solved with EigenSparse and full Newton. The Newton Jacobian of the
+#           rotated bodies has many entries that are round-off; dropThreshold = 1e-12 leaves out those smaller than
+#           1e-12 times the largest entry of their row and of their column. The motion is the same as with
+#           dropThreshold = 0 (only exact zeros left out), with the same number of Newton iterations; the result is
+#           the sum of the coordinates at the end.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-11-12
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+def Model(numberOfBodies=20):
+    """a chain of bricks on rigid body spring-dampers, released horizontally"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    (L, w) = (0.4, 0.04)
+    inertia = InertiaCuboid(density=1000, sideLengths=[L, w, w])
+    stiffness = np.diag([1e5, 1e5, 1e5, 1e2, 1e2, 0]) #free rotation about z
+    previous = mbs.CreateGround()
+    for i in range(numberOfBodies):
+        body = mbs.CreateRigidBody(inertia=inertia, referencePosition=[L*(i + 0.5), 0, 0], gravity=[0, -9.81, 0],
+                                   graphicsDataList=[graphics.Brick(size=[L, w, w], color=graphics.colorList[i % 10])])
+        mbs.CreateRigidBodySpringDamper(itemNumbers=[previous, body], localPosition0=[L*i, 0, 0] if i == 0 else [0.5*L, 0, 0],
+                                        localPosition1=[-0.5*L, 0, 0], stiffness=stiffness, damping=0.01*stiffness)
+        previous = body
+    mbs.Assemble()
+    return (SC, mbs)
+
+def Settings(dropThreshold, numberOfSteps=100):
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
+    simulationSettings.timeIntegration.endTime = numberOfSteps*2e-3
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.dropThreshold = dropThreshold
+    simulationSettings.solution.file.write = False
+    return simulationSettings
+
+results = {}
+newtonSteps = {}
+for dropThreshold in [0, 1e-12]:
+    (SC, mbs) = Model()
+    mbs.SolveDynamic(Settings(dropThreshold))
+    results[dropThreshold] = np.array(mbs.systemData.GetODE2Coordinates())
+    newtonSteps[dropThreshold] = mbs.sys['dynamicSolver'].it.newtonStepsCount
+
+difference = np.abs(results[1e-12] - results[0]).max()/np.abs(results[0]).max()
+exu.Print('relative difference of dropThreshold 1e-12 to 0:', difference, ', Newton steps', newtonSteps)
+errors = int(difference > 1e-10) + int(newtonSteps[0] != newtonSteps[1e-12])
+if errors:
+    exu.Print('linearSolverDropThresholdTest: FAILED')
+
+if not testIsActive:
+    (SC, mbs) = Model()
+    simulationSettings = Settings(1e-12, numberOfSteps=1000)
+    simulationSettings.solution.file.write = True
+    mbs.SolveDynamic(simulationSettings)
+    mbs.SolutionViewer()
+
+result = float(cMath.norm(results[1e-12])) + errors
+exu.Print('solution of linearSolverDropThresholdTest=', result)
+exu.sys['testResult'] = result

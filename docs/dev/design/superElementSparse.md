@@ -156,8 +156,8 @@ The reduced matrices of ObjectFFRFreducedOrder are already triplets (Section 3) 
 - `EXUmath::MatrixContainer::AppendSubmatrixAsTriplets(matrix, ltg, rowOffset, columnOffset, transposed)` and
   `AppendTripletsWithOffset(tripletMatrix, ltg, rowOffset, columnOffset)` (`MatrixContainer.h`).
 - `CObjectFFRF::ComputeMassMatrix` appends the blocks Mtt, Mtr/Mrt, Mtf/Mft, Mrf/Mfr, Mrr as their nonzeros and Mff as
-  the stored triplets of `massMatrixFF`, in the global indices of `ltg`, when
-  `exu.special.solver.superElementSparseMassMatrix` is True (the default; experimental, the fallback) and neither a
+  the stored triplets of `massMatrixFF`, in the global indices of `ltg`, when its parameter `sparseMassMatrix` is True
+  (the default; False is the fallback, #3449) and neither a
   mass matrix user function nor a dense `massMatrixFF` is given. The dense path adds Mff from the triplets directly
   instead of a dense copy of nFF x nFF on every call.
 - `mbs.ComputeItem(body, exu.ComputeItemType.MassMatrix)` turns the triplets of a body that returns a sparse mass matrix

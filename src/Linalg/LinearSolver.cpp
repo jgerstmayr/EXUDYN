@@ -430,7 +430,33 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 
 	matrix.setFromTriplets(triplets.begin(), triplets.end()); //sums up duplicates by default... (@TODO: what happens in EigenSparseMatrix::setFromTriplets(...) with (+1) + (-1) ? )
 
+	if (dropThreshold > 0.) { DropSmallEntries(); }
+
 	SetMatrixBuiltFromTriplets(); //now the sparse matrix is finally set and ready for multiplication and factorization
+}
+
+//! leave out the entries whose magnitude is at most dropThreshold times the smaller of the largest magnitudes in their
+//! row and in their column - round-off of rotations and numerical derivatives, which costs fill-in in the
+//! factorization (#3448)
+void GeneralMatrixEigenSparse::DropSmallEntries()
+{
+	rowMaximum.SetNumberOfItems(NumberOfRows());
+	columnMaximum.SetNumberOfItems(NumberOfColumns());
+	rowMaximum.SetAll(0.);
+	columnMaximum.SetAll(0.);
+	for (Index column = 0; column < matrix.outerSize(); column++)
+	{
+		for (EigenSparseMatrix::InnerIterator it(matrix, column); it; ++it)
+		{
+			const Real value = fabs(it.value());
+			if (value > rowMaximum[(Index)it.row()]) { rowMaximum[(Index)it.row()] = value; }
+			if (value > columnMaximum[column]) { columnMaximum[column] = value; }
+		}
+	}
+	matrix.prune([this](Index row, Index column, Real value)
+	{
+		return fabs(value) > dropThreshold * EXUstd::Minimum(rowMaximum[row], columnMaximum[column]);
+	});
 }
 
 //Index TSeigenFactorize;

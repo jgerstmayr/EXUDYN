@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 558 | 1.13.582 |
+| 1.13 | Newborn | 560 | 1.13.586 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.586** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRF.sparseMassMatrix replaces exudyn.special.solver.superElementSparseMassMatrix (#3449)
+  - description: The switch between the sparse and the dense mass matrix of ObjectFFRF (\#2183) belongs to the object, as a parameter that is kept with the model, not to exudyn.special.
+  - **notes:** ObjectFFRF.sparseMassMatrix (default True) switches between the mass matrix as sparse triplets and the dense matrix; it replaces exu.special.solver.superElementSparseMassMatrix
+  - date resolved: **2026-11-12 07:46**, date raised: 2026-11-12
+- **1.13.585** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` simulationSettings.linearSolver.dropThreshold: leave out the near-zero entries of the sparse Newton Jacobian (#3448)
+  - description: The sparse Newton Jacobian keeps every entry that is not exactly zero. In chains of rigid bodies and in contact models, 14-55 % of the nonzeros are smaller than 1e-12 times the largest entry of their row and of their column: round-off of rotations and of numerical derivatives, which cost fill-in in the factorization. A relative threshold leaves them out in GeneralMatrixEigenSparse::FinalizeMatrix, for the Newton Jacobian only; the solution is unchanged, as the residual is exact.
+  - **notes:** simulationSettings.linearSolver.dropThreshold: the sparse Newton Jacobian leaves out the entries at most dropThreshold times the smaller of the largest magnitudes of their row and their column (round-off of rotations and numerical derivatives); default 0, only exact zeros; with 1e-12 a chain of rigid body spring-dampers with full Newton is 17 % faster, a chain of revolute joints 13 % slower, the results the same
+  - date resolved: **2026-11-12 07:46**, date raised: 2026-11-12
 - **1.13.582** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1: before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
   - **notes:** python/testing/solverBaseline.py measures the solvers on 13 models, five solvers, dense and sparse, full and modified Newton, two step sizes and 1 and 4 threads, in the regular or the fast module; the baseline of 2026-11-12 is in docs/dev/design/solverBaseline.md.

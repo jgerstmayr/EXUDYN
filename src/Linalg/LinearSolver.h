@@ -146,6 +146,9 @@ public:
 	virtual bool IsSymmetric() const { return false; }
 	virtual void SetReuseAnalyzedPattern(bool flag) { }
 	virtual bool GetReuseAnalyzedPattern() const { return false; }
+	//! entries at most threshold times the smaller of the largest magnitudes of their row and their column are left
+	//! out by FinalizeMatrix; 0: only exact zeros (linearSolver.dropThreshold, #3448)
+	virtual void SetDropThreshold(Real threshold) { }
 	//! the groups of unknowns that may be coupled (the coordinates of an object), for orderings that need the
 	//! structural pattern, as exact zeros are dropped (#3432)
 	virtual void SetStructuralGroups(const std::vector<std::vector<int>>& groups) { }
@@ -499,6 +502,9 @@ private:
 	std::shared_ptr<PardisoSolver> pardisoSolver; //!< created at the first factorization with PARDISO (#3431)
 	std::shared_ptr<SparseLUParallel> solverParallel; //!< SparseLU with nested dissection, special.solver.parallelSubstitution (#3432)
 	bool parallelSubstitutionActive = false; //!< the last factorization is the one of solverParallel (#3432)
+	Real dropThreshold = 0.;        //!< relative threshold of FinalizeMatrix for entries left out, 0: none (#3448)
+	ResizableVector rowMaximum;     //!< the largest magnitude per row, for dropThreshold (#3448)
+	ResizableVector columnMaximum;  //!< the largest magnitude per column, for dropThreshold (#3448)
 	//data for Eigen sparse matrix storage:
 #ifdef USE_EIGEN_SPARSE_SOLVER
 	EigenSparseMatrix matrix;	 //this is the sparse matrix built from triplets
@@ -554,6 +560,7 @@ public:
 
 	//! reuse pattern for faster computation [experimental]
 	virtual void SetReuseAnalyzedPattern(bool flag) override { reuseAnalyzedPattern = flag; }
+	virtual void SetDropThreshold(Real threshold) override { dropThreshold = threshold; }
 	virtual void SetStructuralGroups(const std::vector<std::vector<int>>& groups) override;
 	virtual bool GetReuseAnalyzedPattern() const override { return reuseAnalyzedPattern; }
 
@@ -637,6 +644,8 @@ public:
     
     //! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	virtual void FinalizeMatrix() override;
+	//! the entries left out by dropThreshold, called by FinalizeMatrix (#3448)
+	void DropSmallEntries();
 
 	//! factorize matrix (invert, SparseLU, etc.);
 	//! return -1 if success, causing index otherwise

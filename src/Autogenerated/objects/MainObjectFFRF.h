@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  07:19:41 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,6 +123,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRF->GetParameters().forceUserFunction = d["forceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRF->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { EPyUtils::FromPython(d["computeFFRFterms"], cObjectFFRF->GetParameters().computeFFRFterms, "ObjectFFRF.computeFFRFterms"); }
+        if (EPyUtils::DictItemExists(d, "sparseMassMatrix")) { EPyUtils::FromPython(d["sparseMassMatrix"], cObjectFFRF->GetParameters().sparseMassMatrix, "ObjectFFRF.sparseMassMatrix"); }
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { EPyUtils::FromPython(d["objectIsInitialized"], cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); }
@@ -145,6 +146,7 @@ public: // AUTO:
         d["forceUserFunction"] = (py::object)cObjectFFRF->GetParameters().forceUserFunction;
         d["massMatrixUserFunction"] = (py::object)cObjectFFRF->GetParameters().massMatrixUserFunction;
         d["computeFFRFterms"] = (bool)cObjectFFRF->GetParameters().computeFFRFterms;
+        d["sparseMassMatrix"] = (bool)cObjectFFRF->GetParameters().sparseMassMatrix;
         d["coordinateIndexPerNode"] = EPyUtils::ToPythonMember(cObjectFFRF->GetCoordinateIndexPerNode());
         d["objectIsInitialized"] = (bool)cObjectFFRF->GetObjectIsInitialized();
         d["mass"] = (Real)cObjectFFRF->GetMass();
@@ -177,6 +179,7 @@ public: // AUTO:
         else if (parameterName.compare("forceUserFunction") == 0) { return cObjectFFRF->GetParameters().forceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectFFRF->GetParameters().massMatrixUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRF->GetParameters().computeFFRFterms); } //! AUTO: get parameter
+        else if (parameterName.compare("sparseMassMatrix") == 0) { return py::cast((bool)cObjectFFRF->GetParameters().sparseMassMatrix); } //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectFFRF->GetCoordinateIndexPerNode())); } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRF->GetObjectIsInitialized()); } //! AUTO: get parameter
         else if (parameterName.compare("mass") == 0) { return py::cast((Real)cObjectFFRF->GetMass()); } //! AUTO: get parameter
@@ -210,6 +213,7 @@ public: // AUTO:
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectFFRF->GetParameters().forceUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRF->GetParameters().massMatrixUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetParameters().computeFFRFterms, "ObjectFFRF.computeFFRFterms"); } //! AUTO: set parameter
+        else if (parameterName.compare("sparseMassMatrix") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetParameters().sparseMassMatrix, "ObjectFFRF.sparseMassMatrix"); } //! AUTO: set parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetColor(), "ObjectFFRF.Vcolor"); } //! AUTO: set parameter

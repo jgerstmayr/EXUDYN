@@ -1612,6 +1612,8 @@ class StaticSolverSettings:
 
 class LinearSolverSettings:
     """Settings for linear solver, both dense and sparse (Eigen)."""
+    dropThreshold: float
+    """[ONLY for the sparse solvers] relative threshold for the entries of the Newton Jacobian: an entry whose magnitude is at most dropThreshold times the smaller of the largest magnitudes in its row and in its column is left out before the factorization; such entries are round-off of rotations and of numerical derivatives and cost fill-in; the solution is not changed, as the residual is computed exactly, only the convergence of the Newton iteration can be; 0: only exact zeros are left out."""
     ignoreSingularJacobian: bool
     """[ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!"""
     pivotThreshold: float
@@ -4838,8 +4840,6 @@ class SpecialSolver:
     """the diagonal pivot threshold of the factorization with parallelSubstitution: a diagonal entry is taken as pivot if its magnitude is at least this fraction of the largest in its column, which keeps the subtrees independent; default=1e-3 (#3432)."""
     parallelSubstitutionSerial:int
     """the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)."""
-    superElementSparseMassMatrix:bool
-    """experimental; if True (=default), ObjectFFRF returns its mass matrix as sparse triplets - the stored triplets of massMatrixFF and the nonzeros of the coupling blocks - instead of a dense matrix of all its coordinates, which costs time and memory proportional to the square of the number of mesh coordinates; False: the dense matrix; a mass matrix user function or a dense massMatrixFF always uses the dense matrix (#2183)."""
     sparseSolveByRows:bool
     """if True (=default), EigenSparse copies the factors of SparseLU into rows after each factorization and solves forward and backward with them, which is about twice as fast as the supernodal solve of Eigen for the small supernodes of multibody systems; False: the solve of Eigen (#3441)."""
     @overload

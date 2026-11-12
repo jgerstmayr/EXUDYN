@@ -1,0 +1,15 @@
+{
+  "number": 3448,
+  "title": "simulationSettings.linearSolver.dropThreshold: leave out the near-zero entries of the sparse Newton Jacobian",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "The sparse Newton Jacobian keeps every entry that is not exactly zero. In chains of rigid bodies and in contact models, 14-55 % of the nonzeros are smaller than 1e-12 times the largest entry of their row and of their column: round-off of rotations and of numerical derivatives, which cost fill-in in the factorization. A relative threshold leaves them out in GeneralMatrixEigenSparse::FinalizeMatrix, for the Newton Jacobian only; the solution is unchanged, as the residual is exact.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 07:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "simulationSettings.linearSolver.dropThreshold: the sparse Newton Jacobian leaves out the entries at most dropThreshold times the smaller of the largest magnitudes of their row and their column (round-off of rotations and numerical derivatives); default 0, only exact zeros; with 1e-12 a chain of rigid body spring-dampers with full Newton is 17 % faster, a chain of revolute joints 13 % slower, the results the same",
+  "resolvedInVersion": "1.13.585"
+}

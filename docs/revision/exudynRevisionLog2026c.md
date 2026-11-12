@@ -6431,6 +6431,40 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-9-11"></a>
+### RG5.9.11, RG5.4.4, RG5.8.2 — the near-zero entries of the sparse Newton Jacobian, ObjectFFRF.sparseMassMatrix, no total coordinates (2026-11-12, #3448, #3449, #1910, #2182)
+
+*(Maintainer 2026-11-12: the near-zero values of the sparse matrices get a threshold; the switch of the sparse mass
+matrix goes into ObjectFFRF with a fitting name; #2182 closed; RG5.8.2 not done, closed.)*
+
+**RG5.9.11 (#3448)**: the Newton Jacobian at the end of a run of the models of solverBaseline.py (scratch nearZero.py):
+of the nonzeros, below 1e-12 times the larger of the row and the column maximum - rigidBodyJoints50 568 of 3324,
+rigidBodySpringDampers50 1487 of 4405, contactSpheres 1428 of 2184, FFRFreducedOrder 28 of 170, the beams and the small
+models none; absolute magnitudes down to 1e-46. `simulationSettings.linearSolver.dropThreshold` (default 0) leaves out
+an entry at most dropThreshold times the smaller of the largest magnitudes of its row and its column -
+`GeneralMatrixEigenSparse::DropSmallEntries` after `setFromTriplets` (Eigen `prune`, O(nnz)), set by the solver for
+the Newton Jacobian only, not for the mass matrix or other sparse matrices. Measured (scratch dropBench.py, EigenSparse,
+best of 3; 0 / 1e-14 / 1e-12 / 1e-10):
+
+| model | Newton | time [s] | Newton iterations | difference of the coordinates |
+|---|---|---|---|---|
+| rigidBodySpringDampers50 | full | 0.686 / 0.597 / 0.569 / 0.558 | 714 for all | 2e-15 |
+| rigidBodyJoints50 | full | 0.213 / 0.260 / 0.248 / 0.253 | 720 for all | 4e-15 |
+| contactSpheres | full | 0.153 / 0.157 / 0.148 / 0.147 | 1003 for all | 5e-18 |
+| beam3D60 | full | 0.344 / 0.349 / 0.355 / 0.358 | 400 for all | 6e-14 |
+| all of them | modified | equal within 3 % (joints50 up to +8 %) | equal | up to 2e-13 |
+
+The factorization of the spring-damper chain falls from 0.266 to 0.150 s, that of the revolute chain rises from 0.136
+to 0.163 s with fewer nonzeros: COLAMD orders the thinner pattern worse there. No gain in general, so the default
+stays 0 (only exact zeros, as before). Test model linearSolverDropThresholdTest.py (20 bodies, full Newton: the same
+Newton iterations, coordinates equal to 2e-15).
+
+**RG5.4.4 (#3449)**: `ObjectFFRF.sparseMassMatrix` (default True) replaces `exu.special.solver.superElementSparseMassMatrix`
+of #2183, removed; objectFFRFsparseMassMatrixTest.py sets the parameter (result unchanged).
+
+**RG5.8.2 (#1910)** closed, won't fix; **#2182** closed, won't fix (docs/dev/design/superElementSparse.md).
+parameterConversionTestReference.txt recorded again (the two new parameters).
+
 <a id="rg5-8-1"></a>
 ### RG5.8.1, RG5.1.2, RG5.1.4, RG5.2, RG5.4, RG5.11.3, RG5.9.10, RG5.10 — the solver baseline, the vectors, the fixed-size matrices, the sparse mass matrix of ObjectFFRF (2026-11-12, #3002, #142, #2183, #3445, #3446)
 

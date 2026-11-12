@@ -160,6 +160,7 @@ laserScannerTest
 libraryDeprecationTest
 lieGroupOutputWithinStepTest
 linearFEMgenericODE2
+linearSolverDropThresholdTest
 loadUserFunctionTest
 LShapeGeomExactBeam2D
 mainSystemExtensionsTests

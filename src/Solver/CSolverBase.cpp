@@ -378,6 +378,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 		LinearSolverType linearSolverType = (data.nSys == 0) ? LinearSolverType::EXUdense : simulationSettings.linearSolver.solverType;
 		data.SetLinearSolverType(linearSolverType, simulationSettings.linearSolver.reuseAnalyzedPattern, 
             simulationSettings.linearSolver.ignoreSingularJacobian);
+		data.systemJacobian->SetDropThreshold(simulationSettings.linearSolver.dropThreshold); //only the Newton Jacobian (#3448)
 	}
 	//else if (simulationSettings.linearSolver.solverType == LinearSolverType::EigenSparse)
 	//{

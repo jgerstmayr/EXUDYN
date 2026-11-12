@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.582.dev1
+- Exudyn version = 1.13.586.dev1
 - last change = 2026-11-12
-- Number of issues = 3448
-- Number of resolved issues = 3359 (582 in current version)
+- Number of issues = 3451
+- Number of resolved issues = 3363 (586 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` Clean up the interface between the superelement markers and the superelements (#3450)
+  - description: MarkerSuperElementPosition and MarkerSuperElementRigid compute their sums over the mesh nodes through a set of functions of the superelements (GetMeshNodeLocalPosition, GetMeshNodePosition, ...); the code is cleaned up and the interface adapted, as the base of the precomputed interface sums (\#2184).
+  - date raised: 2026-11-12
 - `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` ObjectFFRF: analytic Jacobian instead of the numerical one (#3447)
   - description: ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (\#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.
   - date raised: 2026-11-12
@@ -9133,10 +9136,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
   - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
   - date raised: 2026-01-04
-- `EXTENSION` `MEDIUM EFF` ObjectFFRFreducedOrder (#2182)
-  - description: improve efficiency by using internal sparse triplets for mass matrix in C++ code
-  - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
-  - date raised: 2026-01-04
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9165,10 +9164,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add autodiff Jacobian
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2024-11-02
-- `CHECK` `HIGH EFF` total coordinates (#1910)
-  - description: consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
-  - **remarks:** planned as revision2026c step RG13.2 (maintainer 2026-10-16): the solvers keep relative coordinates, total coordinates an additional result; after the performance baseline RG13.1 (\#3002); planned as revision2026c step RG5.8 (moved from RG13 on 2026-11-09: total coordinates only with a performance gain)
-  - date raised: 2024-10-26
 - `EXTENSION` `HIGH EFF` Reference/link data (#1904)
   - description: evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

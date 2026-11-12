@@ -4324,6 +4324,8 @@ class ObjectFFRF:
 
         computeFFRFterms: flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector; type: bool
 
+        sparseMassMatrix: True: the mass matrix is given to the solver as sparse triplets - the triplets of ``massMatrixFF`` and the nonzero entries of the coupling blocks -, which is much faster for larger meshes; False: as a dense matrix of all coordinates, whose size and work grow with the square of the number of mesh coordinates; the dense matrix is used anyway with a ``massMatrixUserFunction``, with ``computeFFRFterms`` = False or with a dense ``massMatrixFF``; type: bool
+
         objectIsInitialized: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble(); type: bool
 
         visualization: visualization data, see VObjectFFRF
@@ -4332,7 +4334,7 @@ class ObjectFFRF:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = None, stiffnessMatrixFF = None, dampingMatrixFF = None, forceVector = [], forceUserFunction: Union[ObjectFFRFForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFMassMatrixUserFunction, int] = 0, computeFFRFterms = True, objectIsInitialized = False, visualization = None):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = None, stiffnessMatrixFF = None, dampingMatrixFF = None, forceVector = [], forceUserFunction: Union[ObjectFFRFForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFMassMatrixUserFunction, int] = 0, computeFFRFterms = True, sparseMassMatrix = True, objectIsInitialized = False, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixFF = massMatrixFF
@@ -4342,6 +4344,7 @@ class ObjectFFRF:
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
+        self.sparseMassMatrix = sparseMassMatrix
         self.objectIsInitialized = objectIsInitialized
         self.visualization = _ItemVisualization(visualization, VObjectFFRF)
 
@@ -4356,6 +4359,7 @@ class ObjectFFRF:
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'computeFFRFterms', self.computeFFRFterms
+        yield 'sparseMassMatrix', self.sparseMassMatrix
         yield 'objectIsInitialized', self.objectIsInitialized
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]

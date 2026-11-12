@@ -376,6 +376,8 @@ class StaticSolverSettings:
 #information for LinearSolverSettings
 class LinearSolverSettings:
     """Settings for linear solver, both dense and sparse (Eigen)."""
+    dropThreshold: float
+    """[ONLY for the sparse solvers] relative threshold for the entries of the Newton Jacobian: an entry whose magnitude is at most dropThreshold times the smaller of the largest magnitudes in its row and in its column is left out before the factorization; such entries are round-off of rotations and of numerical derivatives and cost fill-in; the solution is not changed, as the residual is computed exactly, only the convergence of the Newton iteration can be; 0: only exact zeros are left out."""
     ignoreSingularJacobian: bool
     """[ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!"""
     pivotThreshold: float

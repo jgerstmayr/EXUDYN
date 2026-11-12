@@ -2,8 +2,8 @@
 # This is an EXUDYN example
 #
 # Details:  The mass matrix of ObjectFFRF as sparse triplets (#2183): a rotor (the Abaqus mesh of testData/rotorDiscTest,
-#           115 nodes) as ObjectFFRF on two spring-damper supports, spinning; exu.special.solver.superElementSparseMassMatrix
-#           (default True) returns the mass matrix as triplets - those of massMatrixFF and the nonzeros of the coupling
+#           115 nodes) as ObjectFFRF on two spring-damper supports, spinning; the parameter sparseMassMatrix of ObjectFFRF
+#           (default True) gives the mass matrix as triplets - those of massMatrixFF and the nonzeros of the coupling
 #           blocks -, False as the dense matrix of all coordinates. The mass matrix of the body (mbs.ComputeItem) and
 #           the motion with EigenDense and EigenSparse agree for both; the result is the sum of the displacements of
 #           the middle node.
@@ -32,13 +32,14 @@ fem.ScaleStiffnessMatrix(1e-2) #larger deformations
 fem.AddNodeMass(9, 0.1) #an unbalance on the disc
 fem.ComputeEigenmodes(8, excludeRigidBodyModes=6, useSparseSolver=True) #ObjectFFRFinterface reads the mode basis
 
-def Model():
-    """the rotor on two supports; returns SC, mbs, the body and the sensor of the middle node"""
+def Model(sparseMassMatrix=True):
+    """the rotor on two supports, with ObjectFFRF.sparseMassMatrix; returns SC, mbs, the body and the sensor of the middle node"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     ffrf = ObjectFFRFinterface(fem)
     objFFRF = ffrf.AddObjectFFRF(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0,
                                  initialVelocity=[0,0,0], initialAngularVelocity=[0,0,50*2*pi], color=[0.1,0.9,0.1,1.])
+    mbs.SetObjectParameter(objFFRF['oFFRF'], 'sparseMassMatrix', sparseMassMatrix)
     oGround = mbs.AddObject(ObjectGround())
     (k, d) = (2e8, 2e6)
     for (z, stiffnessZ) in [(0., k), (0.5, 0.)]:
@@ -62,20 +63,17 @@ def Settings(linearSolverType):
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
     simulationSettings.solution.file.write = False
     simulationSettings.solution.sensors.writePeriod = h
-    simulationSettings.linearSolverType = linearSolverType
+    simulationSettings.linearSolver.solverType = linearSolverType
     return simulationSettings
 
-sparseFlag = exu.special.solver.superElementSparseMassMatrix
 results = {}
 massMatrices = {}
 for sparseMassMatrix in [True, False]:
-    exu.special.solver.superElementSparseMassMatrix = sparseMassMatrix
     for linearSolverType in [exu.LinearSolverType.EigenDense, exu.LinearSolverType.EigenSparse]:
-        (SC, mbs, oFFRF, sDisp) = Model()
+        (SC, mbs, oFFRF, sDisp) = Model(sparseMassMatrix)
         massMatrices[sparseMassMatrix] = mbs.ComputeItem(oFFRF, exu.ComputeItemType.MassMatrix)
         mbs.SolveDynamic(Settings(linearSolverType))
         results[(sparseMassMatrix, str(linearSolverType))] = mbs.GetSensorStoredData(sDisp)[:, 1:]
-exu.special.solver.superElementSparseMassMatrix = sparseFlag
 
 reference = results[(False, str(exu.LinearSolverType.EigenDense))]
 scale = np.abs(reference).max()

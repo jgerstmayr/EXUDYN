@@ -1,0 +1,15 @@
+{
+  "number": 2182,
+  "title": "ObjectFFRFreducedOrder",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "improve efficiency by using internal sparse triplets for mass matrix in C++ code",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-11-12 07:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix: no gain - the reduced matrices of ObjectFFRFreducedOrder are already sparse triplets and its mass matrix is small (docs/dev/design/superElementSparse.md); the gain was in the mass matrix of ObjectFFRF (#2183)",
+  "resolvedInVersion": "1.13.584"
+}

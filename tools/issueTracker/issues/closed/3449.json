@@ -1,0 +1,15 @@
+{
+  "number": 3449,
+  "title": "ObjectFFRF.sparseMassMatrix replaces exudyn.special.solver.superElementSparseMassMatrix",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The switch between the sparse and the dense mass matrix of ObjectFFRF (#2183) belongs to the object, as a parameter that is kept with the model, not to exudyn.special.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 07:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectFFRF.sparseMassMatrix (default True) switches between the mass matrix as sparse triplets and the dense matrix; it replaces exu.special.solver.superElementSparseMassMatrix",
+  "resolvedInVersion": "1.13.586"
+}
