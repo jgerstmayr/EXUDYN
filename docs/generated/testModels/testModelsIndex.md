@@ -177,6 +177,7 @@ NGsolveCMStest
 numericalInverseKinematicsTest
 objectFFRFforceVectorTest
 objectFFRFreducedOrderAccelerations
+objectFFRFreducedOrderMarkerModesTest
 objectFFRFreducedOrderTest
 objectFFRFsparseMassMatrixTest
 objectFFRFTest

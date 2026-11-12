@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  08:07:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainMarkerSuperElementRigid
-* @brief        A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
+* @brief        A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sums over the mesh nodes are computed once at Assemble as weighted sums of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -118,6 +118,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerSuperElementRigid->GetShow(), "MarkerSuperElementRigid.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VshowMarkerNodes")) { EPyUtils::FromPython(d["VshowMarkerNodes"], visualizationMarkerSuperElementRigid->GetShowMarkerNodes(), "MarkerSuperElementRigid.VshowMarkerNodes"); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -170,6 +171,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementRigid->GetShow(), "MarkerSuperElementRigid.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VshowMarkerNodes") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementRigid->GetShowMarkerNodes(), "MarkerSuperElementRigid.VshowMarkerNodes"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerSuperElementRigid::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

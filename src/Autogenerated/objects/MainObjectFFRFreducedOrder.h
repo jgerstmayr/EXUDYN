@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-11-02  12:22:10 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,6 +123,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { EPyUtils::FromPython(d["computeFFRFterms"], cObjectFFRFreducedOrder->GetParameters().computeFFRFterms, "ObjectFFRFreducedOrder.computeFFRFterms"); }
         if (EPyUtils::DictItemExists(d, "numericalJacobian")) { EPyUtils::FromPython(d["numericalJacobian"], cObjectFFRFreducedOrder->GetParameters().numericalJacobian, "ObjectFFRFreducedOrder.numericalJacobian"); }
+        if (EPyUtils::DictItemExists(d, "precomputeMarkerModes")) { EPyUtils::FromPython(d["precomputeMarkerModes"], cObjectFFRFreducedOrder->GetParameters().precomputeMarkerModes, "ObjectFFRFreducedOrder.precomputeMarkerModes"); }
         if (EPyUtils::DictItemExists(d, "modeBasis")) { EPyUtils::FromPython(d["modeBasis"], cObjectFFRFreducedOrder->GetParameters().modeBasis); }
         if (EPyUtils::DictItemExists(d, "outputVariableModeBasis")) { EPyUtils::FromPython(d["outputVariableModeBasis"], cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); }
         if (EPyUtils::DictItemExists(d, "outputVariableTypeModeBasis")) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = (OutputVariableType)py::cast<Index64>(d["outputVariableTypeModeBasis"]); }
@@ -163,6 +164,7 @@ public: // AUTO:
         d["massMatrixUserFunction"] = (py::object)cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction;
         d["computeFFRFterms"] = (bool)cObjectFFRFreducedOrder->GetParameters().computeFFRFterms;
         d["numericalJacobian"] = (bool)cObjectFFRFreducedOrder->GetParameters().numericalJacobian;
+        d["precomputeMarkerModes"] = (bool)cObjectFFRFreducedOrder->GetParameters().precomputeMarkerModes;
         d["modeBasis"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().modeBasis);
         d["outputVariableModeBasis"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis);
         d["outputVariableTypeModeBasis"] = (OutputVariableType)cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis;
@@ -199,6 +201,7 @@ public: // AUTO:
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetParameters().computeFFRFterms); } //! AUTO: get parameter
         else if (parameterName.compare("numericalJacobian") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetParameters().numericalJacobian); } //! AUTO: get parameter
+        else if (parameterName.compare("precomputeMarkerModes") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetParameters().precomputeMarkerModes); } //! AUTO: get parameter
         else if (parameterName.compare("modeBasis") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().modeBasis); } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableModeBasis") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { return py::cast((OutputVariableType)cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis); } //! AUTO: get parameter
@@ -240,6 +243,7 @@ public: // AUTO:
         else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().computeFFRFterms, "ObjectFFRFreducedOrder.computeFFRFterms"); } //! AUTO: set parameter
         else if (parameterName.compare("numericalJacobian") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().numericalJacobian, "ObjectFFRFreducedOrder.numericalJacobian"); } //! AUTO: set parameter
+        else if (parameterName.compare("precomputeMarkerModes") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().precomputeMarkerModes, "ObjectFFRFreducedOrder.precomputeMarkerModes"); } //! AUTO: set parameter
         else if (parameterName.compare("modeBasis") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().modeBasis); } //! AUTO: set parameter
         else if (parameterName.compare("outputVariableModeBasis") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); } //! AUTO: set parameter
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = py::cast<OutputVariableType>(value); } //! AUTO: set parameter

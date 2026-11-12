@@ -30,6 +30,7 @@
 #include "System/CObject.h" 
 
 #include "Main/MarkerData.h"
+#include "System/SuperElementMarkerInterface.h" //the interface of the superelement markers (#3450)
 
 //! the energies are one value for the whole item: a local position would suggest that they depend on it (#2202)
 inline void CheckEnergyLocalPosition(const Vector3D& localPosition, const char* itemName)
@@ -269,23 +270,43 @@ public:
 	//+++++++++++++++     MESH NODE FUNCTIONS      ++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		
-	//! special access function types for multi-nodal objects with mesh nodes
-	//==>integrated into GetAccessFunctionTypes()
-	//virtual AccessFunctionType GetAccessFunctionTypesSuperElement() const
-	//{ CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetAccessFunctionTypesSuperElement"); }
+	//+++++++++++++++     THE INTERFACE OF THE SUPERELEMENT MARKERS      ++++++++++++++++++++++++++++++
+	//MarkerSuperElementPosition and MarkerSuperElementRigid on the mesh nodes i (meshNodeNumbers) with the weights w_i
+	//(weightingFactors); the sums and the weighted rotation are those of SuperElementMarkerInterface (#3450)
 
-	//! special access function for multi - nodal objects with mesh nodes; compute Jacobian with weightingMatrix(WM), which defines how flexible coordinates(w / wo modeBasis) are 
-	//! localOffset acts in reference frame
-	//! CASE 1:
-	//!   if meshNodeNumbers (out of n total mesh nodes in the SuperElement) are provided, the nodes are weighted by weightingMatrix (can be n x 1 or n x 3) 
-	//!   and the position (or velocity) of every node is added to a weighted sum. In case (n x 3), the single components are weighted.
-	//!   If the marker is defined for the global position, the transformations read: pLoc = WM * q, pGlob = pRef + A * pLoc == > Jac = d(pGlob) / d([q0, q])
-	//! CASE 2:
-	//!   For reducedOrder elements, meshNodeNumbers.NumberOfItems()==0, the weightingMatrix acts on reduced coordinates (WM = WMfull * modalBasis), 
-	//!   and must have size (nReducedCoordinates x 3): pLoc = WM * qReduced, pGlob = pRef + A * pLoc == > Jac = d(pGlob) / d([q0, q])
-	//! rotationCorrection contains a small correction (tangent operator TexpSO3) in case that a Lie group approach is used for computation of rotation matrix
-	virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, 
-		const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode) const;
+	//! compute the part of the marker interface that depends only on the reference configuration; computeRotation for
+	//! MarkerSuperElementRigid, with its useAlternativeApproach; ObjectFFRFreducedOrder adds the modal matrices (#2184)
+	virtual void InitializeMarkerInterface(const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, bool computeRotation,
+		bool alternativeApproach, SuperElementMarkerInterface& markerInterface) const;
+
+	//! sum_i w_i * (local position of mesh node i), in the body frame
+	virtual Vector3D GetMarkerLocalPosition(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+		const Vector& weightingFactors, ConfigurationType configuration) const;
+
+	//! sum_i w_i * (local velocity of mesh node i), in the body frame
+	virtual Vector3D GetMarkerLocalVelocity(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+		const Vector& weightingFactors, ConfigurationType configuration) const;
+
+	//! the weighted rotation of the mesh nodes in the body frame, W^{-1} sum_i w_i (p_i^ref - p_0) x (u_i - sum_j w_j u_j)
+	virtual Vector3D GetMarkerLocalRotation(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+		const Vector& weightingFactors, ConfigurationType configuration) const;
+
+	//! the weighted angular velocity of the mesh nodes in the body frame: the rotation with the velocities
+	virtual Vector3D GetMarkerLocalAngularVelocity(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+		const Vector& weightingFactors, ConfigurationType configuration) const;
+
+	//! the Jacobian of the marker, 3 x GetODE2Size(): for TranslationalVelocity_qt+SuperElement the derivative of the
+	//! global velocity of the point localOffset + sum_i w_i (local position of mesh node i) of the body frame, for
+	//! AngularVelocity_qt+SuperElement the derivative of the global angular velocity of the weighted rotation;
+	//! rotTangentCorrection (the tangent operator TexpSO3 of a Lie group rotation) multiplies W^{-1} in the alternative approach
+	virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const SuperElementMarkerInterface& markerInterface,
+		const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, const Vector3D& localOffset,
+		const Matrix3D& rotTangentCorrection, Matrix& value) const;
+
+	//! the position, rotation, velocity and local angular velocity of the floating frame of the superelement, or of the
+	//! global frame if it has none
+	void GetReferenceFrame(Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity,
+		Vector3D& frameAngularVelocityLocal, ConfigurationType configuration) const;
 
 	//! get extended output variable types for multi-nodal objects with mesh nodes
 	virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const

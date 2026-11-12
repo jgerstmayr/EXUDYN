@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,6 +112,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "coordinate")) { EPyUtils::RequireGiven(d["coordinate"], EXUstd::InvalidIndex, "MarkerNodeCoordinate.coordinate"); EPyUtils::FromPython(d["coordinate"], cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); } else { EPyUtils::RequireGiven(py::cast(cMarkerNodeCoordinate->GetParameters().coordinate), EXUstd::InvalidIndex, "MarkerNodeCoordinate.coordinate"); }
         if (EPyUtils::DictItemExists(d, "includeReferenceCoordinate")) { EPyUtils::FromPython(d["includeReferenceCoordinate"], cMarkerNodeCoordinate->GetParameters().includeReferenceCoordinate, "MarkerNodeCoordinate.includeReferenceCoordinate"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -146,6 +147,7 @@ public: // AUTO:
         else if (parameterName.compare("coordinate") == 0) { EPyUtils::FromPython(value, cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); } //! AUTO: set parameter
         else if (parameterName.compare("includeReferenceCoordinate") == 0) { EPyUtils::FromPython(value, cMarkerNodeCoordinate->GetParameters().includeReferenceCoordinate, "MarkerNodeCoordinate.includeReferenceCoordinate"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerNodeCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

@@ -388,7 +388,7 @@ bool MainMarkerSuperElementRigid::CheckPreAssembleConsistency(const MainSystem& 
 
 		Vector3D pRef; //mesh node local reference position
 		
-		Vector3D pRef0 = cMarker->GetParameters().localHT.GetTranslation(); //this is a correction, if the midpoint is not at the desired center of the marker
+		Vector3D pRef0(0.); //the weighted reference position, as in CObjectSuperElement::InitializeMarkerInterface, without the offset of localHT (#3450)
 
 		for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 		{

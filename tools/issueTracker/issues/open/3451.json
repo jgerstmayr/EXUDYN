@@ -1,0 +1,11 @@
+{
+  "number": 3451,
+  "title": "MarkerSuperElementRigid: the rotation Jacobian without useAlternativeApproach leaves out the tangent operator TexpSO3",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "With rotationsExponentialMap > 0 and experimental.markerSuperElementRigidTexpSO3 (default), the rotation Jacobian of MarkerSuperElementRigid is multiplied by the tangent operator TexpSO3 of the weighted rotation only with useAlternativeApproach = True; with False the Jacobian of the weighted rotation is used without it, while the angular velocity applies it (rotationsExponentialMap = 2). The Jacobian then differs from the derivative of the angular velocity by TexpSO3 - I, which is small for small deformations; to be checked whether the Jacobian should include it in both approaches (found in #3450).",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

@@ -6,7 +6,7 @@
 (sec-item-markersuperelementrigid)=
 # MarkerSuperElementRigid
 
-A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
+A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sums over the mesh nodes are computed once at Assemble as weighted sums of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
 
 ## Interface
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  08:07:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainMarkerSuperElementPosition
-* @brief        A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.
+* @brief        A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sum over the mesh nodes is computed once at Assemble as a weighted sum of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -114,6 +114,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerSuperElementPosition->GetShow(), "MarkerSuperElementPosition.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VshowMarkerNodes")) { EPyUtils::FromPython(d["VshowMarkerNodes"], visualizationMarkerSuperElementPosition->GetShowMarkerNodes(), "MarkerSuperElementPosition.VshowMarkerNodes"); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -154,6 +155,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementPosition->GetShow(), "MarkerSuperElementPosition.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VshowMarkerNodes") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementPosition->GetShowMarkerNodes(), "MarkerSuperElementPosition.VshowMarkerNodes"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerSuperElementPosition::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

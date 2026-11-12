@@ -181,3 +181,40 @@ the numerical Jacobian of ObjectFFRF (7.9 s of 24 s at 1525 nodes, nODE2 evaluat
 and the remaining 14 s, not split in this study (the right-hand side and the overhead). Next for ObjectFFRF: an analytic Jacobian (Section 5.2); for
 ObjectFFRFreducedOrder: the precomputed interfaces of the markers (Section 5.1, #2184), with a performance case of a
 large interface.
+
+## 8. The interfaces of the superelement markers (#3450, #2184)
+
+The interface between the markers and the superelements (`CObjectSuperElement`, `src/System/CObjectBody.h`):
+
+- `SuperElementMarkerInterface` (`src/System/SuperElementMarkerInterface.h`) holds what a marker needs of its mesh nodes
+  that depends only on the reference configuration: p_0 = sum_i w_i p_i^ref, the weighting W of the rotation (scalar, or
+  its inverse matrix for `useAlternativeApproach`), and for `ObjectFFRFreducedOrder` the matrices Pm = sum_i w_i Psi_i
+  and Rm = W^{-1} (sum_i w_i tilde(p_i) Psi_i - tilde(sum_i w_i p_i) Pm), p_i = p_i^ref - p_0.
+- The superelement computes it in `InitializeMarkerInterface`, which the marker calls in its new `PostAssemble`
+  (`CMarker::PostAssemble`, called after the objects by Assemble). A changed parameter of a marker
+  (`CMarker::ParametersHaveChanged`, now called by the generated `SetParameter` of every marker) makes the marker compute
+  the part of the mesh nodes on every evaluation until the next Assemble.
+- The marker asks the superelement for the weighted local position, velocity, rotation and angular velocity
+  (`GetMarkerLocalPosition`, ...) and for the Jacobians (`GetAccessFunctionSuperElement` with the interface); the frame
+  comes from `CObjectSuperElement::GetReferenceFrame`. The base class sums over the mesh nodes, `ObjectFFRFreducedOrder`
+  multiplies Pm or Rm with the modal coordinates (`precomputeMarkerModes`, default True). The weighting matrix of n x 3
+  weights, which no marker used, is gone.
+- The rigid marker no longer computes W, p_0 and the frame per call in four places; the check of the regularity of W
+  uses the same p_0 as the marker (it added the offset of `localHT` before).
+
+Measured (scratch markerModesBench.py: an NGsolve block 0.2 x 0.4 x 0.4 m, Hurty-Craig-Bampton modes with RBE2
+interfaces at both ends, clamped at one end by MarkerSuperElementRigid, a force and a torque on the other end;
+200 steps, modified Newton, EigenSparse; regular module):
+
+| nodes | interface nodes | modes | precomputeMarkerModes False | True | factor |
+|---:|---:|---:|---:|---:|---:|
+| 676 | 136 / 135 | 10 | 0.102 s | 0.003 s | 33 |
+| 676 | 136 / 135 | 22 | 0.236 s | 0.006 s | 38 |
+| 2203 | 327 / 329 | 10 | 0.242 s | 0.003 s | 76 |
+| 2203 | 327 / 329 | 22 | 0.565 s | 0.006 s | 90 |
+| 5234 | 613 / 618 | 10 | 0.484 s | 0.003 s | 148 |
+| 5234 | 613 / 618 | 22 | 1.102 s | 0.006 s | 171 |
+
+The positions agree to 2e-15. The precomputation at Assemble takes less than a millisecond. Test model
+objectFFRFreducedOrderMarkerModesTest.py: the rotor with RBE2 and RBE3 interfaces and 0-11 eigenmodes, both settings
+agree to 6e-13, also with weights changed after Assemble.

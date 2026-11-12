@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-10  21:43:04 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -287,8 +287,8 @@ public: // AUTO:
     //! AUTO:  return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
     virtual Vector3D GetMeshNodeVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; alternativeRotationMode is the useAlternativeApproach of MarkerSuperElementRigid (#2744); for details see CObjectSuperElement header file
-    virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode) const override;
+    //! AUTO:  the position or rotation Jacobian of a MarkerSuperElementPosition or MarkerSuperElementRigid on the mesh nodes meshNodeNumbers with weightingFactors and the interface computed at Assemble (#3450); for details see the CObjectSuperElement header file
+    virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, const Vector3D& localOffset, const Matrix3D& rotTangentCorrection, Matrix& value) const override;
 
     //! AUTO:  get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes
     virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const override;

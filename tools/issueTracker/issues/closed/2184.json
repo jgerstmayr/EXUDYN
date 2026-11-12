@@ -1,0 +1,15 @@
+{
+  "number": 2184,
+  "title": "MarkerSuperElementRigid",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "highly improve efficiency for larger number of nodes by adding according precomputed transformations",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-11-12 08:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "MarkerSuperElementPosition and MarkerSuperElementRigid on ObjectFFRFreducedOrder compute their sums over the mesh nodes from the weighted modes, formed once at Assemble (ObjectFFRFreducedOrder.precomputeMarkerModes, default True; False computes them from the mesh nodes): 30-170 times faster for interfaces of 135-620 nodes",
+  "resolvedInVersion": "1.13.587"
+}

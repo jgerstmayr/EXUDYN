@@ -831,9 +831,11 @@ def ItemCppHeaders(definition):
     for i in range(nClasses):
         sList[3] += dictListWrite[i]
     sList[3] += deprecatedDictWrite
-        
+
     if Header(definition, 'classType') == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
         sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
+    elif Header(definition, 'classType') == 'Marker': #what a marker computed at Assemble is computed again (#3450)
+        sList[3] += space8+'GetCMarker()->ParametersHaveChanged();\n'
         
     sList[3] += space4+'}\n\n'
 
@@ -871,6 +873,8 @@ def ItemCppHeaders(definition):
     #notify object that parameters have changed
     if Header(definition, 'classType') == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
         sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
+    elif Header(definition, 'classType') == 'Marker': #(#3450)
+        sList[3] += space8+'GetCMarker()->ParametersHaveChanged();\n'
     #sList[3] += space8+'\n'
 #        if Header(definition, 'classType') == 'Object': #if parameters have changed, some functions may be necessary to be reset
 #            sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'

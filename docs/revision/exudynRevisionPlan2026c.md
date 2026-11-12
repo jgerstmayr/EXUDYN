@@ -52,8 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The superelement markers** (RG5.4.2): their interface cleaned up, then the interface sums precomputed; the analytic
-   Jacobian of ObjectFFRF (RG5.4.3).
+2. **The analytic Jacobian of ObjectFFRF** (RG5.4.3), the largest remaining cost of ObjectFFRF on larger meshes; the
+   tangent operator in the Jacobian of MarkerSuperElementRigid (RG5.4.5).
 3. **The fixed-size matrices** (RG5.2), after the maintainer's evaluation of docs/dev/design/linalgFixedSize.md.
 4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
@@ -65,7 +65,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
-  - RG5.4 Store the superelement matrices as sparse triplets for larger meshes (3 open sub-steps)
+  - RG5.4 Store the superelement matrices as sparse triplets for larger meshes (2 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
@@ -111,7 +111,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 10 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -606,13 +606,23 @@ Maintainer 2026-11-12: try, with a fallback option; check whether sparse triplet
 
 #2183. CLOSED 2026-11-12 (#2183): MatrixContainer::AppendSubmatrixAsTriplets and AppendTripletsWithOffset; CObjectFFRF::ComputeMassMatrix appends its blocks and the triplets of massMatrixFF in global indices if exu.special.solver.superElementSparseMassMatrix (default True, experimental); ComputeItem(..., MassMatrix) for sparse mass matrices; mass matrix 8-20 times faster (1525 nodes: 1.571 -> 0.080 s for 20 steps), total 6-13 %; test model objectFFRFsparseMassMatrixTest.py. [log](exudynRevisionLog2026c.md#rg5-8-1)
 
-#### **OPEN_RG5.4.2** Precompute the interface sums of MarkerSuperElementRigid and MarkerSuperElementPosition on ObjectFFRFreducedOrder
+#### **CLOSED_RG5.4.2** Precompute the interface sums of MarkerSuperElementRigid and MarkerSuperElementPosition on ObjectFFRFreducedOrder
 
 #2184. The sums over the interface nodes are linear in the modal coordinates with constant weights; computed once at Assemble (a new CMarker::InitializeMarker), a marker costs O(nModes) instead of O(nodes x nModes); both rotation variants; a fallback flag; a performance case with interfaces of 500-2000 nodes (docs/dev/design/superElementSparse.md section 5.1).
 
-##### **OPEN_RG5.4.2.1** Clean up the interface between the superelement markers and the superelements
+CLOSED 2026-11-12 (#2184): ObjectFFRFreducedOrder.precomputeMarkerModes (default True): Pm and Rm computed at Assemble, a marker costs O(nModes) per evaluation; 33-171 times faster on interfaces of 135-620 nodes with 10-22 modes (docs/dev/design/superElementSparse.md section 8); test model objectFFRFreducedOrderMarkerModesTest.py (RBE2 and RBE3, 0-11 eigenmodes, both settings and weights changed after Assemble agree to 6e-13); #3451 found on the way, RG5.4.5. [log](exudynRevisionLog2026c.md#rg5-4-2)
+
+##### **CLOSED_RG5.4.2.1** Clean up the interface between the superelement markers and the superelements
 
 #3450. Maintainer 2026-11-12: first clean up the existing code; the interface between marker and superelement is adapted; a test with a varying number of modes (mostly the eigenmodes).
+
+CLOSED 2026-11-12 (#3450): SuperElementMarkerInterface (p_0, the weighting W of the rotation, for ObjectFFRFreducedOrder the weighted modes), computed by CObjectSuperElement::InitializeMarkerInterface in the new CMarker::PostAssemble; CMarker::ParametersHaveChanged, called by the generated SetParameter of every marker; the markers ask the superelement for the weighted local position, velocity, rotation, angular velocity and the Jacobians; CObjectSuperElement::GetReferenceFrame instead of the frame data of the rigid marker; the unused n x 3 weighting gone; the regularity check of W with the same p_0 as the marker; the position of MarkerSuperElementPosition as frame + A*sum (as its Jacobian and the rigid marker). Test results move by round-off (up to 1.3e-12). [log](exudynRevisionLog2026c.md#rg5-4-2)
+
+##### **CLOSED_RG5.4.2.2** MarkerSuperElementRigid: the tangent operator in the rotation Jacobian without useAlternativeApproach
+
+#3451, found in #3450: the Jacobian of the rotation leaves out TexpSO3 with useAlternativeApproach = False, while the angular velocity applies it.
+
+CLOSED 2026-11-12: moved to RG5.4.5, as RG5.4.2 is closed.
 
 #### **OPEN_RG5.4.3** An analytic Jacobian of ObjectFFRF as sparse triplets
 
@@ -623,6 +633,10 @@ Maintainer 2026-11-12: try, with a fallback option; check whether sparse triplet
 #3449. Maintainer 2026-11-12: the switch belongs to ObjectFFRF, with a fitting name.
 
 CLOSED 2026-11-12 (#3449): the parameter sparseMassMatrix of ObjectFFRF (default True) replaces exu.special.solver.superElementSparseMassMatrix, which is removed (introduced after 1.13.0, not released). [log](exudynRevisionLog2026c.md#rg5-9-11)
+
+#### **OPEN_RG5.4.5** MarkerSuperElementRigid: the tangent operator in the rotation Jacobian without useAlternativeApproach
+
+#3451, found in #3450: the Jacobian of the rotation leaves out TexpSO3 with useAlternativeApproach = False, while the angular velocity applies it.
 
 ### **OPEN_RG5.5** Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 

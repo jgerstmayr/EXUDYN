@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,6 +115,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset, "MarkerBodiesRelativeTranslationCoordinate.offset"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow(), "MarkerBodiesRelativeTranslationCoordinate.Vshow"); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -158,6 +159,7 @@ public: // AUTO:
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset, "MarkerBodiesRelativeTranslationCoordinate.offset"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow(), "MarkerBodiesRelativeTranslationCoordinate.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerBodiesRelativeTranslationCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

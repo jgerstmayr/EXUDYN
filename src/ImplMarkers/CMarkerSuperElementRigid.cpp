@@ -28,207 +28,91 @@
 extern PyExperimental pyExperimental; //!this class can be accessed from outside, but also from every other file where this is imported
 
 
-//! define factor to 1., if offset should also be considered for rotations (which would be inconsistent with mode computation!); if 1., it should also be added to ALL AccessFunctions / rotation jacobians
-#define CMarkerSuperElementRigidOffsetRotationFactor 0.
-
-//! return parameters of underlying floating frame node (or default values for case that no frame exists)
-void CMarkerSuperElementRigid::GetFloatingFrameNodeData(const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix,
-							  Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration) const
+//! the interface depends only on the reference configuration and the parameters of the marker (#3450)
+void CMarkerSuperElementRigid::PostAssemble(const CSystemData& cSystemData)
 {
-	const CObjectSuperElement& cObjectSuperElement = (const CObjectSuperElement&)(*cSystemData.GetCObjects()[parameters.bodyNumber]); 
-	Index localRigidBodyNodeNumber; //node number in superelement!
-	if (cObjectSuperElement.HasReferenceFrame(localRigidBodyNodeNumber))
-	{
-		const CNodeRigidBody& cNodeRigid = ((const CNodeRigidBody&)cSystemData.GetCNode(cObjectSuperElement.GetNodeNumber(localRigidBodyNodeNumber)));// ->GetPosition(configuration)
-
-		framePosition = cNodeRigid.GetPosition(configuration);
-		frameRotationMatrix = cNodeRigid.GetRotationMatrix(configuration);
-		if (configuration != ConfigurationType::Reference)
-		{
-			frameVelocity = cNodeRigid.GetVelocity(configuration);
-			frameAngularVelocityLocal = cNodeRigid.GetAngularVelocityLocal(configuration);
-		}
-		else
-		{
-			frameVelocity.SetAll(0);
-			frameAngularVelocityLocal.SetAll(0);
-		}
-	}
-	else
-	{
-		framePosition.SetAll(0);
-		frameRotationMatrix.SetScalarMatrix(3, 1.); //unit matrix
-		frameVelocity.SetAll(0);
-		frameAngularVelocityLocal.SetAll(0);
-	}
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber()));
+	cObject.InitializeMarkerInterface(parameters.meshNodeNumbers, parameters.weightingFactors, true, parameters.useAlternativeApproach, markerInterface);
 }
 
-//! return weighted (linearized) rotation from local mesh displacements
+//! the interface of PostAssemble; after a change of a parameter of the marker, the part of the mesh nodes computed into temp
+const SuperElementMarkerInterface& CMarkerSuperElementRigid::ValidMarkerInterface(const CObjectSuperElement& cObject, SuperElementMarkerInterface& temp) const
+{
+	if (markerInterface.isInitialized) { return markerInterface; }
+	cObject.CObjectSuperElement::InitializeMarkerInterface(parameters.meshNodeNumbers, parameters.weightingFactors, true, parameters.useAlternativeApproach, temp);
+	return temp;
+}
+
+//! the weighted rotation of the mesh nodes, in the frame of the superelement
 void CMarkerSuperElementRigid::GetWeightedRotations(const CSystemData& cSystemData, Vector3D& weightedRotations, ConfigurationType configuration) const
 {
-	const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
 	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
-	
-	//compute rotations according to given formula
-	Real factor = 0; //sum w_i * |pRef_i|^2
-	Matrix3D factorMatrix(3, 3, 0.); //W in docu
-
-	weightedRotations.SetAll(0); //sum w_i * pRef_i x u_i
-	if (configuration == ConfigurationType::Reference) { return; } //otherwise would not work
-
-	Vector3D pRef; //mesh node local reference position
-
-	Vector3D translationPart(0); //this term occurs if the mesh at the Marker is not symmetric regarding rotations => translation causes rotation ...
-	Vector3D pRef0 = CMarkerSuperElementRigidOffsetRotationFactor * parameters.localHT.GetTranslation(); //this is a correction, if the midpoint is not at the desired center of the marker
-
-	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	{
-		pRef0 += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference);
-		translationPart += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration); //usually Current
-	}
-	translationPart -= pRef0;
-
-	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	{
-		pRef = cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference);
-		pRef -= pRef0;
-
-		if (parameters.useAlternativeApproach)
-		{
-			factorMatrix -= parameters.weightingFactors[i] * RigidBodyMath::Vector2SkewMatrix(pRef) * RigidBodyMath::Vector2SkewMatrix(pRef); //negative sign!
-		}
-		else
-		{
-			factor += parameters.weightingFactors[i] * pRef.GetL2NormSquared();
-		}
-
-		weightedRotations += parameters.weightingFactors[i] * pRef.CrossProduct(cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration) -
-			cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference) - translationPart);
-	}
-	//already checked: CHECKandTHROW(factor != 0., "MarkerSuperElementRigid::GetWeightedRotations obtained singular mesh node weighting matrix ==> check your interface nodes");
-	//pout << "W = " << factorMatrix << "\n";
-	//pout << "W^-1 = " << factorMatrix.GetInverse() << "\n";
-	//pout << "factor = " << factor << "\n";
-
-	if (parameters.useAlternativeApproach)
-	{
-		weightedRotations = factorMatrix.GetInverse()*weightedRotations;
-		//weightedRotations *= -1.;
-	}
-	else
-	{
-		//weightedRotations /= 0.5*factorMatrix.Trace();
-		weightedRotations /= factor;
-	}
+	SuperElementMarkerInterface temp;
+	weightedRotations = cObject.GetMarkerLocalRotation(ValidMarkerInterface(cObject, temp), parameters.meshNodeNumbers, parameters.weightingFactors, configuration);
 }
 
-//! return weighted angular velocity from local mesh velocities
-void CMarkerSuperElementRigid::GetWeightedAngularVelocity(const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, 
+//! the weighted angular velocity of the mesh nodes in the frame of the superelement, with the tangent operator of
+//! rotationsExponentialMap = 2...6
+void CMarkerSuperElementRigid::GetWeightedAngularVelocity(const CSystemData& cSystemData, Vector3D& weightedAngularVelocity,
 	ConfigurationType configuration) const
 {
-	const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
-	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible, because object must be SuperElement
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
+	SuperElementMarkerInterface temp;
+	const SuperElementMarkerInterface& markerInterfaceValid = ValidMarkerInterface(cObject, temp);
+	weightedAngularVelocity = cObject.GetMarkerLocalAngularVelocity(markerInterfaceValid, parameters.meshNodeNumbers, parameters.weightingFactors, configuration);
 
-	//compute rotations according to given formula
-	Real factor = 0; //sum w_i * |pRef_i|^2
-	weightedAngularVelocity.SetAll(0); //sum w_i * pRef_i x u_i
-	Matrix3D factorMatrix(3, 3, 0.);   //W in docu
-	Vector3D pRef; //mesh node local reference position
-
-	Vector3D translationPart(0); //this term occurs if the mesh at the Marker is not symmetric regarding rotations => translation causes rotation ...
-	//Vector3D pRef0 = parameters.referencePosition; //this is the midpoint of the Marker, computed from reference positions
-	Vector3D pRef0 = CMarkerSuperElementRigidOffsetRotationFactor * parameters.localHT.GetTranslation(); //this is a correction, if the midpoint is not at the desired center of the marker
-
-	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
+	if (parameters.rotationsExponentialMap >= 2)
 	{
-		pRef0 += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference);
-		translationPart += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalVelocity(nodeNumbers[i], configuration);
-	}
-
-	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	{
-		pRef = cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference);
-		pRef -= pRef0;
-		if (parameters.useAlternativeApproach)
+		Vector3D weightedRotations = cObject.GetMarkerLocalRotation(markerInterfaceValid, parameters.meshNodeNumbers, parameters.weightingFactors, configuration);
+		switch (parameters.rotationsExponentialMap)
 		{
-			factorMatrix -= parameters.weightingFactors[i] * RigidBodyMath::Vector2SkewMatrix(pRef) * RigidBodyMath::Vector2SkewMatrix(pRef); //negative sign!
+		case 2: weightedAngularVelocity = EXUlie::TExpSO3(weightedRotations) * weightedAngularVelocity; break;
+		case 3: weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3(weightedRotations); break;
+		case 4: weightedAngularVelocity = EXUlie::TExpSO3Inv(weightedRotations) * weightedAngularVelocity; break;
+		case 5: weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3Inv(weightedRotations); break;
+		case 6: weightedAngularVelocity = EXUlie::ExpSO3(weightedRotations) * EXUlie::TExpSO3(weightedRotations) * weightedAngularVelocity; break;
+		default: break;
 		}
-		else
-		{
-			factor += parameters.weightingFactors[i] * pRef.GetL2NormSquared();
-		}
-		weightedAngularVelocity += parameters.weightingFactors[i] * pRef.CrossProduct(cObject.GetMeshNodeLocalVelocity(nodeNumbers[i], configuration) - translationPart);
-	}
-	//already checked: CHECKandTHROW(factor != 0., "MarkerSuperElementRigid::GetWeightedAngularVelocity obtained singular mesh node weighting matrix ==> check your interface nodes");
-
-	if (parameters.useAlternativeApproach)
-	{
-		weightedAngularVelocity = factorMatrix.GetInverse()*weightedAngularVelocity;
-	}
-	else
-	{
-		weightedAngularVelocity /= factor;
 	}
 }
 
-
+//! position = framePosition + frameRotation * (offset + sum_i w_i (local position of mesh node i))
 void CMarkerSuperElementRigid::GetPosition(const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration) const
 {
-	const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
 	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
-
-	Vector3D framePosition;
+	SuperElementMarkerInterface temp;
+	Vector3D framePosition, frameVelocity, frameAngularVelocityLocal;
 	Matrix3D frameRotationMatrix;
-	Vector3D frameVelocity;
-	Vector3D frameAngularVelocityLocal;
-	//also works for ConfigurationType::Reference:
-	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
+	cObject.GetReferenceFrame(framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
-	position = parameters.localHT.GetTranslation();
-	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	{
-		//add weighted displacements: could be optimized if SuperElement has additional GetMeshNodeLocalDisplacement(...)
-		position += parameters.weightingFactors[i] * (cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration));
-	}
-
-	//transform to global position:
-	position = framePosition + frameRotationMatrix * position;
+	Vector3D localPosition = parameters.localHT.GetTranslation() +
+		cObject.GetMarkerLocalPosition(ValidMarkerInterface(cObject, temp), parameters.meshNodeNumbers, parameters.weightingFactors, configuration);
+	position = framePosition + frameRotationMatrix * localPosition;
 }
 
+//! velocity = frameVelocity + frameRotation * (sum_i w_i v_i + frameAngularVelocityLocal x local position)
 void CMarkerSuperElementRigid::GetVelocity(const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration) const
 {
-	const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
 	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
-
-	Vector3D framePosition;
+	SuperElementMarkerInterface temp;
+	const SuperElementMarkerInterface& markerInterfaceValid = ValidMarkerInterface(cObject, temp);
+	Vector3D framePosition, frameVelocity, frameAngularVelocityLocal;
 	Matrix3D frameRotationMatrix;
-	Vector3D frameVelocity;
-	Vector3D frameAngularVelocityLocal;
-	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
+	cObject.GetReferenceFrame(framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
-	Vector3D localDisplacement = parameters.localHT.GetTranslation();
-	velocity.SetAll(0);
-
-	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	{
-		velocity += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalVelocity(nodeNumbers[i], configuration);
-
-		//add weighted displacements: 
-		localDisplacement += parameters.weightingFactors[i] * (cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration));
-	}
-	velocity += frameAngularVelocityLocal.CrossProduct(localDisplacement);
-
-	velocity = frameVelocity + frameRotationMatrix * velocity;
+	Vector3D localPosition = parameters.localHT.GetTranslation() +
+		cObject.GetMarkerLocalPosition(markerInterfaceValid, parameters.meshNodeNumbers, parameters.weightingFactors, configuration);
+	Vector3D localVelocity = cObject.GetMarkerLocalVelocity(markerInterfaceValid, parameters.meshNodeNumbers, parameters.weightingFactors, configuration);
+	localVelocity += frameAngularVelocityLocal.CrossProduct(localPosition);
+	velocity = frameVelocity + frameRotationMatrix * localVelocity;
 }
-
 
 void CMarkerSuperElementRigid::GetRotationMatrix(const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration) const
 {
-	Vector3D framePosition;
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
+	Vector3D framePosition, frameVelocity, frameAngularVelocityLocal;
 	Matrix3D frameRotationMatrix;
-	Vector3D frameVelocity;
-	Vector3D frameAngularVelocityLocal;
-	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
+	cObject.GetReferenceFrame(framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
 	Vector3D weightedRotations;
 	GetWeightedRotations(cSystemData, weightedRotations, configuration);
@@ -238,123 +122,71 @@ void CMarkerSuperElementRigid::GetRotationMatrix(const CSystemData& cSystemData,
 
 void CMarkerSuperElementRigid::ComputeRotationMatrix(const Matrix3D& frameRotationMatrix, const Vector3D& weightedRotations, Matrix3D& rotationMatrix) const
 {
-	//linearized, inconsistent rotation matrix: rotationMatrix = frameRotationMatrix * (EXUmath::unitMatrix3D + RigidBodyMath::Vector2SkewMatrix(weightedRotations)); //linearized rotation matrix reads: I+skew(rotVec)
-    if (parameters.rotationsExponentialMap > 0)
-    {
-        rotationMatrix = frameRotationMatrix * EXUlie::ExpSO3(weightedRotations); //gives consistent rotation matrix!
-    }
-    else
-    {
-        rotationMatrix = frameRotationMatrix * (EXUmath::unitMatrix3D + RigidBodyMath::Vector2SkewMatrix(weightedRotations)); //inconsistent ...
-    }
+	if (parameters.rotationsExponentialMap > 0)
+	{
+		rotationMatrix = frameRotationMatrix * EXUlie::ExpSO3(weightedRotations); //a consistent rotation matrix
+	}
+	else
+	{
+		rotationMatrix = frameRotationMatrix * (EXUmath::unitMatrix3D + RigidBodyMath::Vector2SkewMatrix(weightedRotations)); //linearized: I+skew(rotation)
+	}
 }
 
 void CMarkerSuperElementRigid::GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
-	Vector3D framePosition;
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
+	Vector3D framePosition, frameVelocity, frameAngularVelocityLocal;
 	Matrix3D frameRotationMatrix;
-	Vector3D frameVelocity;
-	Vector3D frameAngularVelocityLocal;
-	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
+	cObject.GetReferenceFrame(framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
 	Vector3D weightedAngularVelocity;
 	GetWeightedAngularVelocity(cSystemData, weightedAngularVelocity, configuration);
-    if (parameters.rotationsExponentialMap >= 2)
-    {
-        Vector3D weightedRotations;
-        GetWeightedRotations(cSystemData, weightedRotations, configuration);
-
-        if (parameters.rotationsExponentialMap == 2) { weightedAngularVelocity = EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
-        else if (parameters.rotationsExponentialMap == 3) { weightedAngularVelocity = weightedAngularVelocity* EXUlie::TExpSO3(weightedRotations); }
-        else if (parameters.rotationsExponentialMap == 4) { weightedAngularVelocity = EXUlie::TExpSO3Inv(weightedRotations)*weightedAngularVelocity; }
-		else if (parameters.rotationsExponentialMap == 5) { weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3Inv(weightedRotations); }
-		else if (parameters.rotationsExponentialMap == 6) { weightedAngularVelocity = EXUlie::ExpSO3(weightedRotations) * EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
-	}
 	angularVelocity = frameRotationMatrix * (frameAngularVelocityLocal + weightedAngularVelocity);
 }
 
 void CMarkerSuperElementRigid::GetAngularVelocityLocal(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
-	Vector3D framePosition;
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
+	Vector3D framePosition, frameVelocity, frameAngularVelocityLocal;
 	Matrix3D frameRotationMatrix;
-	Vector3D frameVelocity;
-	Vector3D frameAngularVelocityLocal;
-	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
+	cObject.GetReferenceFrame(framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
 	Vector3D weightedAngularVelocity;
 	GetWeightedAngularVelocity(cSystemData, weightedAngularVelocity, configuration);
-    if (parameters.rotationsExponentialMap >= 2)
-    {
-        Vector3D weightedRotations;
-        GetWeightedRotations(cSystemData, weightedRotations, configuration);
-
-        if (parameters.rotationsExponentialMap == 2) { weightedAngularVelocity = EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
-        else if (parameters.rotationsExponentialMap == 3) { weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3(weightedRotations); }
-        else if (parameters.rotationsExponentialMap == 4) { weightedAngularVelocity = EXUlie::TExpSO3Inv(weightedRotations)*weightedAngularVelocity; }
-        else if (parameters.rotationsExponentialMap == 5) { weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3Inv(weightedRotations); }
-		else if (parameters.rotationsExponentialMap == 6) { weightedAngularVelocity = EXUlie::ExpSO3(weightedRotations) * EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
-	}
-    angularVelocity = frameAngularVelocityLocal + weightedAngularVelocity;
+	angularVelocity = frameAngularVelocityLocal + weightedAngularVelocity;
 	ApplyMarkerLocalRotationToAngularVelocity(parameters.localHT, angularVelocity);
 }
-
-
-
 
 //! the position and rotation Jacobians of the marker, 3 x n each, through the superelement's access functions (#2745)
 static void ComputeJacobians(const CMarkerSuperElementRigid& marker, const CSystemData& cSystemData, Matrix& positionJacobian,
 	Matrix& rotationJacobian)
 {
-	//const ArrayIndex& nodeNumbers = marker.GetParameters().meshNodeNumbers;
+	const CMarkerSuperElementRigidParameters& parameters = marker.GetParameters();
 	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(marker.GetObjectNumber())); //always possible
-
-	//will be done in AccessFunctions ...
-	//positionJacobian.SetNumberOfRowsAndColumns(3, cObject.GetODE2Size());
-	//positionJacobian.SetAll(0.);
-
-	Index nw = marker.GetParameters().weightingFactors.NumberOfItems();
-
-	LinkedDataMatrix weightingMatrix(marker.GetParameters().weightingFactors.GetDataPointer(), nw, 1);
+	SuperElementMarkerInterface temp;
+	const SuperElementMarkerInterface& markerInterfaceValid = marker.ValidMarkerInterface(cObject, temp);
 
 	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), positionJacobian, EXUmath::unitMatrix3D, false);
+		markerInterfaceValid, parameters.meshNodeNumbers, parameters.weightingFactors, parameters.localHT.GetTranslation(), EXUmath::unitMatrix3D, positionJacobian);
 
-	Matrix3D rotationCorrection;
-	if (marker.GetParameters().rotationsExponentialMap > 0 && pyExperimental.markerSuperElementRigidTexpSO3)
+	Matrix3D rotationCorrection = EXUmath::unitMatrix3D;
+	if (parameters.rotationsExponentialMap > 0 && pyExperimental.markerSuperElementRigidTexpSO3)
 	{
-		Vector3D weightedRotations;
-		marker.GetWeightedRotations(cSystemData, weightedRotations, ConfigurationType::Current); //this computation could be saved in case that GetRotationMatrix() would also retrieve weightedRotations ...
-		rotationCorrection = EXUlie::TExpSO3(weightedRotations);
+		rotationCorrection = EXUlie::TExpSO3(cObject.GetMarkerLocalRotation(markerInterfaceValid, parameters.meshNodeNumbers,
+			parameters.weightingFactors, ConfigurationType::Current));
 	}
-	else { rotationCorrection.SetScalarMatrix(3, 1.); }
 
 	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), rotationJacobian, rotationCorrection, marker.GetParameters().useAlternativeApproach);
-
-#ifdef verboseCMarkerSuperElementRigid
-	pout << "  markerdata.positionJacobian=" << positionJacobian << "\n";
-	pout << "  markerdata.rotationJacobian=" << rotationJacobian << "\n";
-#endif // verboseCMarkerSuperElementRigid
+		markerInterfaceValid, parameters.meshNodeNumbers, parameters.weightingFactors, parameters.localHT.GetTranslation(), rotationCorrection, rotationJacobian);
 }
 
 void CMarkerSuperElementRigid::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
 	GetPosition(cSystemData, markerData.position, ConfigurationType::Current);
 	GetVelocity(cSystemData, markerData.velocity, ConfigurationType::Current);
-
 	GetRotationMatrix(cSystemData, markerData.orientation, ConfigurationType::Current);
 	GetAngularVelocityLocal(cSystemData, markerData.angularVelocityLocal, ConfigurationType::Current);
 	markerData.velocityAvailable = true;
-
-//#define verboseCMarkerSuperElementRigid
-#ifdef verboseCMarkerSuperElementRigid
-	pout << "markerdata:\n";
-	pout << "  markerdata.position=" << markerData.position << "\n";
-	pout << "  markerdata.velocity=" << markerData.velocity << "\n";
-	pout << "  markerdata.orientation=" << markerData.orientation << "\n";
-	pout << "  markerdata.angularVelocityLocal=" << markerData.angularVelocityLocal << "\n";
-#endif // verboseCMarkerSuperElementRigid
-
 
 	if (computeJacobian) { ComputeJacobians(*this, cSystemData, markerData.positionJacobian, markerData.rotationJacobian); }
 }
@@ -404,11 +236,9 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 	//rotations are linear in the local displacements and scale with them (deformationScaleFactor, #1813)
 	const Real scaleFactor = visualizationSettings.bodies.deformationScaleFactor;
 	const CSystemData& cSystemData = *vSystem->systemData;
-	Vector3D framePosition;
+	Vector3D framePosition, frameVelocity, frameAngularVelocityLocal;
 	Matrix3D frameRotationMatrix;
-	Vector3D frameVelocity;
-	Vector3D frameAngularVelocityLocal;
-	cMarker->GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, ConfigurationType::Visualization);
+	cSuperElement->GetReferenceFrame(framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, ConfigurationType::Visualization);
 
 	const ArrayIndex& nodeNumbers = cMarker->GetParameters().meshNodeNumbers;
 	Vector3D pos = cMarker->GetParameters().localHT.GetTranslation(); //global marker position

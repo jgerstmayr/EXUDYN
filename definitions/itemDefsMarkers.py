@@ -1142,7 +1142,8 @@ definitions.append(ItemDefinition(
     drawing=r'At the weighted position of its mesh nodes, deformed with `bodies.deformationScaleFactor`.',
     drawingSettings=['bodies.deformationScaleFactor'],
     cParentClass=ParentClassCMarker,
-    overallDescription=r'A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.',
+    addIncludesC='class CObjectSuperElement;\n#include "System/SuperElementMarkerInterface.h" //the interface of the superelement markers (#3450)\n',
+    overallDescription=r'A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sum over the mesh nodes is computed once at Assemble as a weighted sum of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes.',
     classType=ClassTypeMarker,
     detailedDescription=r"""    **Definition of marker quantities**:
 
@@ -1178,8 +1179,8 @@ definitions.append(ItemDefinition(
     The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for `ObjectGenericODE2`, because the jacobian only affects one single node.
     In `ObjectFFRFreducedOrder`, the jacobian may affect all reduced coordinates.
 
-    Note that $\Jm_{m,pos}$ is actually computed by the
-    `ObjectSuperElement` within the function `GetAccessFunctionSuperElement`.
+    Note that $\Jm_{m,pos}$ is computed by the superelement. For `ObjectFFRFreducedOrder` with `precomputeMarkerModes`, the
+    weighted sum of the rows of the mode basis of the marker nodes is computed once at Assemble.
 """,
     mainParentClass=MainParentClassMainMarker,
     miniExample=r"""    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
@@ -1236,6 +1237,16 @@ definitions.append(ItemDefinition(
             pythonName='weightingFactors',
             defaultValue='Vector()',
             description=r"""$[w_{0},\,\ldots,\,w_{n_m-1}]\tp$a list of $n_m$ weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker"""),
+        ItemParameter(type=TSuperElementMarkerInterface, destination=DestComp, cFlags=CFMutable+CFNoInterface,
+            pythonName='markerInterface',
+            defaultValue='SuperElementMarkerInterface()',
+            description=r'what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)'),
+        ItemFunctionDef('ParametersHaveChanged',
+            implementation='markerInterface.isInitialized = false;'),
+        ItemFunctionDef('PostAssemble'),
+        ItemFunction(type='const SuperElementMarkerInterface&', destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ValidMarkerInterface', args='const CObjectSuperElement& cObject, SuperElementMarkerInterface& temp',
+            description=r'the interface computed at Assemble, or computed into temp if a parameter changed since (#3450)'),
         ItemFunctionDef('GetObjectNumber',
             implementation='return parameters.bodyNumber;'),
         ItemFunctionDef('SetObjectNumber',
@@ -1284,7 +1295,8 @@ definitions.append(ItemDefinition(
     drawing=r'At the weighted position of its mesh nodes, deformed with `bodies.deformationScaleFactor`, with its frame.',
     drawingSettings=['bodies.deformationScaleFactor'],
     cParentClass=ParentClassCMarker,
-    overallDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
+    addIncludesC='class CObjectSuperElement;\n#include "System/SuperElementMarkerInterface.h" //the interface of the superelement markers (#3450)\n',
+    overallDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sums over the mesh nodes are computed once at Assemble as weighted sums of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
     classType=ClassTypeMarker,
     miniExample=r"""    #a rigid body marker on four mesh nodes of a super element, here four free mass points of a
     #ObjectGenericODE2; the marker averages their motion, a force on it is shared by the weights
@@ -1551,6 +1563,16 @@ definitions.append(ItemDefinition(
             pythonName='rotationsExponentialMap',
             defaultValue=2,
             description=r'Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities'),
+        ItemParameter(type=TSuperElementMarkerInterface, destination=DestComp, cFlags=CFMutable+CFNoInterface,
+            pythonName='markerInterface',
+            defaultValue='SuperElementMarkerInterface()',
+            description=r'what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)'),
+        ItemFunctionDef('ParametersHaveChanged',
+            implementation='markerInterface.isInitialized = false;'),
+        ItemFunctionDef('PostAssemble'),
+        ItemFunction(type='const SuperElementMarkerInterface&', destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ValidMarkerInterface', args='const CObjectSuperElement& cObject, SuperElementMarkerInterface& temp',
+            description=r'the interface computed at Assemble, or computed into temp if a parameter changed since (#3450)'),
         ItemFunctionDef('GetObjectNumber',
             implementation='return parameters.bodyNumber;'),
         ItemFunctionDef('SetObjectNumber',
@@ -1585,17 +1607,13 @@ definitions.append(ItemDefinition(
             description=r"Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?"),
         ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='GetFloatingFrameNodeData',
-            args='const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration = ConfigurationType::Current',
-            description=r'return parameters of underlying floating frame node (or default values for case that no frame exists)'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='GetWeightedRotations',
             args='const CSystemData& cSystemData, Vector3D& weightedRotations, ConfigurationType configuration = ConfigurationType::Current',
-            description=r'return weighted (linearized) rotation from local mesh displacements'),
+            description=r'the weighted rotation of the mesh nodes, in the frame of the superelement'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='GetWeightedAngularVelocity',
             args='const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current',
-            description=r'return weighted angular velocity from local mesh velocities'),
+            description=r'the weighted angular velocity of the mesh nodes in the frame of the superelement, with the tangent operator of rotationsExponentialMap'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeRotationMatrix',
             args='const Matrix3D& frameRotationMatrix, const Vector3D& weightedRotations, Matrix3D& rotationMatrix',

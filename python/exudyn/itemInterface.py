@@ -4421,6 +4421,8 @@ class ObjectFFRFreducedOrder:
 
         numericalJacobian: False: the object computes its ODE2 Jacobian, in parallel with the other objects; True: the system differentiates the object numerically, serially, as with a forceUserFunction or a node other than Euler parameters and Tait-Bryan angles (#3212); type: bool
 
+        precomputeMarkerModes: True: MarkerSuperElementPosition and MarkerSuperElementRigid on this body compute their position, rotation and Jacobians from the weighted sums of the modes over their mesh nodes, which are computed once at Assemble, so that their work per evaluation grows with the number of modes only; False: from the mesh nodes on every evaluation, whose work grows with the number of mesh nodes of the marker times the number of modes; both agree up to round-off; type: bool
+
         modeBasis: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector :math:`[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp`; type: array_like
 
         outputVariableModeBasis: mode basis, which transforms reduced coordinates to output variables per mode and per node; :math:`s_{OV}` is the size of the output variable, e.g., 6 for stress modes (:math:`S_{xx},...,S_{xy}`); type: array_like
@@ -4465,7 +4467,7 @@ class ObjectFFRFreducedOrder:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, numericalJacobian = False, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = None):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, numericalJacobian = False, precomputeMarkerModes = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixReduced = massMatrixReduced
@@ -4475,6 +4477,7 @@ class ObjectFFRFreducedOrder:
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
         self.numericalJacobian = numericalJacobian
+        self.precomputeMarkerModes = precomputeMarkerModes
         self.modeBasis = CheckForValidNumpyArray(modeBasis)
         self.outputVariableModeBasis = CheckForValidNumpyArray(outputVariableModeBasis)
         self.outputVariableTypeModeBasis = outputVariableTypeModeBasis
@@ -4507,6 +4510,7 @@ class ObjectFFRFreducedOrder:
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'computeFFRFterms', self.computeFFRFterms
         yield 'numericalJacobian', self.numericalJacobian
+        yield 'precomputeMarkerModes', self.precomputeMarkerModes
         yield 'modeBasis', self.modeBasis
         yield 'outputVariableModeBasis', self.outputVariableModeBasis
         yield 'outputVariableTypeModeBasis', self.outputVariableTypeModeBasis
@@ -10347,9 +10351,9 @@ class VMarkerSuperElementPosition:
         return str(dict(self))
 
 class MarkerSuperElementPosition:
-    """A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers).
+    """A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder.
     
-    The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.
+    The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sum over the mesh nodes is computed once at Assemble as a weighted sum of the modes (``precomputeMarkerModes``), so that the cost per evaluation does not grow with the number of mesh nodes.
     
     Args:
         name: marker's unique name; type: str
@@ -10406,9 +10410,9 @@ class VMarkerSuperElementRigid:
         return str(dict(self))
 
 class MarkerSuperElementRigid:
-    """A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient).
+    """A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder.
     
-    The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
+    The marker acts on the mesh nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sums over the mesh nodes are computed once at Assemble as weighted sums of the modes (``precomputeMarkerModes``), so that the cost per evaluation does not grow with the number of mesh nodes. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
     
     Args:
         name: marker's unique name; type: str

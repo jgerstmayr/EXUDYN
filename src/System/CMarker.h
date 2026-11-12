@@ -104,6 +104,11 @@ public: //
 		CHECKandTHROWstring("Invalid call to CMarker::PostNewtonStep");
 	}
 
+	//! a parameter of the marker was changed through the Python interface (#3450)
+	virtual void ParametersHaveChanged() {}
+	//! operations done after Assemble(), after those of the objects, if the system is consistent (#3450)
+	virtual void PostAssemble(const CSystemData& cSystemData) {}
+
 	//! true if the marker calls Python user functions itself (MarkerBodyUser, #3065): it and what depends on it are drawn in
 	//! the main thread (#3003)
 	virtual bool AccessFunctionsCallUserFunctions() const { return false; }

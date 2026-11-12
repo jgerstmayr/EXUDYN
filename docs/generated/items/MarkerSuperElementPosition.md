@@ -6,7 +6,7 @@
 (sec-item-markersuperelementposition)=
 # MarkerSuperElementPosition
 
-A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.
+A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sum over the mesh nodes is computed once at Assemble as a weighted sum of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes.
 
 ## Interface
 
@@ -73,8 +73,8 @@ $$
 The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for `ObjectGenericODE2`, because the jacobian only affects one single node.
 In `ObjectFFRFreducedOrder`, the jacobian may affect all reduced coordinates.
 
-Note that $\Jm_{m,pos}$ is actually computed by the
-`ObjectSuperElement` within the function `GetAccessFunctionSuperElement`.
+Note that $\Jm_{m,pos}$ is computed by the superelement. For `ObjectFFRFreducedOrder` with `precomputeMarkerModes`, the
+weighted sum of the rows of the mode basis of the marker nodes is computed once at Assemble.
 
 (miniexample-markersuperelementposition)=
 ## Mini example
@@ -118,4 +118,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Positio
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`objectFFRFforceVectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFforceVectorTest.py) (TM), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`objectFFRFreducedOrderTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderTest.py) (TM), [`objectFFRFsparseMassMatrixTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFsparseMassMatrixTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM), [`objectGenericODE2Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectGenericODE2Test.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`objectFFRFforceVectorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFforceVectorTest.py) (TM), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderMarkerModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderMarkerModesTest.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`objectFFRFreducedOrderTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderTest.py) (TM), [`objectFFRFsparseMassMatrixTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFsparseMassMatrixTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM), [`objectGenericODE2Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectGenericODE2Test.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -110,6 +110,7 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "objectNumber")) { EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cMarkerObjectODE2Coordinates->GetParameters().objectNumber); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -138,6 +139,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("objectNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cMarkerObjectODE2Coordinates->GetParameters().objectNumber); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerObjectODE2Coordinates::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

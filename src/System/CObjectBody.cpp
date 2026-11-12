@@ -244,184 +244,210 @@ Real CObjectConstraint::GetCurrentAEcoordinate(Index localIndex) const
 	return cSystemData->GetCData().GetCurrent().AECoords[globalAECoordinateIndex + localIndex]; 
 }
 
-void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
-	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode) const
-{ 
-	const bool useAlternativeApproach = alternativeRotationMode; //must be same as in CMarkerSuperElementRigid! alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
-	Index localReferenceNodeIndex; //local node number!!!
-	bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//THE INTERFACE OF THE SUPERELEMENT MARKERS (#3450): the sums over the mesh nodes, for all superelements;
+//ObjectFFRFreducedOrder computes them from the modes instead (#2184)
 
-	switch ((Index)accessType)
+void CObjectSuperElement::GetReferenceFrame(Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity,
+	Vector3D& frameAngularVelocityLocal, ConfigurationType configuration) const
+{
+	Index localReferenceNodeIndex; //local node number
+	if (HasReferenceFrame(localReferenceNodeIndex))
 	{
-	case (Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
-	{
-
-		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
-		value.SetAll(0.);
-
-		Matrix3D A;
-		Index refFrameOffset = 0;
-
-		if (hasReferenceFrame)
+		const CNodeRigidBody* frameNode = (const CNodeRigidBody*)GetCNode(localReferenceNodeIndex);
+		framePosition = frameNode->GetPosition(configuration);
+		frameRotationMatrix = frameNode->GetRotationMatrix(configuration);
+		if (configuration != ConfigurationType::Reference)
 		{
-			A = ((const CNodeODE2*)(GetCNode(localReferenceNodeIndex)))->GetRotationMatrix();
-			refFrameOffset++;
+			frameVelocity = frameNode->GetVelocity(configuration);
+			frameAngularVelocityLocal = frameNode->GetAngularVelocityLocal(configuration);
 		}
 		else
 		{
-			A = EXUmath::unitMatrix3D;
+			frameVelocity.SetAll(0.);
+			frameAngularVelocityLocal.SetAll(0.);
 		}
+	}
+	else
+	{
+		framePosition.SetAll(0.);
+		frameRotationMatrix = EXUmath::unitMatrix3D;
+		frameVelocity.SetAll(0.);
+		frameAngularVelocityLocal.SetAll(0.);
+	}
+}
 
-		//Index cOffset = 0; //coordinates offset
-		//without reference frame, the localOffset does not influence position jacobian!
+void CObjectSuperElement::InitializeMarkerInterface(const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, bool computeRotation,
+	bool alternativeApproach, SuperElementMarkerInterface& markerInterface) const
+{
+	markerInterface.hasRotation = computeRotation;
+	markerInterface.alternativeApproach = alternativeApproach;
+	markerInterface.positionModes.SetNumberOfRowsAndColumns(0, 0);
+	markerInterface.rotationModes.SetNumberOfRowsAndColumns(0, 0);
+
+	Vector3D& p0 = markerInterface.referencePosition;
+	p0.SetAll(0.);
+	for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	{
+		p0 += weightingFactors[i] * GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference);
+	}
+
+	if (computeRotation)
+	{
+		Real factor = 0.; //W = sum w_i * |p_i|^2
+		Matrix3D factorMatrix(3, 3, 0.); //W = -sum w_i * pTilde_i^2, alternative approach
 		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 		{
-			Index iNode = meshNodeNumbers[i] + refFrameOffset;
-			Index nodeODE2 = GetCNode(iNode)->GetNumberOfODE2Coordinates();
-			if (nodeODE2 >= CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)
-			{ 
-				CHECKandTHROWstring("CObjectSuperElement::GetAccessFunctionSuperElement: MarkerSuperElement only available in case of nodes with equal or less than 7 coordinates!"); 
-			}
-
-			//use temporary jacobian structure, to get node jacobian; posJac0 MUST have already correct size, because LinkedDataMatrix cannot change size!
-			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + 
-				CNodeRigidBody::maxRotationCoordinates)> posJac0(nDim3D, nodeODE2);
-			LinkedDataMatrix linkedPosJac0(posJac0);
-			((const CNodeODE2*)GetCNode(iNode))->GetPositionJacobian(linkedPosJac0);
-
-			//assume that the first 3 coordinates of the node are the displacement coordinates!!!
-			Matrix3D jac = A;
-			if (weightingMatrix.NumberOfColumns() == 1)
+			Vector3D p = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - p0;
+			if (alternativeApproach)
 			{
-				jac *= weightingMatrix(i, 0);
+				factorMatrix -= weightingFactors[i] * RigidBodyMath::Vector2SkewMatrix(p) * RigidBodyMath::Vector2SkewMatrix(p);
 			}
 			else
 			{
-				for (Index j = 0; j < 3; j++)
-				{
-					for (Index k = 0; k < 3; k++)
-					{
-						jac(j, k) *= weightingMatrix(i, k); //add weighting to columns, because every column corresponds to local x,y and z direction (weigthing effects needed on local coordinates)
-					}
-				}
+				factor += weightingFactors[i] * p.GetL2NormSquared();
 			}
-			EXUmath::ApplyTransformation33Template< ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates +
-				CNodeRigidBody::maxRotationCoordinates)>>(jac, posJac0); //size=3: always 3D
-
-			Index offset = GetLocalODE2CoordinateIndexPerNode(iNode); //gives correct coordinates also in case of referenceFrame node
-			//pout << "offsetFFRF" << i << "=" << offset << "\n";
-			value.SetSubmatrix(posJac0, 0, offset);
 		}
-		//pout << "posJac=" << markerData.positionJacobian << "\n";
+		markerInterface.rotationFactor = factor;
+		if (alternativeApproach) { markerInterface.rotationMatrixInverse = factorMatrix.GetInverse(); } //checked to be regular in CheckPreAssembleConsistency
+	}
+	markerInterface.isInitialized = true;
+}
+
+Vector3D CObjectSuperElement::GetMarkerLocalPosition(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+	const Vector& weightingFactors, ConfigurationType configuration) const
+{
+	Vector3D position(0.);
+	for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	{
+		position += weightingFactors[i] * GetMeshNodeLocalPosition(meshNodeNumbers[i], configuration);
+	}
+	return position;
+}
+
+Vector3D CObjectSuperElement::GetMarkerLocalVelocity(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+	const Vector& weightingFactors, ConfigurationType configuration) const
+{
+	Vector3D velocity(0.);
+	for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	{
+		velocity += weightingFactors[i] * GetMeshNodeLocalVelocity(meshNodeNumbers[i], configuration);
+	}
+	return velocity;
+}
+
+Vector3D CObjectSuperElement::GetMarkerLocalRotation(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+	const Vector& weightingFactors, ConfigurationType configuration) const
+{
+	CHECKandTHROW(markerInterface.hasRotation, "CObjectSuperElement::GetMarkerLocalRotation: the marker interface has no rotation");
+	Vector3D rotation(0.);
+	if (configuration == ConfigurationType::Reference) { return rotation; }
+
+	const Vector3D& p0 = markerInterface.referencePosition;
+	//sum_j w_j u_j: a translation of the mesh nodes that are not symmetric about p0 would otherwise rotate the marker
+	Vector3D translation = CObjectSuperElement::GetMarkerLocalPosition(markerInterface, meshNodeNumbers, weightingFactors, configuration) - p0;
+	for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	{
+		Vector3D referencePosition = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference);
+		rotation += weightingFactors[i] * (referencePosition - p0).CrossProduct(
+			GetMeshNodeLocalPosition(meshNodeNumbers[i], configuration) - referencePosition - translation);
+	}
+	return markerInterface.ApplyRotationWeighting(rotation);
+}
+
+Vector3D CObjectSuperElement::GetMarkerLocalAngularVelocity(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers,
+	const Vector& weightingFactors, ConfigurationType configuration) const
+{
+	CHECKandTHROW(markerInterface.hasRotation, "CObjectSuperElement::GetMarkerLocalAngularVelocity: the marker interface has no rotation");
+	const Vector3D& p0 = markerInterface.referencePosition;
+	Vector3D translation = CObjectSuperElement::GetMarkerLocalVelocity(markerInterface, meshNodeNumbers, weightingFactors, configuration);
+	Vector3D angularVelocity(0.);
+	for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	{
+		angularVelocity += weightingFactors[i] * (GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - p0).CrossProduct(
+			GetMeshNodeLocalVelocity(meshNodeNumbers[i], configuration) - translation);
+	}
+	return markerInterface.ApplyRotationWeighting(angularVelocity);
+}
+
+void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType accessType, const SuperElementMarkerInterface& markerInterface,
+	const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, const Vector3D& localOffset,
+	const Matrix3D& rotTangentCorrection, Matrix& value) const
+{
+	Index localReferenceNodeIndex; //local node number
+	const bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
+	typedef ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> NodeJacobian;
+
+	value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+	value.SetAll(0.);
+
+	switch ((Index)accessType)
+	{
+	case (Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement:
+	//without reference frame: [w0*nodeJac0, w1*nodeJac1, ...] at the coordinates of the mesh nodes;
+	//with reference frame: [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
+	{
+		Matrix3D A = EXUmath::unitMatrix3D;
+		Index referenceFrameOffset = 0;
+		if (hasReferenceFrame)
+		{
+			A = ((const CNodeODE2*)(GetCNode(localReferenceNodeIndex)))->GetRotationMatrix();
+			referenceFrameOffset = 1;
+		}
+
+		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+		{
+			Index iNode = meshNodeNumbers[i] + referenceFrameOffset;
+			Index nodeODE2 = GetCNode(iNode)->GetNumberOfODE2Coordinates();
+			CHECKandTHROW(nodeODE2 < CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates,
+				"CObjectSuperElement::GetAccessFunctionSuperElement: MarkerSuperElement only available for nodes with less than 7 coordinates");
+
+			//the node Jacobian: posJac0 needs its size before it is linked
+			NodeJacobian posJac0(nDim3D, nodeODE2);
+			LinkedDataMatrix linkedPosJac0(posJac0);
+			((const CNodeODE2*)GetCNode(iNode))->GetPositionJacobian(linkedPosJac0);
+
+			Matrix3D jac = A;
+			jac *= weightingFactors[i];
+			EXUmath::ApplyTransformation33Template<NodeJacobian>(jac, posJac0);
+			value.SetSubmatrix(posJac0, 0, GetLocalODE2CoordinateIndexPerNode(iNode));
+		}
 
 		if (hasReferenceFrame)
 		{
-			//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
-
-			Vector3D localPosition;// ({ 0,0,0 });
-			localPosition = localOffset;
-			for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
-			{
-				if (weightingMatrix.NumberOfColumns() == 1)
-				{
-					localPosition += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i]); 
-				}
-				else
-				{
-					for (Index j = 0; j < 3; j++)
-					{
-						localPosition[j] += weightingMatrix(i, j) * GetMeshNodeLocalPosition(meshNodeNumbers[i])[j]; 
-					}
-				}
-			}
-
+			Vector3D localPosition = localOffset + GetMarkerLocalPosition(markerInterface, meshNodeNumbers, weightingFactors, ConfigurationType::Current);
 			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(localReferenceNodeIndex);
-			Index nodeODE2 = cNode->GetNumberOfODE2Coordinates();
 
-
+			//-A*pLocalTilde*GLocal
 			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
-
-			//compute: -A*pLocalTilde*GLocal
 			cNode->GetGlocal(Glocal);
 			EXUmath::ApplyTransformation33(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
 			EXUmath::ApplyTransformation33(A, Glocal);
 
-			//now compute remaining jacobian terms for reference frame motion:
-			//posJac0 MUST have already correct size, because LinkedDataMatrix cannot change size!
-			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + 
-				CNodeRigidBody::maxRotationCoordinates)> posJac0(nDim3D, nodeODE2);
+			NodeJacobian posJac0(nDim3D, cNode->GetNumberOfODE2Coordinates());
 			LinkedDataMatrix linkedPosJac0(posJac0);
-			((const CNodeODE2*)GetCNode(localReferenceNodeIndex))->GetPositionJacobian(linkedPosJac0);
+			cNode->GetPositionJacobian(linkedPosJac0);
 
 			value.SetSubmatrix(posJac0, 0, 0);
 			value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
 		}
 		break;
 	}
-	case (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
+	case (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement:
+	//[W^{-1}*w0*pRefTilde0, W^{-1}*w1*pRefTilde1, ...] at the coordinates of the mesh nodes; the localOffset has no influence
 	{
-		//[0, A * Glocal, A*(0, ..., 0, w0*pRefTilde0*nodeJac0, 0, ..., 0, w1*pRefTilde1*nodeJac1, ...)]
+		CHECKandTHROW(!hasReferenceFrame, "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder", ExudynNotImplementedError);
+		CHECKandTHROW(GetODE2Size() == 3*GetNumberOfMeshNodes(), "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible if all mesh nodes have dimensionality 3", ExudynNotImplementedError);
+		CHECKandTHROW(markerInterface.hasRotation, "CObjectSuperElement::GetAccessFunctionSuperElement: the marker interface has no rotation");
 
-		//according to theDoc, localOffset has no influence on rotations, as this position also does not influence angular velocity
-
-		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, weightingMatrix must have 1 row!", ExudynValueError);
-		CHECKandTHROW(!hasReferenceFrame, "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder!", ExudynNotImplementedError);
-		CHECKandTHROW(GetODE2Size() == 3*GetNumberOfMeshNodes(), "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible if all mesh nodes have dimensionality 3!", ExudynNotImplementedError);
-		
-
-		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
-		value.SetAll(0.);
-
-		//++++++++++++++++++++++++++++++++++++++
-		//compute global factor
-		Real factor = 0; //sum w_i * |pRef_i|^2
-		Matrix3D factorMatrix(3, 3, 0.);  //W in docu
-		Vector3D pRef; //mesh node local reference position
-
-		Vector3D pRef0(0);			 //this is the midpoint of the Marker, computed from reference positions
-		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
-		{
-			pRef0 += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference);
-		}
+		Matrix3D weighting = EXUmath::unitMatrix3D; //rotTangentCorrection*W^{-1} or W^{-1}
+		if (markerInterface.alternativeApproach) { weighting = rotTangentCorrection * markerInterface.rotationMatrixInverse; }
+		else { weighting *= 1. / markerInterface.rotationFactor; }
 
 		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 		{
-			pRef = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - pRef0;
-			if (useAlternativeApproach)
-			{
-				factorMatrix -= weightingMatrix(i, 0) * RigidBodyMath::Vector2SkewMatrix(pRef) * RigidBodyMath::Vector2SkewMatrix(pRef); //negative sign!
-			}
-			else
-			{
-				factor += weightingMatrix(i, 0) * pRef.GetL2NormSquared();
-			}
-		}
-
-		if (useAlternativeApproach)
-		{
-			factorMatrix = rotTangentCorrection*factorMatrix.GetInverse();
-		}
-		else
-		{
-			factor = 1. / factor; //factor is now inverted
-		}
-
-		//++++++++++++++++++++++++++++++++++++++
-		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
-		{
-			//assume that the first 3 coordinates of the node are the displacement coordinates!!!
-			pRef = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - pRef0;
-			//Matrix3D jac = A * RigidBodyMath::Vector2SkewMatrix(pRef);  //A must be multiplied from left!
-			Matrix3D jac = RigidBodyMath::Vector2SkewMatrix(pRef);
-			if (useAlternativeApproach)
-			{
-				jac = weightingMatrix(i, 0) * factorMatrix * jac;
-			}
-			else
-			{
-				jac = factor * weightingMatrix(i, 0) * jac;
-			}
-
+			Vector3D p = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - markerInterface.referencePosition;
+			Matrix3D jac = weightingFactors[i] * weighting * RigidBodyMath::Vector2SkewMatrix(p);
 			Index offset = meshNodeNumbers[i] * 3;
 			for (Index j = 0; j < 3; j++)
 			{
@@ -431,14 +457,11 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 				}
 			}
 		}
-
 		break;
-
 	}
 	default:
 		CHECKandTHROWstring("CObjectSuperElement:GetAccessFunctionSuperElement illegal accessType");
 	}
-
 }
 
 //! the ODE2 coordinates of the nodes and their velocities (#2995)

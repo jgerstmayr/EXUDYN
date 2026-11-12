@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 560 | 1.13.586 |
+| 1.13 | Newborn | 562 | 1.13.588 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.588** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Clean up the interface between the superelement markers and the superelements (#3450)
+  - description: MarkerSuperElementPosition and MarkerSuperElementRigid compute their sums over the mesh nodes through a set of functions of the superelements (GetMeshNodeLocalPosition, GetMeshNodePosition, ...); the code is cleaned up and the interface adapted, as the base of the precomputed interface sums (\#2184).
+  - **notes:** the interface between the superelement markers and the superelements: what a marker needs of its mesh nodes is computed by the superelement at Assemble; a changed weightingFactors takes effect without a new Assemble; the position of MarkerSuperElementPosition with weights that do not sum up to 1 follows the floating frame like that of MarkerSuperElementRigid
+  - date resolved: **2026-11-12 08:32**, date raised: 2026-11-12
+- **1.13.587** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` MarkerSuperElementRigid (#2184)
+  - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
+  - **notes:** MarkerSuperElementPosition and MarkerSuperElementRigid on ObjectFFRFreducedOrder compute their sums over the mesh nodes from the weighted modes, formed once at Assemble (ObjectFFRFreducedOrder.precomputeMarkerModes, default True; False computes them from the mesh nodes): 30-170 times faster for interfaces of 135-620 nodes
+  - date resolved: **2026-11-12 08:32**, date raised: 2026-01-04
 - **1.13.586** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRF.sparseMassMatrix replaces exudyn.special.solver.superElementSparseMassMatrix (#3449)
   - description: The switch between the sparse and the dense mass matrix of ObjectFFRF (\#2183) belongs to the object, as a parameter that is kept with the model, not to exudyn.special.
   - **notes:** ObjectFFRF.sparseMassMatrix (default True) switches between the mass matrix as sparse triplets and the dense matrix; it replaces exu.special.solver.superElementSparseMassMatrix

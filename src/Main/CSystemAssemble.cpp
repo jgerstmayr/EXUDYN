@@ -124,6 +124,10 @@ void CSystem::Assemble(const MainSystem& mainSystem)
 	for (CObject* object : cSystemData.GetCObjects())
 	{
 		object->PostAssemble();	}
+	if (IsSystemConsistent()) //the markers after the objects, as they may use what the objects computed (#3450)
+	{
+		for (CMarker* marker : cSystemData.GetCMarkers()) { marker->PostAssemble(cSystemData); }
+	}
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-10  21:43:04 (last modified)
+* @date         2026-11-12  08:07:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,8 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+class CObjectSuperElement;
+#include "System/SuperElementMarkerInterface.h" //the interface of the superelement markers (#3450)
 
 //! AUTO: Parameters for class CMarkerSuperElementRigidParameters
 class CMarkerSuperElementRigidParameters // AUTO:
@@ -48,7 +50,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CMarkerSuperElementRigid
-* @brief        A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
+* @brief        A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sums over the mesh nodes are computed once at Assemble as weighted sums of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -71,14 +73,39 @@ class CMarkerSuperElementRigid: public CMarker // AUTO:
 {
 protected: // AUTO:
     CMarkerSuperElementRigidParameters parameters; //! AUTO: contains all parameters for CMarkerSuperElementRigid
+    mutable SuperElementMarkerInterface markerInterface;//!< AUTO: what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
 
 public: // AUTO:
+    //! AUTO: default constructor with parameter initialization
+    CMarkerSuperElementRigid()
+    {
+        markerInterface = SuperElementMarkerInterface();
+    };
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
     virtual CMarkerSuperElementRigidParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CMarkerSuperElementRigidParameters& GetParameters() const { return parameters; }
+
+    //! AUTO:  Write (Reference) access to:what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
+    void SetMarkerInterface(const SuperElementMarkerInterface& value) { markerInterface = value; }
+    //! AUTO:  Read (Reference) access to:what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
+    const SuperElementMarkerInterface& GetMarkerInterface() const { return markerInterface; }
+    //! AUTO:  Read (Reference) access to:what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
+    SuperElementMarkerInterface& GetMarkerInterface() { return markerInterface; }
+
+    //! AUTO:  a parameter of the marker was changed, so what it computed at Assemble is computed again (#3450)
+    virtual void ParametersHaveChanged() override
+    {
+        markerInterface.isInitialized = false;
+    }
+
+    //! AUTO:  operations done after Assemble(), after those of the objects (#3450)
+    virtual void PostAssemble(const CSystemData& cSystemData) override;
+
+    //! AUTO:  the interface computed at Assemble, or computed into temp if a parameter changed since (#3450)
+    const SuperElementMarkerInterface& ValidMarkerInterface(const CObjectSuperElement& cObject, SuperElementMarkerInterface& temp) const;
 
     //! AUTO:  general access to object number
     virtual Index GetObjectNumber(Index localIndex = 0) const override
@@ -137,13 +164,10 @@ public: // AUTO:
     //! AUTO:  add J_pos^T force + J_rot^T torque to ode2Lhs; the Jacobians formed here (#2745)
     virtual void AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const override;
 
-    //! AUTO:  return parameters of underlying floating frame node (or default values for case that no frame exists)
-    void GetFloatingFrameNodeData(const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration = ConfigurationType::Current) const;
-
-    //! AUTO:  return weighted (linearized) rotation from local mesh displacements
+    //! AUTO:  the weighted rotation of the mesh nodes, in the frame of the superelement
     void GetWeightedRotations(const CSystemData& cSystemData, Vector3D& weightedRotations, ConfigurationType configuration = ConfigurationType::Current) const;
 
-    //! AUTO:  return weighted angular velocity from local mesh velocities
+    //! AUTO:  the weighted angular velocity of the mesh nodes in the frame of the superelement, with the tangent operator of rotationsExponentialMap
     void GetWeightedAngularVelocity(const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  the rotation matrix of the marker from the rotation of the floating frame and the weighted rotations, as rotationsExponentialMap chooses

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.586.dev1
+- Exudyn version = 1.13.588.dev1
 - last change = 2026-11-12
-- Number of issues = 3451
-- Number of resolved issues = 3363 (586 in current version)
+- Number of issues = 3452
+- Number of resolved issues = 3365 (588 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,8 +9039,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` Clean up the interface between the superelement markers and the superelements (#3450)
-  - description: MarkerSuperElementPosition and MarkerSuperElementRigid compute their sums over the mesh nodes through a set of functions of the superelements (GetMeshNodeLocalPosition, GetMeshNodePosition, ...); the code is cleaned up and the interface adapted, as the base of the precomputed interface sums (\#2184).
+- `CHECK` `LOW EFF` `raised by: Claude-JG` MarkerSuperElementRigid: the rotation Jacobian without useAlternativeApproach leaves out the tangent operator TexpSO3 (#3451)
+  - description: With rotationsExponentialMap \> 0 and experimental.markerSuperElementRigidTexpSO3 (default), the rotation Jacobian of MarkerSuperElementRigid is multiplied by the tangent operator TexpSO3 of the weighted rotation only with useAlternativeApproach = True; with False the Jacobian of the weighted rotation is used without it, while the angular velocity applies it (rotationsExponentialMap = 2). The Jacobian then differs from the derivative of the angular velocity by TexpSO3 - I, which is small for small deformations; to be checked whether the Jacobian should include it in both approaches (found in \#3450).
   - date raised: 2026-11-12
 - `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` ObjectFFRF: analytic Jacobian instead of the numerical one (#3447)
   - description: ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (\#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.
@@ -9132,10 +9132,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add cylindrical test problem; compare to ANCFCable2D
   - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-18
-- `EXTENSION` `MEDIUM EFF` MarkerSuperElementRigid (#2184)
-  - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
-  - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
-  - date raised: 2026-01-04
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

@@ -39,6 +39,12 @@ the new default, selects that number (#3445). `ObjectFFRF` gives its mass matrix
 sparse mass matrix (#2183). `simulationSettings.linearSolver.dropThreshold` leaves out the entries of the sparse Newton
 Jacobian that are tiny relative to their row and column - round-off of rotations and of numerical derivatives -; the
 default 0 leaves out only exact zeros (#3448).
+`MarkerSuperElementPosition` and `MarkerSuperElementRigid` on `ObjectFFRFreducedOrder` compute their sums over the mesh
+nodes from weighted sums of the modes, formed once at Assemble: 30-170 times faster for interfaces of 135-620 nodes; the
+parameter `precomputeMarkerModes = False` of the object computes them from the mesh nodes as before (#2184). A changed
+`weightingFactors` of such a marker takes effect without a new Assemble; the position of a
+`MarkerSuperElementPosition` with weights that do not sum up to 1 follows the floating frame like that of
+`MarkerSuperElementRigid` (#3450).
 
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running

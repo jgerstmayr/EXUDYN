@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-10  21:43:04 (last modified)
+* @date         2026-11-12  08:07:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,8 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+class CObjectSuperElement;
+#include "System/SuperElementMarkerInterface.h" //the interface of the superelement markers (#3450)
 
 //! AUTO: Parameters for class CMarkerSuperElementPositionParameters
 class CMarkerSuperElementPositionParameters // AUTO:
@@ -42,7 +44,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CMarkerSuperElementPosition
-* @brief        A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.
+* @brief        A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder. The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object. On ObjectFFRFreducedOrder, the weighted sum over the mesh nodes is computed once at Assemble as a weighted sum of the modes (`precomputeMarkerModes`), so that the cost per evaluation does not grow with the number of mesh nodes.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -65,14 +67,39 @@ class CMarkerSuperElementPosition: public CMarker // AUTO:
 {
 protected: // AUTO:
     CMarkerSuperElementPositionParameters parameters; //! AUTO: contains all parameters for CMarkerSuperElementPosition
+    mutable SuperElementMarkerInterface markerInterface;//!< AUTO: what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
 
 public: // AUTO:
+    //! AUTO: default constructor with parameter initialization
+    CMarkerSuperElementPosition()
+    {
+        markerInterface = SuperElementMarkerInterface();
+    };
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
     virtual CMarkerSuperElementPositionParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CMarkerSuperElementPositionParameters& GetParameters() const { return parameters; }
+
+    //! AUTO:  Write (Reference) access to:what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
+    void SetMarkerInterface(const SuperElementMarkerInterface& value) { markerInterface = value; }
+    //! AUTO:  Read (Reference) access to:what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
+    const SuperElementMarkerInterface& GetMarkerInterface() const { return markerInterface; }
+    //! AUTO:  Read (Reference) access to:what the marker needs of the mesh nodes that depends only on the reference configuration, computed at Assemble (#3450)
+    SuperElementMarkerInterface& GetMarkerInterface() { return markerInterface; }
+
+    //! AUTO:  a parameter of the marker was changed, so what it computed at Assemble is computed again (#3450)
+    virtual void ParametersHaveChanged() override
+    {
+        markerInterface.isInitialized = false;
+    }
+
+    //! AUTO:  operations done after Assemble(), after those of the objects (#3450)
+    virtual void PostAssemble(const CSystemData& cSystemData) override;
+
+    //! AUTO:  the interface computed at Assemble, or computed into temp if a parameter changed since (#3450)
+    const SuperElementMarkerInterface& ValidMarkerInterface(const CObjectSuperElement& cObject, SuperElementMarkerInterface& temp) const;
 
     //! AUTO:  general access to object number
     virtual Index GetObjectNumber(Index localIndex = 0) const override

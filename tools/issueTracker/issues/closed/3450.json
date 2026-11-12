@@ -1,0 +1,15 @@
+{
+  "number": 3450,
+  "title": "Clean up the interface between the superelement markers and the superelements",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "MarkerSuperElementPosition and MarkerSuperElementRigid compute their sums over the mesh nodes through a set of functions of the superelements (GetMeshNodeLocalPosition, GetMeshNodePosition, ...); the code is cleaned up and the interface adapted, as the base of the precomputed interface sums (#2184).",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 08:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the interface between the superelement markers and the superelements: what a marker needs of its mesh nodes is computed by the superelement at Assemble; a changed weightingFactors takes effect without a new Assemble; the position of MarkerSuperElementPosition with weights that do not sum up to 1 follows the floating frame like that of MarkerSuperElementRigid",
+  "resolvedInVersion": "1.13.588"
+}

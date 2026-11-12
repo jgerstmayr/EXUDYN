@@ -363,8 +363,38 @@ objectFunctions = [
     ItemFunctionLib(classType='Object', pythonName='GetAccessFunctionSuperElement',
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
-        args='AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode',
-        description='compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; alternativeRotationMode is the useAlternativeApproach of MarkerSuperElementRigid (#2744); for details see CObjectSuperElement header file'),
+        args='AccessFunctionType accessType, const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, const Vector3D& localOffset, const Matrix3D& rotTangentCorrection, Matrix& value',
+        description='the position or rotation Jacobian of a MarkerSuperElementPosition or MarkerSuperElementRigid on the mesh nodes meshNodeNumbers with weightingFactors and the interface computed at Assemble (#3450); for details see the CObjectSuperElement header file'),
+
+    ItemFunctionLib(classType='Object', pythonName='InitializeMarkerInterface',
+        type=Tvoid, destination=DestComp,
+        cFlags=CFConst,
+        args='const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, bool computeRotation, bool alternativeApproach, SuperElementMarkerInterface& markerInterface',
+        description='the part of the interface of a superelement marker that depends only on the reference configuration, computed at Assemble (#3450)'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetMarkerLocalPosition',
+        type=TVectorND(3), destination=DestComp,
+        cFlags=CFConst,
+        args='const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration',
+        description='the weighted sum of the local positions of the mesh nodes of a superelement marker (#3450)'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetMarkerLocalVelocity',
+        type=TVectorND(3), destination=DestComp,
+        cFlags=CFConst,
+        args='const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration',
+        description='the weighted sum of the local velocities of the mesh nodes of a superelement marker (#3450)'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetMarkerLocalRotation',
+        type=TVectorND(3), destination=DestComp,
+        cFlags=CFConst,
+        args='const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration',
+        description='the weighted rotation of the mesh nodes of a MarkerSuperElementRigid, in the body frame (#3450)'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetMarkerLocalAngularVelocity',
+        type=TVectorND(3), destination=DestComp,
+        cFlags=CFConst,
+        args='const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration',
+        description='the weighted angular velocity of the mesh nodes of a MarkerSuperElementRigid, in the body frame (#3450)'),
 
     ItemFunctionLib(classType='Object', pythonName='GetAccessFunctionTypes',
         type=TAccessFunctionType, destination=DestComp,
@@ -865,6 +895,15 @@ markerFunctions = [
         cFlags=CFConst,
         args='const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current',
         description='return velocity of marker'),
+
+    ItemFunctionLib(classType='Marker', pythonName='ParametersHaveChanged',
+        type=Tvoid, destination=DestComp,
+        description='a parameter of the marker was changed, so what it computed at Assemble is computed again (#3450)'),
+
+    ItemFunctionLib(classType='Marker', pythonName='PostAssemble',
+        type=Tvoid, destination=DestComp,
+        args='const CSystemData& cSystemData',
+        description='operations done after Assemble(), after those of the objects (#3450)'),
 
     ItemFunctionLib(classType='Marker', pythonName='PostNewtonStep',
         type=Tvoid, destination=DestComp,

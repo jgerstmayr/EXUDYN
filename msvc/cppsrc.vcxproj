@@ -686,6 +686,7 @@
     <ClInclude Include="..\src\System\CNode.h" />
     <ClInclude Include="..\src\System\CObject.h" />
     <ClInclude Include="..\src\System\CObjectBody.h" />
+    <ClInclude Include="..\src\System\SuperElementMarkerInterface.h" />
     <ClInclude Include="..\src\System\CObjectConnector.h" />
     <ClInclude Include="..\src\System\JointRelativeFrame.h" />
     <ClInclude Include="..\src\System\CSensor.h" />

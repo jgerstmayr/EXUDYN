@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,6 +113,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "verticalOffset")) { EPyUtils::FromPython(d["verticalOffset"], cMarkerBodyCable2DShape->GetParameters().verticalOffset, "MarkerBodyCable2DShape.verticalOffset"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodyCable2DShape->GetShow(), "MarkerBodyCable2DShape.Vshow"); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -150,6 +151,7 @@ public: // AUTO:
         else if (parameterName.compare("verticalOffset") == 0) { EPyUtils::FromPython(value, cMarkerBodyCable2DShape->GetParameters().verticalOffset, "MarkerBodyCable2DShape.verticalOffset"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerBodyCable2DShape->GetShow(), "MarkerBodyCable2DShape.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerBodyCable2DShape::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

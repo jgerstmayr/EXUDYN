@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-11-10  21:44:25 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,6 +44,7 @@ public: // AUTO:
     PythonUserFunctionBase< std::function<NumpyMatrix(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below
     bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard ABRV:FFRF/ABRV:CMS terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector
     bool numericalJacobian;                       //!< AUTO: False: the object computes its ABRV:ODE2 Jacobian, in parallel with the other objects; True: the system differentiates the object numerically, serially, as with a forceUserFunction or a node other than Euler parameters and Tait-Bryan angles (#3212)
+    bool precomputeMarkerModes;                   //!< AUTO: True: MarkerSuperElementPosition and MarkerSuperElementRigid on this body compute their position, rotation and Jacobians from the weighted sums of the modes over their mesh nodes, which are computed once at Assemble, so that their work per evaluation grows with the number of modes only; False: from the mesh nodes on every evaluation, whose work grows with the number of mesh nodes of the marker times the number of modes; both agree up to round-off
     Matrix modeBasis;                             //!< AUTO: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector \f$[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp\f$
     Matrix outputVariableModeBasis;               //!< AUTO: mode basis, which transforms reduced coordinates to output variables per mode and per node; \f$s_{OV}\f$ is the size of the output variable, e.g., 6 for stress modes (\f$S_{xx},...,S_{xy}\f$)
     OutputVariableType outputVariableTypeModeBasis;//!< AUTO: this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress
@@ -65,6 +66,7 @@ public: // AUTO:
         massMatrixUserFunction = 0;
         computeFFRFterms = true;
         numericalJacobian = false;
+        precomputeMarkerModes = true;
         modeBasis = Matrix();
         outputVariableModeBasis = Matrix();
         outputVariableTypeModeBasis = OutputVariableType::_None;
@@ -445,8 +447,23 @@ public: // AUTO:
     //! AUTO:  return the (global) acceleration of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
     virtual Vector3D GetMeshNodeAcceleration(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; alternativeRotationMode is the useAlternativeApproach of MarkerSuperElementRigid (#2744); for details see CObjectSuperElement header file
-    virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode) const override;
+    //! AUTO:  the position or rotation Jacobian of a MarkerSuperElementPosition or MarkerSuperElementRigid on the mesh nodes meshNodeNumbers with weightingFactors and the interface computed at Assemble (#3450); for details see the CObjectSuperElement header file
+    virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, const Vector3D& localOffset, const Matrix3D& rotTangentCorrection, Matrix& value) const override;
+
+    //! AUTO:  the part of the interface of a superelement marker that depends only on the reference configuration, computed at Assemble (#3450)
+    virtual void InitializeMarkerInterface(const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, bool computeRotation, bool alternativeApproach, SuperElementMarkerInterface& markerInterface) const override;
+
+    //! AUTO:  the weighted sum of the local positions of the mesh nodes of a superelement marker (#3450)
+    virtual Vector3D GetMarkerLocalPosition(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration) const override;
+
+    //! AUTO:  the weighted sum of the local velocities of the mesh nodes of a superelement marker (#3450)
+    virtual Vector3D GetMarkerLocalVelocity(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration) const override;
+
+    //! AUTO:  the weighted rotation of the mesh nodes of a MarkerSuperElementRigid, in the body frame (#3450)
+    virtual Vector3D GetMarkerLocalRotation(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration) const override;
+
+    //! AUTO:  the weighted angular velocity of the mesh nodes of a MarkerSuperElementRigid, in the body frame (#3450)
+    virtual Vector3D GetMarkerLocalAngularVelocity(const SuperElementMarkerInterface& markerInterface, const ArrayIndex& meshNodeNumbers, const Vector& weightingFactors, ConfigurationType configuration) const override;
 
     //! AUTO:  get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes
     virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const override;

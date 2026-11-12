@@ -157,6 +157,7 @@ emptyContainerValues = {
     'InertiaList':          ('None', '[]'),
     'BeamSection':          ('exudyn.BeamSection()', 'BeamSection()'),
     'BeamSectionGeometry':  ('exudyn.BeamSectionGeometry()', 'BeamSectionGeometry()'),
+    'SuperElementMarkerInterface': ('None', 'None'), #C++ only, not in the interface (#3450)
 }
 
 #an expression that is neither an empty container nor a braced initializer, as (Python, document)
@@ -663,6 +664,7 @@ TAccessFunctionType                = TypeSpec('AccessFunctionType')
 TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
 TCNodeGroup                        = TypeSpec('CNodeGroup')
 TJointTypeList                     = TypeSpec('JointTypeList')
+TSuperElementMarkerInterface       = TypeSpec('SuperElementMarkerInterface') #the interface of the superelement markers, C++ only (#3450)
 TSTDstring                         = TypeSpec('STDstring')
 
 #--------------------------------------------------------------------- user-function signatures

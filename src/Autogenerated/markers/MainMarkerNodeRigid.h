@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:22 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,6 +119,7 @@ public: // AUTO:
         EPyUtils::HTFromDictionary(d, "localHT", nullptr, nullptr, cMarkerNodeRigid->GetParameters().localHT, "MarkerNodeRigid");
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerNodeRigid->GetShow(), "MarkerNodeRigid.Vshow"); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -153,6 +154,7 @@ public: // AUTO:
         else if (parameterName.compare("localHT") == 0) { EPyUtils::HTFromPython(value, cMarkerNodeRigid->GetParameters().localHT, "MarkerNodeRigid.localHT"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerNodeRigid->GetShow(), "MarkerNodeRigid.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerNodeRigid::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

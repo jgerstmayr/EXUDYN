@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-04  00:02:40 (last modified)
+* @date         2026-11-12  07:57:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,6 +118,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "rotationJacobianUserFunction")) { cMarkerBodyUser->GetParameters().rotationJacobianUserFunction = d["rotationJacobianUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodyUser->GetShow(), "MarkerBodyUser.Vshow"); }
+        GetCMarker()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
@@ -167,6 +168,7 @@ public: // AUTO:
         else if (parameterName.compare("rotationJacobianUserFunction") == 0) { cMarkerBodyUser->GetParameters().rotationJacobianUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerBodyUser->GetShow(), "MarkerBodyUser.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerBodyUser::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
+        GetCMarker()->ParametersHaveChanged();
     }
 
 };

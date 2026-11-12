@@ -6431,6 +6431,56 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-4-2"></a>
+### RG5.4.2, RG5.4.2.1 — the interface of the superelement markers cleaned up, the interface sums precomputed (2026-11-12, #3450, #2184)
+
+*(Maintainer 2026-11-12: do RG5.4.2, but first clean up the existing code; the interface between marker and superelement
+is adapted; a test with a varying number of RBE modes, mostly changing the eigenmodes.)*
+
+**RG5.4.2.1 (#3450), the clean-up**: the sums over the mesh nodes were computed in four places (the rigid marker's
+weighted rotation and angular velocity, the access functions of CObjectSuperElement and of ObjectFFRFreducedOrder), each
+forming p_0 and W again on every call; the rigid marker took the frame from the node itself, the position marker summed
+the global mesh node positions. Now:
+
+- `SuperElementMarkerInterface` (new header src/System/SuperElementMarkerInterface.h): p_0, W (rotationFactor or
+  rotationMatrixInverse), and for ObjectFFRFreducedOrder Pm and Rm; a member `markerInterface` of both markers (TypeSpec
+  `TSuperElementMarkerInterface`, C++ only).
+- `CObjectSuperElement`: `InitializeMarkerInterface`, `GetMarkerLocalPosition/Velocity/Rotation/AngularVelocity`, the
+  new signature of `GetAccessFunctionSuperElement` (the interface, the weights as a vector; the n x 3 weighting matrix,
+  which no caller used, removed), `GetReferenceFrame` (from the frame code of the rigid marker).
+- `CMarker::PostAssemble(cSystemData)`, called by Assemble after the objects if the system is consistent;
+  `CMarker::ParametersHaveChanged()`, called by the generated SetWithDictionary and SetParameter of every marker
+  (itemHeaderEmitter.py, as for the objects): the marker then computes the base part per evaluation until the next
+  Assemble (`ValidMarkerInterface`).
+- The rigid marker: GetFloatingFrameNodeData and the macro CMarkerSuperElementRigidOffsetRotationFactor (0) removed; the
+  five tangent-operator variants of the angular velocity in one place; the debug output of ComputeMarkerData removed.
+- MarkerSuperElementPosition: position = frame + A * sum_i w_i x_i, as its Jacobian and the rigid marker (it summed
+  w_i (R + A x_i), which differs if the weights do not sum up to 1 - a warning of the consistency check).
+- The regularity check of W in the consistency check used p_0 plus the offset of localHT, the marker p_0 alone; now the
+  same p_0.
+- Found, not changed: without useAlternativeApproach the rotation Jacobian leaves out TexpSO3, which the angular
+  velocity applies - #3451, RG5.4.5.
+
+The results of the test models with superelement markers (scratch seResults.py, before and after; 12 of 13 - ACFtest
+needs its output directory and ran in the suite only): 5 unchanged to the bit, the others by round-off -
+objectFFRFreducedOrderStressModesTest 2.2e-16, superElementRigidJointTest 7.1e-15, objectFFRFTest 6.6e-14,
+objectFFRFTest2 5.8e-14, objectFFRFreducedOrderTest 7.6e-14, objectFFRFreducedOrderAccelerations 2.9e-13,
+objectFFRFsparseMassMatrixTest 1.3e-12 (relative); all within the tolerances of the suite.
+
+**RG5.4.2 (#2184)**: `ObjectFFRFreducedOrder.precomputeMarkerModes` (default True): Pm = sum_i w_i Psi_i and
+Rm = W^{-1} (sum_i w_i tilde(p_i) Psi_i - tilde(sum_i w_i p_i) Pm) at Assemble; the weighted position is p_0 + Pm q, the
+rotation Rm q, the velocities with q_t, the Jacobian columns of the modal coordinates A Pm and A Rm (A T Rm in the
+alternative approach). Measured (scratch markerModesBench.py, NGsolve block with HCB RBE2 modes, 200 steps): 33-171
+times faster for 135-620 interface nodes and 10-22 modes (0.48 -> 0.003 s at 613 nodes, 10 modes), positions equal to
+2e-15; table in docs/dev/design/superElementSparse.md section 8. Test model objectFFRFreducedOrderMarkerModesTest.py:
+the rotor of testData/rotorDiscTest, HCB with RBE2 (0, 5, 11 eigenmodes) and RBE3 (7), and once without
+useAlternativeApproach (RBE2, 8); clamped by a MarkerSuperElementRigid, loaded through both marker types; True and False
+agree to 6e-13, and weights changed after Assemble agree with a model built with them. The rotor has pairs of equal
+eigenvalues: a number of eigenmodes that splits a pair (4, 12) made the result depend on the state of ARPACK (1.6e-7
+between a single run and the suite), so the numbers avoid them. Overall descriptions of both markers: the remark on the
+inefficiency on ObjectFFRFreducedOrder replaced by the precomputation. parameterConversionTestReference.txt recorded
+again (precomputeMarkerModes).
+
 <a id="rg5-9-11"></a>
 ### RG5.9.11, RG5.4.4, RG5.8.2 — the near-zero entries of the sparse Newton Jacobian, ObjectFFRF.sparseMassMatrix, no total coordinates (2026-11-12, #3448, #3449, #1910, #2182)
 
