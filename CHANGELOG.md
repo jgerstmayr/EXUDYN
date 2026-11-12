@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 571 | 1.13.600 |
+| 1.13 | Newborn | 573 | 1.13.602 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.602** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix3D is SlimMatrix\<3,3\> for good: remove the switch EXUDYN\_MATRIX3D\_CONSTSIZE (#3467)
+  - description: The evaluation of \#3459 (faster in the rigid-body models, nowhere slower, bitwise on Windows and on gcc) decides for SlimMatrix\<3,3\>. The compile switch back to ConstSizeMatrix\<9\> is removed; Matrix3DBase\<T\> stays for templated code; the 3x3 cases of ConstSizeMatrix stay for Matrix3DF.
+  - **notes:** Matrix3D is SlimMatrix\<3,3\> for good; the compile switch EXUDYN\_MATRIX3D\_CONSTSIZE is removed.
+  - date resolved: **2026-11-12 20:14**, date raised: 2026-11-12
+- **1.13.601** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` runPerformanceTests.py counts a model as failed when a package of the tests extra is missing (#3466)
+  - description: perfObjectFFRFreducedOrder.py needs scipy; in an environment without it (WSL venvExuP313) the performance tests report it as FAILED with the error of the invalid result. runTestSuite.py skips such a model (\#2832). The performance runner shall skip it the same way: not failed, not in the times, listed with the package, and marked as skipped in the JSON record.
+  - **notes:** runPerformanceTests.py skips a performance model whose package of the tests extra is not installed (e.g. scipy for perfObjectFFRFreducedOrder.py), as the test suite does: not failed, not in the times, listed at the end.
+  - date resolved: **2026-11-12 20:14**, date raised: 2026-11-12
 - **1.13.600** `FIX` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The gcc build: py::str of a dict is ambiguous, Matrix3D copied uninitialized, LaTeX backslashes in the docstrings of exudyn.cUtilities (#3464)
   - description: gcc 13 with the pybind11 of the build environment refuses py::str(d) for a py::dict (MainSystemContainer.cpp, the renderer controls): ambiguous between the constructors from handle, object and bytes; the Linux build stops. Further warnings of gcc: FromPython for a SlimMatrix copies its destination, which SetRotationPy and HTRotationFromPython left uninitialized (Matrix3D A;); Raytracer::IntersectRayWithItem, inline in Raytracing.h, calls two inline functions defined only in Raytracing.cpp (used but never defined in the other translation units); a narrowing sin/cos of a float in the circles of the raytracer. The generator writes the descriptions of the pybind functions into the C++ string literal without escaping backslashes: the LaTeX of 8 functions of exudyn.cUtilities (EulerParameters2G, RotXYZ2G, LocalTwist, ...) lost its backslashes on every platform and \\t became a tab.
   - **notes:** The gcc build works again: py::str of a dict made unambiguous (renderer controls), the rotation matrix of HomogeneousTransformation initialized before its conversion from Python, Raytracer::IntersectRayWithItem defined in Raytracing.cpp, no narrowing in the raytraced circles; the LaTeX in the docstrings of exudyn.cUtilities (EulerParameters2G, RotXYZ2G, LocalTwist, ...) keeps its backslashes on every platform.

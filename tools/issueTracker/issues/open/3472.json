@@ -1,0 +1,11 @@
+{
+  "number": 3472,
+  "title": "Raytracer: soft shadows for directional lights",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "lightRadius has no effect for a directional light (position[3] == 0, Raytracing.cpp), while its description does not say so. A directional light shall get soft shadows from an angular radius (the sun: 0.27 degrees), sampled on a disk of directions like the point light; or the description says that it is ignored.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

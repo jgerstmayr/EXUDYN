@@ -1,0 +1,11 @@
+{
+  "number": 3471,
+  "title": "Raytracer: transparent objects cast a partial shadow",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "A shadow ray stops at the first hit, so a transparent object (alpha < 1, or a material with transparency) shadows like an opaque one. The light shall pass reduced by the transparency of the objects in between (product of (1-alpha) up to the light), as the visible image already blends them.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

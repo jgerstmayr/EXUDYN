@@ -52,10 +52,10 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The choices of the maintainer** on the three design notes of 2026-11-12: the raytracer shadows (RG6.26,
-   raytracerImprovements.md), expression templates (RG5.2.7) and the consolidation of the linalg templates (RG5.2.8);
-   the decision on Matrix3D (RG5.2.9).
-3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+2. **The raytracer speedups that keep the image** (RG6.26.2-RG6.26.6), then the image-changing group (RG6.26.9-RG6.26.11)
+   and the correctness points (RG6.26.13-RG6.26.15): agreed on 2026-11-12, no decision open.
+3. **The linear algebra cleanup** (RG5.2.8.1, RG5.2.8.2) and the transposed view (RG5.2.7.2): no computation changes.
+4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -65,11 +65,11 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.29 Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (3 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (12 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
-  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it
+  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (15 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -114,8 +114,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
-| RG5 | OPEN | 6 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG5 | OPEN | 15 | Performance |
+| RG6 | OPEN | 16 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -502,6 +502,12 @@ CLOSED 2026-11-12 (#3464): built in WSL; the ambiguous py::str of a dict, the un
 
 #3465, found in RG4.28 (the first Linux run since 1.13.81).
 
+### **CLOSED_RG4.30** runPerformanceTests.py skips a model whose package of the tests extra is missing
+
+#3466 (maintainer 2026-11-12: exudev perf --fast on Linux, venvExuP313, failed in perfObjectFFRFreducedOrder.py, which needs scipy).
+
+CLOSED 2026-11-12 (#3466): scipy was missing in WSL's venvExuP313; the performance runner skips such a model like the test suite (not failed, not in the times, listed, skipped in the JSON). [log](exudynRevisionLog2026c.md#rg4-30)
+
 ## **OPEN_RG5** Performance
 
 Measurement first, then the code that is actually hot.
@@ -649,15 +655,61 @@ CLOSED 2026-11-12 (#3463), not done: the templated G products are bitwise equal 
 
 #3461. Maintainer 2026-11-12: no expression templates were used in Exudyn so far; where they simplify code at the same performance, the most important ones shall be enabled; a design file. Design: docs/dev/design/expressionTemplates.md - full expression templates not recommended; E1 Transposed(A) * x, E2 SlimVectorBase::MultAdd, E3 after the measurements M1; sub-steps ET.1-ET.5 in its section 7, for the maintainer to choose.
 
+Maintainer 2026-11-12: the recommended expression templates into the plan (RG5.2.7.1-RG5.2.7.5).
+
+##### **OPEN_RG5.2.7.1** Measure the temporaries: the cases M1a-M1e in RunLinalgBenchmark
+
+#3461. expressionTemplates.md ET.1: both modules, the results into linalgBenchmark.md; they decide RG5.2.7.5 and confirm RG5.2.7.3.
+
+##### **OPEN_RG5.2.7.2** TransposedView: Transposed(A) * x without a copy
+
+#3461. ET.2: Transposed() (a reference for lvalues, owning for rvalues) with operator* for ConstSizeMatrix and SlimMatrix; unit tests bitwise against GetTransposed().
+
+##### **OPEN_RG5.2.7.3** Transposed(A) * x in the hot item code
+
+#3461. ET.3: about 30 places in joints, connectors, the loads of CObjectRigidBody and CObjectConnector.cpp; the test suite bitwise; exudev perf.
+
+##### **OPEN_RG5.2.7.4** SlimVectorBase::MultAdd
+
+#3461. ET.4: v.MultAdd(factor, w) without a temporary; bitwise.
+
+##### **OPEN_RG5.2.7.5** Fused elementwise expressions on SlimVector, only if the measurement shows a gain
+
+#3461. ET.5: SlimVectorBase(T) explicit, then the restricted expressions of expressionTemplates.md 5.3, with a rule on auto in CODING_STYLE.md.
+
 #### **OPEN_RG5.2.8** Consolidate the linear algebra function templates
 
 #3462. Maintainer 2026-11-12: check the many linalg templates (MultAdd..., Transposed...) - which can be combined or removed, possibly also for performance. Inventory: docs/dev/design/linalgTemplatesInventory.md - dead functions, duplicates, slow kernels in hot code; one kernel per product with a result mode; sub-steps LT.1-LT.5 in its section 7, for the maintainer to choose.
 
-#### **OPEN_RG5.2.9** Decide: Matrix3D as SlimMatrix<3,3> for good, and remove EXUDYN_MATRIX3D_CONSTSIZE
+Maintainer 2026-11-12: the proposed steps are good to go (RG5.2.8.1-RG5.2.8.5; the benchmark RG5.2.8.3 before the kernels RG5.2.8.4).
+
+##### **OPEN_RG5.2.8.1** Remove the dead linear algebra functions
+
+#3462. linalgTemplatesInventory.md LT.1 (section 5.1): MultMatrixMatrixTemplate2, MultMatrixMatrixAddTemplate, the AddSubmatrixTransposedWithFactor chain, ...; build.
+
+##### **OPEN_RG5.2.8.2** The kernels under their plain names, the wrappers and explicit template arguments removed
+
+#3462. LT.2: MultMatrixVector, ... without Template; the 33 wrappers and 75 explicit argument lists gone; MultMatrixVectorSquaredAdd checks instead of resizing; the test suite bitwise.
+
+##### **OPEN_RG5.2.8.3** Benchmark cases for J^T K J as the connectors compute it, and 3x3 times 3 x n
+
+#3462. LT.5, measured before and after RG5.2.8.4: MultMatrixTransposedMatrix + MultMatrixMatrixToSubmatrix for n = 6, 7, 12 (CObjectConnector.cpp), the contact case; both modules.
+
+##### **OPEN_RG5.2.8.4** One kernel per product with a result mode (set, add, subtract)
+
+#3462. LT.3 (section 6.1): generic element type for the transposed kernels, results through pointers, MultMatrixMatrix rows outer, MultMatrixMatrixToSubmatrix with pointers (the slow kernel in hot code); unit tests of every mode bitwise against the kernels of today; RunLinalgBenchmark before and after.
+
+##### **OPEN_RG5.2.8.5** The MatrixBase members AddSubmatrix, AddSubmatrixTransposed and MultAdd with a factor, the duplicates removed
+
+#3462. LT.4; the test suite bitwise.
+
+#### **CLOSED_RG5.2.9** Decide: Matrix3D as SlimMatrix<3,3> for good, and remove EXUDYN_MATRIX3D_CONSTSIZE
 
 Maintainer 2026-11-12: the decision on the switch as a further step, after the evaluation of RG5.2.5. Recommended (linalgFixedSize.md section 10): final; the compile switch and the ConstSizeMatrixBase<T, 9> special cases of ConstSizeMatrix.h removed after the next release has run on Linux and macOS.
 
 Linux (gcc 13.3, WSL, 2026-11-12, RG4.28): Matrix3D as SlimMatrix and as ConstSizeMatrix<9> give the same 448 result lines of the test suite bit for bit; macOS (clang) not yet checked.
+
+CLOSED 2026-11-12 (#3467; maintainer 2026-11-12: switch fully to the new Matrix3D, by the measured gains): the switch removed, Matrix3D = SlimMatrix<3,3>, Matrix3DBase<T> kept; the 3x3 cases of ConstSizeMatrix stay for Matrix3DF. [log](exudynRevisionLog2026c.md#rg4-30)
 
 ### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 
@@ -1271,11 +1323,73 @@ CLOSED 2026-11-11 (#3442): view[0-3].scene.hideMbs (TArrayIndex, default []); Sy
 
 #3460. Maintainer 2026-11-12: the raytracer got faster, but lightRadius variations are handled very inefficiently, possibly other things as well; better options, in particular for shadows - analyze first, the analysis and the suggestions in a design file raytracerImprovements.md. The proposed sub-steps are in its section 5, for the maintainer to choose.
 
+Maintainer 2026-11-12: the proposed speedup is very good, into the plan (RG6.26.2-RG6.26.12); the three correctness points as issues and steps (RG6.26.13-RG6.26.15); blurred reflections if doable during the improvements (RG6.26.16); start with the first steps.
+
 #### **CLOSED_RG6.26.1** Analysis: how shadows are computed, measurements, inefficiencies, options
 
 #3460. CLOSED 2026-11-12: docs/dev/design/raytracerImprovements.md - per-pixel soft shadow 0.0206 s per sample (1200 x 1000, 32 threads; 13 samples 0.355 s against 0.106 s for a hard shadow), the low-resolution precomputation 1/9 of that but with about 30 ms serial smoothing and upsampling; the precomputation also runs without a light radius (+24 %); proposed order: bitwise improvements (parallel copy-free filtering, separate hit test and shading, mailboxing, ray length), precomputation only with a light radius, adaptive penumbra sampling, stratified samples, occluder cache, flat grid; three correctness points (absolute shadow-ray offset, transparent objects cast full shadows, no soft shadows for directional lights).
 
 [log](exudynRevisionLog2026c.md#rg6-26-1)
+
+#### **OPEN_RG6.26.2** A benchmark scene for the raytracer: timings and the difference to a reference with 240 samples
+
+#3468. raytracerImprovements.md section 5.1: the scene of raytracerNOGLFWtest.py with the bodies placed and an oblique light, as a script under python/PerformanceModels; the measure for the following steps.
+
+#### **OPEN_RG6.26.3** The smoothing and upsampling of the precomputed shadow in parallel rows, without full copies
+
+#3468. I1: ping-pong buffers instead of copying the image twice per pass, the rows by RaytracerParallelFor, one channel per shadowed light; bitwise.
+
+#### **OPEN_RG6.26.4** Precompute shadows at reduced resolution only if a light casts soft shadows
+
+#3469. I2: today the pass also runs without a light radius (+24 %); changes the images of such configurations (a hard shadow at full resolution instead of a blurred one).
+
+#### **OPEN_RG6.26.5** The triangle test split into geometry and the shading of the closest hit; the light terms once per image
+
+#3468. I3, I7: t, u, v for every candidate, normal, colour and material only for the closest hit (and the texture mask); light position and disk offsets once per image and light; bitwise.
+
+#### **OPEN_RG6.26.6** Mailboxing, the traversal limited by the ray length, an exact closest-hit cut-off
+
+#3468. I5, I6: a triangle in several bins tested once per ray; a shadow ray stops at the light; the cut-off by min(tMax) instead of a bin box; bitwise.
+
+#### **OPEN_RG6.26.7** A last-occluder cache per thread and light for shadow rays
+
+O6: the triangle that blocked the previous shadow ray tested first; umbra samples cost one test.
+
+#### **OPEN_RG6.26.8** A flat (CSR) grid and a compact triangle array for the traversal
+
+O2, I4: the bins as one index array with offsets, the triangle points in 36-48 bytes; GLTriangle only for the shading; bitwise if the order of the tests is kept.
+
+#### **OPEN_RG6.26.9** Stratified disk samples with a rotation per pixel
+
+O4: concentric or Fibonacci points on the light disk, rotated per pixel by a hash: uncorrelated noise instead of bands, the same quality with about half the samples; changes the image.
+
+#### **OPEN_RG6.26.10** Adaptive penumbra sampling
+
+O3: k samples first, the rest only where they disagree; the low-resolution pass refined at full resolution only in the penumbra; the main fix for lightRadiusVariations; changes the image.
+
+#### **OPEN_RG6.26.11** Depth- and normal-guided filtering and upsampling of the shadow term
+
+O5: no shadow bleeding across silhouettes, smaller sample counts; the reference value of raytracerNOGLFWtest.py updated once for the image-changing steps.
+
+#### **OPEN_RG6.26.12** Optional: shadow rays of secondary hits by their weight; a BVH evaluated on large user scenes
+
+O10 (a setting keeps today's behaviour), O7 only if a user scene shows the grid as the limit.
+
+#### **OPEN_RG6.26.13** The offset of the shadow ray relative to the scene size
+
+#3470: the absolute 0.01 gives light leaks in small and acne in large scenes.
+
+#### **OPEN_RG6.26.14** Transparent objects cast a partial shadow
+
+#3471: the light reduced by the transparency of the objects up to the light, instead of a full shadow.
+
+#### **OPEN_RG6.26.15** Soft shadows for directional lights
+
+#3472: an angular radius of the light, sampled as for point lights.
+
+#### **OPEN_RG6.26.16** Blurred (glossy) reflections: a roughness per material, a number of reflection rays, a switch
+
+#3473. Maintainer 2026-11-12: reflections are sharp; blur them as usual for such surfaces, with a parameter and a flag to turn it off, as it costs; during the improvements, with the samples of the soft shadows.
 
 ## **OPEN_RG7** Python user items
 

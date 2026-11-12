@@ -8,8 +8,8 @@ A design note on the question whether expression templates should be enabled for
 said otherwise. No new timing was taken for this note.
 
 The counts and line numbers were taken with `Matrix3D` as `ConstSizeMatrix<9>`; `Matrix6D` and `Matrix3D` are now
-`SlimMatrix<6,6>` and `SlimMatrix<3,3>` (#3458, #3459), with `ConstSizeMatrix<9>` behind the compile switch
-`EXUDYN_MATRIX3D_CONSTSIZE`; what is said of `ConstSizeMatrix<9>` applies to that switch.
+`SlimMatrix<6,6>` and `SlimMatrix<3,3>` (#3458, #3459, #3467); what is said here of `Matrix3D` as
+`ConstSizeMatrix<9>` still holds for `Matrix3DF` and for the other `ConstSizeMatrix` sizes.
 
 ## 1. What an expression template is, and what it would replace
 

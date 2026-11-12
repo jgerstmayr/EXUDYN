@@ -1,0 +1,15 @@
+{
+  "number": 3467,
+  "title": "Matrix3D is SlimMatrix<3,3> for good: remove the switch EXUDYN_MATRIX3D_CONSTSIZE",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The evaluation of #3459 (faster in the rigid-body models, nowhere slower, bitwise on Windows and on gcc) decides for SlimMatrix<3,3>. The compile switch back to ConstSizeMatrix<9> is removed; Matrix3DBase<T> stays for templated code; the 3x3 cases of ConstSizeMatrix stay for Matrix3DF.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 20:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Matrix3D is SlimMatrix<3,3> for good; the compile switch EXUDYN_MATRIX3D_CONSTSIZE is removed.",
+  "resolvedInVersion": "1.13.602"
+}

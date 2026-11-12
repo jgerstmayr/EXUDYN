@@ -259,10 +259,10 @@ the sums.
 
 ## 10. `Matrix6D` and `Matrix3D` as `SlimMatrix`: the evaluation (RG5.2.4-RG5.2.6, #3458, #3459, #3463)
 
-`Matrix6D` is `SlimMatrix<6, 6>` (#3458). `Matrix3D` is `SlimMatrix<3, 3>` (#3459); `EXUDYN_MATRIX3D_CONSTSIZE`, defined
-before `BasicLinalg.h` is included, switches it back to `ConstSizeMatrix<9>`. The number type of a `Matrix3D` in
-templated code is `Matrix3DBase<T>` (for example `Matrix3DBase<TReal>` in the connectors with automatic
-differentiation); it follows the switch. What the switch needed besides the typedefs:
+`Matrix6D` is `SlimMatrix<6, 6>` (#3458). `Matrix3D` is `SlimMatrix<3, 3>` (#3459, final with #3467: the compile switch
+`EXUDYN_MATRIX3D_CONSTSIZE` back to `ConstSizeMatrix<9>`, used for this evaluation, is removed). The number type of a
+`Matrix3D` in templated code is `Matrix3DBase<T>` (for example `Matrix3DBase<TReal>` in the connectors with automatic
+differentiation). What the change needed besides the typedefs:
 
 - the 135 spellings `ConstSizeMatrixBase<T, 9>` and `ConstSizeMatrix<9>` in `src` (16 files) and 3 in the item
   definitions became `Matrix3DBase<T>` and `Matrix3D`; the float matrices of the graphics (`Matrix3DF`, `RTMatrix3D`)
@@ -297,7 +297,7 @@ number of rotation coordinates (3 or 4) and unchecked pointer loops, the sums in
 rigid models moved by -6 % to +2 % in the regular module, within the noise; the node already gives G in a few
 operations (#3409), and the products are a small part of the body. The change was not kept.
 
-**Recommendation for the decision**: make `Matrix3D` as `SlimMatrix<3,3>` final - it is faster in the models that use
-it, not slower elsewhere, and bitwise; keep `EXUDYN_MATRIX3D_CONSTSIZE` until the next release has run on Linux and
-macOS (gcc and clang were not measured), then remove it with the `ConstSizeMatrixBase<T, 9>` special cases of
-`ConstSizeMatrix.h` that only `Matrix3D` used.
+**Decision (RG5.2.9, #3467)**: `Matrix3D` is `SlimMatrix<3,3>` for good - faster in the models that use it, not slower
+elsewhere, and bitwise; on Linux (gcc 13.3) the test suite gives the same 448 result lines with both variants (RG4.28).
+The switch is removed. The 3x3 special cases of `ConstSizeMatrix.h` stay: `Matrix3DF` and `RTMatrix3D` of the graphics
+are `ConstSizeMatrixBase<float, 9>`.

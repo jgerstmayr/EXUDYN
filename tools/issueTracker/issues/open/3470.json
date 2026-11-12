@@ -1,0 +1,11 @@
+{
+  "number": 3470,
+  "title": "Raytracer: the offset of the shadow ray is absolute (0.01), not relative to the scene size",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "IsInShadow starts the shadow ray at point + 0.01*lightDirection (Raytracing.cpp): a scene in millimetres gets light leaking through thin parts, a scene in kilometres gets shadow acne. The offset shall scale with the scene (e.g. the bounding box or the search tree) or follow the normal by a relative epsilon, documented in the raytracer settings.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

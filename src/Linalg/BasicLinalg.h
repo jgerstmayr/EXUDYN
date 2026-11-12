@@ -32,14 +32,8 @@
 #include "Linalg/ResizableMatrix.h"	
 #include "Linalg/LinkedDataMatrix.h"	
 
-//Matrix3D has fixed rows and columns; EXUDYN_MATRIX3D_CONSTSIZE switches back to ConstSizeMatrix<9> (#3459)
-#ifndef EXUDYN_MATRIX3D_CONSTSIZE
-typedef SlimMatrix<3, 3> Matrix3D;
+typedef SlimMatrix<3, 3> Matrix3D; //fixed rows and columns (#3459, #3467)
 template<typename T> using Matrix3DBase = SlimMatrixBase<T, 3, 3>; //Matrix3D of any number type, e.g. automatic differentiation
-#else
-typedef ConstSizeMatrix<9> Matrix3D;
-template<typename T> using Matrix3DBase = ConstSizeMatrixBase<T, 9>;
-#endif
 typedef ConstSizeMatrix<16> Matrix4D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<4> Matrix2D; //will be changed to SlimMatrix<...>
 typedef SlimMatrix<6, 6> Matrix6D; //fixed rows and columns (#3458)

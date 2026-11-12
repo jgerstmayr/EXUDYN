@@ -1,0 +1,15 @@
+{
+  "number": 3466,
+  "title": "runPerformanceTests.py counts a model as failed when a package of the tests extra is missing",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "perfObjectFFRFreducedOrder.py needs scipy; in an environment without it (WSL venvExuP313) the performance tests report it as FAILED with the error of the invalid result. runTestSuite.py skips such a model (#2832). The performance runner shall skip it the same way: not failed, not in the times, listed with the package, and marked as skipped in the JSON record.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 20:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "runPerformanceTests.py skips a performance model whose package of the tests extra is not installed (e.g. scipy for perfObjectFFRFreducedOrder.py), as the test suite does: not failed, not in the times, listed at the end.",
+  "resolvedInVersion": "1.13.601"
+}

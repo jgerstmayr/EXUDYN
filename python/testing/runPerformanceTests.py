@@ -224,6 +224,7 @@ for groupName in ['small', 'large']:
 totalTests = len(testFileList)
 testPassed = {}  #file name -> whether its result equals the reference
 testRaised = {}  #file name -> whether the model raised an exception, which --tolerant skips (#3080)
+skippedMissingPackages = {}  #file name -> the package of the [tests] extra it needs and is not installed (#3466)
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 #the channel a model uses is exu.sys, as for the test models
 
@@ -269,6 +270,7 @@ for file in testFileList:
     exu.sys['testResult'] = invalidResult #a value that says 'the model set none'
     timeStart= -time.time()
     testRaised[name] = False
+    missingPackage = ''
     runnerFile = globals()['__file__']
     globals()['__file__'] = os.path.abspath(file) #the model finds its data beside it (#3303)
     try:
@@ -276,11 +278,21 @@ for file in testFileList:
             exec(modelFile.read(), globals())
     except Exception as e:
         testRaised[name] = True
+        missingPackage = testRunnerTools.MissingTestsExtraPackage(repr(e) + str(e))
         exu.Print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
         print('PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
 
     globals()['__file__'] = runnerFile
     timeStart += time.time()
+
+    #a package of the [tests] extra is missing: skipped, not failed, and not in the times, as in runTestSuite.py (#3466)
+    if missingPackage != '':
+        exu.sys['testIsActive'] = False
+        exu.Print('  PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") SKIPPED: needs '
+                  + missingPackage + ', which is not installed')
+        skippedMissingPackages[name] = missingPackage
+        testExamplesCnt += 1
+        continue
     totalTime += timeStart
 
     testResult = exu.sys.get('testResult', invalidResult)
@@ -355,8 +367,12 @@ if len(allRuns) != 0:
     exu.Print('')
 
 exu.Print('****************************************************')
+if len(skippedMissingPackages) != 0:
+    exu.Print(str(len(skippedMissingPackages)) + ' PERFORMANCE TEST(S) SKIPPED, packages not installed (pip install exudyn[tests]):')
+    for (fileName, package) in skippedMissingPackages.items():
+        exu.Print('  ' + fileName + ': needs ' + package)
 if len(testsFailed) == 0:
-    exu.Print('ALL ' + str(totalTests) + ' PERFORMANCE TESTS SUCCESSFUL')
+    exu.Print('ALL ' + str(totalTests - len(skippedMissingPackages)) + ' PERFORMANCE TESTS SUCCESSFUL')
 else:
     exu.Print(str(len(testsFailed)) + ' PERFORMANCE TEST(S) FAILED, OUT OF '+ str(totalTests)
               + ' test files and ' + str(len(allRuns)) + ' single runs: ')
@@ -411,7 +427,7 @@ record = {'format': 1,
           'cpuLoad': {key: {'mean': sum(value)/len(value), 'max': max(value)} for (key, value) in cpuLoad.items() if len(value)},
           'files': {name: {'group': testFileGroup[name], 'time': testTimings.get(name, None),
                            'result': examplesTestSolList.get(name, None), 'passed': testPassed.get(name, False),
-                           'raised': testRaised.get(name, True)}
+                           'raised': testRaised.get(name, True), 'skipped': skippedMissingPackages.get(name, None)}
                     for name in testFileList},
           'runs': {run['name']: {'time': run['time'], 'result': run['result'], 'error': run.get('error', None),
                                  'passed': run.get('passed', False), 'timers': run.get('timers', {})}

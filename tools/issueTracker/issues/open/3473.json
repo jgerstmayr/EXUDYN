@@ -1,0 +1,11 @@
+{
+  "number": 3473,
+  "title": "Raytracer: blurred (glossy) reflections with a parameter per material and a switch",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Reflections are mirror-sharp. A material shall get a roughness (0 = sharp, the default) by which the reflected ray is spread over a cone, sampled with a number of reflection rays (a raytracer setting; 1 or roughness 0 keeps the sharp reflection and its cost), with the stratified samples and the adaptive refinement of the soft shadows.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

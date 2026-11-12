@@ -7,8 +7,8 @@ their call sites, duplicates, dead ones and performance notes, and a proposal to
 [linalgBenchmark.md](linalgBenchmark.md) (L1-L6, #3417-#3419) and [expressionTemplates.md](expressionTemplates.md).
 
 The counts and line numbers were taken with `Matrix3D` as `ConstSizeMatrix<9>`; `Matrix6D` and `Matrix3D` are now
-`SlimMatrix<6,6>` and `SlimMatrix<3,3>` (#3458, #3459), with `ConstSizeMatrix<9>` behind the compile switch
-`EXUDYN_MATRIX3D_CONSTSIZE`; what is said of `ConstSizeMatrix<9>` applies to that switch.
+`SlimMatrix<6,6>` and `SlimMatrix<3,3>` (#3458, #3459, #3467); what is said here of `Matrix3D` as
+`ConstSizeMatrix<9>` still holds for `Matrix3DF` and for the other `ConstSizeMatrix` sizes.
 
 Call sites are word counts over `src/` (2026-11-12), **without the definition files** (`Matrix.h`, `BasicLinalg.h`) and
 without comment-only lines where checked by hand; `src/Tests` and `linalgBenchmark.h` are listed separately where they

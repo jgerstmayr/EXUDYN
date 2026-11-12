@@ -6431,6 +6431,26 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg4-30"></a>
+### RG4.30, RG5.2.9 — the performance runner skips a missing package; Matrix3D final; the steps of RG5.2.7, RG5.2.8, RG6.26 (2026-11-12, #3466-#3473)
+
+*(Maintainer 2026-11-12: exudev perf --fast on Linux, venvExuP313, failed in perfObjectFFRFreducedOrder.py; RG5.2.9:
+switch fully to the new Matrix3D; RG6.26: the speedup proposal into the plan, the three correctness points as issues
+and steps, blurred reflections if doable, start with the first steps; RG5.2.7: the recommended expression templates
+into the plan; RG5.2.8: the proposed steps are good to go.)*
+
+- #3466: the Linux failure was `No module named 'scipy'` (not installed in WSL's venvExuP313). runPerformanceTests.py
+  now skips such a model as runTestSuite.py does (#2832): testRunnerTools.MissingTestsExtraPackage on the exception,
+  "SKIPPED: needs scipy", not failed, not in the times, listed at the end, `skipped` in the JSON record. WSL run
+  (1.13.600, fast): 9 tests and 44 single runs successful, 1 skipped.
+- #3467: `EXUDYN_MATRIX3D_CONSTSIZE` removed from BasicLinalg.h; `Matrix3D` is `SlimMatrix<3, 3>`, `Matrix3DBase<T>`
+  stays; the 3x3 cases of ConstSizeMatrix.h stay for `Matrix3DF`/`RTMatrix3D`. linalgFixedSize.md section 10 and the
+  two notes of RG5.2.7/RG5.2.8 updated. Both suites pass.
+- Plan: RG5.2.7.1-.5 (ET.1-ET.5), RG5.2.8.1-.5 (LT.1, LT.2, LT.5, LT.3, LT.4), RG6.26.2-.12 (section 5 of
+  raytracerImprovements.md; #3468 for the bitwise group, #3469 the precomputation only with a light radius),
+  RG6.26.13-.15 (#3470 shadow-ray offset, #3471 transparent occluders, #3472 directional soft shadows), RG6.26.16
+  (#3473 blurred reflections).
+
 <a id="rg4-28"></a>
 ### RG4.28 — the gcc build of 1.13.599 (2026-11-12, #3464, #3465)
 
