@@ -90,8 +90,12 @@ for d in blendings:
 
 #the cup, and the two paths of the tool on the ground
 cupTop = pB[2] - depth + 0.05
-cup = [graphics.Cylinder(pB - [0, 0, pB[2] - cupTop + 0.12], [0, 0, 0.12], radius=0.06, radiusInner=0.055, color=graphics.color.lightred),
-       graphics.Cylinder(pB - [0, 0, pB[2] - cupTop + 0.12], [0, 0, 0.005], radius=0.06, color=graphics.color.lightred)]
+cupOffZ = pB[2] - cupTop + 0.12
+cup = [graphics.Cylinder(pB - [0, 0, cupOffZ], [0, 0, 0.12], radius=0.06, radiusInner=0.055, color=graphics.color.lightred),
+       graphics.Cylinder(pB - [0, 0, cupOffZ], [0, 0, 0.005], radius=0.06, color=graphics.color.lightred)]
+
+cupBase = pB[2] - cupOffZ
+
 def ToolPath(t0, t1):
     return [list(chain.ToolHT(trajectory.Evaluate(t)[0]).translation) for t in np.linspace(t0, t1, 400)]
 paths = [graphics.Lines(ToolPath(times[0], times[nFirst]), color=graphics.color.grey),
@@ -100,7 +104,9 @@ spheres = [graphics.Sphere(chain.ToolHT(trajectory.Evaluate(t)[0]).translation, 
 for d in blendings:
     spheres += [graphics.Sphere(chain.ToolHT(trajectory.Evaluate(t)[0]).translation, 0.008, color=graphics.color.blue, nTiles=12)
                 for t in [d['startTime'], d['endTime']]]
-mbs.AddObject(eii.ObjectGround(visualization=eii.VObjectGround(graphicsData=cup + paths + spheres)))
+mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(size=2)] + 
+                 [graphics.Brick([pB[0], pB[1], cupBase*0.5], size=[0.15,0.15,cupBase], color=graphics.color.dodgerblue)] + 
+                 cup + paths + spheres)
 
 #the robot as kinematic tree, controlled along the trajectory
 treeDict = robot.CreateKinematicTree(mbs)
@@ -119,8 +125,12 @@ simulationSettings.timeIntegration.verboseMode = 1
 SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.view0.window.renderWindowSize = [1600, 1200]
 SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.bodies.kinematicTree.frameSize = 0.1
+SC.visualizationSettings.openGL.light0.shadow = 0.2
+SC.visualizationSettings.openGL.light0.position = [2,2,10,1] #position light
 
 SC.renderer.Start()
+SC.renderer.SetModelView(zoom=0.5227387,rotationVector=[-0.9536306,-0.4851177,-0.9211584],centerPoint=[0.1629494,0.2616769,0])
 SC.renderer.DoIdleTasks()
 mbs.SolveDynamic(simulationSettings)
 SC.renderer.DoIdleTasks()
