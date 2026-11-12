@@ -6431,6 +6431,38 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-2-1"></a>
+### RG5.2.1 — the profile of ODE2RHS in the rigid-body models (2026-11-12, #3455)
+
+*(Maintainer 2026-11-12: RG5.2 checked, start right away.)*
+
+Temporary main timers (scratch p_prof.py, p_prof2.py, not committed) around the bodies, the connector interface, the
+marker data path, the assembly and the loads in `CSystem::ComputeSystemODE2RHS`, and around the kinematics, the
+force and the projection in `ConnectorODE2LHSRigidMarkers`; an empty start/stop pair per body measures the bias of
+the timers (about 45 ns per pair). The chain of 1000 rigid bodies with RigidBodySpringDamper (perfLargeMassSpringChain,
+explicit, 1 thread): connector force 41 %, marker kinematics 26 %, bodies 19 %, projection 9 %, assembly 5 % of
+ODE2RHS, which is 80-85 % of the solver time. No connector of the performance models takes the path of MarkerData;
+all go through the connector interface (#2745). The force is Matrix3D work, two 6x6 matrix-vector products and the
+trigonometric functions of RotationMatrix2RotXYZ. The order of linalgFixedSize.md section 5 stands; the details are
+in its new section 8.
+
+<a id="rg5-2-2"></a>
+### RG5.2.2 — SlimMatrix, a matrix of fixed rows and columns (2026-11-12, #3456)
+
+- `src/Linalg/SlimMatrix.h` (new, included by BasicLinalg.h, in msvc/cppsrc.vcxproj): `SlimMatrixBase<T, rows,
+  columns>`, `SlimMatrix<r, c>`, `SlimMatrixF<r, c>`; the operations of ConstSizeMatrix that the solver uses, each
+  sum in its order; `MultTransposedMatrix`, `MultTransposedVector`; the conversions to and from ConstSizeMatrix.
+- `src/Tests/SlimMatrixUnitTests.h` (new, registered in UnitTestBase.cpp): 4 cases, every operation bitwise
+  against ConstSizeMatrix; the size checks of the regular module. Run with a build with `--unittests`: all unit tests
+  passed.
+- `RunLinalgBenchmark`: SlimMatrix in the small group (3x3 and 6x6 times vector and matrix) and in the Jacobian group
+  (J^T f and J^T K J for n = 6-24). Measured on both modules: the 6x6 product 98 -> 48 ns, 6x6 times vector
+  16 -> 10 ns (regular), J^T K J 60 -> 25 ns at n = 6 and 136 -> 114 ns at n = 12, the 3x3 products as #3418;
+  the table in linalgFixedSize.md section 9.
+
+No item uses SlimMatrix yet; Matrix6D (RG5.2.4) and Matrix3D (RG5.2.5) follow. Found on the way: ConstSizeMatrix
+operator+ and operator- create a non-square result with rows and columns exchanged, #3457 (RG5.2.3).
+
 <a id="rg5-11-1"></a>
 ### RG5.11.1 — the raytracer on threads of its own (2026-11-12, #3438)
 

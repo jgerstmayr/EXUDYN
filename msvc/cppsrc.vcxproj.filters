@@ -512,6 +512,9 @@
     <ClInclude Include="..\src\Linalg\ResizableVector.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Linalg\SlimMatrix.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Linalg\SlimVector.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -549,6 +552,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Tests\UnitTestBase.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Tests\SlimMatrixUnitTests.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Tests\AllArrayUnitTests.h">

@@ -1,6 +1,6 @@
 # Compile-time sizes for the small linear algebra: evaluation and recommendation (revision2026c step RG5.2)
 
-A design note of revision2026c step RG5.2. This is the evaluation and the recommendation; nothing is changed yet. The
+A design note of revision2026c step RG5.2. This is the evaluation and the recommendation; section 8 adds the profile of `ODE2RHS`. The
 measurements are those of [linalgBenchmark.md](linalgBenchmark.md) (RG5.1, `exudyn.special.RunLinalgBenchmark`) and
 the solver sub-timers of the performance history (`python/logs/performance/performanceHistory.json`, 1.13.548.dev1,
 regular module). No new timing was taken for this note.
@@ -170,13 +170,89 @@ rigid-body chains, if step 1 confirms their share - an estimate, not measured.
 |---|---|---|
 | RG5.2.1 | the profile of `ODE2RHS` and `massMatrix` in the rigid-body chains: bodies, markers, connectors | sub-timers / profiler, both modules |
 | RG5.2.2 | `SlimMatrix<T, rows, columns>` with conversions, products, tests; in `RunLinalgBenchmark` | benchmark against the prototype and Eigen |
-| RG5.2.3 | `Matrix6D` as `SlimMatrix<Real,6,6>` | benchmark, perf models, test suite bitwise |
-| RG5.2.4 | `Matrix3D` as `SlimMatrix<Real,3,3>`, compile switch back; the 0x0 uses checked | as RG5.2.3 |
-| RG5.2.5 | the rigid body templated on the rotation coordinates (only after RG5.2.1 shows the share) | perf models with rigid bodies |
+| RG5.2.4 | `Matrix6D` as `SlimMatrix<Real,6,6>` | benchmark, perf models, test suite bitwise |
+| RG5.2.5 | `Matrix3D` as `SlimMatrix<Real,3,3>`, compile switch back; the 0x0 uses checked | as RG5.2.4 |
+| RG5.2.6 | the rigid body templated on the rotation coordinates (only after RG5.2.1 shows the share) | perf models with rigid bodies |
 
 ## 7. Open
 
-- The split of `ODE2RHS` in the rigid-body models (RG5.2.1) - the gain at solver level depends on it.
+- The split of `ODE2RHS` in the rigid-body models: section 8.
 - Whether any `Matrix3D` is used with another shape than 3x3 or as "unset" 0x0 on purpose; the compiler and the
-  regular-module checks of the conversion will find them in RG5.2.4.
+  regular-module checks of the conversion will find them in RG5.2.5.
 - gcc/clang: the benchmark tables are MSVC only (linalgBenchmark.md §7).
+
+## 8. The profile of `ODE2RHS` (RG5.2.1, #3455)
+
+Measured 2026-11-12 with temporary main timers around the parts of `CSystem::ComputeSystemODE2RHS` and of the
+connector chain `ConnectorODE2LHSRigidMarkers` (regular module, 1 thread; the instrumentation is not committed). Each
+start/stop pair costs about 45 ns, which the timers subtract only in part; the numbers below are corrected by the time of
+an empty pair, so they are good to some 10 %. The fast module has no timers; its totals are 5-25 % lower
+(solverBaseline.md), with the same kernels.
+
+`perfLargeMassSpringChain`, rigid bodies with `RigidBodySpringDamper`, 1000 bodies, explicit (900 steps; the implicit run
+of 450 steps divides alike):
+
+| part of `ODE2RHS` | s | share |
+|---|---:|---:|
+| connector: the force (`ComputeConnectorForceRigid`) | 0.323 | 41 % |
+| connector: the kinematics of both markers (`GetKinematicsRigid`) | 0.206 | 26 % |
+| bodies (`CObjectRigidBody::ComputeODE2LHS`) | 0.154 | 19 % |
+| connector: the projection of force and torque by the markers (`AddGeneralizedForceTorque`) | 0.070 | 9 % |
+| adding the local vectors into the system vector | 0.038 | 5 % |
+
+`ODE2RHS` is 80-85 % of the solver time of this model, the mass matrix 10-19 %. In `perfConnectorInterface` (rigid,
+spring) and `perfAccessFunctionsAD` the connectors take 20-50 % of the solver time and the bodies 1-8 %;
+`perf3DRigidBodies` spends 23 % in `ODE2RHS` (most of its time is contact and loads).
+
+- Every connector of the performance models goes through the connector interface (#2745); the path through
+  `ComputeMarkerDataStructure` and `MarkerData` (kind 3, `ResizableMatrix`) is not taken by any of them. Its cost
+  does not need to be considered for RG5.2.
+- **The force** of `RigidBodySpringDamper` is `Matrix3D` work: two products with `rotationMarker0/1`, the relative
+  rotation `A0^T A1`, four transposed products with vectors, `RotationMatrix2RotXYZ` (atan2, asin), and two 6x6
+  matrix-vector products by `operator()` on `ConstSizeMatrix<36>`. The trigonometric functions stay; the rest is kind 1.
+- **The kinematics** of a rigid marker on a rigid body: the rotation matrix from the Euler parameters, the angular
+  velocity from G (kind 2) - `Matrix3D` and the G matrix of the node.
+- **The bodies**: G, its transposed product with the torques, the quadratic velocity term (kind 2).
+
+So 70-75 % of `ODE2RHS` of the rigid chains are kind 1 and kind 2 kernels on 3x3, 3x4 and 6x6 matrices. That
+confirms the order of section 5: `SlimMatrix` (RG5.2.2), then `Matrix6D` (the stiffness and damping of the connector,
+RG5.2.4) and `Matrix3D` (RG5.2.5); the rigid body templated on its rotation coordinates (RG5.2.6) touches the bodies and
+the marker kinematics, together about 45 % of `ODE2RHS`, and stays after RG5.2.5.
+
+## 9. `SlimMatrix` (RG5.2.2, #3456)
+
+`SlimMatrixBase<T, rows, columns>` in `src/Linalg/SlimMatrix.h`, `SlimMatrix<rows, columns>` for `Real`: the data
+`T data[rows*columns]` only, row-major; `NumberOfRows()` and `NumberOfColumns()` are `static constexpr`, so the
+`EXUmath` templates take it (also as result, `SetNumberOfRowsAndColumns` only checks the size). Operations: element
+access with the range checks of the regular module, `+`, `-`, `+=`, `-=`, `*=`, `/=`, the scalar products, the
+matrix product of any fitting sizes, matrix times `SlimVectorBase` (also of an automatic-differentiation type) and
+vector times matrix, `MultTransposedMatrix` and `MultTransposedVector` without forming the transposed,
+`GetTransposed`, `TransposeYourself`, `Trace`, `GetDeterminant` and `GetInverse` (explicit up to 3x3, Gaussian
+elimination of `ConstSizeMatrix` above), `SetScalarMatrix`, `SetSkewMatrix`, `SetWithDiadicProduct`,
+`SetSubmatrix`, `CopyFrom`, the row and column vectors, and the output of `ConstSizeMatrix`. It converts implicitly
+from a `ConstSizeMatrixBase` of at least its size (the shape checked in the regular module) and to
+`ConstSizeMatrixBase<T, rows*columns>`.
+
+Every sum runs in the order of the same operation of `ConstSizeMatrix` (start at 0, add over the inner index in
+increasing order); the unit tests (`src/Tests/SlimMatrixUnitTests.h`) compare every operation bitwise with
+`ConstSizeMatrix` on non-symmetric, non-integer values for 2x2, 3x3, 3x4, 4x3, 4x4 and 6x6.
+
+`RunLinalgBenchmark` (ns per call, regular / fast, 2026-11-12, the same run for all columns):
+
+| operation | `ConstSizeMatrix` / `ResizableMatrix` | `SlimMatrix` | prototype | Eigen fixed |
+|---|---:|---:|---:|---:|
+| 3x3 times vector | 6.7 / 4.1 | 4.2 / 4.1 | - | 3.6 |
+| 3x3 times 3x3 | 8.0 / 8.6 | 8.5 / 7.7 | 8.4 / 8.7 | 44 |
+| 6x6 times vector | 16.2 / 11.9 | 9.8 / 10.2 | - | 8.8 |
+| 6x6 times 6x6 | 97.9 / 95.0 | 48.2 / 47.4 | 45.2 / 44.9 | 31 |
+| J^T f, 3 x 6 | 7.8 / 8.3 | 8.1 / 8.3 | 5.2 | 6.8 |
+| J^T K J, 3 x 6 | 60.1 / 58 | 24.6 / 23.3 | 35.7 / 35 | 552 |
+| J^T K J, 3 x 7 | 73.1 / 70 | 30.5 / 27.1 | 45.2 / 45 | 773 |
+| J^T K J, 3 x 12 | 136 / 169 | 114 / 114 | 117 / 119 | 101 |
+| J^T K J, 3 x 24 | 350 / 341 | 278 / 257 | 436 / 437 | 316 |
+
+`SlimMatrix` reaches the prototype or is faster (J^T K J by `MultTransposedMatrix` over rows of the result); the
+6x6 product and J^T K J for one or two rigid bodies are 2-2.5 times faster than today, the 3x3 products equal the
+unrolled ones of #3418, and in the regular module the range checks of `Matrix3D * Vector3D` are gone (1.6 times).
+Eigen's fixed 6x6 product stays faster (31 ns) - its kernel vectorizes over columns, which would change the order of
+the sums.

@@ -1,0 +1,15 @@
+{
+  "number": 3455,
+  "title": "Profile ODE2RHS of the rigid-body models: bodies, marker data, connectors, assembly",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Before compile-time sizes are introduced (docs/dev/design/linalgFixedSize.md), the time of ODE2RHS in the rigid-body chains and the connector models is divided among the bodies, the marker data, the connectors and the assembly, on both modules, so that the gain of fixed-size matrices at the solver level can be estimated.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 14:37",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Profiled ODE2RHS of the rigid-body performance models: in the chain of rigid bodies with RigidBodySpringDamper the connector force takes 41 %, the marker kinematics 26 %, the bodies 19 %, the projection 9 % and the assembly 5 %; every connector of the performance models uses the connector interface (docs/dev/design/linalgFixedSize.md section 8).",
+  "resolvedInVersion": "1.13.593"
+}

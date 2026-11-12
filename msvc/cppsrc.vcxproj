@@ -635,6 +635,7 @@
     <ClInclude Include="..\src\Linalg\ResizableVectorParallel.h" />
     <ClInclude Include="..\src\Linalg\RigidBodyMath.h" />
     <ClInclude Include="..\src\Linalg\SearchTree.h" />
+    <ClInclude Include="..\src\Linalg\SlimMatrix.h" />
     <ClInclude Include="..\src\Linalg\SlimVector.h" />
     <ClInclude Include="..\src\Linalg\Symbolic.h" />
     <ClInclude Include="..\src\Linalg\SymbolicMatrix.h" />
@@ -703,6 +704,7 @@
     <ClInclude Include="..\src\System\VisualizationObject.h" />
     <ClInclude Include="..\src\System\VisualizationSensor.h" />
     <ClInclude Include="..\src\Tests\AllArrayUnitTests.h" />
+    <ClInclude Include="..\src\Tests\SlimMatrixUnitTests.h" />
     <ClInclude Include="..\src\Tests\AllBasicLinalgUnitTests.h" />
     <ClInclude Include="..\src\Tests\AllMatrixUnitTests.h" />
     <ClInclude Include="..\src\Tests\AllVectorUnitTests.h" />

@@ -56,6 +56,7 @@ using namespace EXUmath;
     #include "RigidBodyMathUnitTests.h"     //#2472
     #include "SymbolicUnitTests.h"          //#2479
     #include "LinearSolverUnitTests.h"      //#2479
+    #include "SlimMatrixUnitTests.h"        //#3456
 #endif
 
 extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
@@ -348,6 +349,9 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 	//the dense and the sparse system matrix behind one interface: one system solved by all four
 	//variants, and the places where they deliberately differ (#2479)
 	failCounter += lest::run(linearSolver_specific_test, arglist_lest, stringStream);
+
+	//the matrix of fixed rows and columns, every operation bitwise against ConstSizeMatrix (#3456)
+	failCounter += lest::run(slimMatrix_specific_test, arglist_lest, stringStream);
 
 #endif
     if (failCounter) {

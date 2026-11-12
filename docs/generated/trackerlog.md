@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.592.dev1
+- Exudyn version = 1.13.594.dev1
 - last change = 2026-11-12
-- Number of issues = 3455
-- Number of resolved issues = 3369 (592 in current version)
+- Number of issues = 3458
+- Number of resolved issues = 3371 (594 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9351,6 +9351,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ConstSizeMatrix operator+ and operator- give a non-square result the transposed shape (#3457)
+  - description: operator+(ConstSizeMatrixBase, ConstSizeMatrixBase) and operator- create the result as (m1.NumberOfColumns(), m1.NumberOfRows()) and fill it item by item, so the sum of two 3x4 matrices is a 4x3 matrix holding the row-major items of a 3x4 one; square matrices are not affected. Found while writing SlimMatrix (\#3456); the uses of + and - on non-square ConstSizeMatrix are to be checked.
+  - date raised: 2026-11-12
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ProfileJointPath keeps a line of length zero between two blends, and divides by zero (#3411)
   - description: robotPathPlanningTest.py prints a numpy RuntimeWarning (divide by zero) from ProfileJointPath.GetBasicProfile, in Largest (h = 2(p\_j - p\_i)) and in pDDot = (pDot\[1:\]\*\*2 - pDot\[:-1\]\*\*2)/(2 np.diff(p)). Cause: \_Segments keeps a line between two rounded corners if np.any(end != start), an exact comparison; when the blends of two neighbouring waypoints meet at the middle of the segment - on paths of RRT-Connect, whose waypoints are equally far apart (0.163 rad there), with a blend radius of half the distance or more - the end of the first and the start of the second blend differ by rounding only, and a line of length about 1e-17 becomes a segment whose path parameters are equal. Found 5 such segments of 75 in the first, 8 of 124 in the second path of the test. The checks of the test pass (the trajectory is not visibly wrong), but inf enters the bounds of the accelerations. Fix: drop a line shorter than a tolerance relative to the path length; then check that no interval of p has length zero.
   - date raised: 2026-11-11

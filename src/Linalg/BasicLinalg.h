@@ -28,6 +28,7 @@
 #include "Linalg/ResizableVector.h"	//includes SlimVector.h and Vector.h
 #include "Linalg/ConstSizeVector.h"	
 #include "Linalg/ConstSizeMatrix.h"		//includes Matrix.h
+#include "Linalg/SlimMatrix.h"			//fixed rows and columns (#3456)
 #include "Linalg/ResizableMatrix.h"	
 #include "Linalg/LinkedDataMatrix.h"	
 

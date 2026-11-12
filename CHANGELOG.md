@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 564 | 1.13.591 |
+| 1.13 | Newborn | 566 | 1.13.594 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.594** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SlimMatrix: a matrix of fixed rows and columns (#3456)
+  - description: SlimMatrixBase\<T, rows, columns\> in src/Linalg/SlimMatrix.h: the size known at compile time, no size members, row-major as ConstSizeMatrix, the products with each other and with SlimVector, the transposed products, inverse and determinant up to 3x3, the conversions to and from ConstSizeMatrix; the sums in the order of ConstSizeMatrix, so that a switch of Matrix6D and Matrix3D keeps the results bitwise; unit tests and RunLinalgBenchmark (docs/dev/design/linalgFixedSize.md section 5).
+  - **notes:** SlimMatrix\<rows, columns\>: a C++ matrix of fixed rows and columns with the operations of ConstSizeMatrix in the same order of the sums, conversions to and from ConstSizeMatrix, unit tests bitwise against ConstSizeMatrix and in RunLinalgBenchmark; 6x6 products and J^T K J for rigid bodies 2-2.5 times faster than ConstSizeMatrix (docs/dev/design/linalgFixedSize.md section 9).
+  - date resolved: **2026-11-12 14:37**, date raised: 2026-11-12
+- **1.13.593** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Profile ODE2RHS of the rigid-body models: bodies, marker data, connectors, assembly (#3455)
+  - description: Before compile-time sizes are introduced (docs/dev/design/linalgFixedSize.md), the time of ODE2RHS in the rigid-body chains and the connector models is divided among the bodies, the marker data, the connectors and the assembly, on both modules, so that the gain of fixed-size matrices at the solver level can be estimated.
+  - **notes:** Profiled ODE2RHS of the rigid-body performance models: in the chain of rigid bodies with RigidBodySpringDamper the connector force takes 41 %, the marker kinematics 26 %, the bodies 19 %, the projection 9 % and the assembly 5 %; every connector of the performance models uses the connector interface (docs/dev/design/linalgFixedSize.md section 8).
+  - date resolved: **2026-11-12 14:37**, date raised: 2026-11-12
 - **1.13.591** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
   - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.
   - **notes:** The raytracer renders on threads of its own (visualizationSettings.raytracer.numberOfThreads), independent of the threads of the solvers: it runs in parallel also while a solver runs, from a user function or from the renderer thread; the speed is unchanged. The persistent threads of exudyn.special.solver.StartPersistentThreads are no longer used by the raytracer. Test model raytracerDuringSolveTest.py.

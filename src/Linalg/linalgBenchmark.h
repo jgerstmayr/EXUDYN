@@ -125,14 +125,17 @@ inline void LinalgBenchmarkJacobian(std::vector<LinalgBenchmarkResult>& results,
 	LinalgBenchmarkFixedMatrix<3, 3> Kp;
 	LinalgBenchmarkFixedMatrix<3, n> KJp;
 	LinalgBenchmarkFixedMatrix<n, n> JKJp;
+	SlimMatrix<3, n> Js;
+	SlimMatrix<3, 3> Ks;
+	SlimMatrix<n, n> JKJs;
 	for (Index i = 0; i < 3; i++)
 	{
 		for (Index j = 0; j < n; j++)
 		{
 			Real value = (i == j % 3) ? 1. : 0.01 * (Real)(i + j);
-			J(i, j) = value; Jd(i, j) = value; Jf(i, j) = value; Jp(i, j) = value;
+			J(i, j) = value; Jd(i, j) = value; Jf(i, j) = value; Jp(i, j) = value; Js(i, j) = value;
 		}
-		for (Index j = 0; j < 3; j++) { Kd(i, j) = K(i, j); Kf(i, j) = K(i, j); Kp(i, j) = K(i, j); }
+		for (Index j = 0; j < 3; j++) { Kd(i, j) = K(i, j); Kf(i, j) = K(i, j); Kp(i, j) = K(i, j); Ks(i, j) = K(i, j); }
 	}
 	Vector3D f({ 0.3, -0.2, 0.5 });
 	ResizableVector r;
@@ -169,6 +172,11 @@ inline void LinalgBenchmarkJacobian(std::vector<LinalgBenchmarkResult>& results,
 			LinalgBenchmarkFixedMultTransposed(Jp, KJp, JKJp);
 			Kp(0, 0) += 1e-12 * JKJp(n - 1, n - 1); return JKJp(0, 0);
 		}));
+	SlimVector<n> rs;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "J^T f, SlimMatrix<3,n>", n, 1, minimumTime, [&]()
+		{ rs = MultTransposedVector(Js, f); f[0] += 1e-12 * rs[n - 1]; return rs[0]; }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "J^T K J, SlimMatrix<3,n>", n, 1, minimumTime, [&]()
+		{ JKJs = MultTransposedMatrix(Js, Ks * Js); Ks(0, 0) += 1e-12 * JKJs(n - 1, n - 1); return JKJs(0, 0); }));
 }
 
 //! the vector operations of size n known at compile time: ConstSizeVector against Eigen and the prototype
@@ -256,6 +264,11 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "Matrix3D * Matrix3D", 3, 1, minimumTime, [&]() { B = A * B; return B(0, 1); }));
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix3d * Matrix3d", 3, 1, minimumTime, [&]() { eB = eA * eB; return eB(0, 1); }));
 		results.push_back(LinalgBenchmarkTime(group, "prototype", "fixed 3x3 * 3x3", 3, 1, minimumTime, [&]() { LinalgBenchmarkFixedMult(pA, pB, pC); pB = pC; return pB(0, 1); }));
+		SlimMatrix<3, 3> sA = A, sB = B;
+		Vector3D sv = v;
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "SlimMatrix<3,3> * Vector3D", 3, 1, minimumTime, [&]() { sv = sA * sv; return sv[2]; }));
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "SlimMatrix<3,3>^T * Vector3D, MultTransposedVector", 3, 1, minimumTime, [&]() { sv = MultTransposedVector(sA, sv); return sv[2]; }));
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "SlimMatrix<3,3> * SlimMatrix<3,3>", 3, 1, minimumTime, [&]() { sB = sA * sB; return sB(0, 1); }));
 
 		ConstSizeMatrix<36> M6(6, 6), R6(6, 6);
 		ConstSizeVector<6> v6, r6;
@@ -273,6 +286,10 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix<6,6> * Matrix<6,6>", 6, 1, minimumTime, [&]() { eR6.noalias() = eM6 * eM6; eM6 = 0.5 * eR6; return eM6(1, 2); }));
 		results.push_back(LinalgBenchmarkTime(group, "prototype", "fixed 6x6 * 6x6", 6, 1, minimumTime, [&]()
 			{ LinalgBenchmarkFixedMult(pM6, pM6, pR6); for (Index i = 0; i < 36; i++) { pM6.data[i] = 0.5 * pR6.data[i]; } return pM6(1, 2); }));
+		SlimMatrix<6, 6> sM6 = M6;
+		Vector6D sv6({ 0., 0.1, 0.2, 0.3, 0.4, 0.5 });
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "SlimMatrix<6,6> * Vector6D", 6, 1, minimumTime, [&]() { sv6 = sM6 * sv6; return sv6[3]; }));
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "SlimMatrix<6,6> * SlimMatrix<6,6>", 6, 1, minimumTime, [&]() { sM6 = 0.5 * (sM6 * sM6); return sM6(1, 2); }));
 
 		//homogeneous transformations: with rotation and translation only (the no-rotation flag, #3405)
 		HomogeneousTransformation H1(A, v), H2(B, w), T1, T2;

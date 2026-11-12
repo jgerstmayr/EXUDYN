@@ -62,7 +62,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (4 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG7** Python user items
@@ -109,7 +109,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 3 | Performance |
+| RG5 | OPEN | 7 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -587,6 +587,34 @@ transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; stee
 Maintainer 2026-11-12: an evaluation and a recommendation first; one point is certainly matrices of fixed rows and columns instead of ConstSizeMatrix, which reserves a size but can take any size during the computation (handy, but slow). Evaluation 2026-11-12: docs/dev/design/linalgFixedSize.md - after the local recommendations L1-L6 of RG5.1 the 3x3 products are as fast as a fixed-size prototype; remaining gaps of compile-time sizes: 6x6 products 2.2 times, 6x6 times vector 1.7, J^T K J at 3 x 6 1.7, short ConstSizeVector operations 3-4 times; Eigen fixed sizes rejected (3.3.7/5.0.1 with MSVC slower than the prototype). Recommended: first a profile of ODE2RHS in the rigid-body chains (bodies, markers, connectors), then SlimMatrix<T, rows, columns> with conversions to ConstSizeMatrix, Matrix6D first, Matrix3D behind a compile switch, the rigid body templated on its rotation coordinates only if the profile shows its share; proposed sub-steps in the note, waiting for the maintainer.
 
 #161, #710 from RG5.1.4.
+
+#### **CLOSED_RG5.2.1** Profile ODE2RHS of the rigid-body models: bodies, marker data, connectors, assembly
+
+#3455. Maintainer 2026-11-12: RG5.2 checked, start right away; the sub-steps of docs/dev/design/linalgFixedSize.md section 6.
+
+CLOSED 2026-11-12 (#3455): connector force 41 %, marker kinematics 26 %, bodies 19 %, projection 9 %, assembly 5 % of ODE2RHS in the rigid chain (80-85 % of the solver time); all connectors go through the connector interface, the MarkerData path is not taken; linalgFixedSize.md section 8. [log](exudynRevisionLog2026c.md#rg5-2-1)
+
+#### **CLOSED_RG5.2.2** SlimMatrix: a matrix of fixed rows and columns, with tests and in the benchmark
+
+#3456. linalgFixedSize.md section 5, point 2.
+
+CLOSED 2026-11-12 (#3456): src/Linalg/SlimMatrix.h, unit tests bitwise against ConstSizeMatrix (src/Tests/SlimMatrixUnitTests.h), in RunLinalgBenchmark; 6x6 product 98 -> 48 ns, J^T K J at n = 6 60 -> 25 ns, 3x3 as #3418; linalgFixedSize.md section 9. [log](exudynRevisionLog2026c.md#rg5-2-2)
+
+#### **OPEN_RG5.2.3** ConstSizeMatrix operator+ and operator-: the shape of a non-square result
+
+#3457, found in #3456 (RG5.2.2): the result is created with rows and columns exchanged.
+
+#### **OPEN_RG5.2.4** Matrix6D as SlimMatrix<6,6>
+
+linalgFixedSize.md section 5, point 3: the stiffness and damping of RigidBodySpringDamper, the 6x6 products of the joints; the test suite bitwise in the regular module.
+
+#### **OPEN_RG5.2.5** Matrix3D as SlimMatrix<3,3>, with a compile switch back to ConstSizeMatrix<9>
+
+linalgFixedSize.md section 5, point 3: 652 uses; the default-constructed Matrix3D sized later and the tests of NumberOfRows() == 0 checked; the test suite bitwise in the regular module, the references of the fast module.
+
+#### **OPEN_RG5.2.6** The rigid body and its marker kinematics templated on the number of rotation coordinates
+
+linalgFixedSize.md section 5, point 4: bodies and marker kinematics are about 45 % of ODE2RHS in the rigid chains (section 8); after RG5.2.5.
 
 ### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 
