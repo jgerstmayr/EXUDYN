@@ -182,9 +182,9 @@
    "fingerprint": "ca64a299d710"
   },
   "NodeRigidBodyRotVecLG": {
-   "checked": "2026-11-10",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "f2c82f08a0d1"
+   "fingerprint": "7bc085c19e13"
   },
   "NodeRigidBodyRxyz": {
    "checked": "2026-10-10",
@@ -222,9 +222,9 @@
    "fingerprint": "d915b6d522b1"
   },
   "ObjectBeamGeometricallyExact": {
-   "checked": "2026-10-31",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "02497e579883"
+   "fingerprint": "b5e7cf3e2179"
   },
   "ObjectBeamGeometricallyExact2D": {
    "checked": "2026-11-10",
@@ -272,9 +272,9 @@
    "fingerprint": "a6b709969127"
   },
   "ObjectConnectorLinearSpringDamper": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "bc508d13c0bf"
+   "fingerprint": "5bc22d972157"
   },
   "ObjectConnectorReevingSystemSprings": {
    "checked": "2026-11-06",
@@ -282,9 +282,9 @@
    "fingerprint": "c3ce4099e3a4"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "5755fdb3a47a"
+   "fingerprint": "96468e981988"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-11-10",
@@ -297,9 +297,9 @@
    "fingerprint": "a00ae9d905f4"
   },
   "ObjectConnectorTorsionalSpringDamper": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "84c5613d8f71"
+   "fingerprint": "9c6a9cdddedb"
   },
   "ObjectConnectorUser": {
    "checked": "2026-11-06",
@@ -354,12 +354,12 @@
   "ObjectFFRF": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "52686dcd4efe"
+   "fingerprint": "61a886a381a0"
   },
   "ObjectFFRFreducedOrder": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "e8f19b99eb74"
+   "fingerprint": "e0e541c8dc17"
   },
   "ObjectGenericODE1": {
    "checked": "2026-10-29",
@@ -387,9 +387,9 @@
    "fingerprint": "3c2cc49b26bd"
   },
   "ObjectJointPrismatic2D": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "a0b5c45bf4fe"
+   "fingerprint": "0e060d84149f"
   },
   "ObjectJointPrismaticX": {
    "checked": "2026-11-10",
@@ -452,9 +452,9 @@
    "fingerprint": "c873397075e1"
   },
   "ObjectRigidBody": {
-   "checked": "2026-11-08",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "f8ed52a73501"
+   "fingerprint": "2f3c53817828"
   },
   "ObjectRigidBody2D": {
    "checked": "2026-11-02",

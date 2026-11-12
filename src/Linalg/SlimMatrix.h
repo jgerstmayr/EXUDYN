@@ -35,6 +35,8 @@
 
 #include <initializer_list>
 #include <ostream>
+#include <array>
+#include <type_traits>
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -61,6 +63,9 @@ public:
 	SlimMatrixBase& operator=(SlimMatrixBase&& other) = default;
 	~SlimMatrixBase() = default;
 
+	//! as ConstSizeMatrixBase(bool): the data is not initialized
+	explicit SlimMatrixBase(bool) {}
+
 	//! as ConstSizeMatrixBase(numberOfRows, numberOfColumns): the sizes must be rows and columns; data not initialized
 	SlimMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit)
 	{
@@ -83,14 +88,47 @@ public:
 		for (auto value : listOfItems) { data[cnt++] = value; }
 	}
 
-	//! from a ConstSizeMatrix of the same size (checked in the regular module)
+	//! from a ConstSizeMatrix of the same capacity, implicitly; the shape is checked in the regular module
+	SlimMatrixBase(const ConstSizeMatrixBase<T, rows * columns>& matrix)
+	{
+		CopyFromConstSizeMatrix(matrix);
+	}
+
+	//! from a ConstSizeMatrix of larger capacity, e.g. a G matrix of maxRotationCoordinates*3, only explicitly, so that
+	//! overloads for ConstSizeMatrix and SlimMatrix stay unambiguous
+	template<Index dataSize, typename std::enable_if<(dataSize > rows * columns), int>::type = 0>
+	explicit SlimMatrixBase(const ConstSizeMatrixBase<T, dataSize>& matrix)
+	{
+		CopyFromConstSizeMatrix(matrix);
+	}
+
 	template<Index dataSize>
-	SlimMatrixBase(const ConstSizeMatrixBase<T, dataSize>& matrix)
+	void CopyFromConstSizeMatrix(const ConstSizeMatrixBase<T, dataSize>& matrix)
 	{
 		static_assert(dataSize >= rows * columns, "SlimMatrixBase(ConstSizeMatrixBase): its dataSize is smaller than the matrix");
 		CHECKandTHROW(matrix.NumberOfRows() == rows && matrix.NumberOfColumns() == columns, "SlimMatrixBase(ConstSizeMatrixBase): the size differs");
 		const T* source = matrix.GetDataPointer();
 		for (Index i = 0; i < rows * columns; i++) { data[i] = source[i]; }
+	}
+
+	//! from std::array, rows of columns, as the Python interface gives it
+	SlimMatrixBase(const std::array<std::array<T, columns>, rows>& matrix)
+	{
+		for (Index i = 0; i < rows; i++)
+		{
+			for (Index j = 0; j < columns; j++) { data[i * columns + j] = matrix[i][j]; }
+		}
+	}
+
+	//! to std::array, rows of columns, as the Python interface takes it
+	operator std::array<std::array<T, columns>, rows>() const
+	{
+		std::array<std::array<T, columns>, rows> matrix;
+		for (Index i = 0; i < rows; i++)
+		{
+			for (Index j = 0; j < columns; j++) { matrix[i][j] = data[i * columns + j]; }
+		}
+		return matrix;
 	}
 
 	//! to a ConstSizeMatrix of the same capacity

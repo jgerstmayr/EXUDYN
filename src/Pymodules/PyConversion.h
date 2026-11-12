@@ -219,6 +219,10 @@ namespace EPyUtils {
 		destination = stdlist;
 	}
 
+	//! a SlimMatrix (Matrix6D) from a list of lists or a 2D numpy array, through the ConstSizeMatrix version below (#3458)
+	template<class T, Index rows, Index columns>
+	inline void FromPython(const py::object& value, SlimMatrixBase<T, rows, columns>& destination);
+
 	//! a fixed-size matrix (Matrix3D, Matrix6D) from a list of lists or a 2D numpy array; rows and
 	//! columns cannot be deduced from the storage size, so they are given: FromPython<Real, 3, 3>(value, m).
 	//! The destination gets its size first, as an uninitialized ConstSizeMatrix has size zero
@@ -258,6 +262,14 @@ namespace EPyUtils {
 				PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!', PyErrorType::valueError);
 			}
 		}
+	}
+
+	template<class T, Index rows, Index columns>
+	inline void FromPython(const py::object& value, SlimMatrixBase<T, rows, columns>& destination)
+	{
+		ConstSizeMatrixBase<T, rows * columns> matrix = destination; //a list row of wrong length leaves its row unchanged
+		FromPython<T, rows, columns>(value, matrix);
+		destination = matrix;
 	}
 
 	namespace Conversion
@@ -563,6 +575,13 @@ namespace EPyUtils {
 	inline py::array_t<T> ToPython(const ConstSizeMatrixBase<T, dataSize>& value)
 	{
 		return py::array_t<T>(std::vector<std::ptrdiff_t>{(int)value.NumberOfRows(), (int)value.NumberOfColumns()}, value.GetDataPointer());
+	}
+
+	//! a SlimMatrix as 2D numpy array (copy) (#3458)
+	template<class T, Index rows, Index columns>
+	inline py::array_t<T> ToPython(const SlimMatrixBase<T, rows, columns>& value)
+	{
+		return py::array_t<T>(std::vector<std::ptrdiff_t>{(int)rows, (int)columns}, value.GetDataPointer());
 	}
 
 	//! indices as a list of their kind, e.g. [NodeIndex(0), NodeIndex(3)]

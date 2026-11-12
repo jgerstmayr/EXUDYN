@@ -23,7 +23,7 @@
 //! the physics of the connector, for Real and AutoDiff (#2745); the user function is Real only
 template<class TReal>
 void CObjectConnectorLinearSpringDamper::ComputeSpringForce(FlatArray<const MarkerRigid<TReal>> markers, Real t,
-	ConstSizeMatrixBase<TReal, 9>& A0, TReal& displacement, TReal& velocity, TReal& force) const
+	Matrix3DBase<TReal>& A0, TReal& displacement, TReal& velocity, TReal& force) const
 {
 	//spring is measured relative to marker0:
 
@@ -64,7 +64,7 @@ void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidTemplate(Flat
 	if (!parameters.activeConnector) { return; }
 
 	TReal displacement, velocity, force;
-	ConstSizeMatrixBase<TReal, 9> A0;
+	Matrix3DBase<TReal> A0;
 	ComputeSpringForce(markers, t, A0, displacement, velocity, force);
 	SlimVectorBase<TReal, 3> axisForce;
 	for (Index i = 0; i < 3; i++) { axisForce[i] = parameters.axisMarker0[i] * force; }

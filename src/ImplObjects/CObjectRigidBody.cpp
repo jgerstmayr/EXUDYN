@@ -63,7 +63,7 @@ static auto RigidBodyPositionAD(bool eulerParameters, const Vector3D& localPosit
 	return [eulerParameters, localPosition](const auto* q, auto* p)
 	{
 		using TReal = typename std::remove_const<typename std::remove_reference<decltype(q[0])>::type>::type;
-		ConstSizeMatrixBase<TReal, 9> A(3, 3);
+		Matrix3DBase<TReal> A(3, 3);
 		RigidBodyRotationMatrixAD(eulerParameters, q + 3, A);
 		for (Index r = 0; r < 3; r++) { p[r] = q[r] + A(r, 0) * localPosition[0] + A(r, 1) * localPosition[1] + A(r, 2) * localPosition[2]; }
 	};
@@ -147,7 +147,7 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 
 	//Index nRotationCoordinates = ((CNodeRigidBody*)GetCNode(0))->GetNumberOfRotationCoordinates();
 
-	//ConstSizeMatrix<9> localInertia;
+	//Matrix3D localInertia;
 	//RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia);
 	////EXUmath::MultMatrixTransposedMatrix(Glocal, localInertia, GlocalInertia);
 
@@ -248,7 +248,7 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 	{
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal_t; //store this term for case with COM!=0
 		LinkedDataVector rot_t = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters_t();//store this term for case with COM!=0
-		ConstSizeMatrix<9> localInertia;
+		Matrix3D localInertia;
 		RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia); //localInertia @ vector could be implemented as separate (hardcoded) function
 			
 		//compute: forces2 = Glocal^T * localInertia * Glocal_t * rot_t
@@ -382,7 +382,7 @@ static void RigidBodyODE2LHSTemplate(bool eulerParameters, const CObjectRigidBod
 		Cross(omegaBar, UxOmega, force);
 		Cross(U, Glocal_tTheta_t, UxG);
 		for (Index i = 0; i < 3; i++) { force[i] += UxG[i]; }
-		ConstSizeMatrixBase<TReal, 9> A(3, 3);
+		Matrix3DBase<TReal> A(3, 3);
 		if (eulerParameters) //EP2RotationMatrix, unnormalized as the node computes it
 		{
 			const TReal* e = theta;
@@ -558,7 +558,7 @@ void CObjectRigidBody::GetPositionJacobian(const Vector3D& localPosition, Matrix
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 	((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
-	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
+	Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
 	//uLocalTilde *= -1.;//moved into (-localPosition)
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
@@ -648,8 +648,8 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 	((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);
 	Matrix3D A = ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix();
 
-	ConstSizeMatrix<9> fTilde = RigidBodyMath::Vector2SkewMatrix(force);
-	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(localPosition);
+	Matrix3D fTilde = RigidBodyMath::Vector2SkewMatrix(force);
+	Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix(localPosition);
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
 	EXUmath::MultMatrixMatrix(fTilde, G, temp);
@@ -727,7 +727,7 @@ void CObjectRigidBody::GetMassWeightedPositionJacobian(Matrix& value) const
 		((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
 
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*parameters.centerOfMass); //negative sign in -A*uLocalTilde*Glocal
+		Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*parameters.centerOfMass); //negative sign in -A*uLocalTilde*Glocal
 		//uLocalTilde *= -1.;//moved into ((-m)*parameters.centerOfMass)
 
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
@@ -943,11 +943,11 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 		//Jac = -uTilde*G
 
 
-		//ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
+		//Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
 
 
 		//39ns:
-		//ConstSizeMatrix<9> uTilde = RigidBodyMath::Vector2SkewMatrix(-AlocalPosition); //negative sign in -uTilde*G
+		//Matrix3D uTilde = RigidBodyMath::Vector2SkewMatrix(-AlocalPosition); //negative sign in -uTilde*G
 		//ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
 		//EXUmath::MultMatrixMatrix(uTilde, G, temp); 
 
@@ -988,7 +988,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 		posJac.GetUnsafe(2, 0) = 0.; posJac.GetUnsafe(2, 1) = 0.; posJac.GetUnsafe(2, 2) = 1.;
 
 
-		//ConstSizeMatrix<9> uTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -uTilde*G
+		//Matrix3D uTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -uTilde*G
 		//ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
 		//EXUmath::MultMatrixMatrix(uTilde, Glocal, temp); 
 		//EXUmath::MultMatrixMatrix(markerData.orientation, temp, Glocal);
@@ -1061,7 +1061,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 //	((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 //
-//	ConstSizeMatrix<9> localInertia;
+//	Matrix3D localInertia;
 //	RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia);
 //
 //	//pout << "Glocal=" << Glocal << "\n";
@@ -1111,7 +1111,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //	ode2Lhs.SetNumberOfItems(GetODE2Size());
 //	ode2Lhs.SetAll(0.);
 //
-//	ConstSizeMatrix<9> localInertia;
+//	Matrix3D localInertia;
 //	RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia);
 //
 //	//compute forces1 and forces2 on left-hand-side (M*a + forces1 + forces2)

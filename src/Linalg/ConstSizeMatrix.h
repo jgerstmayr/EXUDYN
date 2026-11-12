@@ -553,7 +553,7 @@ public:
 		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
 			"operator+(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
 
-		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfColumns(), m1.NumberOfRows());
+		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfRows(), m1.NumberOfColumns()); //the shape of m1 (#3457)
 		Index cnt = 0;
 		for (auto &item : result)
 		{
@@ -569,7 +569,7 @@ public:
 		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
 			"operator+(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
 
-		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfColumns(), m1.NumberOfRows());
+		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfRows(), m1.NumberOfColumns()); //the shape of m1 (#3457)
 		Index cnt = 0;
 		for (auto &item : result)
 		{

@@ -2,12 +2,16 @@
   "number": 3457,
   "title": "ConstSizeMatrix operator+ and operator- give a non-square result the transposed shape",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "operator+(ConstSizeMatrixBase, ConstSizeMatrixBase) and operator- create the result as (m1.NumberOfColumns(), m1.NumberOfRows()) and fill it item by item, so the sum of two 3x4 matrices is a 4x3 matrix holding the row-major items of a 3x4 one; square matrices are not affected. Found while writing SlimMatrix (#3456); the uses of + and - on non-square ConstSizeMatrix are to be checked.",
   "dateRaised": "2026-11-12",
   "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 16:21",
+  "resolvedAuthor": "Claude-JG",
   "file": "src/Linalg/ConstSizeMatrix.h",
-  "line": "557"
+  "line": "557",
+  "releaseNotes": "ConstSizeMatrix: the sum and the difference of two non-square matrices have the shape of the operands; before, rows and columns were exchanged.",
+  "resolvedInVersion": "1.13.595"
 }

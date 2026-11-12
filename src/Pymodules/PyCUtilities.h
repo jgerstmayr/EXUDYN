@@ -82,6 +82,12 @@ namespace PyCUtilities {
 		return py::array_t<Real>(std::vector<py::ssize_t>({ m.NumberOfRows(), m.NumberOfColumns() }), m.GetDataPointer());
 	}
 
+	template<Index rows, Index columns>
+	inline py::array_t<Real> ToNumPy(const SlimMatrixBase<Real, rows, columns>& m)
+	{
+		return py::array_t<Real>(std::vector<py::ssize_t>({ rows, columns }), m.GetDataPointer());
+	}
+
 	//! three vectors as the rows of a 3x3 array
 	inline py::array_t<Real> RowsToNumPy(const Vector3D& v0, const Vector3D& v1, const Vector3D& v2)
 	{

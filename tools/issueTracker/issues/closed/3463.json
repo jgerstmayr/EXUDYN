@@ -1,0 +1,15 @@
+{
+  "number": 3463,
+  "title": "The rigid body: its G-matrix products with compile-time sizes, dispatched by the number of rotation coordinates",
+  "author": "Claude-JG",
+  "status": "CLOSED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "CObjectRigidBody::ComputeODE2LHS and AddForceTorque multiply with G^T and Glocal^T of 3 x 3 or 3 x 4 by run-time sizes through checked access; templated on the number of rotation coordinates (3 or 4) and dispatched once per call, with the sums in the same order (docs/dev/design/linalgFixedSize.md section 5, point 4).",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 16:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not done: the templated G products of the rigid body are bitwise equal, but the rigid models change by -6 to +2 %, within the noise; the change was not kept",
+  "resolvedInVersion": "1.13.599"
+}

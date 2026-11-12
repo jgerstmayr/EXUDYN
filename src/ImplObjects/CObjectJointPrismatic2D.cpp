@@ -28,8 +28,8 @@ void CObjectJointPrismatic2D::ComputeConstraintEquationsTemplate(FlatArray<const
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(2);
-	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
-	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	const Matrix3DBase<TReal>& A0 = markers[0].frame.GetRotation();
+	const Matrix3DBase<TReal>& A1 = markers[1].frame.GetRotation();
 	SlimVectorBase<TReal, 3> vPos = markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation();
 	SlimVectorBase<TReal, 3> t0 = A0 * parameters.axisMarker0;
 	SlimVectorBase<TReal, 3> n1 = A1 * parameters.normalMarker1;

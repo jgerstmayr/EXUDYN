@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-11-10  21:43:04 (last modified)
+* @date         2026-11-12  15:26:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -192,7 +192,7 @@ public: // AUTO:
     }
 
     //! AUTO:  the physics of the connector, for Real and AutoDiff (#2745)
-    template<class TReal> void ComputeSpringForceTorque(FlatArray<const MarkerRigid<TReal>> markers, Real t, ConstSizeMatrixBase<TReal, 9>& Ajoint, SlimVectorBase<TReal, 3>& vLocPos, SlimVectorBase<TReal, 3>& vLocVel, SlimVectorBase<TReal, 3>& vLocRot, SlimVectorBase<TReal, 3>& vLocAngVel, SlimVectorBase<TReal, 6>& fLocVec6D, bool computeForceTorque=true) const;
+    template<class TReal> void ComputeSpringForceTorque(FlatArray<const MarkerRigid<TReal>> markers, Real t, Matrix3DBase<TReal>& Ajoint, SlimVectorBase<TReal, 3>& vLocPos, SlimVectorBase<TReal, 3>& vLocVel, SlimVectorBase<TReal, 3>& vLocRot, SlimVectorBase<TReal, 3>& vLocAngVel, SlimVectorBase<TReal, 6>& fLocVec6D, bool computeForceTorque=true) const;
 
     //! AUTO:  the right-hand side on the connector interface of rigid markers (#2745)
     virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override

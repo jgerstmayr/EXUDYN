@@ -32,10 +32,17 @@
 #include "Linalg/ResizableMatrix.h"	
 #include "Linalg/LinkedDataMatrix.h"	
 
-typedef ConstSizeMatrix<9> Matrix3D; //will be changed to SlimMatrix<...>
+//Matrix3D has fixed rows and columns; EXUDYN_MATRIX3D_CONSTSIZE switches back to ConstSizeMatrix<9> (#3459)
+#ifndef EXUDYN_MATRIX3D_CONSTSIZE
+typedef SlimMatrix<3, 3> Matrix3D;
+template<typename T> using Matrix3DBase = SlimMatrixBase<T, 3, 3>; //Matrix3D of any number type, e.g. automatic differentiation
+#else
+typedef ConstSizeMatrix<9> Matrix3D;
+template<typename T> using Matrix3DBase = ConstSizeMatrixBase<T, 9>;
+#endif
 typedef ConstSizeMatrix<16> Matrix4D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<4> Matrix2D; //will be changed to SlimMatrix<...>
-typedef ConstSizeMatrix<6*6> Matrix6D;//will be changed to SlimMatrix<...>
+typedef SlimMatrix<6, 6> Matrix6D; //fixed rows and columns (#3458)
 
 typedef ConstSizeMatrixBase<float, 16> Matrix4DF; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float, 9> Matrix3DF; //will be changed to SlimMatrix<...>
@@ -59,20 +66,20 @@ typedef MatrixList<6> Matrix6DList;
 //typedef ResizableArray<SlimVector<6>> Vector6DList;
 //typedef ResizableArray<ConstSizeMatrix<6 * 6>> Matrix6DList;
 
-//makes problems with Index: typedef ConstSizeMatrixBase<Index, 9> Matrix3DI; //will be changed to SlimMatrix<...>
+//makes problems with Index: typedef Matrix3DBase<Index> Matrix3DI; //will be changed to SlimMatrix<...>
 
 
 namespace EXUmath {
 
 	template <typename T>
-	inline const ConstSizeMatrixBase<T, 9> Identity3D = ConstSizeMatrixBase<T,9>(3, 3, {
+	inline const Matrix3DBase<T> Identity3D = Matrix3DBase<T>(3, 3, {
 		static_cast<T>(1), static_cast<T>(0), static_cast<T>(0),
 		static_cast<T>(0), static_cast<T>(1), static_cast<T>(0),
 		static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)
 		});
 
 	template <typename T>
-	inline const ConstSizeMatrixBase<T, 9> Zero3D = ConstSizeMatrixBase<T, 9>(3, 3, {
+	inline const Matrix3DBase<T> Zero3D = Matrix3DBase<T>(3, 3, {
 		static_cast<T>(0), static_cast<T>(0), static_cast<T>(0),
 		static_cast<T>(0), static_cast<T>(0), static_cast<T>(0),
 		static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)
@@ -238,9 +245,9 @@ namespace EXUmath {
 
 	//! compute Matrix3D with basis vectors in columns, from given vector used for X-column;
 	template<class TReal>
-	inline ConstSizeMatrixBase<TReal, 9> ComputeOrthogonalBasisX(SlimVectorBase<TReal, 3> vectorX)
+	inline Matrix3DBase<TReal> ComputeOrthogonalBasisX(SlimVectorBase<TReal, 3> vectorX)
 	{
-		ConstSizeMatrixBase<TReal, 9> matrix3D;
+		Matrix3DBase<TReal> matrix3D;
 		matrix3D.SetNumberOfRowsAndColumns(3, 3);
 
 		SlimVectorBase<TReal, 3> vectorY, vectorZ;
@@ -253,9 +260,9 @@ namespace EXUmath {
 
 	//! compute Matrix3D with basis vectors in columns, from given vector used for Z-column;
 	template<class TReal>
-	inline ConstSizeMatrixBase<TReal, 9> ComputeOrthogonalBasisZ(SlimVectorBase<TReal, 3> vectorZ)
+	inline Matrix3DBase<TReal> ComputeOrthogonalBasisZ(SlimVectorBase<TReal, 3> vectorZ)
 	{
-		ConstSizeMatrixBase<TReal, 9> matrix3D;
+		Matrix3DBase<TReal> matrix3D;
 		matrix3D.SetNumberOfRowsAndColumns(3, 3);
 
 		SlimVectorBase<TReal, 3> normal0, normal1;
@@ -618,19 +625,19 @@ namespace EXUmath {
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//! Matrix * Matrix multiplication templates; this should also work with operator* in ConstSizeMatrix<9>
-	inline void MultMatrixMatrix(const ConstSizeMatrix<9>& m1, const ConstSizeMatrix<9>& m2, ConstSizeMatrix<9>& result) {
-		MultMatrixMatrixTemplate<ConstSizeMatrix<9>, ConstSizeMatrix<9>, ConstSizeMatrix<9>>(m1, m2, result);
+	//! Matrix * Matrix multiplication templates; this should also work with operator* in Matrix3D
+	inline void MultMatrixMatrix(const Matrix3D& m1, const Matrix3D& m2, Matrix3D& result) {
+		MultMatrixMatrixTemplate<Matrix3D, Matrix3D, Matrix3D>(m1, m2, result);
 	}
 
 	//! Matrix * Matrix multiplication templates for multiplication with rigid body G-matrices
-	inline void MultMatrixMatrix(const ConstSizeMatrix<12>& m1, const ConstSizeMatrix<9>& m2, ConstSizeMatrix<12>& result) {
-		MultMatrixMatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<9>, ConstSizeMatrix<12>>(m1, m2, result);
+	inline void MultMatrixMatrix(const ConstSizeMatrix<12>& m1, const Matrix3D& m2, ConstSizeMatrix<12>& result) {
+		MultMatrixMatrixTemplate<ConstSizeMatrix<12>, Matrix3D, ConstSizeMatrix<12>>(m1, m2, result);
 	}
 
 	//! Matrix * Matrix multiplication templates for multiplication with rigid body G-matrices
-	inline void MultMatrixMatrix(const ConstSizeMatrix<9>& m1, const ConstSizeMatrix<12>& m2, ConstSizeMatrix<12>& result) {
-		MultMatrixMatrixTemplate<ConstSizeMatrix<9>, ConstSizeMatrix<12>, ConstSizeMatrix<12>>(m1, m2, result);
+	inline void MultMatrixMatrix(const Matrix3D& m1, const ConstSizeMatrix<12>& m2, ConstSizeMatrix<12>& result) {
+		MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<12>, ConstSizeMatrix<12>>(m1, m2, result);
 	}
 
 	//! Matrix * Matrix multiplication templates e.g. for computation of inertia tensor
@@ -642,8 +649,8 @@ namespace EXUmath {
 	//transposed(Matrix)*Matrix:
 
 	//! transposed(Matrix) * Matrix multiplication templates for multiplication with rigid body G-matrices
-	inline void MultMatrixTransposedMatrix(const ConstSizeMatrix<12>& m1, const ConstSizeMatrix<9>& m2, ConstSizeMatrix<12>& result) {
-		MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<9>, ConstSizeMatrix<12>>(m1, m2, result);
+	inline void MultMatrixTransposedMatrix(const ConstSizeMatrix<12>& m1, const Matrix3D& m2, ConstSizeMatrix<12>& result) {
+		MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<12>, Matrix3D, ConstSizeMatrix<12>>(m1, m2, result);
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -994,15 +1001,15 @@ namespace EXUmath {
 
 	//!set homogeneous transformation as Float16 from rotation matrix
 	template<class T>
-	ConstSizeMatrixBase<T, 9> SlimVector16toMatrix3D(const SlimVectorBase<T, 16> & A)
+	Matrix3DBase<T> SlimVector16toMatrix3D(const SlimVectorBase<T, 16> & A)
 	{
-		return ConstSizeMatrixBase<T, 9>(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+		return Matrix3DBase<T>(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
 	}
 	//!copy 3x3 part of 4x4 matrix into 3x3 matrix
 	template<class T>
-	ConstSizeMatrixBase<T, 9> Matrix4DtoMatrix3D(const ConstSizeMatrixBase<T, 16> & A)
+	Matrix3DBase<T> Matrix4DtoMatrix3D(const ConstSizeMatrixBase<T, 16> & A)
 	{
-		return ConstSizeMatrixBase<T, 9>(3, 3, { A(0,0), A(0,1), A(0,2),  A(1,0), A(1,1), A(1,2),  A(2,0), A(2,1), A(2,2) });
+		return Matrix3DBase<T>(3, 3, { A(0,0), A(0,1), A(0,2),  A(1,0), A(1,1), A(1,2),  A(2,0), A(2,1), A(2,2) });
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

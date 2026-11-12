@@ -1,0 +1,11 @@
+{
+  "number": 3462,
+  "title": "Consolidate the linear algebra function templates (MultMatrix..., Add..., Transposed...)",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Inventory in docs/dev/design/linalgTemplatesInventory.md: dead functions, duplicates (set/add pairs, AddSubmatrixTransposed and AddTransposedSubmatrix, the WithFactor variants, 33 non-template wrappers, 75 explicit template argument lists), and slow kernels in hot code (MultMatrixMatrix2SubmatrixTemplate with checked access in the connector Jacobians and the rigid-body mass matrix); proposed: one kernel per product with a result mode set/add/subtract, the order of the sums kept.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

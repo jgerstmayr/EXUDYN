@@ -256,3 +256,48 @@ increasing order); the unit tests (`src/Tests/SlimMatrixUnitTests.h`) compare ev
 unrolled ones of #3418, and in the regular module the range checks of `Matrix3D * Vector3D` are gone (1.6 times).
 Eigen's fixed 6x6 product stays faster (31 ns) - its kernel vectorizes over columns, which would change the order of
 the sums.
+
+## 10. `Matrix6D` and `Matrix3D` as `SlimMatrix`: the evaluation (RG5.2.4-RG5.2.6, #3458, #3459, #3463)
+
+`Matrix6D` is `SlimMatrix<6, 6>` (#3458). `Matrix3D` is `SlimMatrix<3, 3>` (#3459); `EXUDYN_MATRIX3D_CONSTSIZE`, defined
+before `BasicLinalg.h` is included, switches it back to `ConstSizeMatrix<9>`. The number type of a `Matrix3D` in
+templated code is `Matrix3DBase<T>` (for example `Matrix3DBase<TReal>` in the connectors with automatic
+differentiation); it follows the switch. What the switch needed besides the typedefs:
+
+- the 135 spellings `ConstSizeMatrixBase<T, 9>` and `ConstSizeMatrix<9>` in `src` (16 files) and 3 in the item
+  definitions became `Matrix3DBase<T>` and `Matrix3D`; the float matrices of the graphics (`Matrix3DF`, `RTMatrix3D`)
+  stay `ConstSizeMatrix`;
+- `SlimMatrix` gained the constructor `SlimMatrixBase(bool)` (uninitialized, as `Matrix3D(false)` is used), the
+  conversions from and to `std::array<std::array<T, columns>, rows>`, and an **explicit** conversion from a
+  `ConstSizeMatrix` of larger capacity - implicit, it made the overloads of `EXUmath::MultMatrixVector` for
+  `ConstSizeMatrix<12>` and `Matrix3D` ambiguous for the 3x3 G matrices;
+- `ToPython`, `FromPython` (PyConversion.h) and `ToNumPy` (PyCUtilities.h) for `SlimMatrix`.
+
+No default-constructed `Matrix3D` relied on being 0x0, and no test of `NumberOfRows() == 0` met a `Matrix3D`: the test
+suite passes with the range checks of the regular module, and **all 309 results are bitwise those of
+`ConstSizeMatrix<9>`** (and of the version before `Matrix6D`).
+
+The performance models (`exudev perf`, 2026-11-12, one machine, `SlimMatrix` against the switch to `ConstSizeMatrix<9>`;
+regular: the better of two runs each):
+
+| | regular | fast |
+|---|---:|---:|
+| total of all runs | -1.4 % | -3.1 % |
+| `perfLargeMassSpringChain` rigid, 1000-20000 bodies, explicit and implicit | -11 to -14 % | -10 to -12 % |
+| `perfConnectorInterface` rigid / spring, explicit | -17 % / -11 % | -16 % / -4 % |
+| `perfAccessFunctionsAD` rigid EP / Rxyz, implicit | -10 % / -11 % | -8 % / -9 % |
+| models without `Matrix3D` in their hot code (user functions, mass-spring) | within +-3 % | within +-6 %, short runs up to 12 % |
+
+`perf3DRigidBodies` and the contact model run on 4 or 8 threads; their times vary by up to 35 % between runs of the
+same module (all their timers, also the factorization, move together), and their results by round-off between runs,
+so they do not decide. No model is slower beyond this noise.
+
+**RG5.2.6, not done**: `CObjectRigidBody::ComputeODE2LHS` and `AddForceTorque` with the G products templated on the
+number of rotation coordinates (3 or 4) and unchecked pointer loops, the sums in the same order: bitwise equal, but the
+rigid models moved by -6 % to +2 % in the regular module, within the noise; the node already gives G in a few
+operations (#3409), and the products are a small part of the body. The change was not kept.
+
+**Recommendation for the decision**: make `Matrix3D` as `SlimMatrix<3,3>` final - it is faster in the models that use
+it, not slower elsewhere, and bitwise; keep `EXUDYN_MATRIX3D_CONSTSIZE` until the next release has run on Linux and
+macOS (gcc and clang were not measured), then remove it with the `ConstSizeMatrixBase<T, 9>` special cases of
+`ConstSizeMatrix.h` that only `Matrix3D` used.

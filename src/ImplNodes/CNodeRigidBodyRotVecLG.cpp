@@ -37,7 +37,7 @@ SlimVectorBase<DReal3, 3> RotationVectorGTv(const ConstSizeVectorBase<DReal3, 3>
 {
 	DReal3 angle = rot.GetL2Norm();
 	//Real angle = sqrt(EXUstd::Square(rot[0].Value()) + EXUstd::Square(rot[1].Value()) + EXUstd::Square(rot[2].Value()));
-	ConstSizeMatrixBase<DReal3, 9> mat;
+	Matrix3DBase<DReal3> mat;
 	mat.SetScalarMatrix(3, 1.);
 
 	if (angle.Value() == 0.) {
@@ -45,7 +45,7 @@ SlimVectorBase<DReal3, 3> RotationVectorGTv(const ConstSizeVectorBase<DReal3, 3>
 	}
 	else
 	{
-		ConstSizeMatrixBase<DReal3, 9> vTilde(3, 3, {    0.,-rot[2], rot[1],
+		Matrix3DBase<DReal3> vTilde(3, 3, {    0.,-rot[2], rot[1],
 													 rot[2],      0,-rot[0],
 													-rot[1], rot[0],      0 });
 		DReal3 sAngle = EM::Sin(angle);

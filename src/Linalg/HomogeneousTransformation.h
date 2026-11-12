@@ -51,7 +51,7 @@ public:
 	}
 
 	//! a rotation matrix and a translation
-	HomogeneousTransformationBase(const ConstSizeMatrixBase<T, 9>& rotation, const SlimVectorBase<T, 3>& translation) : p(translation)
+	HomogeneousTransformationBase(const Matrix3DBase<T>& rotation, const SlimVectorBase<T, 3>& translation) : p(translation)
 	{
 		SetRotationMatrix(rotation);
 	}
@@ -60,21 +60,21 @@ public:
 	//set and get
 
 	//! set rotation and translation
-	void Set(const ConstSizeMatrixBase<T, 9>& rotation, const SlimVectorBase<T, 3>& translation)
+	void Set(const Matrix3DBase<T>& rotation, const SlimVectorBase<T, 3>& translation)
 	{
 		SetRotationMatrix(rotation);
 		p = translation;
 	}
 
 	//! get rotation and translation
-	void Get(ConstSizeMatrixBase<T, 9>& rotation, SlimVectorBase<T, 3>& translation) const
+	void Get(Matrix3DBase<T>& rotation, SlimVectorBase<T, 3>& translation) const
 	{
 		rotation = GetRotation();
 		translation = p;
 	}
 
 	//! the rotation matrix; the translation is kept
-	void SetRotationMatrix(const ConstSizeMatrixBase<T, 9>& rotation)
+	void SetRotationMatrix(const Matrix3DBase<T>& rotation)
 	{
 		CHECKandTHROW(rotation.NumberOfRows() == 3 && rotation.NumberOfColumns() == 3, "HomogeneousTransformation: the rotation must be a 3x3 matrix");
 		const T* data = rotation.GetDataPointer();
@@ -90,7 +90,7 @@ public:
 	}
 
 	//! set a rotation and zero translation
-	void SetRotation(const ConstSizeMatrixBase<T, 9>& rotation)
+	void SetRotation(const Matrix3DBase<T>& rotation)
 	{
 		SetRotationMatrix(rotation);
 		p.SetAll((T)0.);
@@ -121,27 +121,27 @@ public:
 	void SetRotationX(T angleRad)
 	{
 		T c = EM::Cos(angleRad), s = EM::Sin(angleRad);
-		SetRotation(ConstSizeMatrixBase<T, 9>(3, 3, { (T)1., (T)0., (T)0., (T)0., c, -s, (T)0., s, c }));
+		SetRotation(Matrix3DBase<T>(3, 3, { (T)1., (T)0., (T)0., (T)0., c, -s, (T)0., s, c }));
 	}
 
 	//! set a rotation around y-axis and zero translation
 	void SetRotationY(T angleRad)
 	{
 		T c = EM::Cos(angleRad), s = EM::Sin(angleRad);
-		SetRotation(ConstSizeMatrixBase<T, 9>(3, 3, { c, (T)0., s, (T)0., (T)1., (T)0., -s, (T)0., c }));
+		SetRotation(Matrix3DBase<T>(3, 3, { c, (T)0., s, (T)0., (T)1., (T)0., -s, (T)0., c }));
 	}
 
 	//! set a rotation around z-axis and zero translation
 	void SetRotationZ(T angleRad)
 	{
 		T c = EM::Cos(angleRad), s = EM::Sin(angleRad);
-		SetRotation(ConstSizeMatrixBase<T, 9>(3, 3, { c, -s, (T)0., s, c, (T)0., (T)0., (T)0., (T)1. }));
+		SetRotation(Matrix3DBase<T>(3, 3, { c, -s, (T)0., s, c, (T)0., (T)0., (T)0., (T)1. }));
 	}
 
 	//! the rotation matrix (a copy of the 9 numbers)
-	ConstSizeMatrixBase<T, 9> GetRotation() const
+	Matrix3DBase<T> GetRotation() const
 	{
-		ConstSizeMatrixBase<T, 9> A(3, 3);
+		Matrix3DBase<T> A(3, 3);
 		T* data = A.GetDataPointer();
 		for (Index i = 0; i < 9; i++) { data[i] = R[i]; }
 		return A;

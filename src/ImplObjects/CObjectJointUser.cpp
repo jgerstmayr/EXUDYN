@@ -77,7 +77,7 @@ void CObjectJointUser::ComputeConstraintEquationsRigidDiff(FlatArray<const Marke
 	for (Index k = 0; k < 2; k++)
 	{
 		const SlimVectorBase<DRealRigidMarkers, 3>& position = markers[k].frame.GetTranslation();
-		const ConstSizeMatrixBase<DRealRigidMarkers, 9> rotation = markers[k].frame.GetRotation();
+		const Matrix3DBase<DRealRigidMarkers> rotation = markers[k].frame.GetRotation();
 		rotations[k].SetNumberOfRowsAndColumns(3, 3);
 		for (Index i = 0; i < 3; i++)
 		{

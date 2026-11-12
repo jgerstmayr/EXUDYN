@@ -52,8 +52,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **Matrix6D and Matrix3D as SlimMatrix** (RG5.2.4, RG5.2.5): SlimMatrix and the profile of ODE2RHS are done;
-   the switch brings the measured 2 times to the connectors, which are two thirds of ODE2RHS in the rigid chains.
+2. **The choices of the maintainer** on the three design notes of 2026-11-12: the raytracer shadows (RG6.26,
+   raytracerImprovements.md), expression templates (RG5.2.7) and the consolidation of the linalg templates (RG5.2.8);
+   the decision on Matrix3D (RG5.2.9).
 3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
@@ -63,9 +64,11 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (4 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (3 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
+- **RG6** Graphics and rendering
+  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -110,8 +113,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 7 | Performance |
-| RG6 | CLOSED | 0 | Graphics and rendering |
+| RG5 | OPEN | 6 | Performance |
+| RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -601,21 +604,47 @@ CLOSED 2026-11-12 (#3455): connector force 41 %, marker kinematics 26 %, bodies 
 
 CLOSED 2026-11-12 (#3456): src/Linalg/SlimMatrix.h, unit tests bitwise against ConstSizeMatrix (src/Tests/SlimMatrixUnitTests.h), in RunLinalgBenchmark; 6x6 product 98 -> 48 ns, J^T K J at n = 6 60 -> 25 ns, 3x3 as #3418; linalgFixedSize.md section 9. [log](exudynRevisionLog2026c.md#rg5-2-2)
 
-#### **OPEN_RG5.2.3** ConstSizeMatrix operator+ and operator-: the shape of a non-square result
+#### **CLOSED_RG5.2.3** ConstSizeMatrix operator+ and operator-: the shape of a non-square result
 
 #3457, found in #3456 (RG5.2.2): the result is created with rows and columns exchanged.
 
-#### **OPEN_RG5.2.4** Matrix6D as SlimMatrix<6,6>
+CLOSED 2026-11-12 (#3457): the result has the shape of m1; a unit test with 3x4 matrices; no test result moved. [log](exudynRevisionLog2026c.md#rg5-2-3)
+
+#### **CLOSED_RG5.2.4** Matrix6D as SlimMatrix<6,6>
 
 linalgFixedSize.md section 5, point 3: the stiffness and damping of RigidBodySpringDamper, the 6x6 products of the joints; the test suite bitwise in the regular module.
 
-#### **OPEN_RG5.2.5** Matrix3D as SlimMatrix<3,3>, with a compile switch back to ConstSizeMatrix<9>
+#3458. Maintainer 2026-11-12: yes, do that.
+
+CLOSED 2026-11-12 (#3458): typedef SlimMatrix<6,6> Matrix6D; the std::array conversions, ToPython and FromPython for SlimMatrix; the test suite bitwise. [log](exudynRevisionLog2026c.md#rg5-2-3)
+
+#### **CLOSED_RG5.2.5** Matrix3D as SlimMatrix<3,3>, with a compile switch back to ConstSizeMatrix<9>
 
 linalgFixedSize.md section 5, point 3: 652 uses; the default-constructed Matrix3D sized later and the tests of NumberOfRows() == 0 checked; the test suite bitwise in the regular module, the references of the fast module.
 
-#### **OPEN_RG5.2.6** The rigid body and its marker kinematics templated on the number of rotation coordinates
+#3459. Maintainer 2026-11-12: yes; report whether the switch can be made for good after the evaluation (the decision as a further step).
+
+CLOSED 2026-11-12 (#3459): Matrix3D = SlimMatrix<3,3>, Matrix3DBase<T> for templated code, EXUDYN_MATRIX3D_CONSTSIZE back to ConstSizeMatrix<9>; the test suite bitwise; fast total -3.1 %, regular -1.4 %, rigid models -8 to -17 %, nothing slower beyond the noise (linalgFixedSize.md section 10). Recommended final; the decision is RG5.2.9. [log](exudynRevisionLog2026c.md#rg5-2-5)
+
+#### **CLOSED_RG5.2.6** The rigid body and its marker kinematics templated on the number of rotation coordinates
 
 linalgFixedSize.md section 5, point 4: bodies and marker kinematics are about 45 % of ODE2RHS in the rigid chains (section 8); after RG5.2.5.
+
+#3463. Maintainer 2026-11-12: yes, do that.
+
+CLOSED 2026-11-12 (#3463), not done: the templated G products are bitwise equal but change the rigid models by -6 to +2 % (noise); not kept. [log](exudynRevisionLog2026c.md#rg5-2-5)
+
+#### **OPEN_RG5.2.7** Expression templates: the transposed view, SlimVector MultAdd, fused elementwise expressions after measurement
+
+#3461. Maintainer 2026-11-12: no expression templates were used in Exudyn so far; where they simplify code at the same performance, the most important ones shall be enabled; a design file. Design: docs/dev/design/expressionTemplates.md - full expression templates not recommended; E1 Transposed(A) * x, E2 SlimVectorBase::MultAdd, E3 after the measurements M1; sub-steps ET.1-ET.5 in its section 7, for the maintainer to choose.
+
+#### **OPEN_RG5.2.8** Consolidate the linear algebra function templates
+
+#3462. Maintainer 2026-11-12: check the many linalg templates (MultAdd..., Transposed...) - which can be combined or removed, possibly also for performance. Inventory: docs/dev/design/linalgTemplatesInventory.md - dead functions, duplicates, slow kernels in hot code; one kernel per product with a result mode; sub-steps LT.1-LT.5 in its section 7, for the maintainer to choose.
+
+#### **OPEN_RG5.2.9** Decide: Matrix3D as SlimMatrix<3,3> for good, and remove EXUDYN_MATRIX3D_CONSTSIZE
+
+Maintainer 2026-11-12: the decision on the switch as a further step, after the evaluation of RG5.2.5. Recommended (linalgFixedSize.md section 10): final; the compile switch and the ConstSizeMatrixBase<T, 9> special cases of ConstSizeMatrix.h removed after the next release has run on Linux and macOS.
 
 ### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 
@@ -853,7 +882,7 @@ CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: mini
 
 CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tree, each allocated when a sphere first enters it and grown when it first holds more; only in the first solve (100 per step), a second solve from the initial state 0.15-0.7 per step, both in the same time. [log](exudynRevisionLog2026c.md#rg5-12)
 
-## **CLOSED_RG6** Graphics and rendering
+## **OPEN_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -1224,6 +1253,16 @@ Evaluation (2026-11-11, from the code): no problem and no cost. Each system has 
 Recommendation: a member hideMbs of VSettingsScene - so view0.scene.hideMbs ... view3.scene.hideMbs - of type TArrayIndex(size=-1) with the default [] (the type is used in the visualization settings already); a list of system numbers rather than of MainSystems, as the settings are plain data; numbers beyond the systems are ignored. One helper IsHidden(viewID, systemIndex) used in the five places above. A test model with two systems and hideMbs in view 1, checked by the raytracer images of view 0 and view 1 (no window) or by the graphics data the raytracer receives.
 
 CLOSED 2026-11-11 (#3442): view[0-3].scene.hideMbs (TArrayIndex, default []); SystemHiddenInView(viewID, system, settings) in GlfwRenderer::RenderGraphicsData (faces, edges, lines, points, texts, shadows, picking), RenderState::ComputeMaxSceneSize/ComputeZoomToItem (GraphicsData::ComputeMaxScene with the hidden systems), Raytracer::SensorTraceLines (viewID) and Raytracer::SoftwareRenderer (triangles, lines, texts); test model viewHideMbsTest.py with raytracer images against containers holding only the shown systems. [log](exudynRevisionLog2026c.md#rg5-9-9)
+
+### **OPEN_RG6.26** Raytracer: the cost of shadows and soft shadows, and the options to reduce it
+
+#3460. Maintainer 2026-11-12: the raytracer got faster, but lightRadius variations are handled very inefficiently, possibly other things as well; better options, in particular for shadows - analyze first, the analysis and the suggestions in a design file raytracerImprovements.md. The proposed sub-steps are in its section 5, for the maintainer to choose.
+
+#### **CLOSED_RG6.26.1** Analysis: how shadows are computed, measurements, inefficiencies, options
+
+#3460. CLOSED 2026-11-12: docs/dev/design/raytracerImprovements.md - per-pixel soft shadow 0.0206 s per sample (1200 x 1000, 32 threads; 13 samples 0.355 s against 0.106 s for a hard shadow), the low-resolution precomputation 1/9 of that but with about 30 ms serial smoothing and upsampling; the precomputation also runs without a light radius (+24 %); proposed order: bitwise improvements (parallel copy-free filtering, separate hit test and shading, mailboxing, ray length), precomputation only with a light radius, adaptive penumbra sampling, stratified samples, occluder cache, flat grid; three correctness points (absolute shadow-ray offset, transparent objects cast full shadows, no soft shadows for directional lights).
+
+[log](exudynRevisionLog2026c.md#rg6-26-1)
 
 ## **OPEN_RG7** Python user items
 

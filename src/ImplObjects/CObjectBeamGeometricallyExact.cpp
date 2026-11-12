@@ -684,8 +684,8 @@ void CObjectBeamGeometricallyExact::GetPositionJacobian(const Vector3D& localPos
 	if (pCS[1] != 0. || pCS[2] != 0.)
 	{
 		Matrix3D A = GetLocalPositionFrame(localPosition, ConfigurationType::Current).GetRotation();
-		ConstSizeMatrix<9> pTilde = RigidBodyMath::Vector2SkewMatrix(-pCS); //omega x p = -pTilde*omega
-		ConstSizeMatrix<9> ApTilde;
+		Matrix3D pTilde = RigidBodyMath::Vector2SkewMatrix(-pCS); //omega x p = -pTilde*omega
+		Matrix3D ApTilde;
 		EXUmath::MultMatrixMatrix(A, pTilde, ApTilde);
 		for (Index i = 0; i < 2; i++)
 		{

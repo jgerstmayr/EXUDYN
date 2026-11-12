@@ -6431,6 +6431,56 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-26-1"></a>
+### RG6.26.1 — raytracer: the cost of shadows, analysis (2026-11-12, #3460)
+
+*(Maintainer 2026-11-12: the raytracer got faster, but lightRadius variations are handled very inefficiently; analyze
+first, the suggestions into a design file raytracerImprovements.md.)*
+
+docs/dev/design/raytracerImprovements.md (new). Measured on raytracerNOGLFWtest.py with the bodies on their circle and
+an oblique light, 1200 x 1000, 32 threads (a copy of the 1.13.592 module): no shadow 0.088 s, hard shadow 0.106 s;
+soft shadows on the per-pixel path 0.0206 s per sample (13 samples 0.355 s, 50 samples 1.116 s), with the
+low-resolution precomputation (shadowScalingFactor 3) 13 samples 0.151 s, of which about 30 ms are the serial
+smoothing and upsampling; the precomputation also runs without a light radius (+24 %). About 6 % of the pixels are
+penumbra. Recommended order: the bitwise improvements (parallel copy-free filtering, the hit test separated from
+the shading, mailboxing, the ray length), the precomputation only with a light radius, adaptive penumbra sampling,
+stratified samples with a rotation per pixel, an occluder cache per thread, a flat grid with compact triangles,
+edge-aware filtering; a BVH only if scenes show the grid as the limit. Three correctness points are listed (an
+absolute shadow-ray offset of 0.01, transparent objects cast full shadows, directional lights have no soft shadows).
+The design notes expressionTemplates.md (#3461, RG5.2.7) and linalgTemplatesInventory.md (#3462, RG5.2.8) were
+written the same day; both wait for the maintainer's choice of their sub-steps.
+
+<a id="rg5-2-3"></a>
+### RG5.2.3, RG5.2.4 — the shape of ConstSizeMatrix sums, Matrix6D as SlimMatrix (2026-11-12, #3457, #3458)
+
+*(Maintainer 2026-11-12: RG5.2.3 fix the issue; RG5.2.4 yes, do that.)*
+
+- #3457: `operator+` and `operator-` of ConstSizeMatrix (ConstSizeMatrix.h:556, :572) created the result with rows and
+  columns exchanged; now with the shape of m1. A new case in AllMatrixVariantsUnitTests.h adds and subtracts two 3x4
+  matrices. No test result moved, so no non-square sum is reached by the test suite.
+- #3458: `typedef SlimMatrix<6, 6> Matrix6D` (BasicLinalg.h). Needed for it: the conversion from and to
+  `std::array<std::array<T, columns>, rows>` in SlimMatrix (the generated parameter code), `EPyUtils::ToPython` and
+  `FromPython<T, rows, columns>` for SlimMatrix (PyConversion.h), the latter through the ConstSizeMatrix version so that
+  the behaviour for lists and arrays is the same. The test suite results are bitwise those before the change (309
+  result lines compared).
+
+<a id="rg5-2-5"></a>
+### RG5.2.5, RG5.2.6 — Matrix3D as SlimMatrix, the rigid body templated (2026-11-12, #3459, #3463)
+
+*(Maintainer 2026-11-12: RG5.2.5 and RG5.2.6 yes; report whether the switch can be made for good after the
+evaluation, the decision as a further step.)*
+
+- #3459: `typedef SlimMatrix<3, 3> Matrix3D` and `Matrix3DBase<T>` for the templated code, `EXUDYN_MATRIX3D_CONSTSIZE`
+  back to `ConstSizeMatrix<9>` (BasicLinalg.h); the 135 spellings of `ConstSizeMatrixBase<T, 9>` / `ConstSizeMatrix<9>`
+  in 16 files and 3 item definitions replaced (scratch p_m3.py); SlimMatrix: `SlimMatrixBase(bool)`, the conversion
+  from a larger ConstSizeMatrix made explicit (implicit, it made the MultMatrixVector overloads for the 3x3 G matrices
+  ambiguous); ToNumPy for SlimMatrix. The test suite bitwise as before (309 results). Both variants built and
+  measured on both modules (scratch perfEval.sh, perfEval2.sh, peCompare.py): fast total -3.1 %, regular -1.4 %, rigid
+  models -8 to -17 %, nothing slower beyond the noise of the multithreaded models; linalgFixedSize.md section 10.
+  Recommended: final, the switch removed after the next release has run on Linux and macOS (RG5.2.9).
+- #3463: the G products of CObjectRigidBody::ComputeODE2LHS and AddForceTorque templated on 3 or 4 rotation
+  coordinates, bitwise equal, measured -6 to +2 % on the rigid models (noise) - not kept.
+
 <a id="rg5-2-1"></a>
 ### RG5.2.1 — the profile of ODE2RHS in the rigid-body models (2026-11-12, #3455)
 

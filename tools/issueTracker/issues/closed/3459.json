@@ -1,0 +1,15 @@
+{
+  "number": 3459,
+  "title": "Matrix3D as SlimMatrix<3,3>, with a compile switch back to ConstSizeMatrix<9>",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "HIGH",
+  "description": "Matrix3D becomes SlimMatrix<3,3> (#3456); EXUDYN_MATRIX3D_CONSTSIZE switches back to ConstSizeMatrix<9> for measurements and as fallback; the default-constructed Matrix3D sized later and the tests of NumberOfRows() == 0 checked; the test suite bitwise in the regular module, the performance models on both modules; the decision whether the switch is made for good follows the evaluation.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 16:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Matrix3D is SlimMatrix<3,3> (EXUDYN_MATRIX3D_CONSTSIZE switches back to ConstSizeMatrix<9>); the results are bitwise unchanged; rigid-body models 8-17 % faster, all performance models 1.4 % (regular) and 3.1 % (fast) faster in total.",
+  "resolvedInVersion": "1.13.597"
+}

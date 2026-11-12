@@ -73,7 +73,7 @@ const lest::test slimMatrix_specific_test[] =
 		//from a ConstSizeMatrix of larger capacity, as the G matrices of maxRotationCoordinates*3
 		ConstSizeMatrix<16> larger(3, 4);
 		for (Index i = 0; i < 12; i++) { larger.GetDataPointer()[i] = cA.GetDataPointer()[i]; }
-		SlimMatrix<3, 4> fromLarger = larger;
+		SlimMatrix<3, 4> fromLarger(larger); //explicit from a larger capacity
 		EXPECT(fromLarger == A);
 
 #ifndef __FAST_EXUDYN_LINALG
@@ -189,7 +189,7 @@ const lest::test slimMatrix_specific_test[] =
 
 		Vector3D v({ 0.3, -0.21, 0.77 });
 		SlimMatrix<3, 3> skew;
-		Matrix3D cSkew;
+		ConstSizeMatrix<9> cSkew;
 		skew.SetSkewMatrix(v);
 		cSkew.SetSkewMatrix(v);
 		EXPECT(SlimMatrixTestSame(skew, cSkew));

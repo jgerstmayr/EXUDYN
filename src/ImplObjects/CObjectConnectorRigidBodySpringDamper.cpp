@@ -24,19 +24,19 @@
 //! and AutoDiff (#2745), except the intrinsic formulation and the user function, which are Real only
 template<class TReal>
 void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(FlatArray<const MarkerRigid<TReal>> markers, Real t,
-	ConstSizeMatrixBase<TReal, 9>& Ajoint, SlimVectorBase<TReal, 3>& vLocPos, SlimVectorBase<TReal, 3>& vLocVel,
+	Matrix3DBase<TReal>& Ajoint, SlimVectorBase<TReal, 3>& vLocPos, SlimVectorBase<TReal, 3>& vLocVel,
 	SlimVectorBase<TReal, 3>& vLocRot, SlimVectorBase<TReal, 3>& vLocAngVel, SlimVectorBase<TReal, 6>& fLocVec6D,
 	bool computeForceTorque) const
 {
 	//spring is measured relative to marker0:
 
-	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
-	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	const Matrix3DBase<TReal>& A0 = markers[0].frame.GetRotation();
+	const Matrix3DBase<TReal>& A1 = markers[1].frame.GetRotation();
 	const SlimVectorBase<TReal, 3>& p0 = markers[0].frame.GetTranslation();
 	const SlimVectorBase<TReal, 3>& p1 = markers[1].frame.GetTranslation();
 	//the marker frame times rotationMarker0, as for all joints and as documented; it was rotationMarker0 times the frame (#2801)
-	ConstSizeMatrixBase<TReal, 9> A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
-	ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
+	Matrix3DBase<TReal> A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
+	Matrix3DBase<TReal> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 
 	if (parameters.useIntrinsicFormulation)
 	{
@@ -61,7 +61,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(FlatArray<c
 	{
 		Ajoint = A0all;
 		vLocPos = Ajoint.GetTransposed() * (p1 - p0); //vLocPos transformed to marker0 local coordinate system, where springs are defined
-		ConstSizeMatrixBase<TReal, 9> relRot = Ajoint.GetTransposed() * A1all;
+		Matrix3DBase<TReal> relRot = Ajoint.GetTransposed() * A1all;
 		vLocRot = RigidBodyMath::RotationMatrix2RotXYZTemplate(relRot);
 	}
 
@@ -132,7 +132,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(F
 
 	SlimVectorBase<TReal, 3> vLocPos, vLocVel, vLocRot, vLocAngVel;
 	SlimVectorBase<TReal, 6> fLocVec6D;
-	ConstSizeMatrixBase<TReal, 9> Ajoint;
+	Matrix3DBase<TReal> Ajoint;
 	ComputeSpringForceTorque(markers, t, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
 
 	SlimVectorBase<TReal, 3> fPos = Ajoint * SlimVectorBase<TReal, 3>({ fLocVec6D[0], fLocVec6D[1], fLocVec6D[2] });

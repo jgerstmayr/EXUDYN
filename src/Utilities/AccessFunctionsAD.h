@@ -175,7 +175,7 @@ namespace AccessFunctionsAD {
 
 	//! the rotation matrix of the slopes s
 	template<SlopesFrame frame, class TReal>
-	inline void SlopesRotation(const TReal* s, ConstSizeMatrixBase<TReal, 9>& A)
+	inline void SlopesRotation(const TReal* s, Matrix3DBase<TReal>& A)
 	{
 		TReal e1[3], e2[3], e3[3];
 		RigidBodyMath::SymmetricBasis(&s[0], &s[3], e1, e2, e3);
@@ -191,7 +191,7 @@ namespace AccessFunctionsAD {
 	template<SlopesFrame frame>
 	inline Matrix3D SlopesRotationMatrix(const Real* s)
 	{
-		ConstSizeMatrixBase<Real, 9> A;
+		Matrix3DBase<Real> A;
 		SlopesRotation<frame>(s, A);
 		Matrix3D rotation;
 		rotation.CopyFrom(A);

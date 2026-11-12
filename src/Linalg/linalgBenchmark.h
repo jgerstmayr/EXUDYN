@@ -116,7 +116,7 @@ inline void LinalgBenchmarkJacobian(std::vector<LinalgBenchmarkResult>& results,
 {
 	const std::string group = "jacobian";
 	ResizableMatrix J(3, n), KJ, JKJ;
-	Matrix3D K(3, 3, { 2., 0.1, 0., 0.1, 3., 0.2, 0., 0.2, 4. });
+	ConstSizeMatrix<9> K(3, 3, { 2., 0.1, 0., 0.1, 3., 0.2, 0., 0.2, 4. });
 	Eigen::MatrixXd Jd(3, n), Kd(3, 3), JKJd(n, n);
 	Eigen::Matrix<Real, 3, n> Jf;
 	Eigen::Matrix<Real, 3, 3> Kf;
@@ -244,8 +244,8 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 	{
 		const std::string group = "small";
 		Vector3D v({ 0.3, -0.2, 0.7 }), w({ -0.1, 0.5, 0.2 });
-		Matrix3D A(3, 3, { 0.36, 0.48, -0.8, -0.8, 0.6, 0., 0.48, 0.64, 0.6 });
-		Matrix3D B = A.GetTransposed();
+		ConstSizeMatrix<9> A(3, 3, { 0.36, 0.48, -0.8, -0.8, 0.6, 0., 0.48, 0.64, 0.6 });
+		ConstSizeMatrix<9> B = A.GetTransposed();
 		Eigen::Vector3d ev(0.3, -0.2, 0.7), ew(-0.1, 0.5, 0.2);
 		Eigen::Matrix3d eA, eB;
 		LinalgBenchmarkFixedMatrix<3, 3> pA, pB, pC;

@@ -1,0 +1,11 @@
+{
+  "number": 3461,
+  "title": "Expression templates for the small linear algebra: which to enable",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "Evaluated in docs/dev/design/expressionTemplates.md: full expression templates are not recommended (debugging in VS2022, dangling auto, small measured gain); recommended are a transposed view Transposed(A) * x without a copy, SlimVectorBase::MultAdd, and fused elementwise expressions on SlimVector only if the measurements M1 show a gain; all keep the order of the sums.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

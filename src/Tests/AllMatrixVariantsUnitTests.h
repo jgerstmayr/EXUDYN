@@ -172,6 +172,21 @@ const lest::test matrixVariants_specific_test[] =
 		}
 	},
 
+	CASE("ConstSizeMatrix: the sum and the difference of non-square matrices keep their shape (#3457)")
+	{
+		ConstSizeMatrix<12> a, b;
+		MatrixVariantsFill(a, 3, 4);
+		MatrixVariantsFill(b, 3, 4);
+		ConstSizeMatrix<12> sum = a + b;
+		ConstSizeMatrix<12> difference = a - b;
+		EXPECT(sum.NumberOfRows() == 3);
+		EXPECT(sum.NumberOfColumns() == 4);
+		EXPECT(difference.NumberOfRows() == 3);
+		EXPECT(difference.NumberOfColumns() == 4);
+		EXPECT(sum(2, 3) == 2. * MatrixVariantsValue(2, 3));
+		EXPECT(difference(1, 2) == 0.);
+	},
+
 	CASE("ConstSizeMatrix: 3x3 and 6x6, the sizes the solver uses")
 	{
 		//ConstSizeMatrix<9>/<36> appear all over the rigid body code; a product of the small ones

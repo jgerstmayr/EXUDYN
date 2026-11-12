@@ -1,0 +1,15 @@
+{
+  "number": 3458,
+  "title": "Matrix6D as SlimMatrix<6,6>",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Matrix6D becomes SlimMatrix<6,6> (#3456): the stiffness and damping of ObjectConnectorRigidBodySpringDamper and the structural data, the 6x6 matrices of the geometrically exact beam; the conversions to and from Python and std::array kept; the test suite bitwise in the regular module (docs/dev/design/linalgFixedSize.md).",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 16:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Matrix6D is SlimMatrix<6,6>, a matrix of fixed rows and columns; the 6x6 products are about twice as fast, the results are unchanged.",
+  "resolvedInVersion": "1.13.596"
+}

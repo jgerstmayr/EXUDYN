@@ -643,7 +643,7 @@ void CObjectFFRFreducedOrder::GetPositionJacobian(const Vector3D& localPosition,
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
 	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
-	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
+	Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
 	//uLocalTilde *= -1.;//moved into (-localPosition)
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
@@ -698,7 +698,7 @@ void CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian(Matrix& value) con
 	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(AuTildeGlocal);// RigidBodyMath::EP2Glocal(rot);
 
 	//negative sign in -A*uLocalTilde*Glocal; transposed as compared to paper and earlier gravity force in FEM.py
-	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*centerOfMass); 
+	Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*centerOfMass); 
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
 	EXUmath::MultMatrixMatrix(uLocalTilde, AuTildeGlocal, temp);

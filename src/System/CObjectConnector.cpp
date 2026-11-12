@@ -519,7 +519,7 @@ void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, Temporary
 		EXUmath::SeedAutoDiff(velocity, markerKinematics.velocity, offset, factorODE2_t);
 
 		const Matrix3D A = markerKinematics.frame.GetRotation();
-		ConstSizeMatrixBase<DRealRigidMarkers, 9> rotation(3, 3);
+		Matrix3DBase<DRealRigidMarkers> rotation(3, 3);
 		for (Index i = 0; i < 3; i++)
 		{
 			for (Index j = 0; j < 3; j++)
@@ -757,7 +757,7 @@ static void ConstraintEquationsDerivativesRigid(const CSystemData& cSystemData, 
 		const int offset = 6 * (int)k;
 		SlimVectorBase<DRealRigidMarkers, 3> positionAD;
 		EXUmath::SeedAutoDiff(positionAD, position, offset);
-		ConstSizeMatrixBase<DRealRigidMarkers, 9> rotation(3, 3);
+		Matrix3DBase<DRealRigidMarkers> rotation(3, 3);
 		for (Index i = 0; i < 3; i++)
 		{
 			for (Index j = 0; j < 3; j++) { rotation(i, j) = A(i, j); }

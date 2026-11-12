@@ -1,0 +1,15 @@
+{
+  "number": 3460,
+  "title": "Raytracer: the cost of shadows and soft shadows, and options to reduce it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Soft shadows (lightRadius with lightRadiusVariations) cost about 0.02 s per sample at 1200 x 1000 on 32 threads on the per-pixel path; the analysis of how shadows are computed, the measurements, the inefficiencies and the options (bitwise improvements, adaptive penumbra sampling, stratified samples, flat grid, edge-aware filtering) are in docs/dev/design/raytracerImprovements.md.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 16:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Analysed the cost of shadows and soft shadows in the raytracer: measurements, inefficiencies and ranked options in docs/dev/design/raytracerImprovements.md.",
+  "resolvedInVersion": "1.13.598"
+}

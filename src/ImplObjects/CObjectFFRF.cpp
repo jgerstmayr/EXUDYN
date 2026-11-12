@@ -623,7 +623,7 @@ void CObjectFFRF::GetPositionJacobian(const Vector3D& localPosition, Matrix& val
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
 	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
-	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
+	Matrix3D uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
 	//uLocalTilde *= -1.;//moved into (-localPosition)
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation

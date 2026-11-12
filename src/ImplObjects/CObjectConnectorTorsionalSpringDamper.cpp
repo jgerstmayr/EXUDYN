@@ -23,17 +23,17 @@
 //! the physics of the connector, for Real and AutoDiff (#2745); the user function is Real only
 template<class TReal>
 void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(FlatArray<const MarkerRigid<TReal>> markers, Real t,
-	ConstSizeMatrixBase<TReal, 9>& A0all, TReal& angle, TReal& omega, TReal& torque) const
+	Matrix3DBase<TReal>& A0all, TReal& angle, TReal& omega, TReal& torque) const
 {
 	//spring is measured relative to marker0:
 
-	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
-	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	const Matrix3DBase<TReal>& A0 = markers[0].frame.GetRotation();
+	const Matrix3DBase<TReal>& A1 = markers[1].frame.GetRotation();
 	A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
-	ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
+	Matrix3DBase<TReal> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 
 	//relative rotation
-	ConstSizeMatrixBase<TReal, 9> relRot = A0all.GetTransposed() * A1all;
+	Matrix3DBase<TReal> relRot = A0all.GetTransposed() * A1all;
 	SlimVectorBase<TReal, 3> vLocRot = RigidBodyMath::RotationMatrix2RotXYZTemplate(relRot);
 	SlimVectorBase<TReal, 3> vLocAngVel = A0all.GetTransposed()*(A1*markers[1].angularVelocityLocal - A0 * markers[0].angularVelocityLocal);
 	angle = vLocRot[2]; //z-component
@@ -82,7 +82,7 @@ void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidTemplate(F
 	if (!parameters.activeConnector) { return; }
 
 	TReal angle, omega, torque;
-	ConstSizeMatrixBase<TReal, 9> A0all;
+	Matrix3DBase<TReal> A0all;
 	ComputeSpringTorque(markers, t, A0all, angle, omega, torque);
 	SlimVectorBase<TReal, 3> fRotLoc;
 	fRotLoc.SetAll(0.);

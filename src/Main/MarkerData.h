@@ -347,9 +347,9 @@ typedef ConstSizeMatrix<maxConstraintEquations * 12> RigidMarkersDerivatives;
 
 //! a matrix of Real in the number type of a connector's physics (#2745)
 template<class TReal>
-inline ConstSizeMatrixBase<TReal, 9> Matrix3DAs(const Matrix3D& matrix)
+inline Matrix3DBase<TReal> Matrix3DAs(const Matrix3D& matrix)
 {
-	ConstSizeMatrixBase<TReal, 9> result(3, 3);
+	Matrix3DBase<TReal> result(3, 3);
 	for (Index i = 0; i < 3; i++)
 	{
 		for (Index j = 0; j < 3; j++) { result(i, j) = matrix(i, j); }
@@ -367,7 +367,7 @@ inline bool IsUnitMatrix3D(const Matrix3D& A)
 //! A*rotationMarker, the frame of a joint on a marker; the product only for a deprecated rotationMarker0/1 that is not
 //! the unit matrix, as the markers carry their rotation in localHT (#2745)
 template<class TReal>
-inline ConstSizeMatrixBase<TReal, 9> ApplyRotationMarker(const ConstSizeMatrixBase<TReal, 9>& A, const Matrix3D& rotationMarker)
+inline Matrix3DBase<TReal> ApplyRotationMarker(const Matrix3DBase<TReal>& A, const Matrix3D& rotationMarker)
 {
 	if (IsUnitMatrix3D(rotationMarker)) { return A; }
 	return A * Matrix3DAs<TReal>(rotationMarker);

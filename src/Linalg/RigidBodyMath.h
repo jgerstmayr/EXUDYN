@@ -30,10 +30,10 @@ namespace RigidBodyMath {
 
 	//! compute 3x3 skew(tilde)-matrix from vector v;
 	template<class TVector>
-	inline ConstSizeMatrix<9> Vector2SkewMatrixTemplate(const TVector& v)
+	inline Matrix3D Vector2SkewMatrixTemplate(const TVector& v)
 	{
 		CHECKandTHROW(v.NumberOfItems() == 3, "Vector2SkewMatrixTemplate: vector must contain 3 items!");
-		return ConstSizeMatrix<9>(3, 3, { 0.,  -v[2], v[1],
+		return Matrix3D(3, 3, { 0.,  -v[2], v[1],
 										  v[2],    0,-v[0],
 										 -v[1], v[0],    0 });
 	}
@@ -367,7 +367,7 @@ namespace RigidBodyMath {
 
 	//! convert rotation matrix to Euler angles Rxyz (Tait-Bryan angles); templated for automatic differentiation (#2745)
 	template<class TReal>
-	inline SlimVectorBase<TReal, 3> RotationMatrix2RotXYZTemplate(const ConstSizeMatrixBase<TReal, 9>& R)
+	inline SlimVectorBase<TReal, 3> RotationMatrix2RotXYZTemplate(const Matrix3DBase<TReal>& R)
 	{
 		using std::sqrt; using std::atan2; //for Real; AutoDiff finds its own by its namespace
 		SlimVectorBase<TReal, 3> rot;
@@ -515,8 +515,8 @@ namespace RigidBodyMath {
 	//********************************************************************************
 
 	//! specializations of templates:
-	inline ConstSizeMatrix<9> Vector2SkewMatrix(const Vector3D& v) { return Vector2SkewMatrixTemplate<Vector3D>(v); }
-	inline ConstSizeMatrix<9> Vector2SkewMatrix(const CSVector3D& v) { return Vector2SkewMatrixTemplate<CSVector3D>(v); }
+	inline Matrix3D Vector2SkewMatrix(const Vector3D& v) { return Vector2SkewMatrixTemplate<Vector3D>(v); }
+	inline Matrix3D Vector2SkewMatrix(const CSVector3D& v) { return Vector2SkewMatrixTemplate<CSVector3D>(v); }
 
 	//! compute G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
 	inline ConstSizeMatrix<3*maxRotCoordinates> EP2G(const Vector4D& ep) { return EP2GTemplate<Vector4D>(ep); }
@@ -594,9 +594,9 @@ namespace RigidBodyMath {
 
 	//! compute rotation matrix from single rotation around axis 1 (x-axis)
 	template<class T>
-	inline ConstSizeMatrixBase<T, 9> RotationMatrix1(T phi)
+	inline Matrix3DBase<T> RotationMatrix1(T phi)
 	{
-		return ConstSizeMatrixBase<T, 9>(3, 3, 
+		return Matrix3DBase<T>(3, 3, 
 			{ 1, 0, 0,
 			  0, EM::Cos(phi),-EM::Sin(phi),
 			  0, EM::Sin(phi), EM::Cos(phi) });
@@ -604,9 +604,9 @@ namespace RigidBodyMath {
 
 	//! compute rotation matrix from single rotation around axis 2 (y-axis)
 	template<class T>
-	inline ConstSizeMatrixBase<T, 9> RotationMatrix2(T phi)
+	inline Matrix3DBase<T> RotationMatrix2(T phi)
 	{
-		return ConstSizeMatrixBase<T, 9>(3, 3,
+		return Matrix3DBase<T>(3, 3,
 			{ EM::Cos(phi), 0, EM::Sin(phi),
 			  0,        1, 0,
 			  -EM::Sin(phi),0, EM::Cos(phi) });
@@ -614,16 +614,16 @@ namespace RigidBodyMath {
 
 	//! compute rotation matrix from single rotation around axis 3 (z-axis)
 	template<class T>
-	inline ConstSizeMatrixBase<T, 9> RotationMatrix3(T phi)
+	inline Matrix3DBase<T> RotationMatrix3(T phi)
 	{
-		return ConstSizeMatrixBase<T, 9>(3, 3,
+		return Matrix3DBase<T>(3, 3,
 			{ EM::Cos(phi),-EM::Sin(phi), 0,
 			  EM::Sin(phi), EM::Cos(phi), 0,
 			  0,	    0,        1 });
 	}
 
 	//! compute local (=body fixed) inertia matrix from 6 scalar inertia components [J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]
-	inline void ComputeInertiaMatrix(const Vector6D& inertiaParameters, ConstSizeMatrix<9>& inertiaMatrix)
+	inline void ComputeInertiaMatrix(const Vector6D& inertiaParameters, Matrix3D& inertiaMatrix)
 	{
 		inertiaMatrix.SetMatrix(3, 3, {
 			inertiaParameters[0], inertiaParameters[5], inertiaParameters[4],
@@ -859,11 +859,11 @@ namespace EXUlie {
 
 	//! compute matrix exponential of 3D rotation vector rot; (rot is often denoted as Omega in literature ...)
 	template<typename T>
-	inline ConstSizeMatrixBase<T, 9> ExpSO3(const SlimVectorBase<T,3>& rot)
+	inline Matrix3DBase<T> ExpSO3(const SlimVectorBase<T,3>& rot)
 	{
 		T phi = rot.GetL2Norm();
-		ConstSizeMatrixBase<T, 9> R(EXUmath::Identity3D<T>);
-		ConstSizeMatrixBase<T, 9> rotSkew;
+		Matrix3DBase<T> R(EXUmath::Identity3D<T>);
+		Matrix3DBase<T> rotSkew;
 		rotSkew.SetSkewMatrix(rot);
 		R += EXUmath::Sinc(phi) * rotSkew + ((T)0.5 * EXUstd::Square(EXUmath::Sinc((T)0.5 * phi))) * rotSkew * rotSkew;
 		return R;
@@ -872,7 +872,7 @@ namespace EXUlie {
 
 	//! compute the matrix logarithmic map on the Lie group SO(3)
 	template<typename T>
-	inline ConstSizeMatrixBase<T, 9> LogSO3(const ConstSizeMatrixBase<T, 9>& R)
+	inline Matrix3DBase<T> LogSO3(const Matrix3DBase<T>& R)
 	{
 		T ep0;
 		SlimVectorBase<T,3> n;
@@ -885,7 +885,7 @@ namespace EXUlie {
 		return RigidBodyMath::Vector2SkewMatrix(phi * n);
 
 		//old, less accurate!!!
-		//ConstSizeMatrixBase<T, 9> X;
+		//Matrix3DBase<T> X;
 		//T val = 0.5*(R.Trace() - (T)1.);
 		//	
 		//if (fabs(val) > (T)1.) //#if slightly larger than 1, due to numerical differentiation
@@ -908,7 +908,7 @@ namespace EXUlie {
 
 	//! compute the vector of matrix logarithmic map on the Lie group SO(3)
 	template<typename T>
-	inline SlimVectorBase<T,3> LogSO3Vector(const ConstSizeMatrixBase<T, 9>& R)
+	inline SlimVectorBase<T,3> LogSO3Vector(const Matrix3DBase<T>& R)
 	{
 		T ep0;
 		SlimVectorBase<T,3> n;
@@ -923,15 +923,15 @@ namespace EXUlie {
 
 	//! compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}; improved version using polynomial expansion
 	template<typename T>
-	inline ConstSizeMatrixBase<T, 9> TExpSO3(const SlimVectorBase<T,3>& rot)
+	inline Matrix3DBase<T> TExpSO3(const SlimVectorBase<T,3>& rot)
 	{
 		T phi = rot.GetL2Norm();
-		ConstSizeMatrixBase<T, 9> Rot(false);
+		Matrix3DBase<T> Rot(false);
 		Rot.SetScalarMatrix(3, (T)1.);
 
 		if (phi != (T)0.)
 		{
-			ConstSizeMatrixBase<T, 9> rotSkew(false);
+			Matrix3DBase<T> rotSkew(false);
 			rotSkew.SetSkewMatrix(rot);
 			T t1 = -(T)0.5 * EXUstd::Square(EXUmath::Sinc(phi / 2));
 			T t2;
@@ -953,14 +953,14 @@ namespace EXUlie {
 	//! compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}; improved version of Stefan Holzinger
 	//! outputs 3x3 matrix
 	template<typename T>
-	inline ConstSizeMatrixBase<T, 9> TExpSO3Inv(const SlimVectorBase<T,3>& Omega)
+	inline Matrix3DBase<T> TExpSO3Inv(const SlimVectorBase<T,3>& Omega)
 	{
 		T phi = Omega.GetL2Norm();
-		ConstSizeMatrixBase<T, 9> Tinv = EXUmath::Identity3D<T>;
+		Matrix3DBase<T> Tinv = EXUmath::Identity3D<T>;
 		if (phi != (T)0.)
 		{
 			T phi2 = EXUstd::Square(phi);
-			ConstSizeMatrixBase<T, 9> omegaDiadicOmega(3, 3);
+			Matrix3DBase<T> omegaDiadicOmega(3, 3);
 			for (Index i = 0; i < 3; i++)
 			{
 				for (Index j = 0; j < 3; j++)
@@ -1085,13 +1085,13 @@ namespace EXUlie {
 	template<typename T>
 	inline HomogeneousTransformationBase<T> LogSE3(const HomogeneousTransformationBase<T>& H)
 	{
-		//ConstSizeMatrixBase<T, 9> aSkew = LogSO3(H.GetRotation());
+		//Matrix3DBase<T> aSkew = LogSO3(H.GetRotation());
 		//SlimVectorBase<T,3> a = RigidBodyMath::SkewMatrix2Vector(aSkew);
 
 		SlimVectorBase<T,3> a = LogSO3Vector(H.GetRotation());
 
 		HomogeneousTransformationBase<T> logH;
-		ConstSizeMatrixBase<T, 9> A = TExpSO3Inv(a).GetTransposed();
+		Matrix3DBase<T> A = TExpSO3Inv(a).GetTransposed();
 		logH.GetTranslation() = A * H.GetTranslation();
 		logH.SetRotationMatrix(RigidBodyMath::Vector2SkewMatrix(a));
 
@@ -1102,25 +1102,25 @@ namespace EXUlie {
 	template<typename T>
 	inline void LogSE3Vector(const HomogeneousTransformationBase<T>& H, SlimVectorBase<T,3>& incDisp, SlimVectorBase<T,3>& incRot)
 	{
-		//ConstSizeMatrixBase<T, 9> aSkew = LogSO3(H.GetRotation());
+		//Matrix3DBase<T> aSkew = LogSO3(H.GetRotation());
 		//SlimVectorBase<T,3> a = RigidBodyMath::SkewMatrix2Vector(aSkew);
 
 		incRot = LogSO3Vector(H.GetRotation());
 
 		HomogeneousTransformationBase<T> logH;
-		ConstSizeMatrixBase<T, 9> A = TExpSO3Inv(incRot).GetTransposed();
+		Matrix3DBase<T> A = TExpSO3Inv(incRot).GetTransposed();
 		incDisp = A * H.GetTranslation();
 	}
 
 	////! compute the tangent operator TExpSE3 corresponding to ExpSE3, see \cite{Bruels2011}
 	//inline ConstSizeMatrixBase<T, 36> TExpSE3(const SlimVectorBase<T,3>& incDisp, const SlimVectorBase<T,3>& incRot)
 	//{
-	//	ConstSizeMatrixBase<T, 9> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
-	//	ConstSizeMatrixBase<T, 9> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+	//	Matrix3DBase<T> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+	//	Matrix3DBase<T> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
 
 	//	T phi = incRot.GetL2Norm();
 	//	T phiHalf = phi * 0.5;
-	//	ConstSizeMatrixBase<T, 9> TDispRotPlus = (-0.5)*dispSkew;
+	//	Matrix3DBase<T> TDispRotPlus = (-0.5)*dispSkew;
 	//	if (phi != 0.)
 	//	{
 	//		T phi2 = phi * phi;
@@ -1131,7 +1131,7 @@ namespace EXUlie {
 	//		TDispRotPlus += -(((a - b) / (phi2))*incRot*incDisp)* rotSkew;
 	//		TDispRotPlus += (((T)1. / (phi2))*(0.5*b - (3. / (phi2))*((T)1. - a))*(incRot*incDisp))*(rotSkew*rotSkew);
 	//	}
-	//	ConstSizeMatrixBase<T, 9> MTexpSO3 = TExpSO3(incRot);
+	//	Matrix3DBase<T> MTexpSO3 = TExpSO3(incRot);
 	//	ConstSizeMatrixBase<T, 36> Texp(6, 6);
 	//	Texp.SetSubmatrix(MTexpSO3, 0, 0);
 	//	Texp.SetSubmatrix(TDispRotPlus, 0, 3);
@@ -1148,8 +1148,8 @@ namespace EXUlie {
 	template<typename T>
 	inline ConstSizeMatrixBase<T, 36> TExpSE3(const SlimVectorBase<T,3>& incDisp, const SlimVectorBase<T,3>& incRot)
 	{
-		ConstSizeMatrixBase<T, 9> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
-		ConstSizeMatrixBase<T, 9> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+		Matrix3DBase<T> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+		Matrix3DBase<T> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
 		T phi = incRot.GetL2Norm();
 		T phiSquared = EXUstd::Square(phi);
 		T f2, f3, f4, f5;
@@ -1194,12 +1194,12 @@ namespace EXUlie {
 			f5 = (T)1. / 60 - ((T)1. / 1260) * phiSquared + ((T)1. / 60480) * phiSquared * phiSquared - ((T)1. / 4989600) * phiSquared * phiSquared * phiSquared;
 		}
 
-		ConstSizeMatrixBase<T, 9> TDispRotPlus = f2 * dispSkew;
+		Matrix3DBase<T> TDispRotPlus = f2 * dispSkew;
 		TDispRotPlus += f3 * (dispSkew * rotSkew + rotSkew * dispSkew);
 		TDispRotPlus += f4 * (incRot * incDisp) * rotSkew;
 		TDispRotPlus -= f5 * (incRot * incDisp) * rotSkew * rotSkew;
 
-		ConstSizeMatrixBase<T, 9> MTexpSO3 = TExpSO3(incRot);
+		Matrix3DBase<T> MTexpSO3 = TExpSO3(incRot);
 		ConstSizeMatrixBase<T, 36> Texp(6, 6);
 		Texp.SetSubmatrix(MTexpSO3, 0, 0);
 		Texp.SetSubmatrix(TDispRotPlus, 0, 3);
@@ -1214,7 +1214,7 @@ namespace EXUlie {
 	//inline ConstSizeMatrixBase<T, 36> TExpSE3Inv(const SlimVectorBase<T,3>& incDisp, const SlimVectorBase<T,3>& incRot)
 	//{
 	//	T phi = incRot.GetL2Norm();
-	//	ConstSizeMatrixBase<T, 9> Tuwm;
+	//	Matrix3DBase<T> Tuwm;
 	//	if (phi == 0.)
 	//	{
 	//		Tuwm = 0.5*RigidBodyMath::Vector2SkewMatrix(incDisp);
@@ -1224,14 +1224,14 @@ namespace EXUlie {
 	//		T phi2 = phi * phi;
 	//		T alpha = EXUmath::Sinc(phi);
 	//		T beta = 2. * ((T)1. - cos(phi)) / (phi2);
-	//		ConstSizeMatrixBase<T, 9> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
-	//		ConstSizeMatrixBase<T, 9> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+	//		Matrix3DBase<T> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+	//		Matrix3DBase<T> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
 	//		
 	//		Tuwm = 0.5*dispSkew;
 	//		Tuwm += ((beta - alpha) / (beta*phi2))*(dispSkew*rotSkew + rotSkew*dispSkew);
 	//		Tuwm += (((T)1. + alpha -2. * beta) / (beta*phi2*phi2))*(incRot*incDisp)*(rotSkew * rotSkew);
 	//	}
-	//	ConstSizeMatrixBase<T, 9> MTexpSO3Inv = TExpSO3Inv(incRot);
+	//	Matrix3DBase<T> MTexpSO3Inv = TExpSO3Inv(incRot);
 	//	ConstSizeMatrixBase<T, 36> Tinv(6,6);
 	//	Tinv.SetSubmatrix(MTexpSO3Inv, 0, 0);
 	//	Tinv.SetSubmatrix(Tuwm, 0, 3);
@@ -1250,8 +1250,8 @@ namespace EXUlie {
 		T phi = incRot.GetL2Norm();
 		T phiSquared = EXUstd::Square(phi);
 		T f6, f8;
-		ConstSizeMatrixBase<T, 9> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
-		ConstSizeMatrixBase<T, 9> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+		Matrix3DBase<T> dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+		Matrix3DBase<T> rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
 
 		// coefficient f6, see Phd thesis Stefan Hante, Table. 1, page 121
 		if (phi >= 1e-2)
@@ -1274,9 +1274,9 @@ namespace EXUlie {
 		}
 
 		// Matrix C2, see Phd thesis Stefan Hante, Sect.A.3, page 117
-		ConstSizeMatrixBase<T, 9> Tuwm = 0.5 * dispSkew + f6 * (dispSkew * rotSkew + rotSkew * dispSkew) + f8 * (incRot * incDisp) * (rotSkew * rotSkew);
+		Matrix3DBase<T> Tuwm = 0.5 * dispSkew + f6 * (dispSkew * rotSkew + rotSkew * dispSkew) + f8 * (incRot * incDisp) * (rotSkew * rotSkew);
 
-		ConstSizeMatrixBase<T, 9> MTexpSO3Inv = TExpSO3Inv(incRot);
+		Matrix3DBase<T> MTexpSO3Inv = TExpSO3Inv(incRot);
 		ConstSizeMatrixBase<T, 36> Tinv(6, 6);
 		Tinv.SetSubmatrix(MTexpSO3Inv, 0, 0);
 		Tinv.SetSubmatrix(Tuwm, 0, 3);

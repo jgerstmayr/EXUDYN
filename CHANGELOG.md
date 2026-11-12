@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 566 | 1.13.594 |
+| 1.13 | Newborn | 570 | 1.13.598 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.598** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: the cost of shadows and soft shadows, and options to reduce it (#3460)
+  - description: Soft shadows (lightRadius with lightRadiusVariations) cost about 0.02 s per sample at 1200 x 1000 on 32 threads on the per-pixel path; the analysis of how shadows are computed, the measurements, the inefficiencies and the options (bitwise improvements, adaptive penumbra sampling, stratified samples, flat grid, edge-aware filtering) are in docs/dev/design/raytracerImprovements.md.
+  - **notes:** Analysed the cost of shadows and soft shadows in the raytracer: measurements, inefficiencies and ranked options in docs/dev/design/raytracerImprovements.md.
+  - date resolved: **2026-11-12 16:21**, date raised: 2026-11-12
+- **1.13.597** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix3D as SlimMatrix\<3,3\>, with a compile switch back to ConstSizeMatrix\<9\> (#3459)
+  - description: Matrix3D becomes SlimMatrix\<3,3\> (\#3456); EXUDYN\_MATRIX3D\_CONSTSIZE switches back to ConstSizeMatrix\<9\> for measurements and as fallback; the default-constructed Matrix3D sized later and the tests of NumberOfRows() == 0 checked; the test suite bitwise in the regular module, the performance models on both modules; the decision whether the switch is made for good follows the evaluation.
+  - **notes:** Matrix3D is SlimMatrix\<3,3\> (EXUDYN\_MATRIX3D\_CONSTSIZE switches back to ConstSizeMatrix\<9\>); the results are bitwise unchanged; rigid-body models 8-17 % faster, all performance models 1.4 % (regular) and 3.1 % (fast) faster in total.
+  - date resolved: **2026-11-12 16:21**, date raised: 2026-11-12
+- **1.13.596** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix6D as SlimMatrix\<6,6\> (#3458)
+  - description: Matrix6D becomes SlimMatrix\<6,6\> (\#3456): the stiffness and damping of ObjectConnectorRigidBodySpringDamper and the structural data, the 6x6 matrices of the geometrically exact beam; the conversions to and from Python and std::array kept; the test suite bitwise in the regular module (docs/dev/design/linalgFixedSize.md).
+  - **notes:** Matrix6D is SlimMatrix\<6,6\>, a matrix of fixed rows and columns; the 6x6 products are about twice as fast, the results are unchanged.
+  - date resolved: **2026-11-12 16:21**, date raised: 2026-11-12
+- **1.13.595** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ConstSizeMatrix operator+ and operator- give a non-square result the transposed shape (#3457)
+  - description: operator+(ConstSizeMatrixBase, ConstSizeMatrixBase) and operator- create the result as (m1.NumberOfColumns(), m1.NumberOfRows()) and fill it item by item, so the sum of two 3x4 matrices is a 4x3 matrix holding the row-major items of a 3x4 one; square matrices are not affected. Found while writing SlimMatrix (\#3456); the uses of + and - on non-square ConstSizeMatrix are to be checked.
+  - **notes:** ConstSizeMatrix: the sum and the difference of two non-square matrices have the shape of the operands; before, rows and columns were exchanged.
+  - date resolved: **2026-11-12 16:21**, date raised: 2026-11-12
 - **1.13.594** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SlimMatrix: a matrix of fixed rows and columns (#3456)
   - description: SlimMatrixBase\<T, rows, columns\> in src/Linalg/SlimMatrix.h: the size known at compile time, no size members, row-major as ConstSizeMatrix, the products with each other and with SlimVector, the transposed products, inverse and determinant up to 3x3, the conversions to and from ConstSizeMatrix; the sums in the order of ConstSizeMatrix, so that a switch of Matrix6D and Matrix3D keeps the results bitwise; unit tests and RunLinalgBenchmark (docs/dev/design/linalgFixedSize.md section 5).
   - **notes:** SlimMatrix\<rows, columns\>: a C++ matrix of fixed rows and columns with the operations of ConstSizeMatrix in the same order of the sums, conversions to and from ConstSizeMatrix, unit tests bitwise against ConstSizeMatrix and in RunLinalgBenchmark; 6x6 products and J^T K J for rigid bodies 2-2.5 times faster than ConstSizeMatrix (docs/dev/design/linalgFixedSize.md section 9).
