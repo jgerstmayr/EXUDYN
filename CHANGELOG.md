@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 553 | 1.13.577 |
+| 1.13 | Newborn | 555 | 1.13.579 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.579** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Where a new setting goes: simulationSettings or visualizationSettings by default, exudyn.special for experimental flags and settings outside the solver (#3446)
+  - description: Settings are preferably located in simulationSettings or visualizationSettings, which keeps them consistent with the model, reproducible and stored with it. exudyn.special is for experimental flags and for settings that do not belong to one simulation, e.g. operations outside the solver routines. Written as the common way, with exceptions, into CLAUDE.md and CODING\_STYLE.md.
+  - **notes:** CODING\_STYLE.md and CLAUDE.md: a new setting goes into simulationSettings or visualizationSettings as the common way; exudyn.special is for experimental flags and for settings acting outside the solver routines.
+  - date resolved: **2026-11-12 01:14**, date raised: 2026-11-12
+- **1.13.578** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` raytracer.numberOfThreads = 0 selects the number of logical processors, and is the default (#3445)
+  - description: The default visualizationSettings.raytracer.numberOfThreads was 8; since the raytracer balances its tiles dynamically (\#3439) it scales up to the number of logical processors (0.664 s with 8 against 0.37 s with 32 threads on 16 cores / 32 logical processors). The value 0 selects the number of logical processors (std::thread::hardware\_concurrency) and is the new default; a positive value is used as before.
+  - **notes:** visualizationSettings.raytracer.numberOfThreads = 0, the new default, uses the number of logical processors of the computer; the raytracer balances its tiles over them.
+  - date resolved: **2026-11-12 01:14**, date raised: 2026-11-12
 - **1.13.577** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev perf --history-add expands wildcards (#3444)
   - description: In cmd.exe a wildcard reaches exudev unexpanded, so 'exudev perf --history-add performanceLog\_V1.13.5\*' gave the literal pattern to performanceHistory.py, which failed with OSError (invalid argument). exudev now expands wildcards itself, as given or relative to python/logs/performance; the help names it. The logs of 1.13.190 to 1.13.548 (Python 3.13, regular and fast module) were added to performanceHistory.json.
   - **notes:** exudev perf --history-add expands wildcards itself (cmd.exe passes them on unexpanded), as given or relative to python/logs/performance.

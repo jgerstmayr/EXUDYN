@@ -36,6 +36,13 @@
     (`src/Graphics`) and the tests (`src/Tests`) may call the library.
   - `tools/checkMathFunctions.py`, part of `exudev generate --all-checks`, refuses a call of the library elsewhere.
 
+- **A new setting goes into `simulationSettings` or `visualizationSettings`** (`definitions/structureDefs*.py`), as the
+  common way: there it belongs to the model, is stored and copied with it, appears in the settings dialogs and the
+  documentation, and a run can be reproduced from it. `exudyn.special` is for **experimental flags** (to be moved or
+  removed once decided) and for settings that act **outside the solver routines** or across simulations - for example
+  the persistent threads or the tests of the linear algebra. A setting that is put into `exudyn.special` for another
+  reason says why in its description (#3446).
+
 Stated priorities, in order: developer-friendliness, error minimization, user-friendliness,
 efficiency.
 

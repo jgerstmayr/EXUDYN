@@ -2,6 +2,8 @@
 # Details:  The baseline of the cost of the solvers (#3002): the models of TestModels/modelLibrary.py and larger variants of them (rigid bodies, flexible bodies, contact, large systems) with
 #           implicit and explicit solvers, dense and sparse linear solvers, full and modified Newton, two step sizes and one and four threads. Each case is repeated and its smallest time is
 #           taken. It writes a table per case to a CSV file and a Markdown summary into python/logs/performance. A case which fails is recorded and the run continues. To be run on an idle machine.
+#           Explicit solvers are skipped for models with algebraic (constraint) coordinates; the drift check of the index-2 solvers is off, as this measures time, not accuracy.
+#           EXUDYN_MODULE=fast measures the fast module; its name goes into the file name.
 #
 # Usage:    python solverBaseline.py [--quick] [--output FOLDER]     --quick: one model and one repetition, as a check of the script
 #
@@ -93,13 +95,14 @@ def RunCase(name, solverType, implicit, linearSolver, modifiedNewton, stepFactor
         simulationSettings.linearSolverType = linearSolver
         simulationSettings.timeIntegration.newton.useModifiedNewton = modifiedNewton
         simulationSettings.timeIntegration.verboseMode = 0
+        simulationSettings.timeIntegration.generalizedAlpha.checkConstraintDrift = False #time, not accuracy, is measured
         tStart = time.perf_counter()
-        mbs.SolveDynamic(simulationSettings, solverType=solverType, showHints=False)
+        mbs.SolveDynamic(simulationSettings, solverType=solverType, showHints=False, index2CheckConstraints=False)
         seconds = time.perf_counter() - tStart
         best = min(best, seconds)
         total += seconds
         solver = mbs.sys['dynamicSolver']
-        numbers = {'steps': solver.it.currentStepIndex, 'coordinates': mbs.systemData.NumberOfCoordinates() if hasattr(mbs.systemData, 'NumberOfCoordinates') else ''}
+        numbers = {'steps': solver.it.currentStepIndex, 'coordinates': len(mbs.systemData.GetODE2Coordinates()) + len(mbs.systemData.GetAECoordinates())}
         if implicit:
             numbers['newton'] = solver.it.newtonStepsCount
             numbers['jacobians'] = solver.it.newtonJacobiCount
@@ -117,7 +120,8 @@ def main():
     stamp = time.strftime('%Y-%m-%d_%H%M')
     machine = os.environ.get('EXUDYN_MACHINE_ID', platform.node())
     os.makedirs(arguments.output, exist_ok=True)
-    base = os.path.join(arguments.output, 'solverBaseline_' + exu.GetVersionString().split(' ')[0] + '_' + stamp)
+    module = 'fast' if os.environ.get('EXUDYN_MODULE', '') == 'fast' else 'regular'
+    base = os.path.join(arguments.output, 'solverBaseline_' + exu.GetVersionString().split(' ')[0] + '_' + module + '_' + stamp)
     columns = ['model', 'solver', 'linearSolver', 'newton', 'stepFactor', 'threads', 'seconds', 'steps', 'coordinates', 'newtonSteps', 'jacobians', 'status']
     tStart = time.time()
     rows = []
@@ -125,10 +129,12 @@ def main():
         writer = csv.writer(file)
         writer.writerow(columns)
         for name in names:
-            info = GetModel(name).variables['modelLibrary']
+            mbsModel = GetModel(name)
+            info = mbsModel.variables['modelLibrary']
             explicitOnly = info.get('explicitOnly', False)
+            hasConstraints = len(mbsModel.systemData.GetAECoordinates()) > 0 #the explicit solvers cannot solve them
             for (solverName, solverType, implicit) in solvers:
-                if explicitOnly and implicit:
+                if (explicitOnly and implicit) or (hasConstraints and not implicit):
                     continue
                 for (linearName, linearSolver) in linearSolvers if implicit else [('-', exu.LinearSolverType.EigenSparse)]:
                     for (newtonName, modifiedNewton) in newtonModes if implicit else [('-', False)]:
@@ -149,10 +155,27 @@ def main():
         file.write('# Solver baseline (#3002)\n\n')
         file.write('- Exudyn ' + exu.GetVersionString() + ', machine ' + machine + ', Python ' + platform.python_version() + ', started ' + stamp + '\n')
         file.write('- ' + str(len(rows)) + ' cases, ' + str(len(failed)) + ' failed, total ' + str(round(time.time() - tStart)) + ' s; repetitions per case: ' + str(repetitions) + ', the smallest time is given.\n\n')
-        file.write('Time of the configuration with the sparse solver, modified Newton, one thread, the larger step:\n\n| model | solver | seconds | steps | Newton steps | Jacobians |\n|---|---|---|---|---|---|\n')
+        file.write('Module ' + module + '. The base configuration: the sparse solver, modified Newton, one thread, the larger step; the ratios are the time of '
+                   'another configuration over the base time (dense: EigenDense; full: full Newton; h/4: a quarter of the step size; 4 threads):\n\n'
+                   '| model | coordinates | solver | base [s] | steps | Newton steps | Jacobians | dense | full | h/4 | 4 threads |\n'
+                   '|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|\n')
+        def Find(name, solverName, linearName, newtonName, stepFactor, threads):
+            for row in rows:
+                if row[0:6] == [name, solverName, linearName, newtonName, stepFactor, threads] and row[-1] == 'ok':
+                    return row
+            return None
         for row in rows:
             if row[-1] == 'ok' and row[2] in ('sparse', '-') and row[3] in ('modifiedNewton', '-') and row[4] == 1. and row[5] == 1:
-                file.write('| ' + ' | '.join(str(row[i]) for i in [0, 1, 6, 7, 9, 10]) + ' |\n')
+                (name, solverName, linearName, newtonName) = row[0:4]
+                def Ratio(other):
+                    return '' if other is None or row[6] == 0 else '%.2f' % (other[6]/row[6])
+                implicitRow = linearName != '-'
+                cells = [name, row[8], solverName, row[6], row[7], row[9], row[10],
+                         Ratio(Find(name, solverName, 'dense', newtonName, 1., 1)) if implicitRow else '',
+                         Ratio(Find(name, solverName, linearName, 'fullNewton', 1., 1)) if implicitRow else '',
+                         Ratio(Find(name, solverName, linearName, newtonName, 0.25, 1)),
+                         Ratio(Find(name, solverName, linearName, newtonName, 1., 4))]
+                file.write('| ' + ' | '.join(str(c) for c in cells) + ' |\n')
         if failed:
             file.write('\nFailed:\n\n')
             for row in failed:

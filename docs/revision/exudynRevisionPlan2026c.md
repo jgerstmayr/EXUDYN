@@ -580,6 +580,8 @@ The solver time of long-vector models sits in `ODE2RHS` - per-object 3x3 and sho
 `ConstSizeMatrix` carries its size at run time, so it cannot be unrolled. Candidates: compile-time sizes, homogeneous
 transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; steered by RG5.1.
 
+Maintainer 2026-11-12: an evaluation and a recommendation first; one point is certainly matrices of fixed rows and columns instead of ConstSizeMatrix, which reserves a size but can take any size during the computation (handy, but slow). Evaluation 2026-11-12: docs/dev/design/linalgFixedSize.md - after the local recommendations L1-L6 of RG5.1 the 3x3 products are as fast as a fixed-size prototype; remaining gaps of compile-time sizes: 6x6 products 2.2 times, 6x6 times vector 1.7, J^T K J at 3 x 6 1.7, short ConstSizeVector operations 3-4 times; Eigen fixed sizes rejected (3.3.7/5.0.1 with MSVC slower than the prototype). Recommended: first a profile of ODE2RHS in the rigid-body chains (bodies, markers, connectors), then SlimMatrix<T, rows, columns> with conversions to ConstSizeMatrix, Matrix6D first, Matrix3D behind a compile switch, the rigid body templated on its rotation coordinates only if the profile shows its share; proposed sub-steps in the note, waiting for the maintainer.
+
 ### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 
 CLOSED 2026-11-01 (maintainer 2026-11-01: the Jacobians revised as a whole): moved to RG9.11.5.
@@ -704,6 +706,12 @@ CLOSED 2026-11-11 (#3437): exu.special.solver.StartPersistentThreads(n), StopPer
 
 CLOSED 2026-11-11 (#3441): SparseLURows<Ordering> (Eigen's SparseLU with the factors copied into rows after each factorization, factorize invalidates them) is the solver of EigenSparse and the base of the parallel substitution; exu.special.solver.sparseSolveByRows (default True) switches back to Eigen's solve. Performance models 22.21 -> 21.68 s (perf3DRigidBodies -18 %), 52 test models 21.23 -> 20.64 s (up to -11 %), no model clearly slower. [log](exudynRevisionLog2026c.md#rg5-9-9)
 
+#### **CLOSED_RG5.9.10** Write down where a new setting goes: simulationSettings and visualizationSettings, exudyn.special for experimental flags
+
+#3446. Maintainer 2026-11-12, on the flags of exudyn.special added in RG5.9: these are experimental flags or flags that do not belong to the simulationSettings (operations outside the solver routines); otherwise settings are preferably in simulationSettings or visualizationSettings, which keeps them consistent and reproducible. Not a hard rule, as there are exceptions, but the common way, in CLAUDE.md and CODING_STYLE.md.
+
+CLOSED 2026-11-12 (#3446): CODING_STYLE.md section 1 and CLAUDE.md (a new section 'The common way - not hard rules'): a new setting goes into simulationSettings or visualizationSettings; exudyn.special for experimental flags and for what acts outside the solver routines or across simulations; a setting put into exudyn.special for another reason says why in its description.
+
 ### **OPEN_RG5.10** Solve the systems of one SystemContainer in parallel, each on its own thread
 
 #3433. Approved by the maintainer 2026-11-11 (in place of RG5.9.5): a model of independent parts is split by the user into systems of one SystemContainer; first a study of what the systems share (renderer and visualization data, Python user functions and the GIL, output files, the TaskManager, pySpecial and other globals), then a design.
@@ -711,6 +719,8 @@ CLOSED 2026-11-11 (#3441): SparseLURows<Ordering> (Eigen's SparseLU with the fac
 Maintainer 2026-11-11: the pre-analysis of what the systems share now.
 
 Maintainer 2026-11-11, on the concept given in the chat: RG5.10 needs a design file and is bigger than thought, still good to continue; more general than a SolveDynamicParallel - the main gain is a parallel solve of loosely coupled systems (several machines or robots in a factory handling common objects); a common mapping of the results for the solution file and the SolutionViewer; two starting points to compare, several systems of one SystemContainer and decoupled parts of one system solved in parallel; for several systems, a super-system that receives the coordinates of the subsystems after each synchronization step and is the one drawn and written; a solver of its own for each subsystem, so that implicit-explicit coupling works at once. The revised concept: docs/dev/design/coupledSystems.md, to be evaluated by the maintainer.
+
+HALTED 2026-11-12 (maintainer): unclear whether it is continued. Python user functions, PreStepUserFunctions and the like are only one problem of the approach; fully decoupled systems can already be solved with Python's multiprocessing library, independent Python processes without any synchronization problem - with only the results to be joined at the end, while a finer synchronization would be comparatively hard. The design note coupledSystems.md stays as the record of the concept.
 
 #### **CLOSED_RG5.10.1** Pre-analysis: what the systems of one SystemContainer and their solvers share
 
@@ -729,6 +739,12 @@ Approved by the maintainer 2026-11-11: the raytracer shall run in parallel to th
 #3439. Best speed only with 64-128 threads on 16 cores. Candidates: the static split of the tiles when load balancing is off (multiThreadingLoadBalancing is taken from the last solver), the tiles per thread, the workers that spin with yield, the memory traffic of the tiles; the result applies to ParallelFor in general.
 
 CLOSED 2026-11-11 (#3439): measured (raytracerNOGLFWtest.py scene, 1200 x 1000, 16 cores / 32 logical processors): with load balancing 4.66 s on 1 thread, 0.664 s on 8, 0.437 s on 16, 0.372 s on 32, no gain beyond (12.6 times); without load balancing each thread renders a fixed band of tiles - 0.585 s on 16, 0.471 on 32, best 0.421 s on 64 threads, the oversubscription balancing a little: the observed need for 64-128 threads. The raytracer took the flag from exudyn.special.solver.multiThreadingLoadBalancing, which every solver overwrites with its parallel.useLoadBalancing; it now always balances its tiles (AcquireWorkers with a load balancing mode): 0.369 s on 32 threads either way. For Exudyn in general: a ParallelFor without load balancing splits statically and suffers from unequal work. The default raytracer.numberOfThreads = 8 leaves half the speed on a machine like this (0.664 against 0.37 s). [log](exudynRevisionLog2026c.md#rg5-9-9)
+
+#### **CLOSED_RG5.11.3** raytracer.numberOfThreads = 0, the number of logical processors, as the default
+
+#3445. Maintainer 2026-11-12, after RG5.11.2: the default 8 gave 0.664 s against 0.37 s with the 32 logical processors of the measuring machine; 0 shall select the number of logical processors automatically and be the default.
+
+CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: minimum 0, default 0 = std::thread::hardware_concurrency(), clamped to 1-256 as before (Raytracing.cpp); parameterConversionTestReference moved numberOfThreads to the settings with minimum 0; revisions.md.
 
 ## **CLOSED_RG6** Graphics and rendering
 

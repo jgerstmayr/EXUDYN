@@ -576,7 +576,7 @@ outcome: !ExudynValueError !ExudynValueError int=2.0 !ExudynTypeError !ExudynTyp
   VisualizationSettings.general: axesTiling(attribute,dict) circleTiling(attribute,dict) cylinderTiling(attribute,dict) rendererPrecision(attribute,dict) rendererStartupTimeout(attribute,dict) sphereTiling(attribute,dict)
   VisualizationSettings.nodes: tiling(attribute,dict)
   VisualizationSettings.openGL: multiSampling(attribute,dict)
-  VisualizationSettings.raytracer: imageSizeFactor(attribute,dict) lightRadiusVariations(attribute,dict) multiSampling(attribute,dict) numberOfThreads(attribute,dict)
+  VisualizationSettings.raytracer: imageSizeFactor(attribute,dict) lightRadiusVariations(attribute,dict) multiSampling(attribute,dict)
   VisualizationSettings.raytracer.advanced: searchTreeFactor(attribute,dict) tilesPerThread(attribute,dict)
   VisualizationSettings.sensors.traces: positionsShowEvery(attribute,dict) triadsShowEvery(attribute,dict) vectorsShowEvery(attribute,dict)
 
@@ -711,7 +711,7 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
   VisualizationSettings.general: iconBarStartTime(attribute,dict) iconBarTimeout(attribute,dict) showHelpOnStartup(attribute,dict)
   VisualizationSettings.interactive: highlightMbsNumber(attribute,dict)
   VisualizationSettings.openGL.advanced: curvedTriangleMaxTiling(attribute,dict)
-  VisualizationSettings.raytracer: maxReflectionDepth(attribute,dict) maxTransparencyDepth(attribute,dict)
+  VisualizationSettings.raytracer: maxReflectionDepth(attribute,dict) maxTransparencyDepth(attribute,dict) numberOfThreads(attribute,dict)
   VisualizationSettings.raytracer.advanced: shadowScalingFactor(attribute,dict) shadowSmoothingSteps(attribute,dict)
   VisualizationSettings.view0.scene: drawCoordinateSystem(attribute,dict)
   VisualizationSettings.view1.scene: drawCoordinateSystem(attribute,dict)

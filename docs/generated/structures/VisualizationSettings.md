@@ -732,7 +732,7 @@ VSettingsRaytracer has the following items:
 | `maxReflectionDepth` | UInt | 2 | Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
 | `maxTransparencyDepth` | UInt | 2 | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
 | `multiSampling` | PInt | 1 | Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4] |
-| `numberOfThreads` | PInt | 8 | Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads) |
+| `numberOfThreads` | UInt | 0 | Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445) |
 | `verbose` | Index | 0 | 1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information |
 
 

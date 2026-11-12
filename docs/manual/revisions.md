@@ -32,7 +32,8 @@ sleeping between the runs (#3437). `exu.special.solver.parallelSubstitution` (ex
 rows of its factors, about twice as fast as the solve of Eigen (#3441); `exu.special.solver.sparseSolveByRows = False`
 switches back. `view0.scene.hideMbs` ... `view3.scene.hideMbs` leave the graphics of chosen systems out of a view
 (#3442). The raytracer always balances its tiles dynamically over its threads, so it reaches its
-best time with `raytracer.numberOfThreads` near the number of logical processors (#3439).
+best time with `raytracer.numberOfThreads` near the number of logical processors (#3439); `raytracer.numberOfThreads = 0`,
+the new default, selects that number (#3445).
 
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running

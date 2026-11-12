@@ -1030,7 +1030,10 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 	RTS.shadowSmoothingSteps = EXUstd::Clamp(visSettings->raytracer.advanced.shadowSmoothingSteps, 0, 32);
 
 	RTS.verbose = visSettings->raytracer.verbose;
-	RTS.numberOfThreads = EXUstd::Clamp(visSettings->raytracer.numberOfThreads, 1, RTS.maxNThreads);
+	//0: the logical processors; the tiles are balanced dynamically, so all of them pay (#3439, #3445)
+	Index numberOfThreads = visSettings->raytracer.numberOfThreads;
+	if (numberOfThreads == 0) { numberOfThreads = (Index)std::thread::hardware_concurrency(); }
+	RTS.numberOfThreads = EXUstd::Clamp(numberOfThreads, 1, RTS.maxNThreads);
 	RTS.tilesPerThread = visSettings->raytracer.advanced.tilesPerThread;
 	RTS.imageSizeFactor = EXUstd::Clamp(visSettings->raytracer.imageSizeFactor, 1, 16);
 	RTS.zMaxSceneFactor = visSettings->openGL.zMaxSceneFactor;

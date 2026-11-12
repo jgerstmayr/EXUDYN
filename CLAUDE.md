@@ -134,6 +134,12 @@ version.txt                               version — an OUTPUT of issueTracker.
    range checks a wrong index is undefined behaviour instead of an exception.
    
 
+## The common way — not hard rules, there are exceptions
+
+- **Settings**: a new setting goes into `simulationSettings` or `visualizationSettings`, which keeps it with the model,
+  consistent and reproducible; `exudyn.special` only for experimental flags and for what acts outside the solver
+  routines (`CODING_STYLE.md` §1, #3446).
+
 ## Invariants — preserve these (plan §7)
 
 - Mixed Python/native debugging in VS2022, which is the capability rather than the IDE;
