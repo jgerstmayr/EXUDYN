@@ -1,0 +1,15 @@
+{
+  "number": 3438,
+  "title": "The raytracer runs with several threads while a solver runs, from the renderer thread",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.",
+  "dateRaised": "2026-11-11",
+  "deadline": "2027-05-10",
+  "dateResolved": "2026-11-12 14:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer renders on threads of its own (visualizationSettings.raytracer.numberOfThreads), independent of the threads of the solvers: it runs in parallel also while a solver runs, from a user function or from the renderer thread; the speed is unchanged. The persistent threads of exudyn.special.solver.StartPersistentThreads are no longer used by the raytracer. Test model raytracerDuringSolveTest.py.",
+  "resolvedInVersion": "1.13.591"
+}

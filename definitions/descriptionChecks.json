@@ -102,14 +102,14 @@
    "fingerprint": "b5cc743602d5"
   },
   "MarkerSuperElementPosition": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "7f42d6260a7a"
+   "fingerprint": "15231d008a24"
   },
   "MarkerSuperElementRigid": {
-   "checked": "2026-10-06",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "538b9b498a72"
+   "fingerprint": "be6de700c2a5"
   },
   "Node1D": {
    "checked": "2026-10-06",
@@ -352,14 +352,14 @@
    "fingerprint": "ed50aee078c3"
   },
   "ObjectFFRF": {
-   "checked": "2026-11-10",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "21b560f13999"
+   "fingerprint": "52686dcd4efe"
   },
   "ObjectFFRFreducedOrder": {
-   "checked": "2026-11-09",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "c1b4e8732c70"
+   "fingerprint": "e8f19b99eb74"
   },
   "ObjectGenericODE1": {
    "checked": "2026-10-29",
@@ -367,9 +367,9 @@
    "fingerprint": "085e8c870be6"
   },
   "ObjectGenericODE2": {
-   "checked": "2026-10-25",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "2402d96107b1"
+   "fingerprint": "6b8d5703f6eb"
   },
   "ObjectGround": {
    "checked": "2026-11-02",
@@ -432,9 +432,9 @@
    "fingerprint": "0a9e911fba4d"
   },
   "ObjectKinematicTree": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "8308018c4aa7"
+   "fingerprint": "57faf22053e5"
   },
   "ObjectMass1D": {
    "checked": "2026-10-17",

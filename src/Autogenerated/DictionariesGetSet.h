@@ -4903,7 +4903,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracer& data) {
     d["value"] = data.numberOfThreads;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445)";
+    d["description"] = "Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445); the threads belong to the raytracer alone, so it renders in parallel also while a solver runs and from the renderer thread (#3438)";
     structureDict["numberOfThreads"] = d;
 
     d = py::dict(); //reset local dict

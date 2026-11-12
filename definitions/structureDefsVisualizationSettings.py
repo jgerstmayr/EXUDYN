@@ -1741,7 +1741,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TIndex(minimum=0), 
             pythonName='numberOfThreads',
             defaultValue=0,
-            description=r'Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445)'),
+            description=r'Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445); the threads belong to the raytracer alone, so it renders in parallel also while a solver runs and from the renderer thread (#3438)'),
         StructureParameter(type=Tbool, 
             pythonName='keepWindowActive',
             defaultValue=False,

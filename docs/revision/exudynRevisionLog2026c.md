@@ -6431,6 +6431,55 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-11-1"></a>
+### RG5.11.1 — the raytracer on threads of its own (2026-11-12, #3438)
+
+*(Maintainer 2026-11-12: RG5.11.1 now.)*
+
+The raytracer took its threads from the one TaskManager of the solvers (AcquireWorkers, #3437): during a solve it got
+`workersBusy` and set itself to one thread, but its `ExuThreading::ParallelFor` still ran on the solver's
+`task_manager`, and from the renderer thread that is a job created by a second thread in the solver's pool - the
+likely cause of the crash of the issue (not reproduced here, as it needs the render window).
+
+- `RaytracerParallelFor(numberOfThreads, numberOfTasks, function)` (new, Raytracing.cpp): `std::thread`s of its own for
+  each image, the calling thread as thread 0, the tiles taken from an atomic counter (balanced as in #3439), an
+  exception of a thread passed on after all ended. The shadow precomputation and the final rendering use it.
+- The scratch arrays of a thread (`tempSearchTreeBins`) are selected by a `thread_local` index instead of
+  `TaskManager::GetThreadId()`; the progress output and `GlfwPollEvents` stay in the calling thread.
+- AcquireWorkers/ReleaseWorkers and the include of Parallel.h are gone from the raytracer; the persistent threads of
+  `exu.special.solver.StartPersistentThreads` are no longer used by it (its description and errors say so).
+
+Measured (scratch rtOwn.py, the scene of raytracerNOGLFWtest.py, best of 5, the same machine before and after):
+
+| image | threads | TaskManager | own threads |
+|---|---:|---:|---:|
+| 1200 x 1000 | 1 | 4.914 | 4.862 |
+| 1200 x 1000 | 8 | 0.855 | 0.810 |
+| 1200 x 1000 | 16 | 0.495 | 0.488 |
+| 1200 x 1000 | 32 | 0.371 | 0.356 |
+| 1200 x 1000 | 64 | 0.367 | 0.349 |
+| 240 x 180 | 8 | 0.0436 | 0.0442 |
+| 240 x 180 | 32 | 0.0260 | 0.0251 |
+
+Starting the threads per image costs nothing measurable; the images are equal on all thread counts.
+
+Test model raytracerDuringSolveTest.py: a chain of 6 rigid bodies solved on 4 threads; a PreStepUserFunction renders
+with the raytracer on 1 and on 4 threads at two steps - the images of a step equal, the two steps differ. The renderer
+thread cannot be tested without a window; the maintainer checks it with CTRL-R during a solve.
+
+<a id="rg5-12"></a>
+### RG5.12 — the arrays GeneralContact allocates in the steps (2026-11-12, #3454)
+
+*(Maintainer 2026-11-12: find the cause; if it is straightforward, solve it at once.)*
+
+Counted with exudyn.special.InfoStat around each SolveDynamic of generalContactSpheresPerf.py (scratch allocCount.py,
+gcPerf*.py): the first solve allocates 100 arrays per step (10138 in 101 steps, 46624 in 401), a second solve from the
+initial state 0.15-0.7 per step. The arrays are the cells of the search tree (`SearchTree`, one `ArrayIndex` per cell,
+32000 cells): each cell allocates when a sphere first enters it and grows when it first holds more items;
+`ClearItems` keeps the memory between the steps, `FlushCells` frees it every `resetSearchTreeInterval` (10000) updates.
+Both solves take the same time (4.58 / 4.57 s for 101 steps, 20.28 / 20.32 s for 401). Nothing to change;
+linalgBenchmark.md section 3 corrected.
+
 <a id="rg5-4-3"></a>
 ### RG5.4.3 — the analytic ODE2 Jacobian of ObjectFFRF (2026-11-12, #3447)
 

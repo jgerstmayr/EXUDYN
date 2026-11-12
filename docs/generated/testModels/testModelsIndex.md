@@ -198,6 +198,7 @@ plotSensorTest
 postNewtonStepContactTest
 pythonUserFunctionArgumentsTest
 raytracerBackFaceTest
+raytracerDuringSolveTest
 raytracerNOGLFWtest
 reduceURDFrobotDataTest
 reevingSystemSpringsTest

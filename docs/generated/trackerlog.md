@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.590.dev1
+- Exudyn version = 1.13.592.dev1
 - last change = 2026-11-12
 - Number of issues = 3455
-- Number of resolved issues = 3367 (590 in current version)
+- Number of resolved issues = 3369 (592 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,18 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` GeneralContact allocates about 100 arrays per step (#3454)
-  - description: The allocation count of solverBaseline.py (RG5.8.1) shows about 100 array allocations per time step in the GeneralContact model, while the other models allocate only during the initialization; the cause is to be located and, where straightforward, the arrays kept between steps.
-  - date raised: 2026-11-12
 - `EXTENSION` `HUGE EFF` `raised by: Claude-JG` Nonlinear finite elements: 4- and 10-node tetrahedra (#3453)
   - description: Geometrically nonlinear solid finite elements in Exudyn, linear (4 nodes) and quadratic (10 nodes) tetrahedra on NodePoint coordinates, with a mass matrix, the internal forces and an analytic Jacobian, for meshes imported through FEMinterface (NGsolve, Abaqus); they give fully nonlinear reference solutions for the reduced-order and FFRF bodies (\#3451) and the very large sparse systems for which PARDISO is expected to pay.
   - date raised: 2026-11-12
 - `CHECK` `LOW EFF` `raised by: Claude-JG` MarkerSuperElementRigid: the rotation Jacobian without useAlternativeApproach leaves out the tangent operator TexpSO3 (#3451)
   - description: With rotationsExponentialMap \> 0 and experimental.markerSuperElementRigidTexpSO3 (default), the rotation Jacobian of MarkerSuperElementRigid is multiplied by the tangent operator TexpSO3 of the weighted rotation only with useAlternativeApproach = True; with False the Jacobian of the weighted rotation is used without it, while the angular velocity applies it (rotationsExponentialMap = 2). The Jacobian then differs from the derivative of the angular velocity by TexpSO3 - I, which is small for small deformations; to be checked whether the Jacobian should include it in both approaches (found in \#3450).
   - date raised: 2026-11-12
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
-  - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.
-  - date raised: 2026-11-11
 - `IDEA` `HIGH EFF` `raised by: Claude-JG` Solve the systems of one SystemContainer in parallel (#3433)
   - description: A model of independent parts can be split by the user into several MainSystems of one SystemContainer; they are solved one after the other today. Solving them in parallel, each on its own thread with its own solver, needs the shared resources of the SystemContainer (renderer, visualization data, Python user functions and the GIL, output files, the TaskManager) to be sorted out first; a study of what is shared, then a design.
   - date raised: 2026-11-11

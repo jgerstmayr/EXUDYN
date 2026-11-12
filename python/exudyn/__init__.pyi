@@ -2397,7 +2397,7 @@ class VSettingsRaytracer:
     multiSampling: int
     """Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]."""
     numberOfThreads: int
-    """Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445)."""
+    """Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445); the threads belong to the raytracer alone, so it renders in parallel also while a solver runs and from the renderer thread (#3438)."""
     verbose: int
     """1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information."""
     def GetDictionary(self) -> dict: ...
@@ -4848,7 +4848,7 @@ class SpecialSolver:
         ...
     @overload
     def StartPersistentThreads(self, numberOfThreads: int) -> None: 
-        """Start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer uses them alike; not possible while a computation uses threads (#3437).
+        """Start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer does not use them, it has threads of its own (#3438); not possible while a computation uses threads (#3437).
         
         Examples:
             exu.special.solver.StartPersistentThreads(8)

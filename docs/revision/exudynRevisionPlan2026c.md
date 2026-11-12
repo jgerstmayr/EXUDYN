@@ -52,10 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The arrays GeneralContact allocates in every step** (RG5.12) and **the raytracer next to the solver** (RG5.11.1),
-   both small and decided.
-3. **The fixed-size matrices** (RG5.2), evaluated by the maintainer: the profile of ODE2RHS first, then SlimMatrix.
-4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+2. **The fixed-size matrices** (RG5.2), evaluated by the maintainer: the profile of ODE2RHS first, then SlimMatrix.
+3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -67,8 +65,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
-  - RG5.11 Raytracer: threads parallel to the solver, and its scaling with the number of threads (1 open sub-step)
-  - RG5.12 GeneralContact: the arrays allocated in every step
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -113,7 +109,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 6 | Performance |
+| RG5 | OPEN | 3 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -798,13 +794,17 @@ HALTED 2026-11-12 (maintainer): unclear whether it is continued. Python user fun
 
 #3440. CLOSED 2026-11-11 (#3440): docs/dev/design/systemContainerParallel.md - the solve never releases the GIL, so solves on Python threads run one after another today; to be made per solver or locked: the one task manager with its global thread count, thread id 0 as the main thread (symbolic recordings), the suspension of workers, the pySpecial counters, the global timers, a static matrix in MatrixBase::Invert, pout and outputBuffer, PyError/PyWarning and the global error flag, the idle operations (renderer queues, PyCheckSignals), colliding default file names, the shared settings object in SolveDynamic; safe: the per-system render lock, per-solver data, thread_local scratch data, PARDISO (serialized). The natural start: numberOfThreads = 1 per system, the systems on threads of a pool, thread-local thread counts and ids. [log](exudynRevisionLog2026c.md#rg5-9-8)
 
-### **OPEN_RG5.11** Raytracer: threads parallel to the solver, and its scaling with the number of threads
+### **CLOSED_RG5.11** Raytracer: threads parallel to the solver, and its scaling with the number of threads
 
 Approved by the maintainer 2026-11-11: the raytracer shall run in parallel to the solver from the renderer thread, and its scaling shall be understood - it needs 64-128 threads on 16 cores for its best speed, although each thread gets small portions of work; what is learned may speed up the parallel loops of Exudyn in general, and a faster raytracer helps every user.
 
-#### **OPEN_RG5.11.1** Run the raytracer with threads of its own while a solver runs, also from the renderer thread
+CLOSED 2026-11-12: the raytracer runs on threads of its own (RG5.11.1), its scaling is explained (RG5.11.2), and the default takes the logical processors (RG5.11.3).
+
+#### **CLOSED_RG5.11.1** Run the raytracer with threads of its own while a solver runs, also from the renderer thread
 
 #3438. The raytracer is started from the main thread and from the renderer thread; the TaskManager is one global object, so during a solve the raytracer falls back to one thread, and one started in the renderer thread during a solve crashes at once. A pool of threads for the raytracer next to the solver's.
+
+CLOSED 2026-11-12 (#3438): RaytracerParallelFor - std::threads of the raytracer's own for each image, the calling thread as thread 0, the tiles from an atomic counter, the scratch arrays by a thread_local index; no TaskManager, so the raytracer renders in parallel while a solver runs, from a user function and from the renderer thread; the persistent threads of #3437 are no longer used by it; the same speed (1200 x 1000: 0.356 s on 32 threads against 0.371 s); test model raytracerDuringSolveTest.py. [log](exudynRevisionLog2026c.md#rg5-11-1)
 
 #### **CLOSED_RG5.11.2** Measure and explain the scaling of the raytracer with the number of threads
 
@@ -818,9 +818,11 @@ CLOSED 2026-11-11 (#3439): measured (raytracerNOGLFWtest.py scene, 1200 x 1000, 
 
 CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: minimum 0, default 0 = std::thread::hardware_concurrency(), clamped to 1-256 as before (Raytracing.cpp); parameterConversionTestReference moved numberOfThreads to the settings with minimum 0; revisions.md.
 
-### **OPEN_RG5.12** GeneralContact: the arrays allocated in every step
+### **CLOSED_RG5.12** GeneralContact: the arrays allocated in every step
 
 #3454. The allocation count of solverBaseline.py (RG5.8.1) shows about 100 array allocations per step in the GeneralContact model, while the other models allocate only during the initialization. Maintainer 2026-11-12: find the cause; if it is straightforward, solve it at once.
+
+CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tree, each allocated when a sphere first enters it and grown when it first holds more; only in the first solve (100 per step), a second solve from the initial state 0.15-0.7 per step, both in the same time. [log](exudynRevisionLog2026c.md#rg5-12)
 
 ## **CLOSED_RG6** Graphics and rendering
 

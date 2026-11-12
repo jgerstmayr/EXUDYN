@@ -1692,7 +1692,7 @@ class SpecialSolver:
         ...
     @overload
     def StartPersistentThreads(self, numberOfThreads: int) -> None: 
-        """Start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer uses them alike; not possible while a computation uses threads (#3437).
+        """Start numberOfThreads (at least 2, the main thread included) worker threads that stay until StopPersistentThreads or the end of Python; while no computation uses them they sleep on a condition variable; a solver whose parallel.numberOfThreads agrees uses them instead of starting and stopping threads of its own, which pays for many runs of small systems; a solver with another parallel.numberOfThreads (also 1) uses its own number for that run, with a warning, and the persistent threads start again after it; the raytracer does not use them, it has threads of its own (#3438); not possible while a computation uses threads (#3437).
         
         Examples:
             exu.special.solver.StartPersistentThreads(8)

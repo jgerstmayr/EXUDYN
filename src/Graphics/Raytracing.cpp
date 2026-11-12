@@ -15,9 +15,50 @@
 
 #include "Graphics/Raytracing.h"
 
-#include "Utilities/Parallel.h" //include after 
+#include <atomic>
+#include <thread>
+#include <mutex>
+#include <exception>
+#include <vector>
 
 extern bool PyIsRendererActive(bool deprecationWarning);
+
+//! the index of a thread of the raytracer in RaytracerParallelFor, which selects its scratch arrays; 0 in the
+//! calling thread (#3438)
+static thread_local Index raytracerThreadIndex = 0;
+
+//! call function(task) for task = 0 ... numberOfTasks-1 on numberOfThreads threads of the raytracer's own, the calling
+//! thread being thread 0, the tasks taken one after the other as threads become free; the threads do not belong to
+//! the TaskManager of the solvers, so the raytracer runs in parallel while a solver runs, from the main thread and from
+//! the renderer thread; an exception of a thread is passed on after all threads ended (#3438)
+template<class TFunction>
+static void RaytracerParallelFor(Index numberOfThreads, Index numberOfTasks, const TFunction& function)
+{
+	std::atomic<Index> nextTask(0);
+	std::exception_ptr exception = nullptr;
+	std::mutex exceptionMutex;
+	auto worker = [&](Index threadIndex)
+	{
+		raytracerThreadIndex = threadIndex;
+		try
+		{
+			for (Index task = nextTask++; task < numberOfTasks; task = nextTask++) { function(task); }
+		}
+		catch (...)
+		{
+			std::lock_guard<std::mutex> lock(exceptionMutex);
+			if (!exception) { exception = std::current_exception(); }
+			nextTask = numberOfTasks; //the other threads stop after their current task
+		}
+	};
+	numberOfThreads = EXUstd::Minimum(numberOfThreads, numberOfTasks);
+	std::vector<std::thread> threads;
+	for (Index i = 1; i < numberOfThreads; i++) { threads.emplace_back(worker, i); }
+	worker(0);
+	for (auto& thread : threads) { thread.join(); }
+	raytracerThreadIndex = 0;
+	if (exception) { std::rethrow_exception(exception); }
+}
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -187,7 +228,7 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 	const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& closestHit,
 	bool returnOnSingleHit, RTfloat minDistanceZ)
 {
-	Index threadID = RTS.numberOfThreads == 1 ? 0 : ExuThreading::TaskManager::GetThreadId();
+	Index threadID = raytracerThreadIndex;
 
 	constexpr bool useFullLineSearch = false; //false is faster but can have problems
 
@@ -1586,46 +1627,15 @@ ResizableArray<GLLine> triangles6Edges;
 		}
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		RTS.numberOfThreadsUsed = 1;
-
-		//the threads: the persistent workers if their number agrees, otherwise threads of its own; while a solver uses
-		//the threads, the raytracer computes serially (#3437)
-		ExuThreading::WorkersAcquired workersAcquired = ExuThreading::workersNotAcquired;
-		Index workersTicket = 0;
-		if (RTS.numberOfThreads > 1)
-		{
-			STDstring threadsMessage;
-			//the tiles are always balanced dynamically, whatever the last solver used: without it, each thread renders a fixed
-			//band of the image and the raytracer needed 64-128 threads on 16 cores for its best time (#3439)
-			workersAcquired = ExuThreading::TaskManager::AcquireWorkers(RTS.numberOfThreads, false, threadsMessage, workersTicket, 1);
-			if (workersAcquired == ExuThreading::workersBusy)
-			{
-				if (RTS.verbose) { PrintDelayed("Raytracer: multi-threading: TaskManager already/still running (in solver?); do not use multithreading for solver"); }
-				RTS.numberOfThreads = 1;
-			}
-			else if (RTS.verbose && threadsMessage.size()) { PrintDelayed("Raytracer: " + threadsMessage); }
-		}
+		//threads of the raytracer's own, independent of the solvers' TaskManager, so that it also runs in parallel while a
+		//solver runs and from the renderer thread; the tiles are balanced dynamically (#3438, #3439)
 		RTS.numberOfThreadsUsed = RTS.numberOfThreads;
-		if (RTS.numberOfThreads > 1)
-		{
-
-			RTS.numberOfThreadsUsed = ExuThreading::TaskManager::GetNumThreads();
-
-			if (RTS.numberOfThreadsUsed == 1) //this reflects that taskmanager is not running!
-			{
-				if (RTS.verbose) { PrintDelayed("Raytracer: multi-threading failed"); }
-			}
-			else
-			{
-				if (RTS.verbose) { PrintDelayed("Raytracer: Start multi-threading with " +EXUstd::ToString(RTS.numberOfThreadsUsed)+ " threads"); }
-			}
-		}
+		if (RTS.verbose && RTS.numberOfThreadsUsed > 1) { PrintDelayed("Raytracer: multi-threading with " + EXUstd::ToString(RTS.numberOfThreadsUsed) + " threads"); }
 
 		Real tStartRT = EXUstd::GetTimeInSeconds();
 
 		Index nBoxes = RTS.numberOfThreadsUsed*RTS.tilesPerThread;
 
-		Index taskSplit = nBoxes; //RTS.imageHeight / 10;
 		//determine tiling in 2D: find grid dimensions close to square
 		Index tilesX = EXUstd::Maximum(1, (Index)std::sqrt(nBoxes));
 		while (nBoxes % tilesX != 0) { --tilesX; }
@@ -1649,13 +1659,12 @@ ResizableArray<GLLine> triangles6Edges;
 			RTS.shadowValues.SetAll({ 1.f, 1.f, 1.f, 1.f});
 
 			//! precompute shadows:
-			ExuThreading::ParallelFor(nBoxes, [this, &ToPerspectiveRay,
-				&tilesX, &tilesY, &tStartRT, &nBoxes](ParallelSizeType index)
+			RaytracerParallelFor(RTS.numberOfThreadsUsed, nBoxes, [this, &ToPerspectiveRay,
+				&tilesX, &tilesY, &tStartRT, &nBoxes](Index index)
 				{
 					Index tileWidth = RTS.shadowWidth / tilesX;
 					Index tileHeight = RTS.shadowHeight / tilesY;
 
-					//Index threadID = RTS.numberOfThreads == 1 ? 0 : ExuThreading::TaskManager::GetThreadId();
 					Index tx = (Index)index % tilesX;
 					Index ty = (Index)index / tilesX;
 
@@ -1684,7 +1693,7 @@ ResizableArray<GLLine> triangles6Edges;
 							ComputePixelColor(rayOrigin, rayDir, graphicsData.glTriangles, RTS, zDepthDummy, RTS.shadowValues[iPix], 0, 0, computeShadow, rayOrigin0);
 						}
 					}
-				}, taskSplit);
+				});
 			for (Index i = 0; i < RTS.shadowSmoothingSteps; i++)
 			{
 				SmoothImageValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowWidth, RTS.shadowHeight, RTS);
@@ -1707,11 +1716,10 @@ ResizableArray<GLLine> triangles6Edges;
 		//std::cout << "#trigs=" << graphicsData.glTriangles.NumberOfItems() << "\n";
 		//std::cout << "RTS.preComputeShadow=" << RTS.preComputeShadow << "\n";
 
-		ExuThreading::ParallelFor(nBoxes, [this, &ToPerspectiveRay,
-			&tilesX, &tilesY, &tStartRT, &nBoxes](ParallelSizeType index)
+		RaytracerParallelFor(RTS.numberOfThreadsUsed, nBoxes, [this, &ToPerspectiveRay,
+			&tilesX, &tilesY, &tStartRT, &nBoxes](Index index)
 			{
-				Index threadID = RTS.numberOfThreads == 1 ? 0 : ExuThreading::TaskManager::GetThreadId();
-				if (threadID == 0) //main thread
+				if (raytracerThreadIndex == 0) //the calling thread
 				{
 					if (EXUstd::GetTimeInSeconds() - tStartRT > 0.5)
 					{
@@ -1769,14 +1777,8 @@ ResizableArray<GLLine> triangles6Edges;
 						RTS.pixelsRGBA[i + 3] = 255;
 					}
 				}
-			}, taskSplit);
-
-		if (workersAcquired != ExuThreading::workersNotAcquired && workersAcquired != ExuThreading::workersBusy) //only its own threads (#3437)
-		{
-			if (RTS.verbose && RTS.numberOfThreadsUsed != 1) { PrintDelayed("Stop multi-threading"); }
-			ExuThreading::TaskManager::ReleaseWorkers(workersAcquired, workersTicket);
-			RTS.numberOfThreadsUsed = 1;
-		}
+			});
+		RTS.numberOfThreadsUsed = 1;
 
 
 		//line overlay:

@@ -355,8 +355,11 @@ the range check of the regular module, which the fast module does not have. The 
 since L1-L3, so the checks no longer sit in the inner loops (§3.6: regular and fast equal for `Vector +=` up to a
 factor 2 at n = 500, which is the vectorization of the fast module). **RG5.1.4 needs no change.**
 
-`generalContactSpheresPerf` allocates about 100 arrays per step: `GeneralContact` (the search tree or the lists of
-contacts) - a separate question.
+`generalContactSpheresPerf` allocates about 100 arrays per step in its first solve only: these are the cells of the
+search tree of `GeneralContact` (`ArrayIndex` per cell, 32000 cells), each allocated when a sphere first enters it and
+grown when it first holds more; `SearchTree::ClearItems` keeps their memory between the steps. Solved again from the
+initial state, the same model allocates 0.15-0.6 arrays per step, and both solves take the same time (4.58 and 4.57 s
+for 101 steps; 20.28 and 20.32 s for 401 steps with 46624 and 59 arrays) - nothing to change (#3454).
 
 ## 4. Eigen as the reference
 

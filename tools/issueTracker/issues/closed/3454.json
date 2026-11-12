@@ -2,10 +2,14 @@
   "number": 3454,
   "title": "GeneralContact allocates about 100 arrays per step",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
   "description": "The allocation count of solverBaseline.py (RG5.8.1) shows about 100 array allocations per time step in the GeneralContact model, while the other models allocate only during the initialization; the cause is to be located and, where straightforward, the arrays kept between steps.",
   "dateRaised": "2026-11-12",
-  "deadline": "2027-05-11"
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 14:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "no change needed: the arrays are the cells of the GeneralContact search tree, allocated when a body first enters a cell and kept between the steps; they appear only in the first solve and cost no measurable time",
+  "resolvedInVersion": "1.13.592"
 }

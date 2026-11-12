@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 563 | 1.13.589 |
+| 1.13 | Newborn | 564 | 1.13.591 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.591** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
+  - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.
+  - **notes:** The raytracer renders on threads of its own (visualizationSettings.raytracer.numberOfThreads), independent of the threads of the solvers: it runs in parallel also while a solver runs, from a user function or from the renderer thread; the speed is unchanged. The persistent threads of exudyn.special.solver.StartPersistentThreads are no longer used by the raytracer. Test model raytracerDuringSolveTest.py.
+  - date resolved: **2026-11-12 14:04**, date raised: 2026-11-11
 - **1.13.589** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRF: analytic Jacobian instead of the numerical one (#3447)
   - description: ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (\#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.
   - **notes:** ObjectFFRF computes its ODE2 Jacobian as sparse triplets - stiffness, damping and the quadratic velocity terms by the mesh coordinates analytic, by the rotation parameters by local differences -, on Euler parameters and Tait-Bryan angles without a forceUserFunction: 550 times faster than the numerical Jacobian at 1525 nodes; ObjectFFRF.numericalJacobian = True lets the system differentiate it as before
