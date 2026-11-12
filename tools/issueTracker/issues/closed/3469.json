@@ -2,10 +2,14 @@
   "number": 3469,
   "title": "Raytracer: precompute shadows at reduced resolution only if a light has a radius",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
   "description": "The low-resolution shadow pass (shadowScalingFactor > 1) also runs when no light qualifies for soft shadows (lightRadius 0, a directional light, no shadow): 24 % of the time for a blurred hard shadow. It shall run only if a light casts soft shadows; other configurations get the hard shadow at full resolution, which changes their images.",
   "dateRaised": "2026-11-12",
-  "deadline": "2027-05-11"
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 20:40",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer precomputes the shadow at reduced resolution only if a light casts soft shadows (a light with a position and lightRadius > 0); otherwise the hard shadow is computed at full resolution instead of being blurred.",
+  "resolvedInVersion": "1.13.604"
 }

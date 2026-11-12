@@ -81,7 +81,8 @@ Scene: `python/TestModels/raytracerNOGLFWtest.py` at 1200 x 1000, perspective, t
 circle as the model's `PreStepUserFunction` does at t = 1 (21172 triangles, grid 84 x 84 x 12, box 10 x 10 x 2.9),
 light0 at [8, -6, 10, 1], `lightRadius = 0.5`, reflection and transparency depth 2, chrome floor with
 reflectivity 0.12. 16 cores / 32 logical processors, `numberOfThreads = 0`, best of 3 images,
-`RedrawAndGetImage(True)` (wall time including Python overhead). Script: `rtShadowBench.py` next to this note.
+`RedrawAndGetImage(True)` (wall time including Python overhead). Script: `python/PerformanceModels/raytracerShadowBenchmark.py`
+(#3468; light0 there at the position of this scene).
 The installed module 1.13.592.dev1 (copied, so a parallel rebuild did not disturb the run).
 
 The difference column is the mean absolute difference in 0..255 to a reference with N = 240 and S = 0 (240 shadow
@@ -288,3 +289,38 @@ difference measure of section 2 (`rtPenumbra.py` gives the penumbra fraction); O
 9. Adaptive penumbra sampling: k samples first, the rest only where they disagree; full-resolution refinement of the low-resolution penumbra (O3).
 10. Depth/normal-guided filtering and upsampling of the shadow term (O5); update the reference value of raytracerNOGLFWtest.py once for steps 3, 8-10.
 11. Optional: shadow rays of secondary hits by their weight (O10); evaluate a BVH (O7) on large user scenes.
+
+## 6. Done: the image-preserving group and the precomputation (2026-11-12, #3468, #3469)
+
+The plan steps are RG6.26.2-RG6.26.16: the sub-steps of section 5 in their order (RG6.26.2-RG6.26.12), the three
+correctness points (RG6.26.13-RG6.26.15) and blurred reflections (RG6.26.16).
+
+- **Benchmark** (RG6.26.2): `python/PerformanceModels/raytracerShadowBenchmark.py` renders the scene of section 2 in six
+  configurations and prints the best of three times and an MD5 of each image; `--out`/`--compare` compare two builds,
+  `--reference` adds the difference to N = 240. Not in the performance tests (the images differ between platforms).
+- **I1** (RG6.26.3): `SmoothShadowValues` and `ScaleShadowValues` in Raytracing.cpp work in blocks of rows on the
+  threads of the raytracer, from one array into the other, which are swapped; the old serial functions of
+  Raytracing.h are removed.
+- **I3, I7** (RG6.26.5): `IntersectRayWithTriangleGeometry` gives t, u, v; `ShadeTriangleHit` (normal, colour,
+  material, side) and the texture only for a hit closer than the closest one; the direction and distance of the light
+  and the basis of its disk once per light and hit instead of per sample.
+- **I5, I6** (RG6.26.6): a mailbox of the last 32 items (by index modulo 32) per ray; the traversal stops when the next
+  cell begins beyond the closest hit or the ray length (a relative margin of 1e-4 for the round-off of t), with the
+  entry parameter of the grid from `GetBinsCrossedByLineInit`; the bounding-sphere test per cell is gone.
+- **I2** (RG6.26.4): the precomputation runs only if an active light with a shadow and a position has `lightRadius > 0`.
+
+Measured with the benchmark, the same machine, best of three (before: 1.13.602 as committed):
+
+| configuration | before [s] | after [s] | change | image |
+|---|---:|---:|---:|---|
+| no shadow | 0.072 | 0.060-0.062 | -14 to -17 % | same |
+| hard shadow | 0.100 | 0.084-0.087 | -14 to -16 % | same |
+| N = 13, S = 3 (test model) | 0.143 | 0.111-0.112 | -21 to -23 % | same |
+| N = 50, S = 3 | 0.220 | 0.170-0.171 | -22 % | same |
+| N = 13, per pixel | 0.335 | 0.264-0.268 | -20 to -21 % | same |
+| N = 13, S = 3, `lightRadius = 0` | 0.115 | 0.088 | -23 % | the hard shadow (I2) |
+
+The test suite is unchanged (the checksum of raytracerNOGLFWtest.py and the raytracer cases of pytest). The serial
+part of section 2 is gone; what remains at N = 13, S = 3 over the hard shadow is the shadow rays of the low-resolution
+pass. The per-pixel path is still N/4 primary passes: that is for the adaptive sampling (RG6.26.10) and the
+stratified samples (RG6.26.9).

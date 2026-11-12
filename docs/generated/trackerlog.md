@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.602.dev1
+- Exudyn version = 1.13.604.dev1
 - last change = 2026-11-12
 - Number of issues = 3474
-- Number of resolved issues = 3379 (602 in current version)
+- Number of resolved issues = 3381 (604 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9050,12 +9050,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-11-12
 - `FIX` `LOW EFF` `raised by: Claude-JG` Raytracer: the offset of the shadow ray is absolute (0.01), not relative to the scene size (#3470)
   - description: IsInShadow starts the shadow ray at point + 0.01\*lightDirection (Raytracing.cpp): a scene in millimetres gets light leaking through thin parts, a scene in kilometres gets shadow acne. The offset shall scale with the scene (e.g. the bounding box or the search tree) or follow the normal by a relative epsilon, documented in the raytracer settings.
-  - date raised: 2026-11-12
-- `CHANGE` `LOW EFF` `raised by: Claude-JG` Raytracer: precompute shadows at reduced resolution only if a light has a radius (#3469)
-  - description: The low-resolution shadow pass (shadowScalingFactor \> 1) also runs when no light qualifies for soft shadows (lightRadius 0, a directional light, no shadow): 24 % of the time for a blurred hard shadow. It shall run only if a light casts soft shadows; other configurations get the hard shadow at full resolution, which changes their images.
-  - date raised: 2026-11-12
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` Raytracer: the bitwise speedups of the shadows - parallel copy-free filtering, the hit test separated from the shading, mailboxing, the ray length (#3468)
-  - description: raytracerImprovements.md I1, I3, I5, I6, I7 (option O1): the smoothing and upsampling of the precomputed shadow in parallel rows with ping-pong buffers instead of full copies; IntersectRayWithTriangle split into the geometric test and the shading of the closest hit; per-image light terms hoisted out of the sample loop; a triangle met in several bins tested once per ray; the traversal stopped at the ray length and an exact closest-hit cut-off. The image stays bitwise; a benchmark scene with timings under python/PerformanceModels.
   - date raised: 2026-11-12
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux (#3465)
   - description: With gcc 13 (WSL, venvP313, 1.13.599) journalBearingTest.py gives 8.78901963260202 against the reference 8.789027047564257 (error -7.4e-6) and sliderCrank3Dbenchmark.py 5.7911914985923145 against 5.7911914993916 (-8.0e-10); all other 341 test models and the 108 mini examples agree. Both models were added or changed after the last Linux run (1.13.81). Matrix3D as SlimMatrix or as ConstSizeMatrix\<9\> gives the same results on Linux, so it is not the cause. Find the cause as in revision2026c step RG4.1 (the math functions, the order of sums), or record the models in UnresolvedOnLinux() with the reason.

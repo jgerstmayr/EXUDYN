@@ -716,7 +716,8 @@ public:
 		Index& stepX, Index& stepY, Index& stepZ,
 		T& tDeltaX, T& tDeltaY, T& tDeltaZ,
 		Index& ix, Index& iy, Index& iz,
-		T& tMaxX, T& tMaxY, T& tMaxZ) const
+		T& tMaxX, T& tMaxY, T& tMaxZ, T* tEntry = nullptr) const //tEntry: the parameter t of the entry into the box; the
+		//tMax values count from the entry, so a cell is left at *tEntry + min(tMaxX, tMaxY, tMaxZ) (#3468)
 	{
 		globalBinIndices.SetNumberOfItems(0);
 
@@ -746,6 +747,7 @@ public:
 			}
 		}
 
+		if (tEntry) { *tEntry = tmin; }
 		// Start position inside box
 		Vector3T entryPoint = startPoint + direction * tmin;
 

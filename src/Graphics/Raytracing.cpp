@@ -60,6 +60,87 @@ static void RaytracerParallelFor(Index numberOfThreads, Index numberOfTasks, con
 	if (exception) { std::rethrow_exception(exception); }
 }
 
+//! call function(yStart, yEnd) for the rows of an image, in blocks of rows on the threads of the raytracer (#3468)
+template<class TFunction>
+static void RaytracerParallelRows(Index numberOfThreads, Index imageHeight, const TFunction& function)
+{
+	Index numberOfTasks = EXUstd::Minimum(imageHeight, 4 * EXUstd::Maximum(numberOfThreads, (Index)1));
+	if (numberOfTasks < 1) { return; }
+	RaytracerParallelFor(numberOfThreads, numberOfTasks, [&](Index task)
+		{
+			function(task * imageHeight / numberOfTasks, (task + 1) * imageHeight / numberOfTasks);
+		});
+}
+
+//! one smoothing pass of the shadow values: target gets the 3x3 average of source in the inner pixels of each light
+//! that casts a shadow, else the value of source; with skipHardBoundaries, a pixel whose neighbourhood contains both 0
+//! and 1 keeps its value; the rows in parallel, into a second array instead of copying the image (#3468)
+static void SmoothShadowValues(const ResizableArray<ShadowValue>& source, ResizableArray<ShadowValue>& target,
+	Index imageWidth, Index imageHeight, const RaytracingSettings& RTS, bool skipHardBoundaries)
+{
+	target.SetNumberOfItems(imageWidth * imageHeight);
+	RaytracerParallelRows(RTS.numberOfThreadsUsed, imageHeight, [&](Index yStart, Index yEnd)
+		{
+			for (Index y = yStart; y < yEnd; y++)
+			{
+				for (Index x = 0; x < imageWidth; x++) { target[y * imageWidth + x] = source[y * imageWidth + x]; }
+				if (y == 0 || y == imageHeight - 1) { continue; }
+				for (Index lightID = 0; lightID < (Index)RTS.lights.size(); lightID++)
+				{
+					if (!RTS.lights[lightID].active || !RTS.lights[lightID].shadow) { continue; } //this channel is not smoothed
+					for (Index x = 1; x < imageWidth - 1; x++)
+					{
+						bool containsZero = false;
+						bool containsOne = false;
+						if (skipHardBoundaries)
+						{
+							for (Index dy = -1; dy <= 1; dy++)
+							{
+								for (Index dx = -1; dx <= 1; dx++)
+								{
+									float value = source[(y + dy) * imageWidth + x + dx][lightID];
+									if (value == 0.0f) { containsZero = true; }
+									if (value == 1.0f) { containsOne = true; }
+								}
+							}
+						}
+						if (!(containsZero && containsOne)) //no hard boundary: the average, the sum in the order of the rows
+						{
+							float sum = 0.0f;
+							for (Index dy = -1; dy <= 1; dy++)
+							{
+								for (Index dx = -1; dx <= 1; dx++) { sum += source[(y + dy) * imageWidth + x + dx][lightID]; }
+							}
+							target[y * imageWidth + x][lightID] = sum / 9;
+						}
+					}
+				}
+			}
+		});
+}
+
+//! the shadow values of the reduced resolution mapped to the full resolution, each pixel taking its nearest value;
+//! the rows in parallel (#3468)
+static void ScaleShadowValues(const ResizableArray<ShadowValue>& lowresValues, ResizableArray<ShadowValue>& hiresValues,
+	Index lowresWidth, Index lowresHeight, Index hiresWidth, Index hiresHeight, Index numberOfThreads)
+{
+	float scaleX = static_cast<float>(lowresWidth) / hiresWidth;
+	float scaleY = static_cast<float>(lowresHeight) / hiresHeight;
+	hiresValues.SetNumberOfItems(hiresWidth * hiresHeight);
+	RaytracerParallelRows(numberOfThreads, hiresHeight, [&](Index yStart, Index yEnd)
+		{
+			for (Index y = yStart; y < yEnd; y++)
+			{
+				Index lowresY = EXUstd::Minimum((Index)(y * scaleY), lowresHeight - 1);
+				for (Index x = 0; x < hiresWidth; x++)
+				{
+					Index lowresX = EXUstd::Minimum((Index)(x * scaleX), lowresWidth - 1);
+					hiresValues[y * hiresWidth + x] = lowresValues[lowresY * lowresWidth + lowresX];
+				}
+			}
+		});
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Raytracer raytracer;	//!< currently, use global raytracer to avoid sharing among BasicVisualizationSystemContainer
@@ -94,13 +175,11 @@ Raytracer::~Raytracer()
 	}
 }
 
-// Perform ray-triangle intersection test
-void Raytracer::IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const GLTriangle& triangle, 
-	const RaytracingSettings& RTS, IntersectionResult& result)
+//! ray-triangle intersection (Moeller-Trumbore), the geometry only; the shading of the hit is ShadeTriangleHit, called
+//! only for a hit closer than the closest one so far (#3468)
+inline bool Raytracer::IntersectRayWithTriangleGeometry(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
+	const GLTriangle& triangle, const RaytracingSettings& RTS, RTfloat& t, RTfloat& u, RTfloat& v)
 {
-	//if (rendererDebug) { nHits++; }
-	result.Init();
-
 	const RTVector3D& v0 = triangle.points[0];
 	const RTVector3D& v1 = triangle.points[1];
 	const RTVector3D& v2 = triangle.points[2];
@@ -110,27 +189,31 @@ void Raytracer::IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVe
 	RTVector3D pVec = rayDirection.CrossProduct(edge2);
 	RTfloat det = edge1 * pVec;
 
-	if (det * det <= RTS.tolParallel2) { return; }  // Ray parallel to triangle
+	if (det * det <= RTS.tolParallel2) { return false; }  // Ray parallel to triangle
 
 	RTVector3D tVec = rayOrigin - v0;
 	RTfloat invDet = 1.0f / det; //division is done here, to save time
-	RTfloat u = (tVec * pVec) * invDet;
-	if ((u < -RTS.epsilon5) || (u > 1.f+RTS.epsilon5)) { return; }
+	u = (tVec * pVec) * invDet;
+	if ((u < -RTS.epsilon5) || (u > 1.f+RTS.epsilon5)) { return false; }
 
 	RTVector3D qVec = tVec.CrossProduct(edge1);
-	RTfloat v = (rayDirection * qVec) * invDet;
-	if ((v < -RTS.epsilon5) || (u + v > 1.f+RTS.epsilon5) ) { return; }
+	v = (rayDirection * qVec) * invDet;
+	if ((v < -RTS.epsilon5) || (u + v > 1.f+RTS.epsilon5) ) { return false; }
 
-	RTfloat t = (edge2 * qVec) * invDet;
-	if (t < RTS.minZ) { return; }
+	t = (edge2 * qVec) * invDet;
+	if (t < RTS.minZ) { return false; }
+	return true;
+}
 
-	// Fill result
+//! the shading data of the hit of a triangle at t, u, v
+inline void Raytracer::ShadeTriangleHit(const RTVector3D& rayDirection, const GLTriangle& triangle, const RaytracingSettings& RTS,
+	RTfloat t, RTfloat u, RTfloat v, IntersectionResult& result)
+{
 	RTfloat w = 1.0f - u - v;
 	result.hit = true;
 	result.distance = t;
 	result.u = u;
 	result.v = v;
-	//result.triangleIndex = -1; // to be filled by caller
 	result.normal = triangle.normals[0] * w + triangle.normals[1] * u + triangle.normals[2] * v;
 	result.normal.NormalizeSafe();
 	result.color = triangle.colors[0] * w + triangle.colors[1] * u + triangle.colors[2] * v;
@@ -140,8 +223,6 @@ void Raytracer::IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVe
 	result.hitFromBack = (rayDirection * result.normal) > 0.f;
 
 	if (result.hitFromBack) { result.normal = -result.normal; } //adjust, such that nobody notices ...
-
-	return;
 }
 
 void Raytracer::ApplyTexture(Index texturedIndex, IntersectionResult& result) const
@@ -193,16 +274,24 @@ void Raytracer::IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVect
 }
 
 //! the item iInd of the search tree: a triangle, or with iInd >= triangles.NumberOfItems() a sphere of graphicsData.glSpheres;
-//! defined here, after the two intersections it calls, so that no other translation unit needs them
-inline void Raytracer::IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
-	const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result)
+//! true if it is hit closer than closestDistance and not before minDistanceZ, with the shaded hit in result; a triangle is
+//! shaded and textured only then (#3468); defined here, after the functions it calls, so that no other translation unit
+//! needs them
+inline bool Raytracer::IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
+	const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, RTfloat closestDistance, RTfloat minDistanceZ,
+	IntersectionResult& result)
 {
 	if (iInd < triangles.NumberOfItems())
 	{
-		IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, result);
-		if (result.hit && iInd < triangleTextures.NumberOfItems() && triangleTextures[iInd] >= 0) { ApplyTexture(triangleTextures[iInd], result); }
+		RTfloat t, u, v;
+		if (!IntersectRayWithTriangleGeometry(rayOrigin, rayDirection, triangles[iInd], RTS, t, u, v)) { return false; }
+		if (!(t < closestDistance && t * (-rayDirection[2]) >= minDistanceZ)) { return false; }
+		ShadeTriangleHit(rayDirection, triangles[iInd], RTS, t, u, v, result);
+		if (iInd < triangleTextures.NumberOfItems() && triangleTextures[iInd] >= 0) { ApplyTexture(triangleTextures[iInd], result); }
+		return result.hit; //a mask of the texture may cut the hit out
 	}
-	else { IntersectRayWithSphere(rayOrigin, rayDirection, graphicsData.glSpheres[iInd - triangles.NumberOfItems()], RTS, result); }
+	IntersectRayWithSphere(rayOrigin, rayDirection, graphicsData.glSpheres[iInd - triangles.NumberOfItems()], RTS, result);
+	return result.hit && result.distance < closestDistance && result.distance * (-rayDirection[2]) >= minDistanceZ;
 }
 
 //! check if point is in shadow with given light
@@ -257,9 +346,7 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 			const ArrayIndex& trigIndices = RTS.searchTree.GetItemsOfBin(binInd);
 			for (Index iInd : trigIndices)
 			{
-				IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, hit);
-				if (hit.hit && hit.distance < closestHit.distance &&
-					(hit.distance*(-rayDirection[2]) >= minDistanceZ))
+				if (IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, closestHit.distance, minDistanceZ, hit))
 				{
 					closestHit = hit;
 					closestHit.triangleIndex = iInd;
@@ -276,39 +363,39 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 		Index ix = 0, iy = 0, iz = 0;
 		RTfloat tMaxX = 0, tMaxY = 0, tMaxZ = 0;
 
-		//bool search = RTS.searchTree.GetBinsCrossedByLineInit(rayOrigin, rayDirection * rayLength, RTS.tempSearchTreeBins[threadID],
+		RTfloat tEntry = 0; //the ray enters the grid at rayOrigin + tEntry*rayDirection
 		bool search = RTS.searchTree.GetBinsCrossedByLineInit(rayOrigin, rayDirection, RTS.tempSearchTreeBins[threadID],
-			//tmax,
 			stepX, stepY, stepZ,
 			tDeltaX, tDeltaY, tDeltaZ,
 			ix, iy, iz,
-			tMaxX, tMaxY, tMaxZ);
+			tMaxX, tMaxY, tMaxZ, &tEntry);
 
 		Index sx = RTS.searchTree.SizeX();
 		Index sy = RTS.searchTree.SizeY();
 		Index sz = RTS.searchTree.SizeZ();
 
-		//Box3DBase<RTfloat> box = RTS.searchTree.GetBinBox(0,0,0); //must always exist
-		RTVector3D boxSize;
-		RTS.searchTree.GetCellLengths(boxSize[0], boxSize[1], boxSize[2]);
-		RTfloat boxRadius = boxSize.GetL2Norm() * (RTfloat)0.5;
+		//a triangle that lies in several cells is tested once per ray: the items tested last, by their index modulo
+		//the size (mailboxing); testing it again would give the same hit, which is not closer (#3468)
+		constexpr Index mailboxSize = 32;
+		Index mailbox[mailboxSize];
+		for (Index& item : mailbox) { item = -1; }
 
-		// Traverse until the ray exits the box
+		RTfloat tCell = 0; //the cell is entered at tEntry + tCell
+		RTfloat cutOffMargin = 20.f*RTS.epsilon;
+
+		// Traverse until the ray exits the box, or until the cells lie beyond the closest hit or beyond rayLength,
+		//to which closestHit.distance is initialized (#3468)
 		while (search && ix >= 0 && ix < sx && iy >= 0 && iy < sy && iz >= 0 && iz < sz)
 		{
-			const ArrayIndex& trigIndices = RTS.searchTree.GetItemsOfBin(RTS.searchTree.GlobalIndex(ix, iy, iz));
-			if (closestHit.hit)
-			{
-				Box3DBase<RTfloat> box = RTS.searchTree.GetBinBox(ix, iy, iz);
-				//a conservative calculation that stops as soon as boxes are further away than the closest hit
-				if ((box.Center() - rayOrigin).GetL2NormSquared() > EXUstd::Square(closestHit.distance + boxRadius + 20.f*RTS.epsilon)) { return; }
-			}
+			if (tEntry + tCell > closestHit.distance * (1.f + 1e-4f) + cutOffMargin) { return; } //a margin for the round-off of t
 
+			const ArrayIndex& trigIndices = RTS.searchTree.GetItemsOfBin(RTS.searchTree.GlobalIndex(ix, iy, iz));
 			for (Index iInd : trigIndices)
 			{
-				IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, hit);
-				if (hit.hit && hit.distance < closestHit.distance &&
-					(hit.distance* (-rayDirection[2]) >= minDistanceZ))
+				Index& slot = mailbox[iInd & (mailboxSize - 1)];
+				if (slot == iInd) { continue; }
+				slot = iInd;
+				if (IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, closestHit.distance, minDistanceZ, hit))
 				{
 					closestHit = hit;
 					closestHit.triangleIndex = iInd;
@@ -316,17 +403,14 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 				}
 			}
 
-			search = RTS.searchTree.GetBinsCrossedByLineUpdate(//tmax,
+			tCell = EXUstd::Minimum(tMaxX, EXUstd::Minimum(tMaxY, tMaxZ));
+			search = RTS.searchTree.GetBinsCrossedByLineUpdate(
 				stepX, stepY, stepZ,
 				tDeltaX, tDeltaY, tDeltaZ,
 				ix, iy, iz,
-				tMaxX, tMaxY, tMaxZ);// && (tMaxX < closestHit.distance || tMaxY < closestHit.distance || tMaxZ < closestHit.distance);
+				tMaxX, tMaxY, tMaxZ);
 		}
-
 	}
-
-
-
 }
 
 
@@ -477,53 +561,44 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 
 		RTfloat factLights = 1.f / (RTfloat)nLightPoints;
 
+		//the direction and distance of the light, and the basis of its disk, once per light and hit, not per sample (#3468)
+		RTfloat lightDistance0 = std::numeric_limits<RTfloat>::max();
+		RTVector3D lightPos = { light.position[0], light.position[1], light.position[2] };
+		RTVector3D lightDir0 = lightPos;
+		RTVector3D basisN1, basisN2;
+		if (!light.useCameraFrame) //in camera frame, everything is already correct, as model is already converted to sceen/camera coordinates
+		{
+			//openGL lights transform from the camera to the modelview frame; the lights are not rotated
+			Matrix3DF rotationMV = EXUmath::Matrix4DtoMatrix3D(RTS.modelViewRM); //row-major
+			lightDir0 = rotationMV * lightPos - light.position[3] * (RTS.translationView);
+		}
+		if (light.position[3] == 0.f) //only direction is used!
+		{
+			lightDir0.NormalizeSafe();
+			lightDistance0 = (lightDir0 - hitPoint).GetL2Norm(); //for attenuation, we still compute distance!
+		}
+		else //light is used as position
+		{
+			lightDir0 -= hitPoint; //now lightDir is the direction
+			lightDistance0 = EXUstd::Maximum(1e-5f, lightDir0.GetL2Norm());
+			lightDir0 *= 1.f / lightDistance0;
+			if (nLightPoints > 1) { EXUmath::ComputeOrthogonalBasisVectors(lightDir0, basisN1, basisN2); }
+		}
+
 		for (Index np = 0; np < nLightPoints; np++)
 		{
-			RTfloat lightDistance = std::numeric_limits<RTfloat>::max();
-			RTVector3D lightPos = { light.position[0], light.position[1], light.position[2] };
-			RTVector3D lightDir = lightPos;
-			if (!light.useCameraFrame) //in camera frame, everything is already correct, as model is already converted to sceen/camera coordinates
+			RTfloat lightDistance = lightDistance0;
+			RTVector3D lightDir = lightDir0;
+			if (light.position[3] != 0.f && nLightPoints > 1)
 			{
-				//openGL lights transform this way (from camera to modelview frame):
-				//state->GetRotationTranslationFWithMarker(rotationMV, translationMV,
-				//	basicVisualizationSystemContainer, settingsView, false);
-				//lightPos = lightPos * rotationMV + useLightDir * (translationMV * rotationMV); //light is rotated/translated back to camera view
+				//several point lights on the disk of the light, systematic to avoid noise: a spiral
+				RTfloat fract = ((RTfloat)np / (RTfloat)nLightPoints);
+				RTfloat radFact = sqrt(fract);
+				fract *= sqrt((RTfloat)nLightPoints);
+				RTfloat x = radFact * light.lightRadius / lightDistance * (RTfloat)sin(EXUstd::pi_f * 2.f * fract);
+				RTfloat y = radFact * light.lightRadius / lightDistance * (RTfloat)cos(EXUstd::pi_f * 2.f * fract);
 
-				Matrix3DF rotationMV = EXUmath::Matrix4DtoMatrix3D(RTS.modelViewRM); //row-major
-				lightDir = rotationMV * lightPos - light.position[3] * (RTS.translationView);
-				//same: TransformVertexRM(lightPos, RTS.modelViewRM, lightDir); //lights are not rotated; now in rotated config
-			}
-
-
-			//std::cout << "np=" << np << "\n";
-			if (light.position[3] == 0.f) //only direction is used!
-			{
-				lightDir.NormalizeSafe();
-				//lightDistance = 1.e3f; //large distance, but not too large to keep angle computations right
-				lightDistance = (lightDir - hitPoint).GetL2Norm(); //for attenuation, we still compute distance!
-			}
-			else //light is used as position
-			{
-				//option to use several point lights (but systematic, to avoid noise)
-				lightDir -= hitPoint; //now lightDir is the direction
-				lightDistance = EXUstd::Maximum(1e-5f, lightDir.GetL2Norm());
-				lightDir *= 1.f / lightDistance;
-				RTVector3D vec(0.f);
-				if (nLightPoints > 1)
-				{
-					RTfloat fract = ((RTfloat)np / (RTfloat)nLightPoints);
-					RTfloat radFact = sqrt(fract);
-					//RTfloat x = RTS.lightRadius0 / lightDistance * (RTfloat)sin(EXUstd::pi_f * 2.f * fract); //original
-					//RTfloat y = RTS.lightRadius0 / lightDistance * (RTfloat)cos(EXUstd::pi_f * 2.f * fract);
-
-					fract *= sqrt((RTfloat)nLightPoints);
-					RTfloat x = radFact * light.lightRadius / lightDistance * (RTfloat)sin(EXUstd::pi_f * 2.f * fract);
-					RTfloat y = radFact * light.lightRadius / lightDistance * (RTfloat)cos(EXUstd::pi_f * 2.f * fract);
-					RTVector3D basisN1, basisN2;
-					EXUmath::ComputeOrthogonalBasisVectors(lightDir, basisN1, basisN2);
-
-					lightDir += x * basisN1 + y * basisN2; //lightDir not normalized any more, but should be ok
-				}
+				lightDir += x * basisN1 + y * basisN2; //lightDir not normalized any more, but should be ok
 			}
 			
 			if (shadowMode != 2)
@@ -1660,7 +1735,14 @@ ResizableArray<GLLine> triangles6Edges;
 		//if (RTS.verbose) { PrintDelayed("complexity: " + EXUstd::ToString(complexity)); }
 
 		//shadowMode: 0=normal, 1=precompute shadow (returns shadow in RTVector3D[0]), 2=use computed shadow
-		RTS.preComputeShadow = RTS.lightRadiusVariations > 1 && (RTS.shadowScalingFactor * RTS.AAfactor) > 1; //if factor is <=1, precomputation makes no sense!
+		//the precomputation only if a light casts soft shadows: a point light with a radius; otherwise the hard shadow at
+		//full resolution (#3469); if factor is <=1, precomputation makes no sense
+		bool softShadowLight = false;
+		for (const RaytracingLight& light : RTS.lights)
+		{
+			if (light.active && light.shadow && light.position[3] != 0.f && light.lightRadius > 0.f) { softShadowLight = true; }
+		}
+		RTS.preComputeShadow = softShadowLight && RTS.lightRadiusVariations > 1 && (RTS.shadowScalingFactor * RTS.AAfactor) > 1;
 
 		if (RTS.preComputeShadow)
 		{
@@ -1707,20 +1789,21 @@ ResizableArray<GLLine> triangles6Edges;
 						}
 					}
 				});
+			//each pass from one array into the other, which are then swapped; the result is in RTS.shadowValues (#3468)
 			for (Index i = 0; i < RTS.shadowSmoothingSteps; i++)
 			{
-				SmoothImageValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowWidth, RTS.shadowHeight, RTS);
-				RTS.shadowValues = RTS.smoothShadowValues;
+				SmoothShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowWidth, RTS.shadowHeight, RTS, true);
+				RTS.shadowValues.Swap(RTS.smoothShadowValues);
 			}
-			if (RTS.shadowSmoothingSteps < 1) { RTS.smoothShadowValues = RTS.shadowValues; }
 
-			ScaleImageValues(RTS.smoothShadowValues, RTS.shadowValues, RTS.shadowWidth, RTS.shadowHeight,
-				RTS.imageWidth, RTS.imageHeight);
+			ScaleShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowWidth, RTS.shadowHeight,
+				RTS.imageWidth, RTS.imageHeight, RTS.numberOfThreadsUsed);
+			RTS.shadowValues.Swap(RTS.smoothShadowValues);
 
 			for (Index i = 0; i < RTS.shadowScalingFactor; i++) //RTS.shadowScalingFactor*2 looks better for larger shadowScalingFactor!
 			{
-				SmoothImageValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.imageWidth, RTS.imageHeight, RTS, false);
-				RTS.shadowValues = RTS.smoothShadowValues;
+				SmoothShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.imageWidth, RTS.imageHeight, RTS, false);
+				RTS.shadowValues.Swap(RTS.smoothShadowValues);
 			}
 		}
 

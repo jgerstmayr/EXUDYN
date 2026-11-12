@@ -242,128 +242,6 @@ public:
 #include <vector>
 #include <cmath>
 
-//! function to map from smaller to larger image resolution:
-template<class Tvalue>
-inline void ScaleImageValues(const ResizableArray<Tvalue>& lowresValues, ResizableArray<Tvalue>& hiresValues,
-	int lowresWidth, int lowresHeight,	int hiresWidth, int hiresHeight)
-{
-
-	float scaleX = static_cast<float>(lowresWidth) / hiresWidth;
-	float scaleY = static_cast<float>(lowresHeight) / hiresHeight;
-	hiresValues.SetNumberOfItems(hiresWidth * hiresHeight);
-
-	for (int y = 0; y < hiresHeight; ++y) {
-		for (int x = 0; x < hiresWidth; ++x) {
-			// Map the pixel coordinates to the scaled lowresValues array
-			int lowresX = static_cast<int>(x * scaleX);
-			int lowresY = static_cast<int>(y * scaleY);
-
-			// Ensure indices are within bounds
-			lowresX = std::min(lowresX, lowresWidth - 1);
-			lowresY = std::min(lowresY, lowresHeight - 1);
-
-			// Assign the corresponding lowres value
-			hiresValues[y * hiresWidth + x] = lowresValues[lowresY * lowresWidth + lowresX];
-		}
-	}
-}
-
-//! function to smooth the image values (like shadow values)
-inline void SmoothImageValues(const ResizableArray<RTfloat>& imageValues, ResizableArray<RTfloat>& smoothedValues, 
-	Index imageWidth, Index imageHeight, bool skipHardBoundaries = true) 
-{
-
-	// Create a copy of the original array to store smoothed values
-	smoothedValues = imageValues;
-
-	for (int y = 1; y < imageHeight - 1; ++y) {
-		for (int x = 1; x < imageWidth - 1; ++x) {
-			// Check the 3x3 neighborhood
-			bool containsZero = false;
-			bool containsOne = false;
-
-			if (skipHardBoundaries)
-			{
-				for (int dy = -1; dy <= 1; ++dy) {
-					for (int dx = -1; dx <= 1; ++dx) {
-						float value = imageValues[(y + dy) * imageWidth + x + dx];
-						if (value == 0.0f) { containsZero = true; }
-						if (value == 1.0f) { containsOne = true; }
-					}
-				}
-			}
-
-			// If the neighborhood does not contain both 0 and 1, apply smoothing
-			if (!(containsZero && containsOne)) {
-				float sum = 0.0f;
-				int count = 0;
-
-				for (int dy = -1; dy <= 1; ++dy) {
-					for (int dx = -1; dx <= 1; ++dx) {
-						sum += imageValues[(y + dy)* imageWidth + x + dx];
-						++count;
-					}
-				}
-
-				smoothedValues[y * imageWidth + x] = sum / count; // Average of the 3x3 neighborhood
-			}
-		}
-	}
-}
-
-//! function to smooth the image values (like shadow values)
-inline void SmoothImageValues(const ResizableArray<ShadowValue>& imageValues, ResizableArray<ShadowValue>& smoothedValues,
-	Index imageWidth, Index imageHeight, const RaytracingSettings& RTS, bool skipHardBoundaries = true)
-{
-	// Create a copy of the original array to store smoothed values
-	smoothedValues = imageValues;
-
-	for (Index lightID = 0; lightID < (Index)RTS.lights.size(); lightID++)
-	{
-		if (!RTS.lights[lightID].active || !RTS.lights[lightID].shadow) { continue; } //skip this channel
-
-		for (int y = 1; y < imageHeight - 1; ++y) 
-		{
-			for (int x = 1; x < imageWidth - 1; ++x) 
-			{
-				// Check the 3x3 neighborhood
-				bool containsZero = false;
-				bool containsOne = false;
-
-				if (skipHardBoundaries)
-				{
-					for (int dy = -1; dy <= 1; ++dy)
-					{
-						for (int dx = -1; dx <= 1; ++dx)
-						{
-							float value = imageValues[(y + dy) * imageWidth + x + dx][lightID];
-							if (value == 0.0f) { containsZero = true; }
-							if (value == 1.0f) { containsOne = true; }
-						}
-					}
-				}
-
-				// If the neighborhood does not contain both 0 and 1, apply smoothing
-				if (!(containsZero && containsOne)) {
-					float sum = 0.0f;
-					int count = 9;
-
-					for (int dy = -1; dy <= 1; ++dy) 
-					{
-						for (int dx = -1; dx <= 1; ++dx) 
-						{
-							sum += imageValues[(y + dy) * imageWidth + x + dx][lightID];
-							//++count;
-						}
-					}
-
-					smoothedValues[y * imageWidth + x][lightID] = sum / count; // Average of the 3x3 neighborhood
-				}
-			}
-		}
-	}
-}
-
 class Raytracer
 {
 private:
@@ -393,17 +271,24 @@ public:
 
 	unsigned char FloatColorToByte(RTfloat x) { return static_cast<unsigned char>((Index)(EXUstd::Clamp(x) * 255.0f)); }
 
-	//! Perform ray-triangle intersection test
-	inline void IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
-		const GLTriangle& triangle, const RaytracingSettings& RTS, IntersectionResult& result);
+	//! ray-triangle intersection, the geometry only: true and t, u, v if the ray hits the triangle (#3468)
+	inline bool IntersectRayWithTriangleGeometry(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
+		const GLTriangle& triangle, const RaytracingSettings& RTS, RTfloat& t, RTfloat& u, RTfloat& v);
+
+	//! the shading data of a hit of a triangle at u, v: normal, color, material, alpha and the side; computed only for a
+	//! hit that is closer than the closest one so far (#3468)
+	inline void ShadeTriangleHit(const RTVector3D& rayDirection, const GLTriangle& triangle, const RaytracingSettings& RTS,
+		RTfloat t, RTfloat u, RTfloat v, IntersectionResult& result);
 
 	//! ray-sphere intersection, with the exact normal (#2709)
 	inline void IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
 		const GLSphere& sphere, const RaytracingSettings& RTS, IntersectionResult& result);
 
-	//! the item iInd of the search tree: a triangle, or with iInd >= triangles.NumberOfItems() a sphere of graphicsData.glSpheres
-	inline void IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
-		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result);
+	//! the item iInd of the search tree: a triangle, or with iInd >= triangles.NumberOfItems() a sphere of graphicsData.glSpheres;
+	//! true and the shaded hit in result if it is hit closer than closestDistance and not before minDistanceZ (#3468)
+	inline bool IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
+		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, RTfloat closestDistance, RTfloat minDistanceZ,
+		IntersectionResult& result);
 
 	//! the color of a textured triangle at the hit (#3034): multiplied with the texture or replaced by it, the alpha of
 	//! RGBA multiplied, and no hit where the mask of RGBAMask is below 0.5 - also for shadows

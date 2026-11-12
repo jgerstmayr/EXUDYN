@@ -1584,7 +1584,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TIndex(minimum=0), 
             pythonName='shadowScalingFactor',
             defaultValue=3,
-            description=r'if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries'),
+            description=r'if lightRadiusVariations>1 and a light casts soft shadows (a light with a position and lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries'),
         StructureParameter(type=TIndex(minimum=0), 
             pythonName='shadowSmoothingSteps',
             defaultValue=3,

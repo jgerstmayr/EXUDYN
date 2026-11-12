@@ -6431,6 +6431,31 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-26-2"></a>
+### RG6.26.2-RG6.26.6 — raytracer: the image-preserving speedups and the precomputation (2026-11-12, #3468, #3469)
+
+*(Maintainer 2026-11-12: the proposal of raytracer speedups is very good, into the plan; start with the first steps
+right away.)*
+
+- RG6.26.2: python/PerformanceModels/raytracerShadowBenchmark.py (new): the scene of raytracerNOGLFWtest.py read from
+  the test model, six configurations, best of three, MD5 per image, `--out`/`--compare`/`--reference`; excluded from
+  the performance tests in runPerformanceTests.py (`deliberatelyNotRun`), because its images differ between platforms.
+- RG6.26.3 (I1): SmoothShadowValues/ScaleShadowValues in Raytracing.cpp on the raytracer threads by blocks of rows
+  (RaytracerParallelRows), ping-pong with ResizableArray::Swap instead of two full copies per pass; the serial
+  SmoothImageValues (both overloads) and ScaleImageValues removed from Raytracing.h.
+- RG6.26.5 (I3, I7): IntersectRayWithTriangleGeometry + ShadeTriangleHit; IntersectRayWithItem returns whether the
+  item is hit closer than the closest hit (and not before the near plane) and shades and textures only then; the light
+  direction, distance and disk basis once per light and hit.
+- RG6.26.6 (I5, I6): a 32-entry mailbox per ray; the traversal stops when the next cell starts beyond the closest hit
+  or the ray length (SearchTree::GetBinsCrossedByLineInit gives the entry parameter, optional argument; margin
+  1e-4 relative + 20 eps); the bounding-sphere test per cell removed.
+- RG6.26.4 (I2): preComputeShadow only if an active light with a shadow and a position has lightRadius > 0; the
+  description of shadowScalingFactor says so.
+- Benchmark before/after (MD5 of the images): all five configurations with a light radius or none bitwise the same,
+  13-23 % faster (N = 13, S = 3: 0.143 -> 0.111 s; per pixel 0.335 -> 0.265 s); lightRadius 0 gives exactly the hard
+  shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
+  raytracerImprovements.md section 6; revisions.md.
+
 <a id="rg4-30"></a>
 ### RG4.30, RG5.2.9 — the performance runner skips a missing package; Matrix3D final; the steps of RG5.2.7, RG5.2.8, RG6.26 (2026-11-12, #3466-#3473)
 

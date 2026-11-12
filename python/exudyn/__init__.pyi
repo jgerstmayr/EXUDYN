@@ -2343,7 +2343,7 @@ class VSettingsRaytracerAdvanced:
     searchTreeFactor: int
     """This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128."""
     shadowScalingFactor: int
-    """if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries."""
+    """if lightRadiusVariations>1 and a light casts soft shadows (a light with a position and lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries."""
     shadowSmoothingSteps: int
     """if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)."""
     showText: bool

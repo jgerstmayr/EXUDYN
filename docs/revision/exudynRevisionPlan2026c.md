@@ -52,10 +52,11 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The raytracer speedups that keep the image** (RG6.26.2-RG6.26.6), then the image-changing group (RG6.26.9-RG6.26.11)
-   and the correctness points (RG6.26.13-RG6.26.15): agreed on 2026-11-12, no decision open.
+2. **The remaining image-preserving raytracer speedups** (RG6.26.7 occluder cache, RG6.26.8 flat grid), then the
+   image-changing group (RG6.26.9-RG6.26.11) and the correctness points (RG6.26.13-RG6.26.15): agreed on 2026-11-12.
 3. **The linear algebra cleanup** (RG5.2.8.1, RG5.2.8.2) and the transposed view (RG5.2.7.2): no computation changes.
-4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+4. **The two Linux differences** (RG4.29): before the rehearsal, so that the Linux jobs can be green.
+5. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -69,7 +70,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
-  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (15 open sub-steps)
+  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (10 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -115,7 +116,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 15 | Performance |
-| RG6 | OPEN | 16 | Graphics and rendering |
+| RG6 | OPEN | 11 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -1331,25 +1332,35 @@ Maintainer 2026-11-12: the proposed speedup is very good, into the plan (RG6.26.
 
 [log](exudynRevisionLog2026c.md#rg6-26-1)
 
-#### **OPEN_RG6.26.2** A benchmark scene for the raytracer: timings and the difference to a reference with 240 samples
+#### **CLOSED_RG6.26.2** A benchmark scene for the raytracer: timings and the difference to a reference with 240 samples
 
 #3468. raytracerImprovements.md section 5.1: the scene of raytracerNOGLFWtest.py with the bodies placed and an oblique light, as a script under python/PerformanceModels; the measure for the following steps.
 
-#### **OPEN_RG6.26.3** The smoothing and upsampling of the precomputed shadow in parallel rows, without full copies
+CLOSED 2026-11-12 (#3468): bitwise (MD5 of the benchmark images); see raytracerImprovements.md section 6. [log](exudynRevisionLog2026c.md#rg6-26-2)
+
+#### **CLOSED_RG6.26.3** The smoothing and upsampling of the precomputed shadow in parallel rows, without full copies
 
 #3468. I1: ping-pong buffers instead of copying the image twice per pass, the rows by RaytracerParallelFor, one channel per shadowed light; bitwise.
 
-#### **OPEN_RG6.26.4** Precompute shadows at reduced resolution only if a light casts soft shadows
+CLOSED 2026-11-12 (#3468): bitwise (MD5 of the benchmark images); see raytracerImprovements.md section 6. [log](exudynRevisionLog2026c.md#rg6-26-2)
+
+#### **CLOSED_RG6.26.4** Precompute shadows at reduced resolution only if a light casts soft shadows
 
 #3469. I2: today the pass also runs without a light radius (+24 %); changes the images of such configurations (a hard shadow at full resolution instead of a blurred one).
 
-#### **OPEN_RG6.26.5** The triangle test split into geometry and the shading of the closest hit; the light terms once per image
+CLOSED 2026-11-12 (#3469): only with a soft-shadow light; lightRadius 0 gives the hard shadow at full resolution (0.115 -> 0.088 s). [log](exudynRevisionLog2026c.md#rg6-26-2)
+
+#### **CLOSED_RG6.26.5** The triangle test split into geometry and the shading of the closest hit; the light terms once per image
 
 #3468. I3, I7: t, u, v for every candidate, normal, colour and material only for the closest hit (and the texture mask); light position and disk offsets once per image and light; bitwise.
 
-#### **OPEN_RG6.26.6** Mailboxing, the traversal limited by the ray length, an exact closest-hit cut-off
+CLOSED 2026-11-12 (#3468): bitwise (MD5 of the benchmark images); see raytracerImprovements.md section 6. [log](exudynRevisionLog2026c.md#rg6-26-2)
+
+#### **CLOSED_RG6.26.6** Mailboxing, the traversal limited by the ray length, an exact closest-hit cut-off
 
 #3468. I5, I6: a triangle in several bins tested once per ray; a shadow ray stops at the light; the cut-off by min(tMax) instead of a bin box; bitwise.
+
+CLOSED 2026-11-12 (#3468): bitwise (MD5 of the benchmark images); see raytracerImprovements.md section 6. [log](exudynRevisionLog2026c.md#rg6-26-2)
 
 #### **OPEN_RG6.26.7** A last-occluder cache per thread and light for shadow rays
 

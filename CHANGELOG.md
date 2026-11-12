@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 573 | 1.13.602 |
+| 1.13 | Newborn | 575 | 1.13.604 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.604** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: precompute shadows at reduced resolution only if a light has a radius (#3469)
+  - description: The low-resolution shadow pass (shadowScalingFactor \> 1) also runs when no light qualifies for soft shadows (lightRadius 0, a directional light, no shadow): 24 % of the time for a blurred hard shadow. It shall run only if a light casts soft shadows; other configurations get the hard shadow at full resolution, which changes their images.
+  - **notes:** The raytracer precomputes the shadow at reduced resolution only if a light casts soft shadows (a light with a position and lightRadius \> 0); otherwise the hard shadow is computed at full resolution instead of being blurred.
+  - date resolved: **2026-11-12 20:40**, date raised: 2026-11-12
+- **1.13.603** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: the bitwise speedups of the shadows - parallel copy-free filtering, the hit test separated from the shading, mailboxing, the ray length (#3468)
+  - description: raytracerImprovements.md I1, I3, I5, I6, I7 (option O1): the smoothing and upsampling of the precomputed shadow in parallel rows with ping-pong buffers instead of full copies; IntersectRayWithTriangle split into the geometric test and the shading of the closest hit; per-image light terms hoisted out of the sample loop; a triangle met in several bins tested once per ray; the traversal stopped at the ray length and an exact closest-hit cut-off. The image stays bitwise; a benchmark scene with timings under python/PerformanceModels.
+  - **notes:** The raytracer renders 13-23 % faster with the same images: the shadow of reduced resolution is smoothed and scaled in parallel without copies, a hit is shaded only if it is the closest one, the light terms are computed once per hit, a triangle is tested once per ray, and a ray stops at its length or behind the closest hit.
+  - date resolved: **2026-11-12 20:40**, date raised: 2026-11-12
 - **1.13.602** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix3D is SlimMatrix\<3,3\> for good: remove the switch EXUDYN\_MATRIX3D\_CONSTSIZE (#3467)
   - description: The evaluation of \#3459 (faster in the rigid-body models, nowhere slower, bitwise on Windows and on gcc) decides for SlimMatrix\<3,3\>. The compile switch back to ConstSizeMatrix\<9\> is removed; Matrix3DBase\<T\> stays for templated code; the 3x3 cases of ConstSizeMatrix stay for Matrix3DF.
   - **notes:** Matrix3D is SlimMatrix\<3,3\> for good; the compile switch EXUDYN\_MATRIX3D\_CONSTSIZE is removed.

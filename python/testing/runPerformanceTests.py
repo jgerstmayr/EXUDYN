@@ -253,7 +253,7 @@ if testRunnerTools.ModuleUsesAVX2(): #the second reference set of the test suite
 coverageText, coverageFailed = testRunnerTools.CheckTestCoverage(
     modelsDir='.',
     refSolNames=set(k for k in performanceTestRefSol.keys() if k.endswith('.py')),
-    deliberatelyNotRun={})
+    deliberatelyNotRun={'raytracerShadowBenchmark.py': 'run by hand: its images differ between platforms (#3468)'})
 exu.Print(coverageText)
 
 testExamplesCnt = 0

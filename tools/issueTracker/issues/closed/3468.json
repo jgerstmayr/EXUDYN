@@ -2,10 +2,14 @@
   "number": 3468,
   "title": "Raytracer: the bitwise speedups of the shadows - parallel copy-free filtering, the hit test separated from the shading, mailboxing, the ray length",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
   "description": "raytracerImprovements.md I1, I3, I5, I6, I7 (option O1): the smoothing and upsampling of the precomputed shadow in parallel rows with ping-pong buffers instead of full copies; IntersectRayWithTriangle split into the geometric test and the shading of the closest hit; per-image light terms hoisted out of the sample loop; a triangle met in several bins tested once per ray; the traversal stopped at the ray length and an exact closest-hit cut-off. The image stays bitwise; a benchmark scene with timings under python/PerformanceModels.",
   "dateRaised": "2026-11-12",
-  "deadline": "2027-05-11"
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 20:40",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer renders 13-23 % faster with the same images: the shadow of reduced resolution is smoothed and scaled in parallel without copies, a hit is shaded only if it is the closest one, the light terms are computed once per hit, a triangle is tested once per ray, and a ray stops at its length or behind the closest hit.",
+  "resolvedInVersion": "1.13.603"
 }
