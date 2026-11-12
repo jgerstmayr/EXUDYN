@@ -197,6 +197,75 @@ const lest::test slimMatrix_specific_test[] =
 		EXPECT(Transposed(M) * N == M.GetTransposed() * N);
 	},
 
+	CASE("EXUmath products with ResultMode: add and subtract bitwise as r + p and r - p, the block as the product (#3481)")
+	{
+		const Index n = 7;
+		ResizableMatrix J(6, n), K(6, 6), A(6, 4);
+		Vector v(6), w(n), r0(6), q0(n);
+		for (Index i = 0; i < 6; i++)
+		{
+			for (Index j = 0; j < n; j++) { J(i, j) = SlimMatrixTestValue(i, j, 0.3); }
+			for (Index j = 0; j < 6; j++) { K(i, j) = SlimMatrixTestValue(i, j, 1.1); }
+			for (Index j = 0; j < 4; j++) { A(i, j) = SlimMatrixTestValue(i, j, -0.6); }
+			v[i] = SlimMatrixTestValue(i, 0, 2.2);
+			r0[i] = SlimMatrixTestValue(i, 1, 0.8);
+		}
+		for (Index j = 0; j < n; j++) { w[j] = SlimMatrixTestValue(j, 2, 0.4); q0[j] = SlimMatrixTestValue(j, 3, 0.9); }
+
+		//matrix * vector
+		Vector p, r;
+		EXUmath::MultMatrixVector(K, v, p);
+		r = r0; EXUmath::MultMatrixVectorAdd(K, v, r);
+		bool same = true;
+		for (Index i = 0; i < 6; i++) { if (r[i] != r0[i] + p[i]) { same = false; } }
+		r = r0; EXUmath::MultMatrixVector<EXUmath::ResultMode::subtract>(K, v, r);
+		for (Index i = 0; i < 6; i++) { if (r[i] != r0[i] - p[i]) { same = false; } }
+		EXPECT(same);
+
+		//matrix^T * vector
+		Vector pt, rt;
+		EXUmath::MultMatrixTransposedVector(J, v, pt);
+		rt = q0; EXUmath::MultMatrixTransposedVectorAdd(J, v, rt);
+		same = true;
+		for (Index i = 0; i < n; i++) { if (rt[i] != q0[i] + pt[i]) { same = false; } }
+		EXPECT(same);
+
+		//m1^T * m2, set and add, and the block product of the connectors: J^T K, then (J^T K) J into a block
+		ResizableMatrix JtK, JtKadd(n, 6), JtKJ, block(2 * n, 2 * n);
+		EXUmath::MultMatrixTransposedMatrix(J, K, JtK);
+		JtKadd.SetAll(0.25);
+		EXUmath::MultMatrixTransposedMatrixAdd(J, K, JtKadd);
+		EXUmath::MultMatrixMatrix(JtK, J, JtKJ);
+		block.SetAll(-1.);
+		EXUmath::MultMatrixMatrixToSubmatrix(JtK, J, block, n, 0);
+		ResizableMatrix blockAdd(block);
+		EXUmath::MultMatrixMatrixToSubmatrix<EXUmath::ResultMode::add>(JtK, J, blockAdd, 0, n);
+		same = true;
+		for (Index i = 0; i < n; i++)
+		{
+			for (Index j = 0; j < 6; j++) { if (JtKadd(i, j) != 0.25 + JtK(i, j)) { same = false; } }
+			for (Index j = 0; j < n; j++)
+			{
+				if (block(n + i, j) != JtKJ(i, j)) { same = false; }
+				if (block(i, j) != -1. || block(i, n + j) != -1.) { same = false; } //outside the block untouched
+				if (blockAdd(i, n + j) != -1. + JtKJ(i, j)) { same = false; }
+			}
+		}
+		EXPECT(same);
+
+		//m1 * m2 add, and the sizes are checked in the add modes
+		ResizableMatrix KA, KAadd(6, 4);
+		EXUmath::MultMatrixMatrix(K, A, KA);
+		KAadd.SetAll(0.5);
+		EXUmath::MultMatrixMatrix<EXUmath::ResultMode::add>(K, A, KAadd);
+		same = true;
+		for (Index i = 0; i < 6; i++) { for (Index j = 0; j < 4; j++) { if (KAadd(i, j) != 0.5 + KA(i, j)) { same = false; } } }
+		EXPECT(same);
+		ResizableMatrix wrongSize(3, 3);
+		EXPECT_THROWS(EXUmath::MultMatrixMatrix<EXUmath::ResultMode::add>(K, A, wrongSize));
+		EXPECT_THROWS(EXUmath::MultMatrixMatrixToSubmatrix(JtK, J, block, 2 * n - 1, 0));
+	},
+
 	CASE("SlimMatrix: inverse, determinant, trace, skew matrix, transposing, rows and columns")
 	{
 		SlimMatrix<3, 3> A;

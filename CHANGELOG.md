@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 585 | 1.13.614 |
+| 1.13 | Newborn | 586 | 1.13.615 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.615** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Linear algebra: one kernel per product with a result mode, the block product over pointers (#3481)
+  - description: linalgTemplatesInventory.md LT.3: EXUmath::MultMatrixVector, MultMatrixTransposedVector, MultMatrixMatrix, MultMatrixMatrixToSubmatrix and MultMatrixTransposedMatrix take a ResultMode (set, add, subtract) instead of separate set and add kernels; the add forms (MultMatrixVectorAdd, MultMatrixTransposedVectorAdd, MultMatrixTransposedMatrixAdd) are one-line aliases; MultMatrixMatrixToSubmatrix, used for the connector Jacobians and the rigid-body mass matrix, runs over the rows with pointers instead of the checked operator(); every entry keeps its order of summation, so the results stay bitwise.
+  - **notes:** The products of matrices and vectors in C++ have one kernel each with a mode (set, add, subtract); the block product of the connector Jacobians and the rigid-body mass matrix is 2-4 times faster with the same results.
+  - date resolved: **2026-11-12 23:16**, date raised: 2026-11-12
 - **1.13.614** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RunLinalgBenchmark: the connector Jacobian as CObjectConnector computes it, and 3x3 times 3 x n (#3480)
   - description: linalgTemplatesInventory.md LT.5: a group 'connector' with J^T K for a 6 x n marker Jacobian (MultMatrixTransposedMatrix) and (J^T K) J written into a block (MultMatrixMatrixToSubmatrix), n = 6, 7, 12, and the 3x3 times 3 x n product of the contacts; measured before and after RG5.2.8.4.
   - **notes:** RunLinalgBenchmark has a group 'connector': the connector Jacobian as CObjectConnector computes it and the 3x3 times 3 x n product of the contacts.

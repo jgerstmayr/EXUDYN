@@ -1,0 +1,15 @@
+{
+  "number": 3481,
+  "title": "Linear algebra: one kernel per product with a result mode, the block product over pointers",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "linalgTemplatesInventory.md LT.3: EXUmath::MultMatrixVector, MultMatrixTransposedVector, MultMatrixMatrix, MultMatrixMatrixToSubmatrix and MultMatrixTransposedMatrix take a ResultMode (set, add, subtract) instead of separate set and add kernels; the add forms (MultMatrixVectorAdd, MultMatrixTransposedVectorAdd, MultMatrixTransposedMatrixAdd) are one-line aliases; MultMatrixMatrixToSubmatrix, used for the connector Jacobians and the rigid-body mass matrix, runs over the rows with pointers instead of the checked operator(); every entry keeps its order of summation, so the results stay bitwise.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 23:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The products of matrices and vectors in C++ have one kernel each with a mode (set, add, subtract); the block product of the connector Jacobians and the rigid-body mass matrix is 2-4 times faster with the same results.",
+  "resolvedInVersion": "1.13.615"
+}

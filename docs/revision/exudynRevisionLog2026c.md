@@ -6431,6 +6431,18 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-2-8-4"></a>
+### RG5.2.8.4 — one kernel per product with a result mode, the block product over pointers (2026-11-12, #3481)
+
+*(Maintainer 2026-11-12: do the suggested next steps.)*
+
+Matrix.h (scratch p_lt3.py): ResultMode/WriteResult; the set and add kernels of the vector and matrix products merged,
+the add forms as aliases; MultMatrixMatrix rows outer; MultMatrixMatrixToSubmatrix over pointers with one block check.
+Unit test case (SlimMatrixUnitTests.h) for add/subtract and the block, bitwise; C++ unit tests passed. Test suite: the
+448 result lines unchanged. RunLinalgBenchmark: (J^T K) J into a block 171 -> 74 ns (n = 6), 652 -> 176 ns (n = 12) in
+the regular module, 2.3-2.8x in the fast one; exudev perf regular -4.8 % in total, implicit rigid models -9 to -19 %,
+fast within noise except perfConnectorInterface:rigid-n100-implicit -34 %. linalgTemplatesInventory.md section 9.
+
 <a id="rg5-2-8-1"></a>
 ### RG5.2.8.1, RG5.2.8.2, RG5.2.7.2 — dead linalg functions, the kernels under their plain names, Transposed(A) (2026-11-12, #3478, #3479)
 

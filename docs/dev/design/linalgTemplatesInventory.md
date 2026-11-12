@@ -276,3 +276,30 @@ take `SlimMatrix` already, and LT.3 keeps the sizes in locals so that they fold 
   `MultMatrixVectorSquaredAdd` checks the size of its result instead of resizing it.
 - Bits: the 448 result lines of the test suite equal those before; the C++ unit tests pass. The section numbers and
   line numbers above refer to the code before this change.
+
+## 9. Done: LT.5 and LT.3 (RG5.2.8.3, RG5.2.8.4, #3480, #3481, 2026-11-12)
+
+- LT.5: `RunLinalgBenchmark` group `connector` (`LinalgBenchmarkConnector<n>`, n = 6, 7, 12).
+- LT.3: `EXUmath::ResultMode { set, add, subtract }` and `WriteResult`; `MultMatrixVector`, `MultMatrixTransposedVector`,
+  `MultMatrixMatrix`, `MultMatrixMatrixToSubmatrix`, `MultMatrixTransposedMatrix` take the mode as their first template
+  argument (default `set`); `MultMatrixVectorAdd`, `MultMatrixTransposedVectorAdd`, `MultMatrixTransposedMatrixAdd` are
+  one-line aliases. `MultMatrixMatrix` loops rows outer; `MultMatrixMatrixToSubmatrix` runs over row-major data with
+  pointers (set: rank-1 updates of the block row, add/subtract: a local per entry) with one size check of the block
+  instead of the checked `operator()` per access. The transposed kernels take the element type of the product.
+  `FactorTimesMatrixAdd` and the `MatrixBase` members are LT.4 (RG5.2.8.5).
+- Bits: every entry is summed over k from 0 as before; the 448 result lines of the test suite are unchanged; a unit
+  test case compares add and subtract with r + p and r - p and the block with the product, bitwise.
+
+`RunLinalgBenchmark`, best of 5, ns per call, before / after:
+
+| case | regular | fast |
+|---|---|---|
+| (J^T K) J into a block, n = 6 | 171 / 74 | 180 / 71 |
+| n = 7 | 226 / 105 | 240 / 108 |
+| n = 12 | 652 / 176 | 682 / 260 |
+| J^T K 6 x n, 3x3 * 3 x n, the jacobian group | within +-10 % (noise) | within +-12 % |
+
+`exudev perf` against the logs of 1.13.599 (the linear algebra unchanged in between apart from the renames of LT.2):
+regular total 42.0 -> 40.0 s (-4.8 %), the implicit rigid models -9 to -19 %, nothing slower by more than 5 %; fast
+total 32.6 -> 32.9 s (noise), `perfConnectorInterface:rigid-n100-implicit` -34 %. Results equal except the two
+multithreaded models, which vary between runs of the same module (linalgFixedSize.md section 10).

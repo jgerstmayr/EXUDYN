@@ -1092,18 +1092,34 @@ typedef MatrixBase<Index> MatrixI;
 
 namespace EXUmath {
 
-	//implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
+	//! how a product writes its result (#3481): set it (resized to the product), add to it or subtract from it (the result
+	//! has the size of the product); each item of the product is summed over k = 0, 1, ... from 0 and then written once,
+	//! so the three modes give the bits of r = p, r += p and r -= p
+	enum class ResultMode { set, add, subtract };
 
-	//! matrix*vector multiplication with given result vector (does not invoke memory allocation if result vector has appropriate size)
-	template<class TMatrix, class TVector, class TVectorResult>
+	//! target = value, target += value or target -= value
+	template<ResultMode mode, class TTarget, class TValue>
+	inline void WriteResult(TTarget& target, const TValue& value)
+	{
+		if constexpr (mode == ResultMode::set) { target = value; }
+		else if constexpr (mode == ResultMode::add) { target += value; }
+		else { target -= value; }
+	}
+
+	//! result = matrix*vector (or +=, -= by mode); with set, result is resized, else its size is checked
+	template<ResultMode mode = ResultMode::set, class TMatrix, class TVector, class TVectorResult>
 	inline void MultMatrixVector(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+			"EXUmath::MultMatrixVector(matrix,vector,result): Size mismatch");
+		if constexpr (mode == ResultMode::set) { result.SetNumberOfItems(matrix.NumberOfRows()); }
+		else
+		{
+			CHECKandTHROW(matrix.NumberOfRows() == result.NumberOfItems(),
+				"EXUmath::MultMatrixVector(matrix,vector,result): Size mismatch of result");
+		}
 
-		result.SetNumberOfItems(matrix.NumberOfRows());
-
-		//sum of each row in a local, written once; the order of the sums is unchanged (#3417)
+		//sum of each row in a local, written once (#3417)
 		const auto* mm = matrix.GetDataPointer();
 		const auto* vv = vector.GetDataPointer();
 		auto* rr = result.GetDataPointer();
@@ -1113,41 +1129,59 @@ namespace EXUmath {
 		for (Index i = 0; i < resultLength; i++)
 		{
 			const auto* mr = &mm[i*vectorLength];
-			std::remove_reference_t<decltype(rr[0])> value = 0; //the type of the result, as before
+			std::remove_reference_t<decltype(rr[0])> value = 0; //the type of the result
 			for (Index j = 0; j < vectorLength; j++)
 			{
 				value += mr[j] * vv[j];
 			}
-			rr[i] = value;
+			WriteResult<mode>(rr[i], value);
 		}
 	}
 
-	//implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
-	//! matrix.GetTranspose()*vector multiplication with given result vector (does not invoke memory allocation if result vector has appropriate size)
+	//! result += matrix*vector
 	template<class TMatrix, class TVector, class TVectorResult>
+	inline void MultMatrixVectorAdd(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	{
+		MultMatrixVector<ResultMode::add>(matrix, vector, result);
+	}
+
+	//! result = matrix^T*vector (or +=, -= by mode), without forming the transposed
+	template<ResultMode mode = ResultMode::set, class TMatrix, class TVector, class TVectorResult>
 	inline void MultMatrixTransposedVector(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
 			"EXUmath::MultMatrixTransposedVector(matrix,vector,result): Size mismatch");
+		if constexpr (mode == ResultMode::set) { result.SetNumberOfItems(matrix.NumberOfColumns()); }
+		else
+		{
+			CHECKandTHROW(matrix.NumberOfColumns() == result.NumberOfItems(),
+				"EXUmath::MultMatrixTransposedVector(matrix,vector,result): Size mismatch of result");
+		}
 
-		result.SetNumberOfItems(matrix.NumberOfColumns());
-
-		const Real* mm = matrix.GetDataPointer();
-		const Real* vv = vector.GetDataPointer();
-		Index resultLength = result.NumberOfItems();
-		Index vectorLength = vector.NumberOfItems();
+		const auto* mm = matrix.GetDataPointer();
+		const auto* vv = vector.GetDataPointer();
+		auto* rr = result.GetDataPointer();
+		const Index resultLength = result.NumberOfItems();
+		const Index vectorLength = vector.NumberOfItems();
 
 		for (Index i = 0; i < resultLength; i++)
 		{
-			Real val = 0;
-			const Real* mr = &mm[i];
+			std::remove_cv_t<std::remove_reference_t<decltype(mm[0] * vv[0])>> value = 0; //the type of the product
+			const auto* mr = &mm[i];
 			for (Index j = 0; j < vectorLength; j++)
 			{
-				val += *mr * vv[j];
+				value += *mr * vv[j];
 				mr += resultLength;
 			}
-			result[i] = val;
+			WriteResult<mode>(rr[i], value);
 		}
+	}
+
+	//! result += matrix^T*vector, e.g. the generalized forces J^T f of the connectors
+	template<class TMatrix, class TVector, class TVectorResult>
+	inline void MultMatrixTransposedVectorAdd(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	{
+		MultMatrixTransposedVector<ResultMode::add>(matrix, vector, result);
 	}
 
 	//! matrix*square(vector) multiplication with given result vector and add to result (does not invoke memory allocation if result vector has appropriate size)
@@ -1173,176 +1207,137 @@ namespace EXUmath {
 		}
 	}
 
-	//! implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
-	//! ADD matrix.GetTranspose()*vector multiplication to given result vector (does not invoke memory allocation if result vector has appropriate size)
-	//! result vector needs to have already appropriate size
-	template<class TMatrix, class TVector, class TVectorResult>
-	inline void MultMatrixTransposedVectorAdd(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
-	{
-		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
-			"EXUmath::MultMatrixTransposedVectorAdd(matrix,vector,result): Size mismatch");
-
-		CHECKandTHROW(matrix.NumberOfColumns() == result.NumberOfItems(),
-			"EXUmath::MultMatrixTransposedVectorAdd(matrix,vector,result): Size mismatch");
-
-		const Real* mm = matrix.GetDataPointer();
-		const Real* vv = vector.GetDataPointer();
-		Index resultLength = result.NumberOfItems();
-		Index vectorLength = vector.NumberOfItems();
-
-		for (Index i = 0; i < resultLength; i++)
-		{
-			Real val = 0;
-			const Real* mr = &mm[i];
-			for (Index j = 0; j < vectorLength; j++)
-			{
-				val += *mr * vv[j];
-				mr += resultLength;
-			}
-			result[i] += val;
-		}
-	}
-
-	//! implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
-	//! ADD result of matrix*vector multiplication to given result vector (does not invoke memory allocation if result vector has appropriate size)
-	//! result vector needs to have already appropriate size
-	template<class TMatrix, class TVector, class TVectorResult>
-	inline void MultMatrixVectorAdd(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
-	{
-		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"EXUmath::MultMatrixVectorAdd(matrix,vector,result): Size mismatch");
-
-		CHECKandTHROW(matrix.NumberOfRows() == result.NumberOfItems(),
-			"EXUmath::MultMatrixVectorAdd(matrix,vector,result): Size mismatch");
-
-		const Real* mm = matrix.GetDataPointer();
-		const Real* vv = vector.GetDataPointer();
-		Index resultLength = result.NumberOfItems(); //numberOfRows
-		Index vectorLength = vector.NumberOfItems(); //numberOfColumns
-
-		for (Index i = 0; i < resultLength; i++)
-		{
-			Real val = 0;
-			const Real* mr = &mm[i*vectorLength];
-			for (Index j = 0; j < vectorLength; j++)
-			{
-				val += mr[j] * vv[j];
-			}
-			result[i] += val;
-		}
-	}
-
-	//! generic matrix*matrix multiplication template
-	template<class TMatrix1, class TMatrix2, class TMatrixResult>
+	//! result = m1*m2 (or +=, -= by mode); with set, result is resized, else its size is checked
+	template<ResultMode mode = ResultMode::set, class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixMatrix(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
 	{
 		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
-			"MultMatrixMatrix(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
-
-		result.SetNumberOfRowsAndColumns(m1.NumberOfRows(), m2.NumberOfColumns());
-
-		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+			"MultMatrixMatrix(m1,m2,result): Size mismatch");
+		if constexpr (mode == ResultMode::set) { result.SetNumberOfRowsAndColumns(m1.NumberOfRows(), m2.NumberOfColumns()); }
+		else
 		{
-			for (Index j = 0; j < m1.NumberOfRows(); j++)
+			CHECKandTHROW(result.NumberOfRows() == m1.NumberOfRows() && result.NumberOfColumns() == m2.NumberOfColumns(),
+				"MultMatrixMatrix(m1,m2,result): Size mismatch of result");
+		}
+
+		//rows outer; each entry summed in a local over k from 0 (the order of the sums of before)
+		for (Index j = 0; j < m1.NumberOfRows(); j++)
+		{
+			for (Index i = 0; i < m2.NumberOfColumns(); i++)
 			{
-				//auto value = (decltype(result(0, 0)))0.; //in this way, we can determine double or float! ==> TEST
 				Real value = 0.;
 				for (Index k = 0; k < m1.NumberOfColumns(); k++)
 				{
 					value += m1.GetUnsafe(j, k) * m2.GetUnsafe(k, i);
 				}
-				result.GetUnsafe(j, i) = value;
+				WriteResult<mode>(result.GetUnsafe(j, i), value);
 			}
 		}
 	}
 
-	//! generic matrix*matrix multiplication template, which writes results directly into submatrix (larger than the written submatrix) at position (offRows, offColumns)
-	template<class TMatrix1, class TMatrix2, class TMatrixResult>
+	//! the block of result at (offRows, offColumns) = m1*m2 (or +=, -= by mode); result keeps its size; row-major data,
+	//! the rows of the block over pointers: with set as rank-1 updates of the row, with add and subtract each entry in a
+	//! local - every entry summed over k from 0 in both forms, the bits of before (#3481)
+	template<ResultMode mode = ResultMode::set, class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixMatrixToSubmatrix(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result, Index offRows, Index offColumns)
 	{
-		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
-			"MultMatrixMatrixToSubmatrix(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
+		const Index rows1 = m1.NumberOfRows();
+		const Index inner = m1.NumberOfColumns();
+		const Index columns2 = m2.NumberOfColumns();
+		const Index columnsResult = result.NumberOfColumns();
+		CHECKandTHROW(inner == m2.NumberOfRows() && offRows >= 0 && offColumns >= 0 &&
+			offRows + rows1 <= result.NumberOfRows() && offColumns + columns2 <= columnsResult,
+			"MultMatrixMatrixToSubmatrix(m1,m2,result,offRows,offColumns): Size mismatch");
 
-		//not needed here, because larger matrix already set
-		//result.SetNumberOfRowsAndColumns(m1.NumberOfRows(), m2.NumberOfColumns());
-
-		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		const auto* a = m1.GetDataPointer();
+		const auto* b = m2.GetDataPointer();
+		auto* r = result.GetDataPointer();
+		for (Index j = 0; j < rows1; j++)
 		{
-			for (Index j = 0; j < m1.NumberOfRows(); j++)
+			const auto* aj = &a[j*inner];
+			auto* rj = &r[(j + offRows)*columnsResult + offColumns];
+			if constexpr (mode == ResultMode::set)
 			{
-				//auto value = (decltype(result(0, 0)))0.; //in this way, we can determine double or float! ==> TEST
-				Real value = 0.; //in this way, we can determine double or float! ==> TEST
-				for (Index k = 0; k < m1.NumberOfColumns(); k++)
+				for (Index i = 0; i < columns2; i++) { rj[i] = 0.; }
+				for (Index k = 0; k < inner; k++)
 				{
-					value += m1(j, k)*m2(k, i);
+					const Real factor = aj[k];
+					const auto* bk = &b[k*columns2];
+					for (Index i = 0; i < columns2; i++) { rj[i] += factor * bk[i]; }
 				}
-				result(j+offRows, i+offColumns) = value;
+			}
+			else
+			{
+				for (Index i = 0; i < columns2; i++)
+				{
+					Real value = 0.;
+					for (Index k = 0; k < inner; k++) { value += aj[k] * b[k*columns2 + i]; }
+					WriteResult<mode>(rj[i], value);
+				}
 			}
 		}
 	}
 
-	//! generic transposed(matrix)*matrix multiplication template
-	template<class TMatrix1, class TMatrix2, class TMatrixResult>
+	//! result = m1^T*m2 (or +=, -= by mode), without forming the transposed
+	template<ResultMode mode = ResultMode::set, class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixTransposedMatrix(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
 	{
 		CHECKandTHROW(m1.NumberOfRows() == m2.NumberOfRows(),
-			"MultMatrixTransposedMatrix(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
+			"MultMatrixTransposedMatrix(m1,m2,result): Size mismatch");
 
 		const Index rows = m1.NumberOfRows();
 		const Index columns1 = m1.NumberOfColumns();
 		const Index columns2 = m2.NumberOfColumns();
-		result.SetNumberOfRowsAndColumns(columns1, columns2);
-
-		//rank-1 updates row by row over the data pointers; every entry sums over k = 0, 1, ... from 0, as before (#3417)
 		const auto* p1 = m1.GetDataPointer();
 		const auto* p2 = m2.GetDataPointer();
-		auto* pr = result.GetDataPointer();
-		for (Index q = 0; q < columns1*columns2; q++) { pr[q] = 0.; }
-
-		for (Index k = 0; k < rows; k++)
+		if constexpr (mode == ResultMode::set)
 		{
-			const auto* row1 = &p1[k*columns1];
-			const auto* row2 = &p2[k*columns2];
+			result.SetNumberOfRowsAndColumns(columns1, columns2);
+			//rank-1 updates row by row over the data pointers; every entry sums over k = 0, 1, ... from 0 (#3417)
+			auto* pr = result.GetDataPointer();
+			for (Index q = 0; q < columns1*columns2; q++) { pr[q] = 0.; }
+
+			for (Index k = 0; k < rows; k++)
+			{
+				const auto* row1 = &p1[k*columns1];
+				const auto* row2 = &p2[k*columns2];
+				for (Index j = 0; j < columns1; j++)
+				{
+					const Real factor = row1[j];
+					auto* rowResult = &pr[j*columns2];
+					for (Index i = 0; i < columns2; i++)
+					{
+						rowResult[i] += factor * row2[i];
+					}
+				}
+			}
+		}
+		else
+		{
+			CHECKandTHROW(result.NumberOfRows() == columns1 && result.NumberOfColumns() == columns2,
+				"MultMatrixTransposedMatrix(m1,m2,result): Size mismatch of result");
+			//the sum of an entry in a local, written once (#3417)
+			auto* pr = result.GetDataPointer();
 			for (Index j = 0; j < columns1; j++)
 			{
-				const Real factor = row1[j];
-				auto* rowResult = &pr[j*columns2];
 				for (Index i = 0; i < columns2; i++)
 				{
-					rowResult[i] += factor * row2[i];
+					Real value = 0.;
+					for (Index k = 0; k < rows; k++)
+					{
+						value += p1[k*columns1 + j] * p2[k*columns2 + i];
+					}
+					WriteResult<mode>(pr[j*columns2 + i], value);
 				}
 			}
 		}
 	}
 
-	//! generic transposed(matrix)*matrix multiplication and add template: result = m1.T*m2
+	//! result += m1^T*m2
 	template<class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixTransposedMatrixAdd(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
 	{
-		CHECKandTHROW((m1.NumberOfRows() == m2.NumberOfRows()) &&
-			(result.NumberOfRows() == m1.NumberOfColumns()) && (result.NumberOfColumns() == m2.NumberOfColumns()),
-			"MultMatrixTransposedMatrixAdd(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
-
-		//the sum of an entry in a local, added once - the order of result + sum unchanged; data pointers (#3417)
-		const Index rows = m1.NumberOfRows();
-		const Index columns1 = m1.NumberOfColumns();
-		const Index columns2 = m2.NumberOfColumns();
-		const auto* p1 = m1.GetDataPointer();
-		const auto* p2 = m2.GetDataPointer();
-		auto* pr = result.GetDataPointer();
-
-		for (Index j = 0; j < columns1; j++)
-		{
-			for (Index i = 0; i < columns2; i++)
-			{
-				Real value = 0.;
-				for (Index k = 0; k < rows; k++)
-				{
-					value += p1[k*columns1 + j] * p2[k*columns2 + i];
-				}
-				pr[j*columns2 + i] += value;
-			}
-		}
+		MultMatrixTransposedMatrix<ResultMode::add>(m1, m2, result);
 	}
 
 	//! generic factor times matrix computation: result += factor*matrix:

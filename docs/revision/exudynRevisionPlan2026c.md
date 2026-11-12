@@ -53,8 +53,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 2. **Blurred reflections** (RG6.26.16), on the samples of the soft shadows; then the optional raytracer step RG6.26.12.
-3. **The kernels with a result mode** (RG5.2.8.4, the faster block product of the connectors), then RG5.2.8.5 and the
-   transposed view in the item code (RG5.2.7.3): no computation changes.
+3. **The rest of the linear algebra cleanup** (RG5.2.8.5) and the transposed view in the item code (RG5.2.7.3): no
+   computation changes.
 4. **The two Linux differences** (RG4.29): before the rehearsal, so that the Linux jobs can be green.
 5. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
@@ -66,7 +66,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.29 Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (8 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (7 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
@@ -115,7 +115,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
-| RG5 | OPEN | 11 | Performance |
+| RG5 | OPEN | 10 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -704,9 +704,11 @@ CLOSED 2026-11-12 (#3478): the test suite bitwise, unit tests passed; linalgTemp
 
 CLOSED 2026-11-12 (#3480): group 'connector'; the baseline in the log. [log](exudynRevisionLog2026c.md#rg5-2-8-1)
 
-##### **OPEN_RG5.2.8.4** One kernel per product with a result mode (set, add, subtract)
+##### **CLOSED_RG5.2.8.4** One kernel per product with a result mode (set, add, subtract)
 
 #3462. LT.3 (section 6.1): generic element type for the transposed kernels, results through pointers, MultMatrixMatrix rows outer, MultMatrixMatrixToSubmatrix with pointers (the slow kernel in hot code); unit tests of every mode bitwise against the kernels of today; RunLinalgBenchmark before and after.
+
+CLOSED 2026-11-12 (#3481): bitwise; the block product 2.3-3.7x faster, exudev perf regular -4.8 %; linalgTemplatesInventory.md section 9. [log](exudynRevisionLog2026c.md#rg5-2-8-4)
 
 ##### **OPEN_RG5.2.8.5** The MatrixBase members AddSubmatrix, AddSubmatrixTransposed and MultAdd with a factor, the duplicates removed
 
