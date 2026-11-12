@@ -50,16 +50,20 @@ def UFshortBearing(mbs, t, itemNumber, eccentricity, eccentricity_t, angularVelo
     e = cMath.norm(eccentricity)
     if e == 0:
         return [0, 0, 0]
-    ur = np.array(eccentricity)/e
-    ut = np.cross(axis, ur)
+    #sums in a fixed order: np.dot and np.cross use the BLAS of the platform, whose last bit differs (#3482)
+    ur = [eccentricity[0]/e, eccentricity[1]/e, eccentricity[2]/e]
+    ut = [axis[1]*ur[2] - axis[2]*ur[1], axis[2]*ur[0] - axis[0]*ur[2], axis[0]*ur[1] - axis[1]*ur[0]]
     eps = min(e/c, 0.99)
-    eps_t = np.dot(eccentricity_t, ur)/c
-    gamma_t = np.dot(eccentricity_t, ut)/e
-    K = mu*R*L**3/(2*c**2)
+    eps_t = (eccentricity_t[0]*ur[0] + eccentricity_t[1]*ur[1] + eccentricity_t[2]*ur[2])/c
+    gamma_t = (eccentricity_t[0]*ut[0] + eccentricity_t[1]*ut[1] + eccentricity_t[2]*ut[2])/e
+    K = mu*R*L*L*L/(2*c*c)
     w = angularVelocity - 2*gamma_t
-    Fr = -K*(2*eps**2*w/(1 - eps**2)**2 + np.pi*(1 + 2*eps**2)*eps_t/((1 - eps**2)**2*cMath.sqrt(1 - eps**2)))
-    Ft = K*(np.pi*eps*w/(2*(1 - eps**2)*cMath.sqrt(1 - eps**2)) + 4*eps*eps_t/(1 - eps**2)**2)
-    return list(Fr*ur + Ft*ut)
+    #products instead of **, which calls the pow of the C library and differs in its last bit (#3482)
+    e2 = eps*eps
+    s = 1 - e2
+    Fr = -K*(2*e2*w/(s*s) + np.pi*(1 + 2*e2)*eps_t/((s*s)*cMath.sqrt(s)))
+    Ft = K*(np.pi*eps*w/(2*s*cMath.sqrt(s)) + 4*eps*eps_t/(s*s))
+    return [Fr*ur[0] + Ft*ut[0], Fr*ur[1] + Ft*ut[1], Fr*ur[2] + Ft*ut[2]]
 
 bShort = Journal(0, viscosity=mu, bearingModel=exu.JournalBearingModel.Short)
 bLong = Journal(0.1, omega=omegaLong, viscosity=mu, bearingModel=exu.JournalBearingModel.Long)

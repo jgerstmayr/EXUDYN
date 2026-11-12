@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.615.dev1
-- last change = 2026-11-12
-- Number of issues = 3482
-- Number of resolved issues = 3392 (615 in current version)
+- Exudyn version = 1.13.617.dev1
+- last change = 2026-11-13
+- Number of issues = 3483
+- Number of resolved issues = 3394 (617 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9041,9 +9041,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Raytracer: blurred (glossy) reflections with a parameter per material and a switch (#3473)
   - description: Reflections are mirror-sharp. A material shall get a roughness (0 = sharp, the default) by which the reflected ray is spread over a cone, sampled with a number of reflection rays (a raytracer setting; 1 or roughness 0 keeps the sharp reflection and its cost), with the stratified samples and the adaptive refinement of the soft shadows.
-  - date raised: 2026-11-12
-- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux (#3465)
-  - description: With gcc 13 (WSL, venvP313, 1.13.599) journalBearingTest.py gives 8.78901963260202 against the reference 8.789027047564257 (error -7.4e-6) and sliderCrank3Dbenchmark.py 5.7911914985923145 against 5.7911914993916 (-8.0e-10); all other 341 test models and the 108 mini examples agree. Both models were added or changed after the last Linux run (1.13.81). Matrix3D as SlimMatrix or as ConstSizeMatrix\<9\> gives the same results on Linux, so it is not the cause. Find the cause as in revision2026c step RG4.1 (the math functions, the order of sums), or record the models in UnresolvedOnLinux() with the reason.
   - date raised: 2026-11-12
 - `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` Consolidate the linear algebra function templates (MultMatrix..., Add..., Transposed...) (#3462)
   - description: Inventory in docs/dev/design/linalgTemplatesInventory.md: dead functions, duplicates (set/add pairs, AddSubmatrixTransposed and AddTransposedSubmatrix, the WithFactor variants, 33 non-template wrappers, 75 explicit template argument lists), and slow kernels in hot code (MultMatrixMatrix2SubmatrixTemplate with checked access in the connector Jacobians and the rigid-body mass matrix); proposed: one kernel per product with a result mode set/add/subtract, the order of the sums kept.

@@ -6520,6 +6520,27 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg4-29"></a>
+### RG4.29 — the two Linux differences: Python pow and the platform BLAS (2026-11-13, #3465, #3482)
+
+*(Maintainer 2026-11-12: do the suggested next steps.)*
+
+- journalBearingTest.py: runs on Windows and in WSL (scratch jb/*.py). The user function (Python) uses `**` - the
+  pow of the C library, UCRT and glibc differ in the last bit - and np.dot/np.cross (MKL on Windows, OpenBLAS on Linux).
+  A variant with explicit sums and products gives 8.789027659863773 on both platforms; replacing only the sums already
+  moves the Windows result by 5.6e-6: the model amplifies a last bit (the journals share one Newton system with
+  relativeTolerance 1e-10). The user function is written so (#3482).
+- sliderCrank3Dbenchmark.py: pow alone was not it. The initial data dumped as hex floats on both platforms (scratch
+  jb/makeDump.py) differ in one bit: the third component of the local initial angular velocity of the connecting rod,
+  computed by mbs.CreateRigidBody for the rotation vector node as np.dot(A.T, omega) - the BLAS again; the other node
+  types compute it in C++. Now a sum in a fixed order (mainSystemExtensions.py).
+- New references: journalBearingTest 8.789027659863773, sliderCrank3Dbenchmark 5.791191498592315 (the former Linux
+  value), modelLibraryTest 18.49097905679096 (rotation vector nodes, 3e-13); AVX2 set: journalBearingTest
+  8.789015940529531, sliderCrank3Dbenchmark 5.791191499298896, modelLibraryTest removed (now the regular value).
+- Found on the way: the rest of the Python utilities still use numpy products of 3x3 matrices (e.g.
+  RigidBodyInertia.Rotated, Transformed) - the same kind of last-bit difference between platforms, where a model is as
+  sensitive as these two.
+
 <a id="rg4-30"></a>
 ### RG4.30, RG5.2.9 — the performance runner skips a missing package; Matrix3D final; the steps of RG5.2.7, RG5.2.8, RG6.26 (2026-11-12, #3466-#3473)
 

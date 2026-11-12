@@ -55,8 +55,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 2. **Blurred reflections** (RG6.26.16), on the samples of the soft shadows; then the optional raytracer step RG6.26.12.
 3. **The rest of the linear algebra cleanup** (RG5.2.8.5) and the transposed view in the item code (RG5.2.7.3): no
    computation changes.
-4. **The two Linux differences** (RG4.29): before the rehearsal, so that the Linux jobs can be green.
-5. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -64,7 +63,6 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
-  - RG4.29 Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
 - **RG5** Performance
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (7 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
@@ -114,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | CLOSED | 0 | Release and publication |
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 4 | Implementation problems and bugs |
+| RG4 | OPEN | 3 | Implementation problems and bugs |
 | RG5 | OPEN | 10 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
@@ -499,9 +497,11 @@ CLOSED 2026-11-10 (#904 closed as won't fix; maintainer 2026-11-10): the contact
 
 CLOSED 2026-11-12 (#3464): built in WSL; the ambiguous py::str of a dict, the uninitialized Matrix3D, the inline IntersectRayWithItem and the narrowing sin/cos fixed; the backslashes of the pybind descriptions escaped (8 LaTeX docstrings of exudyn.cUtilities were broken on every platform). Linux suite: 341 of 343 test models, all mini examples; the two others are #3465 (RG4.29), the same with Matrix3D as ConstSizeMatrix, so the switch is bitwise on gcc. [log](exudynRevisionLog2026c.md#rg4-28)
 
-### **OPEN_RG4.29** Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
+### **CLOSED_RG4.29** Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
 
 #3465, found in RG4.28 (the first Linux run since 1.13.81).
+
+CLOSED 2026-11-13 (#3465, #3482): Python ** (the C library pow) in the user function of journalBearingTest.py, and np.dot (the platform BLAS) for the initial angular velocity of rotation vector nodes in CreateRigidBody; both written with sums in a fixed order; new references. [log](exudynRevisionLog2026c.md#rg4-29)
 
 ### **CLOSED_RG4.30** runPerformanceTests.py skips a model whose package of the tests extra is missing
 

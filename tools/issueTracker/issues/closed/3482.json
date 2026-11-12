@@ -1,0 +1,15 @@
+{
+  "number": 3482,
+  "title": "journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux: Python pow and the platform BLAS",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The causes of #3465: the user function of journalBearingTest.py uses Python's ** (the pow of the C library, UCRT and glibc round differently), and mbs.CreateRigidBody computes the local initial angular velocity of a rotation vector node by np.dot (MKL on Windows, OpenBLAS on Linux round differently: the last bit of one component of the connecting rod). Both models amplify such a bit to 7e-6 and 8e-10. The user function is written with products; CreateRigidBody transforms the angular velocity by a sum in a fixed order, as the other node types do in C++.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-13 00:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mbs.CreateRigidBody computes the initial angular velocity of a rotation vector node without np.dot, so that the model has the same initial values on every platform (np.dot uses the BLAS of the platform, whose last bit differs); journalBearingTest.py's user function uses products instead of ** and numpy.",
+  "resolvedInVersion": "1.13.617"
+}

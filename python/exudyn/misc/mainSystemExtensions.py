@@ -632,7 +632,10 @@ def MainSystemCreateRigidBody(mbs,
             VNodeClass = eii.VNodeRigidBodyRxyz
         elif nodeType == exudyn.NodeType.RotationRotationVector:
             def AngularVelocity2RotationVector_t(angularVelocity, rotMatrix):
-                return np.dot(rotMatrix.transpose(),angularVelocity)
+                #A^T omega as a sum in a fixed order: np.dot uses the BLAS of the platform, whose last bit differs (#3482)
+                A = np.array(rotMatrix, dtype=float)
+                w = [float(x) for x in angularVelocity]
+                return np.array([float(A[0, i])*w[0] + float(A[1, i])*w[1] + float(A[2, i])*w[2] for i in range(3)])
                 
             RotationMatrix2parameters = RotationMatrix2RotationVector
             AngularVelocity2parameters_t = AngularVelocity2RotationVector_t

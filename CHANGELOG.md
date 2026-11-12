@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 586 | 1.13.615 |
+| 1.13 | Newborn | 588 | 1.13.617 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.617** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux: Python pow and the platform BLAS (#3482)
+  - description: The causes of \#3465: the user function of journalBearingTest.py uses Python's \*\* (the pow of the C library, UCRT and glibc round differently), and mbs.CreateRigidBody computes the local initial angular velocity of a rotation vector node by np.dot (MKL on Windows, OpenBLAS on Linux round differently: the last bit of one component of the connecting rod). Both models amplify such a bit to 7e-6 and 8e-10. The user function is written with products; CreateRigidBody transforms the angular velocity by a sum in a fixed order, as the other node types do in C++.
+  - **notes:** mbs.CreateRigidBody computes the initial angular velocity of a rotation vector node without np.dot, so that the model has the same initial values on every platform (np.dot uses the BLAS of the platform, whose last bit differs); journalBearingTest.py's user function uses products instead of \*\* and numpy.
+  - date resolved: **2026-11-13 00:21**, date raised: 2026-11-12
+- **1.13.616** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux (#3465)
+  - description: With gcc 13 (WSL, venvP313, 1.13.599) journalBearingTest.py gives 8.78901963260202 against the reference 8.789027047564257 (error -7.4e-6) and sliderCrank3Dbenchmark.py 5.7911914985923145 against 5.7911914993916 (-8.0e-10); all other 341 test models and the 108 mini examples agree. Both models were added or changed after the last Linux run (1.13.81). Matrix3D as SlimMatrix or as ConstSizeMatrix\<9\> gives the same results on Linux, so it is not the cause. Find the cause as in revision2026c step RG4.1 (the math functions, the order of sums), or record the models in UnresolvedOnLinux() with the reason.
+  - **notes:** journalBearingTest.py and sliderCrank3Dbenchmark.py give the same results on Windows and Linux; the causes are \#3482.
+  - date resolved: **2026-11-13 00:21**, date raised: 2026-11-12
 - **1.13.615** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Linear algebra: one kernel per product with a result mode, the block product over pointers (#3481)
   - description: linalgTemplatesInventory.md LT.3: EXUmath::MultMatrixVector, MultMatrixTransposedVector, MultMatrixMatrix, MultMatrixMatrixToSubmatrix and MultMatrixTransposedMatrix take a ResultMode (set, add, subtract) instead of separate set and add kernels; the add forms (MultMatrixVectorAdd, MultMatrixTransposedVectorAdd, MultMatrixTransposedMatrixAdd) are one-line aliases; MultMatrixMatrixToSubmatrix, used for the connector Jacobians and the rigid-body mass matrix, runs over the rows with pointers instead of the checked operator(); every entry keeps its order of summation, so the results stay bitwise.
   - **notes:** The products of matrices and vectors in C++ have one kernel each with a mode (set, add, subtract); the block product of the connector Jacobians and the rigid-body mass matrix is 2-4 times faster with the same results.

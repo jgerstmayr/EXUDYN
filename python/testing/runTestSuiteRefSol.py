@@ -263,7 +263,7 @@ def TestExamplesReferenceSolution():
         'convexConvexContactTest.py':9.948739037154743, #2026-11-07: an icosahedron dropped flat, the points in contact in the first blocks (#3349), before 8.769306311053006; 2026-11-07: the resting icosahedron, EPA refined (#3346), before 7.769306311053007; 2026-11-07: the resting cube, EPA (#3338), before 6.769306311053007; new 2026-11-07: ObjectContactConvexConvex, Distance, the contact points of faces, friction, the user function (#3331)
         'coneContactTest.py':6.694817130343234, #new 2026-11-07: ObjectContactConeCone and ObjectContactConeTriangle, Distance, standing, upside down, lying on a side line (#3332)
         'hollowContactTest.py':4.0186324058130305, #new 2026-11-07: isHollowCylinder1 and isHollowCone1: a shaft in a bore, a shaft through a ring, a cone in a seat, the refusal of a shaft too large (#3334)
-        'journalBearingTest.py':8.789027047564257, #2026-11-07: journals turning the other way, |w| in the radial force (#3345), before 7.789028309612511; new 2026-11-07: ObjectJournalBearing, the short bearing at its closed-form equilibrium, floating journals, the long bearing, the user function, the dry contact (#3335)
+        'journalBearingTest.py':8.789027659863773, #2026-11-12: the user function without ** and np.dot, the same bits on every platform and in both modules (#3482), before 8.789027047564257; 2026-11-07: journals turning the other way, |w| in the radial force (#3345), before 7.789028309612511; new 2026-11-07: ObjectJournalBearing, the short bearing at its closed-form equilibrium, floating journals, the long bearing, the user function, the dry contact (#3335)
         'contactPlasticityTest.py':5.400193744426681, #new 2026-11-07: the adhesive elasto-plastic model of the contact points of ObjectContactConvexConvex (#3336)
         'capsulePrimitiveContactTest.py':16.948902336288814, #new 2026-11-08: capsules and ObjectContactPrimitiveConvex (#3364, #3365, #3366)
         'createPrimitiveContactsTest.py':11.238989678562266, #2026-11-07: a ball on an infinite plane given as a list (#3347), before 10.139087778562265; new 2026-11-07: the Create functions of the primitive contacts, bodies resting at their closed-form heights (#3342)
@@ -285,7 +285,7 @@ def TestExamplesReferenceSolution():
         'sphereTrianglePlaneTest.py':6.456291520443378, #new 2026-11-07: the option infinitePlane of ObjectContactSphereTriangle (#3323)
         'kinematicChainTest.py':37.53287798230574, #new 2026-11-05: exudyn.cUtilities.KinematicChain against the Python functions of Robot (#3259)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
-        'modelLibraryTest.py':18.490979056790675, #2026-11-06: a restart of the modified Newton method takes the ODE1 derivatives of the start of the step (#3300), before 18.49098226089841; 2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 18.491003336653357; 2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289) and the stages of Lie group nodes in the implicit Runge-Kutta solvers by Runge-Kutta-Munthe-Kaas (#3290), before 18.49100303707696; 2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 18.4910098095576; new 2026-11-05: the models of modelLibrary.py, each with its step and half of it (#3257)
+        'modelLibraryTest.py':18.49097905679096, #2026-11-12: the initial angular velocity of its rotation vector nodes without np.dot (#3482), before 18.490979056790675; 2026-11-06: a restart of the modified Newton method takes the ODE1 derivatives of the start of the step (#3300), before 18.49098226089841; 2026-11-06: the ODE1 coordinates start from their derivatives at the initial state (#3258), before 18.491003336653357; 2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289) and the stages of Lie group nodes in the implicit Runge-Kutta solvers by Runge-Kutta-Munthe-Kaas (#3290), before 18.49100303707696; 2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 18.4910098095576; new 2026-11-05: the models of modelLibrary.py, each with its step and half of it (#3257)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)
         'homogeneousTransformationTest.py':178.9377398330175, #new 2026-10-02: exudyn.HT against the 4x4 matrices of rigidBodyUtilities, and the output variable HomogeneousTransformation (#2780)
         'inspectTest.py':49, #2026-10-04: the node types a node marker requests (#2817), before 47; 2026-10-02: the output variable HomogeneousTransformation of the rigid body and its node (#2780), before 45; 2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
@@ -367,7 +367,7 @@ def TestExamplesReferenceSolution():
         #depends on which numpy release built the marker positions. It is the value numpy
         #2.2.4 produced and the one an explicit sum produces; the old 7.256859912845965 was
         #what numpy 2.4.6's matmul happened to give
-        'sliderCrank3Dbenchmark.py':5.7911914993916, #2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289), before 5.791191505820713; 2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 5.7911915103432765; 2026-11-05: the IFToMM model of 2026 (#2326) - Lie group nodes, joints in the body frames, generalized-alpha with the default spectral radius - replaces the former model (Euler parameters, 7.2568600591641665); tEnd 0.5 of the 5 s of the benchmark
+        'sliderCrank3Dbenchmark.py':5.791191498592315, #2026-11-12: CreateRigidBody transforms the initial angular velocity of the rotation vector node without np.dot, the same bits on every platform and in both modules (#3482), before 5.7911914993916; 2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289), before 5.791191505820713; 2026-11-06: the composition of rotation vectors without the quantization of small angles (#3288); before 5.7911915103432765; 2026-11-05: the IFToMM model of 2026 (#2326) - Lie group nodes, joints in the body frames, generalized-alpha with the default spectral radius - replaces the former model (Euler parameters, 7.2568600591641665); tEnd 0.5 of the 5 s of the benchmark
         'sliderCrank3Dtest.py':3.3642761735819824, #2026-11-10: the joints with analytic derivatives, the velocity level by the twists (#2884), before 3.3642761737162674; 2026-11-06: the term of the initial velocities in the initial accelerations along the motion, with the part along the Euler parameters (#3289), before 3.3642761721569; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 3.364276178092191
         'sliderCrankFloatingTest.py':0.5916491633788337,
         'solverExplicitODE1ODE2test.py':2.0696926769200483, #2026-11-06: the PI step size controller and the absolute values in the error scale of DOPRI5, smaller errors (#3245); before 3.3767933275918964; new 2022-07-11 (CState Parallel); 
@@ -826,12 +826,13 @@ def PerformanceTestsReferenceSolution():
 def AVX2ReferenceSolutionUpdate():
 
     refSolAVX2 = {
+        'journalBearingTest.py':                   8.789015940529531,         #drift 1.2e-05 (#3482)
+        'sliderCrank3Dbenchmark.py':               5.791191499298896,         #drift 7.1e-10 (#3482)
         'generalContactFrictionTests.py':          12.022115875486731,        #drift 4.8e-03
         'contactPrimitivesTableTest.py':           10.521724576125148,        #drift 6.2e-04
         'generalContactCylinderTest.py':           12.246589711797922,        #drift 3.1e-04
         'explicitSolversPostNewtonTest.py':        4.557770844507367,         #drift 1.1e-04
         'sphereTriangleTest2.py':                  4.356258097368413,         #drift 8.0e-06
-        'journalBearingTest.py':                   8.789021646959824,         #drift 5.4e-06
         'restartFileTest.py':                      -2.931848,                 #drift 1.0e-06
         'generalContactImplicit1.py':              0.7758156549599001,        #drift 8.9e-08
         'ANCFbeltDrive.py':                        -0.0011715885324635744,    #drift 1.0e-08
@@ -845,7 +846,6 @@ def AVX2ReferenceSolutionUpdate():
         'geometricallyExactBeamMassTest.py':       2.994207078782524,         #drift 3.6e-10
         'homogeneousTransformationParameterTest.py': 8.981932851070072,         #drift 3.5e-10
         'geometricallyExactBeamRightAngleFrame.py': 3.306181076888073,         #drift 3.2e-10
-        'sliderCrank3Dbenchmark.py':               5.791191499538414,         #drift 1.5e-10
         'ObjectJointGeneric.py':                   -3.1340201971054413,       #drift 3.6e-11
         'userJointTest.py':                        28.411748466390463,        #drift 1.6e-11
         'fourBarMechanismIftomm.py':               0.17216652708895938,       #drift 8.9e-12
@@ -870,7 +870,6 @@ def AVX2ReferenceSolutionUpdate():
         'rollingDiscRollingFrictionTest.py':       7.475420024768965,         #drift 1.5e-13
         'bricardMechanism.py':                     4.172189592784257,         #drift 1.4e-13
         'userConnectorContactTest.py':             26.27081007873662,         #drift 1.3e-13
-        'modelLibraryTest.py':                     18.490979056790795,        #drift 1.2e-13
         'createSphereQuadContact2.py':             0.1561658243291206,        #drift 1.2e-13
         'symbolicItemOutputTest.py':               3.4207948324002095,        #drift 1.1e-13
         'carRollingDiscTest.py':                   -0.23940048804187597,      #drift 1.0e-13
