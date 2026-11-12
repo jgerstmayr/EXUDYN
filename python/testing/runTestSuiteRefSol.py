@@ -343,6 +343,7 @@ def TestExamplesReferenceSolution():
         'viewHideMbsTest.py':0.0, #new 2026-11-11: view0.scene.hideMbs, the number of failed checks (#3442)
         'objectFFRFsparseMassMatrixTest.py':0.0030218806901878416, #new 2026-11-12: ObjectFFRF.sparseMassMatrix, the mass matrix as triplets (#2183, #3449)
         'linearSolverDropThresholdTest.py':0.8802969138878017, #new 2026-11-12: linearSolver.dropThreshold, the near-zero entries of the sparse Newton Jacobian left out (#3448)
+        'objectFFRFanalyticJacobianTest.py':0.002746006960099919, #new 2026-11-12: the analytic ODE2 Jacobian of ObjectFFRF against numericalJacobian = True (#3447)
         'objectFFRFreducedOrderMarkerModesTest.py':0.05100457514782404, #new 2026-11-12: ObjectFFRFreducedOrder.precomputeMarkerModes, the superelement markers from the weighted modes, HCB RBE2/RBE3 with 0-11 eigenmodes (#2184, #3450)
         'reevingSystemTangentTest.py':3.025965077828625, #new 2026-11-11: the common tangent of two sheaves with non-parallel axes (#3412)
         'relativeRotationTranslationMechanism.py': 1.509631854432837, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 1.509631854432179; new 2026-09-11

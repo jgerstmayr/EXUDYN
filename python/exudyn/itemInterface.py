@@ -4326,6 +4326,8 @@ class ObjectFFRF:
 
         sparseMassMatrix: True: the mass matrix is given to the solver as sparse triplets - the triplets of ``massMatrixFF`` and the nonzero entries of the coupling blocks -, which is much faster for larger meshes; False: as a dense matrix of all coordinates, whose size and work grow with the square of the number of mesh coordinates; the dense matrix is used anyway with a ``massMatrixUserFunction``, with ``computeFFRFterms`` = False or with a dense ``massMatrixFF``; type: bool
 
+        numericalJacobian: False: the object computes its ODE2 Jacobian as sparse triplets - the stiffness, damping and mass matrices and the quadratic velocity terms by the mesh coordinates analytic, by the rotation parameters of the reference frame by local differences -, on Euler parameters and Tait-Bryan angles without a forceUserFunction; True: the system differentiates the object numerically, by all of its coordinates; type: bool
+
         objectIsInitialized: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble(); type: bool
 
         visualization: visualization data, see VObjectFFRF
@@ -4334,7 +4336,7 @@ class ObjectFFRF:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = None, stiffnessMatrixFF = None, dampingMatrixFF = None, forceVector = [], forceUserFunction: Union[ObjectFFRFForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFMassMatrixUserFunction, int] = 0, computeFFRFterms = True, sparseMassMatrix = True, objectIsInitialized = False, visualization = None):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = None, stiffnessMatrixFF = None, dampingMatrixFF = None, forceVector = [], forceUserFunction: Union[ObjectFFRFForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFMassMatrixUserFunction, int] = 0, computeFFRFterms = True, sparseMassMatrix = True, numericalJacobian = False, objectIsInitialized = False, visualization = None):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixFF = massMatrixFF
@@ -4345,6 +4347,7 @@ class ObjectFFRF:
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
         self.sparseMassMatrix = sparseMassMatrix
+        self.numericalJacobian = numericalJacobian
         self.objectIsInitialized = objectIsInitialized
         self.visualization = _ItemVisualization(visualization, VObjectFFRF)
 
@@ -4360,6 +4363,7 @@ class ObjectFFRF:
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'computeFFRFterms', self.computeFFRFterms
         yield 'sparseMassMatrix', self.sparseMassMatrix
+        yield 'numericalJacobian', self.numericalJacobian
         yield 'objectIsInitialized', self.objectIsInitialized
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]

@@ -52,8 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The analytic Jacobian of ObjectFFRF** (RG5.4.3), the largest remaining cost of ObjectFFRF on larger meshes; the
-   tangent operator in the Jacobian of MarkerSuperElementRigid (RG5.4.5).
+2. **The reaction forces of a joint on a superelement marker** (RG5.4.6), now the largest cost of ObjectFFRF on larger
+   meshes; the tangent operator in the Jacobian of MarkerSuperElementRigid (RG5.4.5).
 3. **The fixed-size matrices** (RG5.2), after the maintainer's evaluation of docs/dev/design/linalgFixedSize.md.
 4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
@@ -624,9 +624,11 @@ CLOSED 2026-11-12 (#3450): SuperElementMarkerInterface (p_0, the weighting W of 
 
 CLOSED 2026-11-12: moved to RG5.4.5, as RG5.4.2 is closed.
 
-#### **OPEN_RG5.4.3** An analytic Jacobian of ObjectFFRF as sparse triplets
+#### **CLOSED_RG5.4.3** An analytic Jacobian of ObjectFFRF as sparse triplets
 
 #3447. The numerical Jacobian is the largest cost of ObjectFFRF on larger meshes after #2183 (7.9 of 24 s for 1525 nodes).
+
+CLOSED 2026-11-12 (#3447; maintainer 2026-11-12: yes, if not too complicated): CObjectFFRF::ComputeJacobianODE2_ODE2 as sparse triplets - K, D and the quadratic velocity terms by the mesh coordinates analytic, by the rotation parameters by local differences of the new ComputeFrameTerms (shared with ComputeODE2LHS), as ObjectFFRFreducedOrder (#3212); ObjectFFRF.numericalJacobian (default False) as fallback; Euler parameters and Tait-Bryan angles without forceUserFunction. Jacobian 550 times faster at 1525 nodes (8.19 -> 0.015 s for 20 steps), total 24.1 -> 16.0 s; Newton Jacobians agree to 3e-9, motion to 1e-12; test model objectFFRFanalyticJacobianTest.py. The rest is the reaction forces of the joint on the superelement marker (12.3 of 14.2 s), #3452, RG5.4.6. [log](exudynRevisionLog2026c.md#rg5-4-3)
 
 #### **CLOSED_RG5.4.4** ObjectFFRF.sparseMassMatrix instead of exudyn.special.solver.superElementSparseMassMatrix
 
@@ -637,6 +639,10 @@ CLOSED 2026-11-12 (#3449): the parameter sparseMassMatrix of ObjectFFRF (default
 #### **OPEN_RG5.4.5** MarkerSuperElementRigid: the tangent operator in the rotation Jacobian without useAlternativeApproach
 
 #3451, found in #3450: the Jacobian of the rotation leaves out TexpSO3 with useAlternativeApproach = False, while the angular velocity applies it.
+
+#### **OPEN_RG5.4.6** The reaction forces of a joint on a MarkerSuperElementPosition of ObjectFFRF
+
+#3452, found in #3447: on 1525 nodes the solver timer reactionForces takes 12.3 of 14.2 s (0.14 s per Newton iteration); to be located and removed.
 
 ### **OPEN_RG5.5** Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 

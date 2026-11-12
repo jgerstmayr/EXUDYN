@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 562 | 1.13.588 |
+| 1.13 | Newborn | 563 | 1.13.589 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.589** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRF: analytic Jacobian instead of the numerical one (#3447)
+  - description: ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (\#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.
+  - **notes:** ObjectFFRF computes its ODE2 Jacobian as sparse triplets - stiffness, damping and the quadratic velocity terms by the mesh coordinates analytic, by the rotation parameters by local differences -, on Euler parameters and Tait-Bryan angles without a forceUserFunction: 550 times faster than the numerical Jacobian at 1525 nodes; ObjectFFRF.numericalJacobian = True lets the system differentiate it as before
+  - date resolved: **2026-11-12 08:58**, date raised: 2026-11-12
 - **1.13.588** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Clean up the interface between the superelement markers and the superelements (#3450)
   - description: MarkerSuperElementPosition and MarkerSuperElementRigid compute their sums over the mesh nodes through a set of functions of the superelements (GetMeshNodeLocalPosition, GetMeshNodePosition, ...); the code is cleaned up and the interface adapted, as the base of the precomputed interface sums (\#2184).
   - **notes:** the interface between the superelement markers and the superelements: what a marker needs of its mesh nodes is computed by the superelement at Assemble; a changed weightingFactors takes effect without a new Assemble; the position of MarkerSuperElementPosition with weights that do not sum up to 1 follows the floating frame like that of MarkerSuperElementRigid

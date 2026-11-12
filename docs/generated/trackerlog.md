@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.588.dev1
+- Exudyn version = 1.13.589.dev1
 - last change = 2026-11-12
-- Number of issues = 3452
-- Number of resolved issues = 3365 (588 in current version)
+- Number of issues = 3453
+- Number of resolved issues = 3366 (589 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,11 +9039,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` The reaction forces of a joint on a MarkerSuperElementPosition of ObjectFFRF dominate larger meshes (#3452)
+  - description: On an NGsolve block of 1525 nodes (4582 coordinates) as ObjectFFRF on a SphericalJoint through a MarkerSuperElementPosition, 20 steps of GeneralizedAlpha with modified Newton: the solver timer reactionForces (CSystem::ComputeODE2ProjectedReactionForces) takes 12.3 of 14.2 s, 0.14 s per Newton iteration, after the analytic Jacobian of ObjectFFRF (\#3447); the cost is to be located - the Jacobian of the constraint through the marker on all coordinates of the body - and removed.
+  - date raised: 2026-11-12
 - `CHECK` `LOW EFF` `raised by: Claude-JG` MarkerSuperElementRigid: the rotation Jacobian without useAlternativeApproach leaves out the tangent operator TexpSO3 (#3451)
   - description: With rotationsExponentialMap \> 0 and experimental.markerSuperElementRigidTexpSO3 (default), the rotation Jacobian of MarkerSuperElementRigid is multiplied by the tangent operator TexpSO3 of the weighted rotation only with useAlternativeApproach = True; with False the Jacobian of the weighted rotation is used without it, while the angular velocity applies it (rotationsExponentialMap = 2). The Jacobian then differs from the derivative of the angular velocity by TexpSO3 - I, which is small for small deformations; to be checked whether the Jacobian should include it in both approaches (found in \#3450).
-  - date raised: 2026-11-12
-- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` ObjectFFRF: analytic Jacobian instead of the numerical one (#3447)
-  - description: ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (\#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.
   - date raised: 2026-11-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
   - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.

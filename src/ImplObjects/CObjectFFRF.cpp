@@ -317,124 +317,29 @@ void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs) const
 	ode2Lhs.SetNumberOfItems(nODE2);
 	ode2Lhs.SetAll(0.);
 
-	//tempCoordinates.SetNumberOfItems(nODE2); //delete
-	//tempCoordinates_t.SetNumberOfItems(nODE2);
 	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
 
 	if (parameters.computeFFRFterms)
 	{
-		//K*q and D*q_T put to LHS !!!
-		//link to flexible parts of vectors:
+		//K*q and D*q_t on the left-hand side
 		LinkedDataVector coordinatesFF(tempCoordinates, nODE2Rigid, nODE2FF);
 		LinkedDataVector coordinatesFF_t(tempCoordinates_t, nODE2Rigid, nODE2FF); //cF_t in python
-		LinkedDataVector ode2LhsTT(ode2Lhs, 0, ffrfNodeDim);
-		LinkedDataVector ode2LhsRR(ode2Lhs, ffrfNodeDim, nODE2Rigid-ffrfNodeDim);
 		LinkedDataVector ode2LhsFF(ode2Lhs, nODE2Rigid, nODE2FF);
-
-		Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix();
-
-		const Index GMaxSize = CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D; //12
-
 
 		if (parameters.stiffnessMatrixFF.NumberOfRows() != 0)
 		{
-			//EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrixFF, coordinatesFF, ode2LhsFF);
 			parameters.stiffnessMatrixFF.MultMatrixVectorAdd(coordinatesFF, ode2LhsFF);
 		}
-
 		if (parameters.dampingMatrixFF.NumberOfRows() != 0)
 		{
 			parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, ode2LhsFF);
-
-			//delete:
-			//Vector test = ode2LhsFF;
-			//test *= 0;
-			//parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, test);
-			//pout << "|damping term|=" << test.GetL2Norm() << "\n";
 		}
 
-		if (parameters.forceVector.NumberOfItems() != 0)
-		{
-			//CHECKandTHROWstring("CObjectFFRF::ComputeODE2LHS: forceVector not implemented!");
-			//transformation needed, which transforms f_{ff} components from global to local coordiantes
-			LinkedDataVector forceVectorRigid(parameters.forceVector, 0, nODE2Rigid);
-			LinkedDataVector forceVectorFF(parameters.forceVector, nODE2Rigid, nODE2FF);
-			LinkedDataVector ode2LhsRigid(ode2Lhs, 0, nODE2Rigid);
-
-			ode2LhsRigid -= forceVectorRigid;
-			Matrix3D AT = GetRotationMatrix(Vector3D({ 0, 0, 0 })).GetTransposed();
-			AT *= -1; //because forceVector is subtracted
-			RigidBodyMath::ApplyTransformationAndAdd(AT, forceVectorFF, ode2LhsFF);
-
-			//ode2Lhs -= parameters.forceVector;
-		}
-
-		ConstSizeMatrix<GMaxSize> Glocal;
-		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);
-		ConstSizeMatrix<GMaxSize> GlocalT;
-		GlocalT = Glocal.GetTransposed();
-
-		coordinatesFF += referencePositions; //this are now the local nodal positions for mesh (FF) coordinates; rF in python
-
-		Vector3D omega3D = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetAngularVelocityLocal();
-		Matrix3D omega3Dtilde = RigidBodyMath::Vector2SkewMatrix(omega3D);
-		Matrix3D omega3Dtilde2 = omega3Dtilde * omega3Dtilde;
-
-		RigidBodyMath::ComputeSkewMatrix(coordinatesFF, tempRefPosSkew); //tempRefPosSkew = rfTilde in python
-		RigidBodyMath::ComputeSkewMatrix(coordinatesFF_t, tempVelSkew); //tempVelSkew = cF_tTilde in python
-
-		//    omega = np.array(list(omega3D)*nNodes)
-		//    omegaTilde = np.kron(np.eye(nNodes),omega3Dtilde)
-		//    omegaTilde2 = np.kron(np.eye(nNodes),omega3Dtilde2)
-
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//fTrans = A @ (omega3Dtilde @ PHItTM @ rfTilde @ omega3D + 2*PHItTM @ cF_tTilde @ omega3D)
-		//force[0:dim3D] = fTrans
-		Matrix3D temp;
-		//omega3Dtilde @ PHItTM @ rfTilde @ omega3D
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempRefPosSkew, temp);
-		Vector3D tempVec = temp * omega3D;
-		tempVec = omega3Dtilde * tempVec;
-
-		//2*PHItTM @ cF_tTilde @ omega3D
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempVelSkew, temp);
-		tempVec += temp * (2. * omega3D);
-		ode2LhsTT -= A * tempVec; //-= for all ode2Lhs terms
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//fRot = -G.T@(omega3Dtilde @ rfTilde.T @ massMatrix @ rfTilde @ omega3D + 
-		//		        2*rfTilde.T @ massMatrix @ cF_tTilde @ omega3D)
-		//force[dim3D:nODE2rigid] = fRot
-		//omega3Dtilde @ (rfTilde.T @ massMatrix @ rfTilde) @ omega3D 
-		parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(tempRefPosSkew, tempMatrix); //tempMatrix=rfTilde.T @ massMatrix
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempRefPosSkew, temp);
-		tempVec = omega3Dtilde * (temp * omega3D);
-
-		//2*rfTilde.T @ massMatrix @ cF_tTilde @ omega3D
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempVelSkew, temp);
-		tempVec += 2.*(temp * omega3D);
-
-		//ode2LhsRR -= -1.*(GlocalT * tempVec); //-= for all ode2Lhs terms; NOT IMPLEMENTED, because cannot decide result vector at compile time
-		EXUmath::MultMatrixVectorAdd(GlocalT, tempVec, ode2LhsRR); //double negative signs cancel!
-
-
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//fFlex = -massMatrix @ (omegaTilde2 @ rF + 2*(omegaTilde @ cF_t))
-		//force[nODE2rigid:] = fFlex
-		tempVector = coordinatesFF;
-		RigidBodyMath::ApplyTransformation(omega3Dtilde2, tempVector);
-		RigidBodyMath::ApplyTransformationAndAdd(2.*omega3Dtilde, coordinatesFF_t, tempVector);
-		parameters.massMatrixFF.MultMatrixVectorAdd(tempVector, ode2LhsFF); //two negative signs cancel: fFlex = - ... and ode2LhsFF -= ...
-		
-
-		//#add gravity:
-		//if False:
-		//    fGrav = np.array(fGravRigid + list(PHItTM.T @ (A.T @ g)) ) #only local vector, without rotation
-		//    force += fGrav
-		//
-
+		const CNodeRigidBody* frameNode = (const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
+		frameNode->GetGlocal(Glocal);
+		coordinatesFF += referencePositions; //the local positions of the mesh nodes; rF in python
+		ComputeFrameTerms(frameNode->GetRotationMatrix(), Glocal, frameNode->GetAngularVelocityLocal(), coordinatesFF, coordinatesFF_t, ode2Lhs);
 	}
 	if (parameters.forceUserFunction)
 	{
@@ -442,12 +347,269 @@ void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs) const
 		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
 		ode2Lhs -= tempUserFunctionForce;
 	}
-
 }
 
+//! the terms that depend on the rotation of the reference frame, added to ode2Lhs: with the local positions rF and
+//! velocities cF_t of the mesh nodes, rfTilde and cF_tTilde their stacked skew matrices, omegaTilde = I x omega3Dtilde,
+//! fTrans = A (omega3Dtilde PHItTM rfTilde omega3D + 2 PHItTM cF_tTilde omega3D),
+//! fRot = -G^T (omega3Dtilde rfTilde^T M rfTilde omega3D + 2 rfTilde^T M cF_tTilde omega3D),
+//! fFlex = -M (omegaTilde^2 rF + 2 omegaTilde cF_t), and the forceVector with its mesh part turned by A^T
+void CObjectFFRF::ComputeFrameTerms(const Matrix3D& A, const ConstSizeMatrix<12>& Glocal, const Vector3D& omega3D,
+	const VectorBase<Real>& positionsFF, const VectorBase<Real>& velocitiesFF, Vector& ode2Lhs) const
+{
+	const Index nODE2FF = positionsFF.NumberOfItems();
+	const Index nODE2Rigid = ode2Lhs.NumberOfItems() - nODE2FF;
+	LinkedDataVector ode2LhsTT(ode2Lhs, 0, ffrfNodeDim);
+	LinkedDataVector ode2LhsRR(ode2Lhs, ffrfNodeDim, nODE2Rigid - ffrfNodeDim);
+	LinkedDataVector ode2LhsFF(ode2Lhs, nODE2Rigid, nODE2FF);
 
+	if (parameters.forceVector.NumberOfItems() != 0)
+	{
+		//the mesh part of f_{ff} turned from global to local coordinates
+		LinkedDataVector forceVectorRigid(parameters.forceVector, 0, nODE2Rigid);
+		LinkedDataVector forceVectorFF(parameters.forceVector, nODE2Rigid, nODE2FF);
+		LinkedDataVector ode2LhsRigid(ode2Lhs, 0, nODE2Rigid);
 
+		ode2LhsRigid -= forceVectorRigid;
+		Matrix3D AT = A.GetTransposed();
+		AT *= -1; //because forceVector is subtracted
+		RigidBodyMath::ApplyTransformationAndAdd(AT, forceVectorFF, ode2LhsFF);
+	}
 
+	ConstSizeMatrix<12> GlocalT;
+	GlocalT = Glocal.GetTransposed();
+
+	Matrix3D omega3Dtilde = RigidBodyMath::Vector2SkewMatrix(omega3D);
+	Matrix3D omega3Dtilde2 = omega3Dtilde * omega3Dtilde;
+
+	RigidBodyMath::ComputeSkewMatrix(positionsFF, tempRefPosSkew); //tempRefPosSkew = rfTilde in python
+	RigidBodyMath::ComputeSkewMatrix(velocitiesFF, tempVelSkew); //tempVelSkew = cF_tTilde in python
+
+	//fTrans: omega3Dtilde @ PHItTM @ rfTilde @ omega3D + 2*PHItTM @ cF_tTilde @ omega3D
+	Matrix3D temp;
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempRefPosSkew, temp);
+	Vector3D tempVec = temp * omega3D;
+	tempVec = omega3Dtilde * tempVec;
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempVelSkew, temp);
+	tempVec += temp * (2. * omega3D);
+	ode2LhsTT -= A * tempVec; //-= for all ode2Lhs terms
+
+	//fRot: omega3Dtilde @ (rfTilde.T @ massMatrix @ rfTilde) @ omega3D + 2*rfTilde.T @ massMatrix @ cF_tTilde @ omega3D
+	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(tempRefPosSkew, tempMatrix); //tempMatrix=rfTilde.T @ massMatrix
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempRefPosSkew, temp);
+	tempVec = omega3Dtilde * (temp * omega3D);
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempVelSkew, temp);
+	tempVec += 2.*(temp * omega3D);
+	EXUmath::MultMatrixVectorAdd(GlocalT, tempVec, ode2LhsRR); //double negative signs cancel!
+
+	//fFlex: -massMatrix @ (omegaTilde2 @ rF + 2*(omegaTilde @ cF_t))
+	tempVector = positionsFF;
+	RigidBodyMath::ApplyTransformation(omega3Dtilde2, tempVector);
+	RigidBodyMath::ApplyTransformationAndAdd(2.*omega3Dtilde, velocitiesFF, tempVector);
+	parameters.massMatrixFF.MultMatrixVectorAdd(tempVector, ode2LhsFF); //two negative signs cancel: fFlex = - ... and ode2LhsFF -= ...
+}
+
+//! the ODE2 Jacobian (#3447), factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, as triplets in the global indices of ltg:
+//! the stiffness and damping matrices; by the mesh coordinates analytic, with a = omegaTilde rF, b = omegaTilde cF_t,
+//! E = rfTilde^T M omegaTilde,
+//!   rows of the mesh: M (I x (omega3Dtilde^2 dq + 2 omega3Dtilde dq_t)),
+//!   rows of the translation: A omega3Dtilde PHItTM omegaTilde dq + 2 A PHItTM omegaTilde dq_t,
+//!   rows of the rotation, per node i: -G^T ((omega3Dtilde (tilde((M a)_i) + E_i) + 2 tilde((M b)_i)) dq_i + 2 E_i dq_t_i);
+//! by the rotation parameters and their velocities by local differences of ComputeFrameTerms, with the rotation and G of
+//! the node's parametrization at the changed parameters; the terms do not depend on the translation
+void CObjectFFRF::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
+{
+	const CNodeRigidBody& node = *(const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
+	const bool eulerParameters = (node.GetType() & Node::RotationEulerParameters) != 0;
+	const Index nODE2Rigid = node.GetNumberOfODE2Coordinates();
+	const Index nRotation = node.GetNumberOfRotationCoordinates();
+	const Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+	const Index nMeshNodes = GetNumberOfMeshNodes();
+	const Index n = nODE2Rigid + nODE2FF;
+
+	jacobianODE2.SetUseDenseMatrix(false);
+	ResizableArray<EXUmath::Triplet>& triplets = jacobianODE2.GetInternalSparseTripletMatrix().GetTriplets();
+	auto Append = [&](Index row, Index column, Real value)
+	{
+		if (value != 0.) { triplets.Append(EXUmath::Triplet(ltg[row], ltg[column], value)); }
+	};
+	if (!parameters.computeFFRFterms) { return; }
+
+	//the stiffness and damping matrices
+	auto AddMatrix = [&](const PyMatrixContainer& matrix, Real factor)
+	{
+		if (matrix.NumberOfRows() == 0 || factor == 0.) { return; }
+		if (matrix.UseDenseMatrix())
+		{
+			const ResizableMatrix& dense = matrix.GetInternalDenseMatrix();
+			for (Index i = 0; i < dense.NumberOfRows(); i++)
+			{
+				for (Index j = 0; j < dense.NumberOfColumns(); j++) { Append(nODE2Rigid + i, nODE2Rigid + j, factor * dense(i, j)); }
+			}
+		}
+		else
+		{
+			for (const EXUmath::Triplet& item : matrix.GetInternalSparseTripletMatrix().GetTriplets())
+			{
+				Append(nODE2Rigid + item.row(), nODE2Rigid + item.col(), factor * item.value());
+			}
+		}
+	};
+	AddMatrix(parameters.stiffnessMatrixFF, factorODE2);
+	AddMatrix(parameters.dampingMatrixFF, factorODE2_t);
+
+	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
+	tempPositionsFF.SetNumberOfItems(nODE2FF);
+	for (Index i = 0; i < nODE2FF; i++) { tempPositionsFF[i] = tempCoordinates[nODE2Rigid + i] + referencePositions[i]; }
+	LinkedDataVector velocitiesFF(tempCoordinates_t, nODE2Rigid, nODE2FF);
+
+	//the rotation, G and omega of the node's parametrization
+	LinkedDataVector reference = node.GetCoordinateVector(ConfigurationType::Reference);
+	CSVector4D theta, theta_t;
+	theta.SetNumberOfItems(nRotation);
+	theta_t.SetNumberOfItems(nRotation);
+	for (Index k = 0; k < nRotation; k++)
+	{
+		theta[k] = reference[ffrfNodeDim + k] + node.GetCurrentCoordinate(ffrfNodeDim + k);
+		theta_t[k] = node.GetCurrentCoordinate_t(ffrfNodeDim + k);
+	}
+	Matrix3D A;
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
+	Vector3D omega;
+	auto Frame = [&](const CSVector4D& rotation, const CSVector4D& rotation_t)
+	{
+		if (eulerParameters) { A = RigidBodyMath::EP2RotationMatrix(rotation); Glocal = RigidBodyMath::EP2Glocal(rotation); }
+		else { A = RigidBodyMath::RotXYZ2RotationMatrix(rotation); Glocal = RigidBodyMath::RotXYZ2GlocalTemplate<CSVector4D>(rotation); }
+		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D>, CSVector4D, Vector3D>(Glocal, rotation_t, omega);
+	};
+
+	//by the rotation parameters and their velocities
+	ResizableVector& f0 = tempFrameTerms0;
+	ResizableVector& f1 = tempFrameTerms1;
+	f0.SetNumberOfItems(n);
+	f1.SetNumberOfItems(n);
+	Frame(theta, theta_t);
+	f0.SetAll(0.);
+	ComputeFrameTerms(A, Glocal, omega, tempPositionsFF, velocitiesFF, f0);
+	const Real relativeEpsilon = 1e-7;
+	const Real minimumValue = 0.01;
+	for (Index level = 0; level < 2; level++)
+	{
+		const Real factor = (level == 0) ? factorODE2 : factorODE2_t;
+		if (factor == 0.) { continue; }
+		for (Index k = 0; k < nRotation; k++)
+		{
+			CSVector4D rotation = theta, rotation_t = theta_t;
+			Real& value = (level == 0) ? rotation[k] : rotation_t[k];
+			const Real eps = relativeEpsilon * EXUstd::Maximum(minimumValue, std::fabs(value));
+			value += eps;
+			Frame(rotation, rotation_t);
+			f1.SetAll(0.);
+			ComputeFrameTerms(A, Glocal, omega, tempPositionsFF, velocitiesFF, f1);
+			for (Index r = 0; r < n; r++) { Append(r, ffrfNodeDim + k, (factor / eps) * (f1[r] - f0[r])); }
+		}
+	}
+
+	//by the mesh coordinates and their velocities, at the current frame
+	Frame(theta, theta_t);
+	const Matrix3D omegaTilde = RigidBodyMath::Vector2SkewMatrix(omega);
+	const Matrix3D omegaTilde2 = omegaTilde * omegaTilde;
+
+	//rows of the mesh: M (I x C), C = factorODE2 omegaTilde^2 + factorODE2_t 2 omegaTilde
+	Matrix3D C = factorODE2 * omegaTilde2 + (2. * factorODE2_t) * omegaTilde;
+	auto AddMassBlock = [&](Index row, Index column, Real value)
+	{
+		const Index node0 = column - column % 3;
+		const Index d = column % 3;
+		for (Index c = 0; c < 3; c++) { Append(nODE2Rigid + row, nODE2Rigid + node0 + c, value * C(d, c)); }
+	};
+	if (parameters.massMatrixFF.UseDenseMatrix())
+	{
+		const ResizableMatrix& dense = parameters.massMatrixFF.GetInternalDenseMatrix();
+		for (Index i = 0; i < dense.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < dense.NumberOfColumns(); j++) { if (dense(i, j) != 0.) { AddMassBlock(i, j, dense(i, j)); } }
+		}
+	}
+	else
+	{
+		for (const EXUmath::Triplet& item : parameters.massMatrixFF.GetInternalSparseTripletMatrix().GetTriplets())
+		{
+			AddMassBlock(item.row(), item.col(), item.value());
+		}
+	}
+
+	//rows of the translation: (factorODE2 A omegaTilde + factorODE2_t 2 A) PHItTM omegaTilde, per node
+	const Matrix3D translationFactor = factorODE2 * (A * omegaTilde) + (2. * factorODE2_t) * A;
+	//rows of the rotation: E = rfTilde^T M (3 x nODE2FF), M a and M b
+	RigidBodyMath::ComputeSkewMatrix(tempPositionsFF, tempRefPosSkew);
+	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(tempRefPosSkew, tempMatrix); //rfTilde^T M
+	tempVector.SetNumberOfItems(nODE2FF); //a = omegaTilde rF, then b = omegaTilde cF_t
+	ResizableVector& massA = tempFrameTerms1; //M a; reused: f1 is not needed any more
+	ResizableVector& massB = tempFrameTerms0; //M b; reused: f0 is not needed any more
+	massB.SetNumberOfItems(nODE2FF);
+	massA.SetNumberOfItems(nODE2FF);
+	for (Index i = 0; i < nMeshNodes; i++)
+	{
+		const Vector3D a = omegaTilde * Vector3D({ tempPositionsFF[3*i], tempPositionsFF[3*i + 1], tempPositionsFF[3*i + 2] });
+		for (Index c = 0; c < 3; c++) { tempVector[3*i + c] = a[c]; }
+	}
+	massA.SetAll(0.);
+	parameters.massMatrixFF.MultMatrixVectorAdd(tempVector, massA);
+	for (Index i = 0; i < nMeshNodes; i++)
+	{
+		const Vector3D b = omegaTilde * Vector3D({ velocitiesFF[3*i], velocitiesFF[3*i + 1], velocitiesFF[3*i + 2] });
+		for (Index c = 0; c < 3; c++) { tempVector[3*i + c] = b[c]; }
+	}
+	massB.SetAll(0.);
+	parameters.massMatrixFF.MultMatrixVectorAdd(tempVector, massB);
+
+	for (Index i = 0; i < nMeshNodes; i++)
+	{
+		//PHItTM_i omegaTilde and E_i omegaTilde, the 3 x 3 blocks of node i
+		Matrix3D P_i(3, 3), E_i(3, 3);
+		for (Index r = 0; r < 3; r++)
+		{
+			for (Index c = 0; c < 3; c++)
+			{
+				P_i(r, c) = PHItTM(r, 3*i + c);
+				E_i(r, c) = tempMatrix(r, 3*i + c);
+			}
+		}
+		P_i = P_i * omegaTilde;
+		E_i = E_i * omegaTilde;
+		const Matrix3D translationBlock = translationFactor * P_i;
+		const Vector3D massA_i({ massA[3*i], massA[3*i + 1], massA[3*i + 2] });
+		const Vector3D massB_i({ massB[3*i], massB[3*i + 1], massB[3*i + 2] });
+		const Matrix3D rotationBlock = factorODE2 * (omegaTilde * (RigidBodyMath::Vector2SkewMatrix(massA_i) + E_i) + 2. * RigidBodyMath::Vector2SkewMatrix(massB_i))
+			+ (2. * factorODE2_t) * E_i;
+		const Index column = nODE2Rigid + 3*i;
+		for (Index c = 0; c < 3; c++)
+		{
+			for (Index r = 0; r < ffrfNodeDim; r++) { Append(r, column + c, translationBlock(r, c)); }
+			for (Index j = 0; j < nRotation; j++)
+			{
+				Real value = 0.;
+				for (Index r = 0; r < 3; r++) { value += Glocal(r, j) * rotationBlock(r, c); }
+				Append(ffrfNodeDim + j, column + c, -value);
+			}
+		}
+	}
+}
+
+//! the ODE2 Jacobian of the object (#3447) on Euler parameters and Tait-Bryan angles without a forceUserFunction, else
+//! and with numericalJacobian numerical by the system
+JacobianType::Type CObjectFFRF::GetAvailableJacobians() const
+{
+	JacobianType::Type jacobians = (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	if (!parameters.numericalJacobian && !parameters.forceUserFunction && parameters.computeFFRFterms &&
+		(GetCNode(rigidBodyNodeNumber)->GetType() & (Node::RotationEulerParameters + Node::RotationRxyz)))
+	{
+		jacobians = (JacobianType::Type)(jacobians + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	return jacobians;
+}
 
 //! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
 void CObjectFFRF::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const

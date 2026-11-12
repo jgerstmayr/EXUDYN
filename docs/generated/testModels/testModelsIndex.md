@@ -175,6 +175,7 @@ movingGroundRobotTest
 multithreadingUserFunctionTest
 NGsolveCMStest
 numericalInverseKinematicsTest
+objectFFRFanalyticJacobianTest
 objectFFRFforceVectorTest
 objectFFRFreducedOrderAccelerations
 objectFFRFreducedOrderMarkerModesTest

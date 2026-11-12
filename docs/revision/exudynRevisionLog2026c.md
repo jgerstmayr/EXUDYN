@@ -6431,6 +6431,36 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-4-3"></a>
+### RG5.4.3 — the analytic ODE2 Jacobian of ObjectFFRF (2026-11-12, #3447)
+
+*(Maintainer 2026-11-12: RG5.4.3 yes, if not too complicated.)*
+
+The approach of ObjectFFRFreducedOrder (#3212), for the full mesh and as sparse triplets:
+
+- `ComputeFrameTerms(A, Glocal, omega, rF, cF_t, ode2Lhs)` (new): the quadratic velocity vector and the forceVector,
+  moved out of ComputeODE2LHS unchanged in its operations, which now calls it.
+- `ComputeJacobianODE2_ODE2`: triplets in the global indices of ltg (the system adds them in the serial, dense and
+  parallel assembly): K and D; by the mesh coordinates analytic (the derivation in docs/dev/design/superElementSparse.md
+  section 9: the mass rows from the triplets of M, 3 per entry; dense 3 x nFF translation rows and nRot x nFF rotation
+  rows from PHItTM, rfTilde^T M and the products M a, M b); by the rotation parameters and their velocities by local
+  differences of ComputeFrameTerms (relative 1e-7, minimum 0.01), with A and G of EP2RotationMatrix/EP2Glocal or
+  RotXYZ2... at the changed parameters.
+- `GetAvailableJacobians` (now in the .cpp): the function flags on Euler parameters and Tait-Bryan angles without a
+  forceUserFunction and with computeFFRFterms, unless `numericalJacobian` (new parameter, default False).
+
+Checked (scratch jacCheck.py): the Newton Jacobian of the rotor of objectFFRFsparseMassMatrixTest after 30 steps,
+analytic against numerical - largest difference 1e-8 of the largest entry, 3.5e-7 of the largest entry of its column.
+Measured (scratch ffrfJacStudy.py, the NGsolve block of RG5.4.1, 20 steps): jacobianODE2 0.073 -> 0.001 s (166 nodes),
+0.713 -> 0.004 s (486), 8.193 -> 0.015 s (1525); total 0.167 -> 0.095, 1.596 -> 0.958, 24.09 -> 15.96 s; coordinates
+equal to 1.6e-15. At 1525 nodes the timer reactionForces now takes 12.3 of 14.2 s (the spherical joint on the
+MarkerSuperElementPosition, 0.14 s per Newton iteration): #3452, RG5.4.6.
+
+Test model objectFFRFanalyticJacobianTest.py: the rotor with damping, a forceVector, gravity and spin, full Newton;
+numericalJacobian True and False - Newton Jacobians equal to 2.8e-9, motion to 1.2e-12, the same number of Newton
+iterations. The results of the other ObjectFFRF test models stay within the tolerances of the suite;
+parameterConversionTestReference.txt recorded again (numericalJacobian).
+
 <a id="rg5-4-2"></a>
 ### RG5.4.2, RG5.4.2.1 — the interface of the superelement markers cleaned up, the interface sums precomputed (2026-11-12, #3450, #2184)
 

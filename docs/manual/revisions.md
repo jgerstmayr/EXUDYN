@@ -45,6 +45,9 @@ parameter `precomputeMarkerModes = False` of the object computes them from the m
 `weightingFactors` of such a marker takes effect without a new Assemble; the position of a
 `MarkerSuperElementPosition` with weights that do not sum up to 1 follows the floating frame like that of
 `MarkerSuperElementRigid` (#3450).
+`ObjectFFRF` computes its ODE2 Jacobian itself, as sparse triplets: 550 times faster than the numerical one at 1525
+nodes, which shortens the whole simulation there by a third; its parameter `numericalJacobian = True` lets the system
+differentiate it as before (#3447).
 
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running

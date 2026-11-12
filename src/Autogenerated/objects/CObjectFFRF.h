@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-11-12  07:57:29 (last modified)
+* @date         2026-11-12  08:37:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -45,6 +45,7 @@ public: // AUTO:
     PythonUserFunctionBase< std::function<NumpyMatrix(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the ABRV:FFRF mass matrix; see description below
     bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard ABRV:FFRF terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector
     bool sparseMassMatrix;                        //!< AUTO: True: the mass matrix is given to the solver as sparse triplets - the triplets of `massMatrixFF` and the nonzero entries of the coupling blocks -, which is much faster for larger meshes; False: as a dense matrix of all coordinates, whose size and work grow with the square of the number of mesh coordinates; the dense matrix is used anyway with a `massMatrixUserFunction`, with `computeFFRFterms` = False or with a dense `massMatrixFF`
+    bool numericalJacobian;                       //!< AUTO: False: the object computes its ABRV:ODE2 Jacobian as sparse triplets - the stiffness, damping and mass matrices and the quadratic velocity terms by the mesh coordinates analytic, by the rotation parameters of the reference frame by local differences -, on Euler parameters and Tait-Bryan angles without a forceUserFunction; True: the system differentiates the object numerically, by all of its coordinates
     //! AUTO: default constructor with parameter initialization
     CObjectFFRFParameters()
     {
@@ -57,6 +58,7 @@ public: // AUTO:
         massMatrixUserFunction = 0;
         computeFFRFterms = true;
         sparseMassMatrix = true;
+        numericalJacobian = false;
     };
 };
 
@@ -97,6 +99,9 @@ protected: // AUTO:
     mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
     mutable ResizableVector tempUserFunctionForce;//!< AUTO: the force of the user function, kept between the calls (#3006)
     mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
+    mutable ResizableVector tempPositionsFF;      //!< AUTO: temporary vector of the local positions of the mesh nodes at the Jacobian (#3447)
+    mutable ResizableVector tempFrameTerms0;      //!< AUTO: temporary vector of the terms of ComputeFrameTerms at the Jacobian (#3447)
+    mutable ResizableVector tempFrameTerms1;      //!< AUTO: temporary vector of the terms of ComputeFrameTerms at a changed rotation, at the Jacobian (#3447)
     mutable Matrix tempRefPosSkew;                //!< AUTO: temporary matrix with skew symmetric local (deformed) node positions
     mutable Matrix tempVelSkew;                   //!< AUTO: temporary matrix with skew symmetric local node velocities
     mutable ResizableMatrix tempMatrix;           //!< AUTO: temporary matrix
@@ -119,6 +124,9 @@ public: // AUTO:
         tempCoordinates = Vector();
         tempUserFunctionForce = ResizableVector();
         tempCoordinates_t = Vector();
+        tempPositionsFF = ResizableVector();
+        tempFrameTerms0 = ResizableVector();
+        tempFrameTerms1 = ResizableVector();
         tempRefPosSkew = Matrix();
         tempVelSkew = Matrix();
         tempMatrix = ResizableMatrix();
@@ -215,6 +223,27 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing velocity coordinates
     Vector& GetTempCoordinates_t() { return tempCoordinates_t; }
 
+    //! AUTO:  Write (Reference) access to:temporary vector of the local positions of the mesh nodes at the Jacobian (#3447)
+    void SetTempPositionsFF(const ResizableVector& value) { tempPositionsFF = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the local positions of the mesh nodes at the Jacobian (#3447)
+    const ResizableVector& GetTempPositionsFF() const { return tempPositionsFF; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the local positions of the mesh nodes at the Jacobian (#3447)
+    ResizableVector& GetTempPositionsFF() { return tempPositionsFF; }
+
+    //! AUTO:  Write (Reference) access to:temporary vector of the terms of ComputeFrameTerms at the Jacobian (#3447)
+    void SetTempFrameTerms0(const ResizableVector& value) { tempFrameTerms0 = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the terms of ComputeFrameTerms at the Jacobian (#3447)
+    const ResizableVector& GetTempFrameTerms0() const { return tempFrameTerms0; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the terms of ComputeFrameTerms at the Jacobian (#3447)
+    ResizableVector& GetTempFrameTerms0() { return tempFrameTerms0; }
+
+    //! AUTO:  Write (Reference) access to:temporary vector of the terms of ComputeFrameTerms at a changed rotation, at the Jacobian (#3447)
+    void SetTempFrameTerms1(const ResizableVector& value) { tempFrameTerms1 = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the terms of ComputeFrameTerms at a changed rotation, at the Jacobian (#3447)
+    const ResizableVector& GetTempFrameTerms1() const { return tempFrameTerms1; }
+    //! AUTO:  Read (Reference) access to:temporary vector of the terms of ComputeFrameTerms at a changed rotation, at the Jacobian (#3447)
+    ResizableVector& GetTempFrameTerms1() { return tempFrameTerms1; }
+
     //! AUTO:  Write (Reference) access to:\f$\tilde\pv\indf \in \Rcal^{n\indf \times 3}\f$temporary matrix with skew symmetric local (deformed) node positions
     void SetTempRefPosSkew(const Matrix& value) { tempRefPosSkew = value; }
     //! AUTO:  Read (Reference) access to:\f$\tilde\pv\indf \in \Rcal^{n\indf \times 3}\f$temporary matrix with skew symmetric local (deformed) node positions
@@ -262,10 +291,13 @@ public: // AUTO:
     virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
+
+    //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
+
+    //! AUTO:  the terms of the left-hand side that depend on the rotation of the reference frame - the quadratic velocity vector and the forceVector -, at the local positions and velocities of the mesh nodes, added to ode2Lhs; for the left-hand side and its Jacobian (#3447)
+    void ComputeFrameTerms(const Matrix3D& A, const ConstSizeMatrix<12>& Glocal, const Vector3D& omega3D, const VectorBase<Real>& positionsFF, const VectorBase<Real>& velocitiesFF, Vector& ode2Lhs) const;
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override

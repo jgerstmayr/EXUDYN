@@ -2,11 +2,15 @@
   "number": 3447,
   "title": "ObjectFFRF: analytic Jacobian instead of the numerical one",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "HIGH",
   "description": "ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.",
   "dateRaised": "2026-11-12",
   "deadline": "2027-05-11",
-  "file": "src/ImplObjects/CObjectFFRF.cpp"
+  "dateResolved": "2026-11-12 08:58",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectFFRF.cpp",
+  "releaseNotes": "ObjectFFRF computes its ODE2 Jacobian as sparse triplets - stiffness, damping and the quadratic velocity terms by the mesh coordinates analytic, by the rotation parameters by local differences -, on Euler parameters and Tait-Bryan angles without a forceUserFunction: 550 times faster than the numerical Jacobian at 1525 nodes; ObjectFFRF.numericalJacobian = True lets the system differentiate it as before",
+  "resolvedInVersion": "1.13.589"
 }

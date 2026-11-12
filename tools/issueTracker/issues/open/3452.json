@@ -1,0 +1,11 @@
+{
+  "number": 3452,
+  "title": "The reaction forces of a joint on a MarkerSuperElementPosition of ObjectFFRF dominate larger meshes",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "On an NGsolve block of 1525 nodes (4582 coordinates) as ObjectFFRF on a SphericalJoint through a MarkerSuperElementPosition, 20 steps of GeneralizedAlpha with modified Newton: the solver timer reactionForces (CSystem::ComputeODE2ProjectedReactionForces) takes 12.3 of 14.2 s, 0.14 s per Newton iteration, after the analytic Jacobian of ObjectFFRF (#3447); the cost is to be located - the Jacobian of the constraint through the marker on all coordinates of the body - and removed.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

@@ -218,3 +218,31 @@ interfaces at both ends, clamped at one end by MarkerSuperElementRigid, a force 
 The positions agree to 2e-15. The precomputation at Assemble takes less than a millisecond. Test model
 objectFFRFreducedOrderMarkerModesTest.py: the rotor with RBE2 and RBE3 interfaces and 0-11 eigenmodes, both settings
 agree to 6e-13, also with weights changed after Assemble.
+
+## 9. The analytic Jacobian of ObjectFFRF (#3447)
+
+`CObjectFFRF::ComputeJacobianODE2_ODE2` gives the ODE2 Jacobian as triplets in the global indices, as ObjectFFRFreducedOrder
+does densely (#3212). With the local positions rF and velocities cF_t of the mesh nodes, omegaTilde = I x tilde(omega):
+
+- the stiffness and damping matrices K and D;
+- by the mesh coordinates analytic: the mesh rows M (I x (tilde(omega)^2 dq + 2 tilde(omega) dq_t)), from the triplets of
+  M; the translation rows A tilde(omega) PHItTM omegaTilde dq + 2 A PHItTM omegaTilde dq_t; the rotation rows per node i
+  -G^T ((tilde(omega) (tilde((M a)_i) + E_i) + 2 tilde((M b)_i)) dq_i + 2 E_i dq_t_i), a = omegaTilde rF,
+  b = omegaTilde cF_t, E = rfTilde^T M omegaTilde;
+- by the rotation parameters and their velocities by local differences of `ComputeFrameTerms` (the quadratic velocity
+  vector and the forceVector, which ComputeODE2LHS uses too), with A and G of the node's parametrization at the changed
+  parameters.
+
+It is used on Euler parameters and Tait-Bryan angles without a forceUserFunction; `numericalJacobian = True` lets the
+system differentiate the object as before. The mass matrix term M(q) q_tt is not differentiated, as for all bodies.
+
+Measured (scratch ffrfJacStudy.py: the NGsolve block of section 7, 20 steps, modified Newton, EigenSparse):
+
+| nodes | jacobianODE2 numerical | analytic | total numerical | analytic |
+|---:|---:|---:|---:|---:|
+| 166 | 0.073 s | 0.001 s | 0.167 s | 0.095 s |
+| 486 | 0.713 s | 0.004 s | 1.596 s | 0.958 s |
+| 1525 | 8.193 s | 0.015 s | 24.09 s | 15.96 s |
+
+The coordinates agree to 1.6e-15. At 1525 nodes the rest is the reaction forces of the spherical joint on the
+MarkerSuperElementPosition, 12.3 of 14.2 s (0.14 s per Newton iteration, #3452).
