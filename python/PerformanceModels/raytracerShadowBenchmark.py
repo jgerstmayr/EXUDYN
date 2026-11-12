@@ -89,7 +89,9 @@ if __name__ == '__main__':
     reference = None
     if '--reference' in arguments:
         Configure(0.2, 0.5, 240, 0, 0)
+        settings.raytracer.advanced.adaptiveShadowSamples = 0 #every sample traced
         timeReference, reference = Render(1)
+        settings.raytracer.advanced.adaptiveShadowSamples = 6
         print('reference with 240 samples per pixel: %.3f s' % timeReference)
 
     results = {}

@@ -712,7 +712,7 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
   VisualizationSettings.interactive: highlightMbsNumber(attribute,dict)
   VisualizationSettings.openGL.advanced: curvedTriangleMaxTiling(attribute,dict)
   VisualizationSettings.raytracer: maxReflectionDepth(attribute,dict) maxTransparencyDepth(attribute,dict) numberOfThreads(attribute,dict)
-  VisualizationSettings.raytracer.advanced: shadowScalingFactor(attribute,dict) shadowSmoothingSteps(attribute,dict)
+  VisualizationSettings.raytracer.advanced: adaptiveShadowSamples(attribute,dict) shadowScalingFactor(attribute,dict) shadowSmoothingSteps(attribute,dict)
   VisualizationSettings.view0.scene: drawCoordinateSystem(attribute,dict)
   VisualizationSettings.view1.scene: drawCoordinateSystem(attribute,dict)
   VisualizationSettings.view2.scene: drawCoordinateSystem(attribute,dict)

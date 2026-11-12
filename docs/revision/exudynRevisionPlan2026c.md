@@ -52,8 +52,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The image-changing raytracer group** (RG6.26.9-RG6.26.11) with the correctness points (RG6.26.13-RG6.26.15): agreed on
-   2026-11-12, one update of the reference image.
+2. **Blurred reflections** (RG6.26.16), on the samples of the soft shadows; then the optional raytracer step RG6.26.12.
 3. **The linear algebra cleanup** (RG5.2.8.1, RG5.2.8.2) and the transposed view (RG5.2.7.2): no computation changes.
 4. **The two Linux differences** (RG4.29): before the rehearsal, so that the Linux jobs can be green.
 5. **The larger open work**, once the next release is planned: the plugin interface (RG8).
@@ -70,7 +69,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
-  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (8 open sub-steps)
+  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (2 open sub-steps)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -116,7 +115,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 15 | Performance |
-| RG6 | OPEN | 9 | Graphics and rendering |
+| RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -1374,33 +1373,45 @@ O2, I4: the bins as one index array with offsets, the triangle points in 36-48 b
 
 CLOSED 2026-11-12 (#3474): bitwise; 0 to -5 % in the benchmark scene (far less than estimated: its triangles fit the cache, most shadow rays are lit); raytracerImprovements.md section 6.1. [log](exudynRevisionLog2026c.md#rg6-26-7)
 
-#### **OPEN_RG6.26.9** Stratified disk samples with a rotation per pixel
+#### **CLOSED_RG6.26.9** Stratified disk samples with a rotation per pixel
 
 O4: concentric or Fibonacci points on the light disk, rotated per pixel by a hash: uncorrelated noise instead of bands, the same quality with about half the samples; changes the image.
 
-#### **OPEN_RG6.26.10** Adaptive penumbra sampling
+CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
+
+#### **CLOSED_RG6.26.10** Adaptive penumbra sampling
 
 O3: k samples first, the rest only where they disagree; the low-resolution pass refined at full resolution only in the penumbra; the main fix for lightRadiusVariations; changes the image.
 
-#### **OPEN_RG6.26.11** Depth- and normal-guided filtering and upsampling of the shadow term
+CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
+
+#### **CLOSED_RG6.26.11** Depth- and normal-guided filtering and upsampling of the shadow term
 
 O5: no shadow bleeding across silhouettes, smaller sample counts; the reference value of raytracerNOGLFWtest.py updated once for the image-changing steps.
+
+CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
 
 #### **OPEN_RG6.26.12** Optional: shadow rays of secondary hits by their weight; a BVH evaluated on large user scenes
 
 O10 (a setting keeps today's behaviour), O7 only if a user scene shows the grid as the limit.
 
-#### **OPEN_RG6.26.13** The offset of the shadow ray relative to the scene size
+#### **CLOSED_RG6.26.13** The offset of the shadow ray relative to the scene size
 
 #3470: the absolute 0.01 gives light leaks in small and acne in large scenes.
 
-#### **OPEN_RG6.26.14** Transparent objects cast a partial shadow
+CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
+
+#### **CLOSED_RG6.26.14** Transparent objects cast a partial shadow
 
 #3471: the light reduced by the transparency of the objects up to the light, instead of a full shadow.
 
-#### **OPEN_RG6.26.15** Soft shadows for directional lights
+CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
+
+#### **CLOSED_RG6.26.15** Soft shadows for directional lights
 
 #3472: an angular radius of the light, sampled as for point lights.
+
+CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
 
 #### **OPEN_RG6.26.16** Blurred (glossy) reflections: a roughness per material, a number of reflection rays, a switch
 

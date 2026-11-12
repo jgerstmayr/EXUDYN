@@ -350,3 +350,35 @@ Best of seven images against the commit before:
 Far less than estimated in section 4 (O6: 10-20 %, O2: 1.3-2x): the scene has 21172 triangles, whose data fits the
 cache anyway, and most shadow rays reach the light, where the cache costs one test and saves nothing. Both are kept,
 being bitwise and cheaper in scenes with many triangles and large umbras.
+
+### 6.2 The image-changing group and the correctness points (RG6.26.9-.11, .13-.15; #3470-#3472, #3475-#3477)
+
+- **O4** (#3475): the samples on a Fibonacci spiral (radius sqrt((i+0.5)/N), golden angle), rotated per hit by an angle
+  hashed from the bits of the hit point - deterministic and the same on every platform for the same hit. The bands
+  of the fixed spiral are gone; the per-pixel path (S = 0) shows fine noise instead, which the precomputation smooths.
+- **O3** (#3476): `raytracer.advanced.adaptiveShadowSamples` (default 6): the innermost and the outermost samples first;
+  if they agree, the others take their value untraced; 0 traces all.
+- **O5** (#3477): the reduced-resolution pass keeps its depths; its smoothing weights each neighbour by
+  1/(1+(dz/tol)^2), tol = 0.002 of the scene size; the final pass takes the shadow at its own hit from the four nearest
+  low-resolution values, bilinear times the same depth weight (plain bilinear if all four are of another depth). The
+  nearest-neighbour upsampling and the S box filters at full resolution are gone.
+- **#3470**: the shadow ray starts 0.001 of the scene size from the hit (was 0.01 for every scene).
+- **#3471**: `ShadowTransmission` instead of `IsInShadow`: an opaque item gives 0, transparent items in between
+  multiply by (1 - alpha), each counted once, if transparency is rendered (`maxTransparencyDepth > 0`); the
+  occluder cache holds opaque items only.
+- **#3472**: a directional light gets soft shadows with `lightRadius` as its angular radius in radians.
+
+Benchmark (best of 3-5; the difference column against N = 240 per pixel with all samples traced, computed with the
+new code):
+
+| configuration | before [s] | after [s] | change | difference before / after |
+|---|---:|---:|---:|---:|
+| hard shadow | 0.0815 | 0.082-0.085 | 0 % | 1.30 / 1.30 |
+| N = 13, S = 3 (test model) | 0.1060 | 0.093-0.103 | -3 to -12 % | 0.18 / 0.08 |
+| N = 50, S = 3 | 0.1653 | 0.118-0.120 | -28 % | 0.11 / 0.06 |
+| N = 13, per pixel | 0.2667 | 0.211-0.216 | -20 % | 0.29 / 0.26 |
+
+(The "before" differences are against the reference of section 2, computed with the old sampling.) The precomputed
+soft shadow has half the error at the same N, without the rings of the old spiral; the reference image itself took
+4.6 s with all 240 samples and 1.4 s with the adaptive probes. The adaptive probes help less at N = 13 (6 of 13
+probes) than at N = 50. raytracerNOGLFWtest.py: new reference 0.28115557230831 (regular and fast module equal).

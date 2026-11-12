@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 576 | 1.13.605 |
+| 1.13 | Newborn | 582 | 1.13.611 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,30 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.611** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: depth-aware smoothing and upsampling of the precomputed shadow (#3477)
+  - description: raytracerImprovements.md O5: the smoothing at reduced resolution weights the neighbours by the similarity of their depth, and the full resolution interpolates the four nearest values of reduced resolution at the depth of its own hit, instead of nearest-neighbour upsampling followed by box filters; shadows no longer bleed across silhouettes, and the passes at full resolution are gone.
+  - **notes:** The raytracer smooths the shadow of reduced resolution with weights by depth and interpolates it at the depth of each pixel, so shadows do not bleed across the silhouettes of objects.
+  - date resolved: **2026-11-12 22:23**, date raised: 2026-11-12
+- **1.13.610** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: adaptive soft shadows - probe samples first, the others only at the edges of shadows (#3476)
+  - description: raytracerImprovements.md O3: per pixel and light, a few samples (the innermost and the outermost of the disk) first; if they agree, the pixel is fully lit or fully in shadow and the other samples are not traced. A setting raytracer.advanced.adaptiveShadowSamples (0 = trace all). Expected 2-5x on the soft shadow term.
+  - **notes:** visualizationSettings.raytracer.advanced.adaptiveShadowSamples (default 6): the raytracer traces a few shadow samples first and the others only where they disagree, at the edges of shadows; 0 traces all samples.
+  - date resolved: **2026-11-12 22:23**, date raised: 2026-11-12
+- **1.13.609** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: soft-shadow samples on a Fibonacci spiral, rotated per hit (#3475)
+  - description: raytracerImprovements.md O4: the samples of a light with a radius lie on a spiral with equal area per sample, rotated by an angle hashed from the hit point (the same on every platform); the bands of today's fixed spiral become fine noise, which the smoothing removes, and the advice to avoid squares of integers is no longer needed. Changes the images with soft shadows.
+  - **notes:** The raytracer samples a soft shadow on a spiral of equal areas, rotated from hit to hit, which removes the rings of the former fixed pattern.
+  - date resolved: **2026-11-12 22:23**, date raised: 2026-11-12
+- **1.13.608** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: soft shadows for directional lights (#3472)
+  - description: lightRadius has no effect for a directional light (position\[3\] == 0, Raytracing.cpp), while its description does not say so. A directional light shall get soft shadows from an angular radius (the sun: 0.27 degrees), sampled on a disk of directions like the point light; or the description says that it is ignored.
+  - **notes:** In the raytracer, a directional light casts soft shadows; its lightRadius is the angular radius in radians (the sun: 0.0047).
+  - date resolved: **2026-11-12 22:23**, date raised: 2026-11-12
+- **1.13.607** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: transparent objects cast a partial shadow (#3471)
+  - description: A shadow ray stops at the first hit, so a transparent object (alpha \< 1, or a material with transparency) shadows like an opaque one. The light shall pass reduced by the transparency of the objects in between (product of (1-alpha) up to the light), as the visible image already blends them.
+  - **notes:** In the raytracer, transparent objects let light through in proportion to their transparency (1 - alpha, each object once) instead of casting a full shadow, if transparency is rendered (maxTransparencyDepth \> 0).
+  - date resolved: **2026-11-12 22:23**, date raised: 2026-11-12
+- **1.13.606** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: the offset of the shadow ray is absolute (0.01), not relative to the scene size (#3470)
+  - description: IsInShadow starts the shadow ray at point + 0.01\*lightDirection (Raytracing.cpp): a scene in millimetres gets light leaking through thin parts, a scene in kilometres gets shadow acne. The offset shall scale with the scene (e.g. the bounding box or the search tree) or follow the normal by a relative epsilon, documented in the raytracer settings.
+  - **notes:** The raytracer starts a shadow ray at a distance relative to the scene size (0.001 of it) instead of 0.01 for every scene, so small scenes no longer leak light and large ones get no shadow acne.
+  - date resolved: **2026-11-12 22:23**, date raised: 2026-11-12
 - **1.13.605** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: a last-occluder cache for shadow rays, a flat search grid and compact triangles (#3474)
   - description: raytracerImprovements.md O6 and O2/I4: the item that blocked the last shadow ray of a thread and light is tested first; the cells of the grid as one flat index array with offsets instead of an array per cell; the triangle test reads v0 and the two edges (36 bytes) instead of the GLTriangle (128 bytes), which is used only for the shading of the closest hit. The image stays bitwise.
   - **notes:** The raytracer tests the item that blocked the last shadow ray first, keeps its search grid in one flat array and tests triangles from a compact copy of their points; the images stay the same.

@@ -1,0 +1,15 @@
+{
+  "number": 3477,
+  "title": "Raytracer: depth-aware smoothing and upsampling of the precomputed shadow",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "raytracerImprovements.md O5: the smoothing at reduced resolution weights the neighbours by the similarity of their depth, and the full resolution interpolates the four nearest values of reduced resolution at the depth of its own hit, instead of nearest-neighbour upsampling followed by box filters; shadows no longer bleed across silhouettes, and the passes at full resolution are gone.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 22:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer smooths the shadow of reduced resolution with weights by depth and interpolates it at the depth of each pixel, so shadows do not bleed across the silhouettes of objects.",
+  "resolvedInVersion": "1.13.611"
+}

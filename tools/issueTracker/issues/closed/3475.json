@@ -1,0 +1,15 @@
+{
+  "number": 3475,
+  "title": "Raytracer: soft-shadow samples on a Fibonacci spiral, rotated per hit",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "raytracerImprovements.md O4: the samples of a light with a radius lie on a spiral with equal area per sample, rotated by an angle hashed from the hit point (the same on every platform); the bands of today's fixed spiral become fine noise, which the smoothing removes, and the advice to avoid squares of integers is no longer needed. Changes the images with soft shadows.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 22:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer samples a soft shadow on a spiral of equal areas, rotated from hit to hit, which removes the rings of the former fixed pattern.",
+  "resolvedInVersion": "1.13.609"
+}

@@ -1584,11 +1584,15 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TIndex(minimum=0), 
             pythonName='shadowScalingFactor',
             defaultValue=3,
-            description=r'if lightRadiusVariations>1 and a light casts soft shadows (a light with a position and lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries'),
+            description=r'if lightRadiusVariations>1 and a light casts soft shadows (lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries'),
         StructureParameter(type=TIndex(minimum=0), 
             pythonName='shadowSmoothingSteps',
             defaultValue=3,
-            description=r'if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)'),
+            description=r'if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; each step averages the neighbours of similar depth, so a shadow does not spread across the silhouette of an object; the full resolution interpolates the low-resolution values of similar depth; range=0..32'),
+        StructureParameter(type=TIndex(minimum=0), 
+            pythonName='adaptiveShadowSamples',
+            defaultValue=6,
+            description=r'if lightRadiusVariations is larger, this number of the shadow samples of a light is traced first for each pixel, the innermost and the outermost ones of its disk; if they agree (the pixel fully lit or fully in shadow), the other samples take their value without being traced, which saves most of the cost of soft shadows away from their edges; 0 traces all samples; small details of a shadow, smaller than the spacing of the probes, may be missed; range=0..256'),
         ],
     ))
 
@@ -1962,7 +1966,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tfloat, 
             pythonName='lightRadius',
             defaultValue=0.1,
-            description=r'only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)'),
+            description=r'only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower); for a directional light (4th component of position 0), it is the angular radius in radians, e.g. 0.0047 for the sun'),
         ],
     ))
 

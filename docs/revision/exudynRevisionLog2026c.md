@@ -6431,6 +6431,25 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg6-26-9"></a>
+### RG6.26.9-RG6.26.11, RG6.26.13-RG6.26.15 — raytracer: rotated spiral, adaptive probes, depth-aware filter; transparent occluders, directional soft shadows, relative offset (2026-11-12, #3470-#3472, #3475-#3477)
+
+*(Maintainer 2026-11-12: do the suggested next steps.)*
+
+- Raytracing.cpp: HashAngle (FNV over the bits of the hit point), SampleDirection (Fibonacci spiral, golden angle,
+  rotated), the transmission per sample with adaptive probes (sample 0 and the outermost adaptiveShadowSamples-1),
+  then the shading per sample with the fraction of light; ShadowTransmission (opaque 0, transparent (1-alpha) once per
+  item if maxTransparencyDepth > 0, cache of opaque occluders); UpsampleShadow and depth weights in
+  SmoothShadowValues (RTS.shadowDepths of the low-resolution pass, initialized to 0 for pixels cut by the clipping
+  plane, tolerance 0.002 of the scene); ScaleShadowValues and the full-resolution passes removed; shadowRayOffset
+  0.001 of the scene; directional lights with lightRadius as angular radius, also for the precomputation condition.
+- Settings: raytracer.advanced.adaptiveShadowSamples (new, default 6); the descriptions of shadowSmoothingSteps,
+  shadowScalingFactor and lightRadius. parameterConversionTestReference.txt rerecorded (only the new setting).
+- Benchmark: N = 13, S = 3 0.106 -> 0.093-0.103 s with half the difference to the 240-sample reference (0.08), N = 50
+  -28 %, per pixel -20 % (fine noise instead of bands); images inspected (the rings of the old spiral gone).
+  raytracerNOGLFWtest.py 0.28013531271596 -> 0.28115557230831, the same in the fast module.
+  raytracerImprovements.md section 6.2, revisions.md.
+
 <a id="rg6-26-7"></a>
 ### RG6.26.7, RG6.26.8 — raytracer: last-occluder cache, flat grid, compact triangles (2026-11-12, #3474)
 

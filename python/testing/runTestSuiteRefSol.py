@@ -333,7 +333,7 @@ def TestExamplesReferenceSolution():
         'pickleCopyMbs.py':0.2583013564102547, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 0.2583013564103506; new 2025-05-10
         'plotSensorTest.py':1.0,
         'postNewtonStepContactTest.py':0.057286638346409235,
-        'raytracerNOGLFWtest.py':0.28013531271596,                  #2026-10-10: the edges of the bricks in front of the focal plane are drawn (#2951); before 0.28161678591179; 2026-10-01: the node of the rigid body is raytraced as a sphere (#2709); new 2026-01-03
+        'raytracerNOGLFWtest.py':0.28115557230831,                  #2026-11-12: soft shadows sampled on a rotated spiral, adaptive, depth-aware filtering, transparent occluders, relative shadow-ray offset (#3470-#3477); before 0.28013531271596; 2026-10-10: the edges of the bricks in front of the focal plane are drawn (#2951); before 0.28161678591179; 2026-10-01: the node of the rigid body is raytraced as a sphere (#2709); new 2026-01-03
         'reevingSystemSpringsTest.py':2.2156643963423805, #2026-11-11: the common tangent of two sheaves normalizes nB by its own length (#3412), before 2.2155575717433043; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 2.215557571743304;new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'helicalJointTest.py':62.32477542908185, #new 2026-11-11 (#3421, #3422)
         'screwGraphicsTest.py':0.9068896323640016, #new 2026-11-11 (#3425)

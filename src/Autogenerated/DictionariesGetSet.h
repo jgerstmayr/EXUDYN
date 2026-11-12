@@ -4727,6 +4727,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
     structureDict["structureDescription"] = "Advanced settings for raytracer.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.adaptiveShadowSamples;
+    d["type"] = "UInt";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "if lightRadiusVariations is larger, this number of the shadow samples of a light is traced first for each pixel, the innermost and the outermost ones of its disk; if they agree (the pixel fully lit or fully in shadow), the other samples take their value without being traced, which saves most of the cost of soft shadows away from their edges; 0 traces all samples; small details of a shadow, smaller than the spacing of the probes, may be missed; range=0..256";
+    structureDict["adaptiveShadowSamples"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.backFaceColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
@@ -4754,7 +4762,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
     d["value"] = data.shadowScalingFactor;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "if lightRadiusVariations>1 and a light casts soft shadows (a light with a position and lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries";
+    d["description"] = "if lightRadiusVariations>1 and a light casts soft shadows (lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries";
     structureDict["shadowScalingFactor"] = d;
 
     d = py::dict(); //reset local dict
@@ -4762,7 +4770,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
     d["value"] = data.shadowSmoothingSteps;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)";
+    d["description"] = "if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; each step averages the neighbours of similar depth, so a shadow does not spread across the silhouette of an object; the full resolution interpolates the low-resolution values of similar depth; range=0..32";
     structureDict["shadowSmoothingSteps"] = d;
 
     d = py::dict(); //reset local dict
@@ -4795,6 +4803,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
     auto structureDict = py::dict();
+    structureDict["adaptiveShadowSamples"] = data.adaptiveShadowSamples;
     structureDict["backFaceColor"] = EPyUtils::ToPythonMember(data.backFaceColor);
     structureDict["backgroundColorReflections"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
     structureDict["searchTreeFactor"] = data.searchTreeFactor;
@@ -4808,6 +4817,7 @@ inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsRaytracerAdvanced& data, const py::dict& d) {
+    EPyUtils::FromPython(d["adaptiveShadowSamples"], data.adaptiveShadowSamples, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.adaptiveShadowSamples");
     EPyUtils::FromPython(d["backFaceColor"], data.backFaceColor, "VSettingsRaytracerAdvanced.backFaceColor");
     EPyUtils::FromPython(d["backgroundColorReflections"], data.backgroundColorReflections, "VSettingsRaytracerAdvanced.backgroundColorReflections");
     EPyUtils::FromPython(d["searchTreeFactor"], data.searchTreeFactor, EPyUtils::RangeCheck::positive, "VSettingsRaytracerAdvanced.searchTreeFactor");
@@ -5221,7 +5231,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.lightRadius;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)";
+    d["description"] = "only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower); for a directional light (4th component of position 0), it is the angular radius in radians, e.g. 0.0047 for the sun";
     structureDict["lightRadius"] = d;
 
     d = py::dict(); //reset local dict

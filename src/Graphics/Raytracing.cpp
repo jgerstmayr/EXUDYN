@@ -20,6 +20,8 @@
 #include <mutex>
 #include <exception>
 #include <vector>
+#include <cstring>
+#include <cstdint>
 
 extern bool PyIsRendererActive(bool deprecationWarning);
 
@@ -72,13 +74,15 @@ static void RaytracerParallelRows(Index numberOfThreads, Index imageHeight, cons
 		});
 }
 
-//! one smoothing pass of the shadow values: target gets the 3x3 average of source in the inner pixels of each light
-//! that casts a shadow, else the value of source; with skipHardBoundaries, a pixel whose neighbourhood contains both 0
-//! and 1 keeps its value; the rows in parallel, into a second array instead of copying the image (#3468)
+//! one smoothing pass of the shadow values at reduced resolution: target gets the average of the 3x3 neighbourhood of
+//! source, each neighbour weighted by the similarity of its depth (1/(1+(dz/tolerance)^2)), so that a shadow does not
+//! bleed across silhouettes (#3477), in the inner pixels of each light that casts a shadow, else the value of source; with
+//! skipHardBoundaries, a pixel whose neighbourhood contains both 0 and 1 keeps its value; the rows in parallel (#3468)
 static void SmoothShadowValues(const ResizableArray<ShadowValue>& source, ResizableArray<ShadowValue>& target,
-	Index imageWidth, Index imageHeight, const RaytracingSettings& RTS, bool skipHardBoundaries)
+	const ResizableArray<RTfloat>& depths, Index imageWidth, Index imageHeight, const RaytracingSettings& RTS, bool skipHardBoundaries)
 {
 	target.SetNumberOfItems(imageWidth * imageHeight);
+	RTfloat invTolerance = 1.f / RTS.shadowDepthTolerance;
 	RaytracerParallelRows(RTS.numberOfThreadsUsed, imageHeight, [&](Index yStart, Index yEnd)
 		{
 			for (Index y = yStart; y < yEnd; y++)
@@ -104,38 +108,25 @@ static void SmoothShadowValues(const ResizableArray<ShadowValue>& source, Resiza
 								}
 							}
 						}
-						if (!(containsZero && containsOne)) //no hard boundary: the average, the sum in the order of the rows
+						if (!(containsZero && containsOne)) //no hard boundary: the weighted average
 						{
-							float sum = 0.0f;
+							RTfloat depth = depths[y * imageWidth + x];
+							RTfloat sum = 0.f;
+							RTfloat sumWeights = 0.f;
 							for (Index dy = -1; dy <= 1; dy++)
 							{
-								for (Index dx = -1; dx <= 1; dx++) { sum += source[(y + dy) * imageWidth + x + dx][lightID]; }
+								for (Index dx = -1; dx <= 1; dx++)
+								{
+									Index i = (y + dy) * imageWidth + x + dx;
+									RTfloat dz = (depths[i] - depth) * invTolerance;
+									RTfloat weight = 1.f / (1.f + dz * dz);
+									sum += weight * source[i][lightID];
+									sumWeights += weight;
+								}
 							}
-							target[y * imageWidth + x][lightID] = sum / 9;
+							target[y * imageWidth + x][lightID] = sum / sumWeights;
 						}
 					}
-				}
-			}
-		});
-}
-
-//! the shadow values of the reduced resolution mapped to the full resolution, each pixel taking its nearest value;
-//! the rows in parallel (#3468)
-static void ScaleShadowValues(const ResizableArray<ShadowValue>& lowresValues, ResizableArray<ShadowValue>& hiresValues,
-	Index lowresWidth, Index lowresHeight, Index hiresWidth, Index hiresHeight, Index numberOfThreads)
-{
-	float scaleX = static_cast<float>(lowresWidth) / hiresWidth;
-	float scaleY = static_cast<float>(lowresHeight) / hiresHeight;
-	hiresValues.SetNumberOfItems(hiresWidth * hiresHeight);
-	RaytracerParallelRows(numberOfThreads, hiresHeight, [&](Index yStart, Index yEnd)
-		{
-			for (Index y = yStart; y < yEnd; y++)
-			{
-				Index lowresY = EXUstd::Minimum((Index)(y * scaleY), lowresHeight - 1);
-				for (Index x = 0; x < hiresWidth; x++)
-				{
-					Index lowresX = EXUstd::Minimum((Index)(x * scaleX), lowresWidth - 1);
-					hiresValues[y * hiresWidth + x] = lowresValues[lowresY * lowresWidth + lowresX];
 				}
 			}
 		});
@@ -291,21 +282,99 @@ inline bool Raytracer::IntersectRayWithItem(const RTVector3D& rayOrigin, const R
 	return result.hit && result.distance < closestDistance && result.distance * (-rayDirection[2]) >= minDistanceZ;
 }
 
-//! check if point is in shadow of light lightID: any item between point and the light; the item that blocked the last
-//! shadow ray of this thread and light first, as neighbouring pixels and samples are mostly blocked by the same (#3474)
-bool Raytracer::IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles,
+//! the fraction of light lightID that reaches point along lightDirection: 0 behind an opaque item, the product of (1-alpha)
+//! of the transparent items in between (if transparency is rendered, maxTransparencyDepth > 0), 1 without any; each
+//! transparent item counted once; the opaque item that blocked the last shadow ray of this thread and light is tested
+//! first, as neighbouring pixels and samples are mostly blocked by the same (#3474, #3471)
+RTfloat Raytracer::ShadowTransmission(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles,
 	const RaytracingSettings& RTS, RTfloat maxDistance, Index lightID)
 {
-	IntersectionResult shadowHit;
+	const RTfloat lowest = std::numeric_limits<RTfloat>::lowest();
+	const bool transparentShadows = RTS.maxTransparencyDepth > 0;
+	IntersectionResult hit;
 	Index& lastOccluder = RTS.lastOccluder[raytracerThreadIndex][lightID];
-	if (lastOccluder >= 0 && IntersectRayWithItem(point, lightDirection, lastOccluder, triangles, RTS, maxDistance,
-		std::numeric_limits<RTfloat>::lowest(), shadowHit))
+	if (lastOccluder >= 0 && IntersectRayWithItem(point, lightDirection, lastOccluder, triangles, RTS, maxDistance, lowest, hit) &&
+		(!transparentShadows || hit.alpha >= 1.f))
 	{
-		return true;
+		return 0.f;
 	}
-	IntersectRayWithTriangles(point, lightDirection, maxDistance, triangles, RTS, shadowHit, true);
-	if (shadowHit.hit) { lastOccluder = shadowHit.triangleIndex; }
-	return shadowHit.hit;
+
+	constexpr Index maxTransparentItems = 16;
+	Index transparentItems[maxTransparentItems];
+	Index nTransparentItems = 0;
+	RTfloat transmission = 1.f;
+	TraverseGrid(point, lightDirection, RTS, maxDistance, [&](Index iInd)
+		{
+			if (!IntersectRayWithItem(point, lightDirection, iInd, triangles, RTS, maxDistance, lowest, hit)) { return false; }
+			if (!transparentShadows || hit.alpha >= 1.f)
+			{
+				lastOccluder = iInd;
+				transmission = 0.f;
+				return true;
+			}
+			for (Index k = 0; k < nTransparentItems; k++) { if (transparentItems[k] == iInd) { return false; } }
+			if (nTransparentItems < maxTransparentItems) { transparentItems[nTransparentItems++] = iInd; }
+			transmission *= 1.f - EXUstd::Maximum(hit.alpha, 0.f);
+			return transmission <= 0.f;
+		});
+	return transmission;
+}
+
+//! the precomputed shadow at a pixel of full resolution, from the four nearest pixels of reduced resolution, weighted
+//! bilinearly and by the similarity of their depths to zDepth, which keeps the shadow at silhouettes (#3477)
+ShadowValue Raytracer::UpsampleShadow(const RTVector3D& pixelNormalized, RTfloat zDepth) const
+{
+	//the pixel of reduced resolution xLow has its center at (2*xLow+1)/shadowWidth - 1
+	RTfloat fx = 0.5f * ((pixelNormalized[0] + 1.f) * (RTfloat)RTS.shadowWidth - 1.f);
+	RTfloat fy = 0.5f * ((pixelNormalized[1] + 1.f) * (RTfloat)RTS.shadowHeight - 1.f);
+	Index x0 = EXUstd::Clamp((Index)std::floor(fx), (Index)0, RTS.shadowWidth - 1);
+	Index y0 = EXUstd::Clamp((Index)std::floor(fy), (Index)0, RTS.shadowHeight - 1);
+	Index x1 = EXUstd::Minimum(x0 + 1, RTS.shadowWidth - 1);
+	Index y1 = EXUstd::Minimum(y0 + 1, RTS.shadowHeight - 1);
+	RTfloat tx = EXUstd::Clamp(fx - (RTfloat)x0, 0.f, 1.f);
+	RTfloat ty = EXUstd::Clamp(fy - (RTfloat)y0, 0.f, 1.f);
+
+	const Index indices[4] = { y0 * RTS.shadowWidth + x0, y0 * RTS.shadowWidth + x1, y1 * RTS.shadowWidth + x0, y1 * RTS.shadowWidth + x1 };
+	const RTfloat bilinear[4] = { (1.f - tx) * (1.f - ty), tx * (1.f - ty), (1.f - tx) * ty, tx * ty };
+	RTfloat invTolerance = 1.f / RTS.shadowDepthTolerance;
+
+	ShadowValue result = { 0.f, 0.f, 0.f, 0.f };
+	RTfloat sumWeights = 0.f;
+	for (Index k = 0; k < 4; k++)
+	{
+		RTfloat dz = (RTS.shadowDepths[indices[k]] - zDepth) * invTolerance;
+		RTfloat weight = (bilinear[k] + 1e-4f) / (1.f + dz * dz);
+		sumWeights += weight;
+		for (Index lightID = 0; lightID < MAX_LIGHTS_GLFW; lightID++) { result[lightID] += weight * RTS.shadowValues[indices[k]][lightID]; }
+	}
+	if (!(sumWeights > 1e-20f)) //all four of another depth, e.g. a thin object in front of the background: bilinear
+	{
+		result = { 0.f, 0.f, 0.f, 0.f };
+		sumWeights = 1.f;
+		for (Index k = 0; k < 4; k++)
+		{
+			for (Index lightID = 0; lightID < MAX_LIGHTS_GLFW; lightID++) { result[lightID] += bilinear[k] * RTS.shadowValues[indices[k]][lightID]; }
+		}
+	}
+	for (Index lightID = 0; lightID < MAX_LIGHTS_GLFW; lightID++) { result[lightID] /= sumWeights; }
+	return result;
+}
+
+//! an angle in [0, 2 pi) from the bits of a point, the same on every platform for the same point; it rotates the samples
+//! on the disk of a light from hit to hit, which turns the bands of a fixed pattern into fine noise (#3475)
+static RTfloat HashAngle(const RTVector3D& point)
+{
+	uint32_t h = 2166136261u;
+	for (Index i = 0; i < 3; i++)
+	{
+		uint32_t bits;
+		std::memcpy(&bits, &point[i], sizeof(bits));
+		h = (h ^ bits) * 16777619u;
+		h ^= h >> 15;
+	}
+	h *= 0x2c1b3c6du;
+	h ^= h >> 12;
+	return (RTfloat)(h & 0xFFFFFFu) * (2.f * EXUstd::pi_f / 16777216.f);
 }
 
 //! the flat search tree (CSR) and the compact triangles, after RTS.searchTree is filled (#3474)
@@ -550,6 +619,10 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 	{
 		zDepth = rayOrigin[2] + rayDirection[2] * closestHit.distance;
 	}
+	if (shadowMode == 2 && reflectionDepth == 0 && transparencyDepth == 0)
+	{
+		shadowValue = UpsampleShadow(rayOriginNormalized, zDepth); //(#3477)
+	}
 	const GLMaterial& material = (*RTS.materials)[closestHit.materialIndex];
 
 	RTVector3D hitPoint = rayOrigin + rayDirection * closestHit.distance;
@@ -575,9 +648,9 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 		const RaytracingLight& light = RTS.lights[lightID];
 		if (!light.active) { continue; }
 
-		//variations: special spiral to minimize artifacts
+		//soft shadows: the light as a disk of samples; a point light of radius lightRadius, a directional light of the
+		//angular radius lightRadius (in radians, #3472)
 		Index nLightPoints = (light.shadow
-			&& light.position[3] != 0.f
 			&& light.lightRadius > 0.f
 			&& RTS.lightRadiusVariations > 1
 			&& shadowMode != 2
@@ -597,53 +670,86 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 			Matrix3DF rotationMV = EXUmath::Matrix4DtoMatrix3D(RTS.modelViewRM); //row-major
 			lightDir0 = rotationMV * lightPos - light.position[3] * (RTS.translationView);
 		}
+		RTfloat diskRadius = 0.f; //the angular radius of the disk of the light, seen from the hit
 		if (light.position[3] == 0.f) //only direction is used!
 		{
 			lightDir0.NormalizeSafe();
 			lightDistance0 = (lightDir0 - hitPoint).GetL2Norm(); //for attenuation, we still compute distance!
+			diskRadius = light.lightRadius;
 		}
 		else //light is used as position
 		{
 			lightDir0 -= hitPoint; //now lightDir is the direction
 			lightDistance0 = EXUstd::Maximum(1e-5f, lightDir0.GetL2Norm());
 			lightDir0 *= 1.f / lightDistance0;
-			if (nLightPoints > 1) { EXUmath::ComputeOrthogonalBasisVectors(lightDir0, basisN1, basisN2); }
+			diskRadius = light.lightRadius / lightDistance0;
+		}
+		if (nLightPoints > 1) { EXUmath::ComputeOrthogonalBasisVectors(lightDir0, basisN1, basisN2); }
+
+		//the samples: a Fibonacci spiral on the disk, equal areas per sample, rotated by an angle per hit (#3475)
+		RTfloat rotation = (nLightPoints > 1) ? HashAngle(hitPoint) : 0.f;
+		auto SampleDirection = [&](Index np)
+		{
+			if (nLightPoints == 1) { return lightDir0; }
+			constexpr RTfloat goldenAngle = 2.39996323f; //pi*(3-sqrt(5))
+			RTfloat radius = diskRadius * std::sqrt(((RTfloat)np + 0.5f) / (RTfloat)nLightPoints);
+			RTfloat phi = (RTfloat)np * goldenAngle + rotation;
+			return RTVector3D(lightDir0 + (radius * std::cos(phi)) * basisN1 + (radius * std::sin(phi)) * basisN2);
+		};
+
+		//the light that reaches the hit per sample, 0 in shadow (#3471); with adaptiveShadowSamples, the innermost sample and
+		//the outermost ones first, and the others only if these do not agree, at the edges of shadows (#3476)
+		constexpr Index maxLightSamples = 256;
+		std::array<RTfloat, maxLightSamples> transmission;
+		nLightPoints = EXUstd::Minimum(nLightPoints, maxLightSamples);
+		if (shadowMode != 2 && light.shadow)
+		{
+			auto Trace = [&](Index np)
+			{
+				RTVector3D direction = SampleDirection(np);
+				transmission[np] = ShadowTransmission(hitPoint + direction * RTS.shadowRayOffset, direction, triangles, RTS, lightDistance0, lightID);
+			};
+			Index nProbes = RTS.adaptiveShadowSamples;
+			if (nLightPoints > 1 && nProbes > 1 && nProbes < nLightPoints)
+			{
+				Trace(0);
+				bool agree = true;
+				for (Index k = 1; k < nProbes; k++)
+				{
+					Trace(nLightPoints - k);
+					if (transmission[nLightPoints - k] != transmission[0]) { agree = false; }
+				}
+				for (Index np = 1; np <= nLightPoints - nProbes; np++)
+				{
+					if (agree) { transmission[np] = transmission[0]; }
+					else { Trace(np); }
+				}
+			}
+			else
+			{
+				for (Index np = 0; np < nLightPoints; np++) { Trace(np); }
+			}
+		}
+		else
+		{
+			for (Index np = 0; np < nLightPoints; np++) { transmission[np] = 1.f; }
 		}
 
 		for (Index np = 0; np < nLightPoints; np++)
 		{
 			RTfloat lightDistance = lightDistance0;
-			RTVector3D lightDir = lightDir0;
-			if (light.position[3] != 0.f && nLightPoints > 1)
-			{
-				//several point lights on the disk of the light, systematic to avoid noise: a spiral
-				RTfloat fract = ((RTfloat)np / (RTfloat)nLightPoints);
-				RTfloat radFact = sqrt(fract);
-				fract *= sqrt((RTfloat)nLightPoints);
-				RTfloat x = radFact * light.lightRadius / lightDistance * (RTfloat)sin(EXUstd::pi_f * 2.f * fract);
-				RTfloat y = radFact * light.lightRadius / lightDistance * (RTfloat)cos(EXUstd::pi_f * 2.f * fract);
+			RTVector3D lightDir = SampleDirection(np);
+			RTfloat lightFraction = transmission[np];
+			if (lightFraction == 0.f) { continue; }
 
-				lightDir += x * basisN1 + y * basisN2; //lightDir not normalized any more, but should be ok
-			}
-			
-			if (shadowMode != 2)
-			{
-				if (light.shadow)
-				{
-					if (IsInShadow(hitPoint + lightDir * 0.01f, lightDir, triangles, RTS, lightDistance, lightID)) 
-					{
-						continue;
-					}
-				}
-			}
-			else
+			if (shadowMode == 2)
 			{
 				factLights = shadowValue[lightID]; //precomputed shadowValue (0=full shadow, 1=full light) influences light factor
 			}
 
 			if (shadowMode == 1)
 			{
-				shadowValue[lightID] += factLights; //for each light computation, we add the fraction of light contribution ( sum(factLights)==1 )
+				shadowValue[lightID] += factLights * lightFraction; //for each light computation, we add the fraction of light contribution ( sum(factLights)==1 )
 			}
 			else
 			{
@@ -661,7 +767,7 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 					closestHit.color[2] * light.diffuse * diffuseIntensity * attenuation
 				};
 
-				shadedColor += factLights * lightContribution;
+				shadedColor += (factLights * lightFraction) * lightContribution;
 
 				// Specular (Phong)
 				RTVector3D viewDir = -rayDirection;
@@ -671,7 +777,7 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 				RTfloat adjustedShininess = std::max(1.0f, material.shininess);
 				//RTfloat adjustedShininess = std::max(1.0f, material.shininess * (1.0f - material.roughness)); //for simplification, roughness is not used for now!
 				RTfloat specIntensity = std::pow(std::max(0.0f, closestHit.normal * halfVec), adjustedShininess);
-				shadedColor += factLights * material.specular * light.specular * specIntensity * attenuation;
+				shadedColor += (factLights * lightFraction) * material.specular * light.specular * specIntensity * attenuation;
 			}
 		}
 	}
@@ -1182,6 +1288,7 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 	RTS.lightRadiusVariations = EXUstd::Clamp(visSettings->raytracer.lightRadiusVariations, 0, 256);
 	RTS.shadowScalingFactor = EXUstd::Clamp(visSettings->raytracer.advanced.shadowScalingFactor, 0, 16);
 	RTS.shadowSmoothingSteps = EXUstd::Clamp(visSettings->raytracer.advanced.shadowSmoothingSteps, 0, 32);
+	RTS.adaptiveShadowSamples = EXUstd::Clamp(visSettings->raytracer.advanced.adaptiveShadowSamples, 0, 256);
 
 	RTS.verbose = visSettings->raytracer.verbose;
 	//0: the logical processors; the tiles are balanced dynamically, so all of them pay (#3439, #3445)
@@ -1600,6 +1707,8 @@ ResizableArray<GLLine> triangles6Edges;
 		RTS.searchTreeBoxMaxRadius = box3D.Radius(); //searchTree not initialized here!
 		//RTS.maxSceneSize = EXUstd::Maximum((box3D.PMax() - box3D.PMin())[2], visSettings->general.minSceneSize); //makes problems with long cylinders starting at [0,0,0] in x-direction
 		RTS.maxSceneSize = EXUstd::Maximum(2.f*(RTS.searchTreeBoxMaxRadius+box3D.Center().GetL2Norm()), visSettings->general.minSceneSize); //modified to include center displacement!
+		RTS.shadowRayOffset = 1e-3f * 2.f * RTS.searchTreeBoxMaxRadius; //relative to the scene, not 0.01 for every scene (#3470)
+		RTS.shadowDepthTolerance = 2e-3f * 2.f * RTS.searchTreeBoxMaxRadius; //(#3477)
 
 		RTS.zBiasLines = (RTfloat)visSettings->raytracer.advanced.zBiasLines * 2.f * RTS.searchTreeBoxMaxRadius; //relative to sceen size
 		RTS.tolParallel = RTS.epsilon * 2.f * RTS.searchTreeBoxMaxRadius; //fixed for now
@@ -1761,12 +1870,12 @@ ResizableArray<GLLine> triangles6Edges;
 		//if (RTS.verbose) { PrintDelayed("complexity: " + EXUstd::ToString(complexity)); }
 
 		//shadowMode: 0=normal, 1=precompute shadow (returns shadow in RTVector3D[0]), 2=use computed shadow
-		//the precomputation only if a light casts soft shadows: a point light with a radius; otherwise the hard shadow at
-		//full resolution (#3469); if factor is <=1, precomputation makes no sense
+		//the precomputation only if a light casts soft shadows, a light with a radius; otherwise the hard shadow at full
+		//resolution (#3469, #3472); if factor is <=1, precomputation makes no sense
 		bool softShadowLight = false;
 		for (const RaytracingLight& light : RTS.lights)
 		{
-			if (light.active && light.shadow && light.position[3] != 0.f && light.lightRadius > 0.f) { softShadowLight = true; }
+			if (light.active && light.shadow && light.lightRadius > 0.f) { softShadowLight = true; }
 		}
 		RTS.preComputeShadow = softShadowLight && RTS.lightRadiusVariations > 1 && (RTS.shadowScalingFactor * RTS.AAfactor) > 1;
 
@@ -1778,6 +1887,8 @@ ResizableArray<GLLine> triangles6Edges;
 
 			RTS.shadowValues.SetNumberOfItems(RTS.shadowWidth * RTS.shadowHeight);
 			RTS.shadowValues.SetAll({ 1.f, 1.f, 1.f, 1.f});
+			RTS.shadowDepths.SetNumberOfItems(RTS.shadowWidth * RTS.shadowHeight);
+			RTS.shadowDepths.SetAll(0.f); //a pixel cut by the clipping plane returns before its depth is set
 
 			//! precompute shadows:
 			RaytracerParallelFor(RTS.numberOfThreadsUsed, nBoxes, [this, &ToPerspectiveRay,
@@ -1796,7 +1907,6 @@ ResizableArray<GLLine> triangles6Edges;
 					Index yStart = ty * tileHeight;
 					Index yEnd = (ty == tilesY - 1) ? RTS.shadowHeight : yStart + tileHeight;
 
-					RTfloat zDepthDummy;
 					const Index computeShadow = 1;
 					for (Index y = yStart; y < yEnd; ++y)
 					{
@@ -1811,24 +1921,15 @@ ResizableArray<GLLine> triangles6Edges;
 								RTS.zoom, RTS.zMaxSceneFactor);
 
 							//in this mode, color[3] becomes the shadow value
-							ComputePixelColor(rayOrigin, rayDir, graphicsData.glTriangles, RTS, zDepthDummy, RTS.shadowValues[iPix], 0, 0, computeShadow, rayOrigin0);
+							ComputePixelColor(rayOrigin, rayDir, graphicsData.glTriangles, RTS, RTS.shadowDepths[iPix], RTS.shadowValues[iPix], 0, 0, computeShadow, rayOrigin0);
 						}
 					}
 				});
-			//each pass from one array into the other, which are then swapped; the result is in RTS.shadowValues (#3468)
+			//each pass from one array into the other, which are then swapped; the result is in RTS.shadowValues (#3468); the
+			//full resolution takes the values where the final pass hits, by UpsampleShadow (#3477)
 			for (Index i = 0; i < RTS.shadowSmoothingSteps; i++)
 			{
-				SmoothShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowWidth, RTS.shadowHeight, RTS, true);
-				RTS.shadowValues.Swap(RTS.smoothShadowValues);
-			}
-
-			ScaleShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowWidth, RTS.shadowHeight,
-				RTS.imageWidth, RTS.imageHeight, RTS.numberOfThreadsUsed);
-			RTS.shadowValues.Swap(RTS.smoothShadowValues);
-
-			for (Index i = 0; i < RTS.shadowScalingFactor; i++) //RTS.shadowScalingFactor*2 looks better for larger shadowScalingFactor!
-			{
-				SmoothShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.imageWidth, RTS.imageHeight, RTS, false);
+				SmoothShadowValues(RTS.shadowValues, RTS.smoothShadowValues, RTS.shadowDepths, RTS.shadowWidth, RTS.shadowHeight, RTS, true);
 				RTS.shadowValues.Swap(RTS.smoothShadowValues);
 			}
 		}
@@ -1881,12 +1982,6 @@ ResizableArray<GLLine> triangles6Edges;
 
 						Index iPix = (y * RTS.imageWidth + x);
 						Index i = iPix * RTS.RTcolorDepth;
-						if (RTS.preComputeShadow)
-						{
-							//Index iPixShadow = ((y / (RTS.shadowScalingFactor * RTS.AAfactor)) * RTS.shadowWidth + x / (RTS.shadowScalingFactor * RTS.AAfactor));
-							//shadowValue = RTS.shadowValues[iPixShadow];
-							shadowValue = RTS.shadowValues[iPix];
-						}
 						auto [rayOrigin, rayDir] = ToPerspectiveRay(x, y, RTS.imageWidth, RTS.imageHeight, RTS.perspectiveFactor,
 							RTS.maxSceneSize, RTS.zoom, RTS.zMaxSceneFactor);
 

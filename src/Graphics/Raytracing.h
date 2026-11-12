@@ -169,7 +169,11 @@ public:
 	ResizableArray<unsigned char> pixelsRGBA;   //! for raytracing, the RGBA pixel buffer
 	ResizableArray<RTfloat> zDepths;			//! for raytracing, storing zDepths for lateron adding texts
 	ResizableArray<ShadowValue> shadowValues;	//! shadow values, per light, at possibly lower resolution
-	ResizableArray<ShadowValue> smoothShadowValues; //! shadow values at original resolution
+	ResizableArray<ShadowValue> smoothShadowValues; //! the second array of the smoothing passes at reduced resolution
+	ResizableArray<RTfloat> shadowDepths;		//! the depths of the pixels of reduced resolution, for the depth-aware filter (#3477)
+	RTfloat shadowDepthTolerance;				//! a depth difference of this size halves the weight of a neighbour (#3477)
+	RTfloat shadowRayOffset;					//! a shadow ray starts this far from the hit, relative to the scene size (#3470)
+	Index adaptiveShadowSamples;				//! the probe samples per pixel and light; 0 = all samples always (#3476)
 	Index shadowScalingFactor;					//! reduced resolution of shadows (AAfactor additionally multiplied)
 	Index shadowSmoothingSteps;					//! number of smoothing steps at lower resolution shadow map
 	bool preComputeShadow;						//! if yes, precomputes (smoothed) shadow with lower resolution
@@ -212,6 +216,9 @@ public:
 		modelCentricView = true;
 		shadowScalingFactor = 2;
 		shadowSmoothingSteps = 2;
+		shadowDepthTolerance = 1.f;
+		shadowRayOffset = 0.01f;
+		adaptiveShadowSamples = 0;
 		maxReflectionDepth = 0;
 		maxTransparencyDepth = 0;
 		globalMaxAlpha = 0;
@@ -323,10 +330,15 @@ public:
 	void TraverseGrid(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const RaytracingSettings& RTS,
 		const RTfloat& cutOffDistance, const TVisit& visit) const;
 
-	//! check if point is in shadow of light lightID; the item that blocked the last shadow ray of this thread and light
-	//! is tested first (#3474)
-	bool IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles,
+	//! the fraction of light lightID that reaches point: 0 behind an opaque item, the product of (1 - alpha) of the
+	//! transparent items in between, 1 without any; the item that blocked the last shadow ray of this thread and light is
+	//! tested first (#3474, #3471)
+	RTfloat ShadowTransmission(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles,
 		const RaytracingSettings& RTS, RTfloat maxDistance, Index lightID);
+
+	//! the precomputed shadow at a pixel of full resolution (normalized coordinates in [-1, 1]) and its depth: the four
+	//! nearest values of reduced resolution, weighted bilinearly and by the similarity of their depths (#3477)
+	ShadowValue UpsampleShadow(const RTVector3D& pixelNormalized, RTfloat zDepth) const;
 
 	//! the flat search tree and the compact triangles from RTS.searchTree and the triangles (#3474)
 	void BuildFlatSearchTree(const ResizableArray<GLTriangle>& triangles);

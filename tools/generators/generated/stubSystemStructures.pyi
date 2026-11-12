@@ -1100,6 +1100,8 @@ class VSettingsMaterial:
 #information for VSettingsRaytracerAdvanced
 class VSettingsRaytracerAdvanced:
     """Advanced settings for raytracer."""
+    adaptiveShadowSamples: int
+    """if lightRadiusVariations is larger, this number of the shadow samples of a light is traced first for each pixel, the innermost and the outermost ones of its disk; if they agree (the pixel fully lit or fully in shadow), the other samples take their value without being traced, which saves most of the cost of soft shadows away from their edges; 0 traces all samples; small details of a shadow, smaller than the spacing of the probes, may be missed; range=0..256."""
     backFaceColor: Tuple[float,float,float,float]
     """if the alpha (fourth) value is > 0: faces seen from their back - whose normals point away from the camera, e.g. the inward normals of a closed body - are drawn in this RGB color, without light, to check the orientation of the normals of imported meshes, as the one-sided lighting of OpenGL (openGL.advanced.lightModelTwoSide = False) shows them dark (#3275); 0: drawn as the front."""
     backgroundColorReflections: Tuple[float,float,float,float]
@@ -1107,9 +1109,9 @@ class VSettingsRaytracerAdvanced:
     searchTreeFactor: int
     """This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128."""
     shadowScalingFactor: int
-    """if lightRadiusVariations>1 and a light casts soft shadows (a light with a position and lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries."""
+    """if lightRadiusVariations>1 and a light casts soft shadows (lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries."""
     shadowSmoothingSteps: int
-    """if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)."""
+    """if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; each step averages the neighbours of similar depth, so a shadow does not spread across the silhouette of an object; the full resolution interpolates the low-resolution values of similar depth; range=0..32."""
     showText: bool
     """True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings."""
     tilesPerThread: int
@@ -1223,7 +1225,7 @@ class VSettingsLight:
     enable: bool
     """turn this light on or off; the four lights light0 to light3 of visualizationSettings.openGL are OpenGL GL_LIGHT0 to GL_LIGHT3, and each of them can cast a shadow - see shadow below."""
     lightRadius: float
-    """only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)."""
+    """only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower); for a directional light (4th component of position 0), it is the angular radius in radians, e.g. 0.0047 for the sun."""
     linearAttenuation: float
     """linear attenuation coefficient of this light, this is a linear factor for attenuation of the light source with distance."""
     position: Tuple[float,float,float,float]
