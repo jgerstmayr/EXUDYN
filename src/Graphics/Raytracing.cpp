@@ -192,6 +192,19 @@ void Raytracer::IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVect
 	if (result.hitFromBack) { result.normal = -result.normal; }
 }
 
+//! the item iInd of the search tree: a triangle, or with iInd >= triangles.NumberOfItems() a sphere of graphicsData.glSpheres;
+//! defined here, after the two intersections it calls, so that no other translation unit needs them
+inline void Raytracer::IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
+	const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result)
+{
+	if (iInd < triangles.NumberOfItems())
+	{
+		IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, result);
+		if (result.hit && iInd < triangleTextures.NumberOfItems() && triangleTextures[iInd] >= 0) { ApplyTexture(triangleTextures[iInd], result); }
+	}
+	else { IntersectRayWithSphere(rayOrigin, rayDirection, graphicsData.glSpheres[iInd - triangles.NumberOfItems()], RTS, result); }
+}
+
 //! check if point is in shadow with given light
 bool Raytracer::IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles, 
 	const RaytracingSettings& RTS, RTfloat maxDistance) 
@@ -1413,7 +1426,7 @@ ResizableArray<GLLine> triangles6Edges;
 				for (Index i = 1; i <= (Index)nSeg; i++)
 				{
 					float phi = 2.f*EXUstd::pi_f*(float)i / nSeg;
-					Float3 point2 = circle.point + Float3({ circle.radius*sin(phi), circle.radius*cos(phi), 0.f });
+					Float3 point2 = circle.point + Float3({ circle.radius*std::sin(phi), circle.radius*std::cos(phi), 0.f });
 					TransformVertexRM(point1, RTS.modelViewRM, lineNew.point1);
 					TransformVertexRM(point2, RTS.modelViewRM, lineNew.point2);
 					graphicsData.glLines.Append(lineNew);

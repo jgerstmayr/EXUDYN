@@ -1376,7 +1376,7 @@ namespace
 		py::dict d = py::reinterpret_borrow<py::dict>(object);
 		if (!d.contains("type"))
 		{
-			PyError(where + "the item needs the key 'type', 'Line', 'Text' or 'Point': " + EXUstd::ToString(py::str(d)), PyErrorType::valueError);
+			PyError(where + "the item needs the key 'type', 'Line', 'Text' or 'Point': " + EXUstd::ToString(py::str(py::handle(d))), PyErrorType::valueError);
 		}
 		ScopePlot::StaticItem item;
 		auto Get = [&](const char* key, auto& value)
@@ -1384,7 +1384,7 @@ namespace
 			try { value = py::cast<std::remove_reference_t<decltype(value)>>(d[key]); }
 			catch (const py::cast_error&)
 			{
-				PyError(where + "the key '" + key + "' of " + EXUstd::ToString(py::str(d)) + " has the wrong type", PyErrorType::typeError);
+				PyError(where + "the key '" + key + "' of " + EXUstd::ToString(py::str(py::handle(d))) + " has the wrong type", PyErrorType::typeError);
 			}
 		};
 		STDstring type;
@@ -1543,7 +1543,7 @@ namespace
 			try { value = py::cast<std::remove_reference_t<decltype(value)>>(d[key]); }
 			catch (const py::cast_error&)
 			{
-				PyError(where + "the key '" + key + "' of " + EXUstd::ToString(py::str(d)) + " has the wrong type", PyErrorType::typeError);
+				PyError(where + "the key '" + key + "' of " + EXUstd::ToString(py::str(py::handle(d))) + " has the wrong type", PyErrorType::typeError);
 			}
 		};
 		RendererControls::Control control;

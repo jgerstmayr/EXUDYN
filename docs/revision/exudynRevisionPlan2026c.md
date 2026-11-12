@@ -63,6 +63,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
+  - RG4.29 Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
 - **RG5** Performance
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (3 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
@@ -112,7 +113,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | CLOSED | 0 | Release and publication |
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 3 | Implementation problems and bugs |
+| RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 6 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
@@ -491,6 +492,16 @@ the tolerance, the step size of the examples, or the check off in them.
 
 CLOSED 2026-11-10 (#904 closed as won't fix; maintainer 2026-11-10): the contacts keep switching by the gap; the general section of the contacts says that the damping may give a negative contact force at the end of a contact, which keeps the linear spring-damper behaviour, and names the restitution-based impact models as the alternative; every contactDamping refers to it. [log](exudynRevisionLog2026c.md#rg4-27)
 
+### **CLOSED_RG4.28** Fix the gcc build of 1.13.599 and its warnings
+
+#3464 (maintainer 2026-11-12: the Linux build error, built in WSL with the conda environments).
+
+CLOSED 2026-11-12 (#3464): built in WSL; the ambiguous py::str of a dict, the uninitialized Matrix3D, the inline IntersectRayWithItem and the narrowing sin/cos fixed; the backslashes of the pybind descriptions escaped (8 LaTeX docstrings of exudyn.cUtilities were broken on every platform). Linux suite: 341 of 343 test models, all mini examples; the two others are #3465 (RG4.29), the same with Matrix3D as ConstSizeMatrix, so the switch is bitwise on gcc. [log](exudynRevisionLog2026c.md#rg4-28)
+
+### **OPEN_RG4.29** Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
+
+#3465, found in RG4.28 (the first Linux run since 1.13.81).
+
 ## **OPEN_RG5** Performance
 
 Measurement first, then the code that is actually hot.
@@ -645,6 +656,8 @@ CLOSED 2026-11-12 (#3463), not done: the templated G products are bitwise equal 
 #### **OPEN_RG5.2.9** Decide: Matrix3D as SlimMatrix<3,3> for good, and remove EXUDYN_MATRIX3D_CONSTSIZE
 
 Maintainer 2026-11-12: the decision on the switch as a further step, after the evaluation of RG5.2.5. Recommended (linalgFixedSize.md section 10): final; the compile switch and the ConstSizeMatrixBase<T, 9> special cases of ConstSizeMatrix.h removed after the next release has run on Linux and macOS.
+
+Linux (gcc 13.3, WSL, 2026-11-12, RG4.28): Matrix3D as SlimMatrix and as ConstSizeMatrix<9> give the same 448 result lines of the test suite bit for bit; macOS (clang) not yet checked.
 
 ### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 

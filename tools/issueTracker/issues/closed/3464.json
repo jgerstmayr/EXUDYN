@@ -1,0 +1,16 @@
+{
+  "number": 3464,
+  "title": "The gcc build: py::str of a dict is ambiguous, Matrix3D copied uninitialized, LaTeX backslashes in the docstrings of exudyn.cUtilities",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "gcc 13 with the pybind11 of the build environment refuses py::str(d) for a py::dict (MainSystemContainer.cpp, the renderer controls): ambiguous between the constructors from handle, object and bytes; the Linux build stops. Further warnings of gcc: FromPython for a SlimMatrix copies its destination, which SetRotationPy and HTRotationFromPython left uninitialized (Matrix3D A;); Raytracer::IntersectRayWithItem, inline in Raytracing.h, calls two inline functions defined only in Raytracing.cpp (used but never defined in the other translation units); a narrowing sin/cos of a float in the circles of the raytracer. The generator writes the descriptions of the pybind functions into the C++ string literal without escaping backslashes: the LaTeX of 8 functions of exudyn.cUtilities (EulerParameters2G, RotXYZ2G, LocalTwist, ...) lost its backslashes on every platform and \\t became a tab.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 18:47",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The gcc build works again: py::str of a dict made unambiguous (renderer controls), the rotation matrix of HomogeneousTransformation initialized before its conversion from Python, Raytracer::IntersectRayWithItem defined in Raytracing.cpp, no narrowing in the raytraced circles; the LaTeX in the docstrings of exudyn.cUtilities (EulerParameters2G, RotXYZ2G, LocalTwist, ...) keeps its backslashes on every platform.",
+  "resolvedInVersion": "1.13.600"
+}

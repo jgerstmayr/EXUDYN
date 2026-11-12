@@ -582,7 +582,9 @@ class DeclarationWriter:
                 self.sPy += cClass + '::'
     
         self.sPy += cName + ', '
-        self.sPy += '"' + description +'"'
+        #a backslash of a LaTeX macro escaped for the C++ string literal; unescaped, \t became a tab and \G an
+        #unknown escape (a gcc warning, the backslash lost on every platform)
+        self.sPy += '"' + description.replace(chr(92), chr(92)*2) + '"'
         if (options != ''):
             self.sPy += ', ' + options
        

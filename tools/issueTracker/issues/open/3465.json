@@ -1,0 +1,11 @@
+{
+  "number": 3465,
+  "title": "journalBearingTest.py and sliderCrank3Dbenchmark.py differ on Linux",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "With gcc 13 (WSL, venvP313, 1.13.599) journalBearingTest.py gives 8.78901963260202 against the reference 8.789027047564257 (error -7.4e-6) and sliderCrank3Dbenchmark.py 5.7911914985923145 against 5.7911914993916 (-8.0e-10); all other 341 test models and the 108 mini examples agree. Both models were added or changed after the last Linux run (1.13.81). Matrix3D as SlimMatrix or as ConstSizeMatrix<9> gives the same results on Linux, so it is not the cause. Find the cause as in revision2026c step RG4.1 (the math functions, the order of sums), or record the models in UnresolvedOnLinux() with the reason.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

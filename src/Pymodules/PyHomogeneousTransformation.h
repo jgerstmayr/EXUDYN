@@ -78,7 +78,7 @@ public:
 	//! no rotation, which the C++ side sets only by construction (#2810)
 	void SetRotationPy(const py::object& rotation)
 	{
-		Matrix3D A;
+		Matrix3D A(3, 3, 0.); //initialized: FromPython copies the destination, as a list row of wrong length keeps its row
 		EPyUtils::FromPython<Real, 3, 3>(rotation, A);
 		SetRotationMatrix(A);
 		UpdateNoRotationFlag();
@@ -435,7 +435,7 @@ namespace EPyUtils
 	//! the rotation part of an HT; its position is kept
 	inline void HTRotationFromPython(const py::object& value, HomogeneousTransformation& ht, const char* context)
 	{
-		Matrix3D rotation;
+		Matrix3D rotation(3, 3, 0.); //initialized, as in SetRotationPy
 		FromPython<Real, 3, 3>(value, rotation);
 		ht.SetRotationMatrix(rotation);
 		ht.UpdateNoRotationFlag();

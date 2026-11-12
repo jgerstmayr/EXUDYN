@@ -403,15 +403,7 @@ public:
 
 	//! the item iInd of the search tree: a triangle, or with iInd >= triangles.NumberOfItems() a sphere of graphicsData.glSpheres
 	inline void IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
-		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result)
-	{
-		if (iInd < triangles.NumberOfItems())
-		{
-			IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, result);
-			if (result.hit && iInd < triangleTextures.NumberOfItems() && triangleTextures[iInd] >= 0) { ApplyTexture(triangleTextures[iInd], result); }
-		}
-		else { IntersectRayWithSphere(rayOrigin, rayDirection, graphicsData.glSpheres[iInd - triangles.NumberOfItems()], RTS, result); }
-	}
+		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result);
 
 	//! the color of a textured triangle at the hit (#3034): multiplied with the texture or replaced by it, the alpha of
 	//! RGBA multiplied, and no hit where the mask of RGBAMask is below 0.5 - also for shadows

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 570 | 1.13.598 |
+| 1.13 | Newborn | 571 | 1.13.600 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.600** `FIX` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The gcc build: py::str of a dict is ambiguous, Matrix3D copied uninitialized, LaTeX backslashes in the docstrings of exudyn.cUtilities (#3464)
+  - description: gcc 13 with the pybind11 of the build environment refuses py::str(d) for a py::dict (MainSystemContainer.cpp, the renderer controls): ambiguous between the constructors from handle, object and bytes; the Linux build stops. Further warnings of gcc: FromPython for a SlimMatrix copies its destination, which SetRotationPy and HTRotationFromPython left uninitialized (Matrix3D A;); Raytracer::IntersectRayWithItem, inline in Raytracing.h, calls two inline functions defined only in Raytracing.cpp (used but never defined in the other translation units); a narrowing sin/cos of a float in the circles of the raytracer. The generator writes the descriptions of the pybind functions into the C++ string literal without escaping backslashes: the LaTeX of 8 functions of exudyn.cUtilities (EulerParameters2G, RotXYZ2G, LocalTwist, ...) lost its backslashes on every platform and \\t became a tab.
+  - **notes:** The gcc build works again: py::str of a dict made unambiguous (renderer controls), the rotation matrix of HomogeneousTransformation initialized before its conversion from Python, Raytracer::IntersectRayWithItem defined in Raytracing.cpp, no narrowing in the raytraced circles; the LaTeX in the docstrings of exudyn.cUtilities (EulerParameters2G, RotXYZ2G, LocalTwist, ...) keeps its backslashes on every platform.
+  - date resolved: **2026-11-12 18:47**, date raised: 2026-11-12
 - **1.13.598** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: the cost of shadows and soft shadows, and options to reduce it (#3460)
   - description: Soft shadows (lightRadius with lightRadiusVariations) cost about 0.02 s per sample at 1200 x 1000 on 32 threads on the per-pixel path; the analysis of how shadows are computed, the measurements, the inefficiencies and the options (bitwise improvements, adaptive penumbra sampling, stratified samples, flat grid, edge-aware filtering) are in docs/dev/design/raytracerImprovements.md.
   - **notes:** Analysed the cost of shadows and soft shadows in the raytracer: measurements, inefficiencies and ranked options in docs/dev/design/raytracerImprovements.md.

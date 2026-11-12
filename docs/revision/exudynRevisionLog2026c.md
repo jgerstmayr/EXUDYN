@@ -6431,6 +6431,34 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg4-28"></a>
+### RG4.28 — the gcc build of 1.13.599 (2026-11-12, #3464, #3465)
+
+*(Maintainer 2026-11-12: a Linux build error with its warnings; build it in WSL with the conda environments, not in
+docker.)*
+
+Built in WSL (gcc 13.3, venvP313, `pip wheel . -w dist --no-deps -v`, the compiler output in setuppy.output.txt).
+- The error: `py::str(d)` of a `py::dict` (MainSystemContainer.cpp, the renderer controls, three places) is ambiguous
+  for gcc with the pybind11 of the build environment (constructors from handle, object, bytes); now
+  `py::str(py::handle(d))`.
+- `FromPython` of a SlimMatrix copies its destination (a list row of wrong length keeps its row); SetRotationPy and
+  HTRotationFromPython passed an uninitialized `Matrix3D` (gcc: used uninitialized) - initialized with zeros.
+- `Raytracer::IntersectRayWithItem` was inline in Raytracing.h and called two inline functions defined only in
+  Raytracing.cpp (gcc: used but never defined, in GlfwClient.cpp); its body moved to Raytracing.cpp, where it is used.
+- The circles of the raytracer: `std::sin`/`std::cos` of the float angle, no narrowing from double.
+- Found in the output: autoGenerateHelper.DefPyFunctionAccess wrote the description into the C++ string literal
+  without escaping backslashes; the LaTeX of 8 functions of exudyn.cUtilities (EulerParameters2G, RotXYZ2G,
+  LocalTwist, ...) lost its backslashes on every platform, `\t` became a tab. Escaped; the generated file changes only
+  in these 8 lines.
+- The test suite on Linux: 341 of 343 test models and the 108 mini examples pass; journalBearingTest.py (-7.4e-6) and
+  sliderCrank3Dbenchmark.py (-8.0e-10) differ, both added or changed after the last Linux run (1.13.81). A second
+  build with `Matrix3D` as `ConstSizeMatrix<9>` (the switch of #3459) gives the same 448 result lines bit for bit on
+  gcc as with SlimMatrix, so the switch is not the cause and is bitwise on gcc too (for RG5.2.9). #3465 raised
+  (RG4.29).
+- Left as they are, older than this step: the signed/unsigned comparison in MainSystem.cpp:1132/1137, the parentheses
+  in PortableMath.cpp, unused variables in CObjectKinematicTree.cpp and CObjectANCFCable.cpp, the maybe-uninitialized
+  members of Eigen's FullPivLU in LinearSolver.h, the note on `-Wno-template-id-cdtor` (gcc older than 14).
+
 <a id="rg6-26-1"></a>
 ### RG6.26.1 — raytracer: the cost of shadows, analysis (2026-11-12, #3460)
 
