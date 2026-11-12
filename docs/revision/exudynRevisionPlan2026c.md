@@ -52,7 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The fixed-size matrices** (RG5.2), evaluated by the maintainer: the profile of ODE2RHS first, then SlimMatrix.
+2. **Matrix6D and Matrix3D as SlimMatrix** (RG5.2.4, RG5.2.5): SlimMatrix and the profile of ODE2RHS are done;
+   the switch brings the measured 2 times to the connectors, which are two thirds of ODE2RHS in the rigid chains.
 3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
