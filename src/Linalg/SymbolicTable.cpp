@@ -222,7 +222,7 @@ static void ArrayResultSize(OperationCode code, const FlatNode& node, const Slot
 		rows = x[0].rows;
 		break;
 	case OperationCode::MatrixTransposedVector:
-		CHECKandTHROW(x[0].rows == x[1].rows, "EXUmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch", ExudynValueError);
+		CHECKandTHROW(x[0].rows == x[1].rows, "EXUmath::MultMatrixTransposedVector(matrix,vector,result): Size mismatch", ExudynValueError);
 		rows = x[0].columns;
 		break;
 	case OperationCode::VectorPositive: case OperationCode::VectorNegative: rows = x[0].rows; break;
@@ -311,7 +311,7 @@ Real ArrayOperation(OperationCode code, const SlotValue* x, Index numberOfOperan
 		for (Index i = 0; i < x[1].Components(); i++) { out[i] = factor * x[1].data[i]; }
 		return 0.;
 	}
-	case OperationCode::MatrixVector: //as EXUmath::MultMatrixVectorTemplate
+	case OperationCode::MatrixVector: //as EXUmath::MultMatrixVector
 	{
 		const Real* mm = x[0].data;
 		const Real* vv = x[1].data;
@@ -323,7 +323,7 @@ Real ArrayOperation(OperationCode code, const SlotValue* x, Index numberOfOperan
 		}
 		return 0.;
 	}
-	case OperationCode::MatrixTransposedVector: //as EXUmath::MultMatrixTransposedVectorTemplate
+	case OperationCode::MatrixTransposedVector: //as EXUmath::MultMatrixTransposedVector
 	{
 		const Real* mm = x[0].data;
 		const Real* vv = x[1].data;

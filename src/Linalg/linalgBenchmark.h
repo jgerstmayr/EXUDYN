@@ -9,6 +9,8 @@
 *				    3 to 500 and across ResizableVectorParallelThreadingLimit, single- and multithreaded
 *				  - group 'small': Matrix3D, ConstSizeMatrix 6x6, HomogeneousTransformation, SlimVector
 *				  - group 'jacobian': J^T f and J^T K J for a 3 x n Jacobian, n = 6 ... 24, as the connectors do
+*				  - group 'connector': J^T K and (J^T K) J into a block for a 6 x n marker Jacobian (n = 6, 7, 12), as
+*				    CObjectConnector computes it, and 3x3 * 3 x n of the contacts (#3480)
 *				  - group 'dense': Matrix * Vector, and the factorization and solve of the dense solver (InvertSpecial)
 *				  - group 'assembly': local 12 x 12 Jacobians of a chain into the sparse triplets, FinalizeMatrix,
 *				    and the same into a sparse matrix of known pattern
@@ -145,7 +147,7 @@ inline void LinalgBenchmarkJacobian(std::vector<LinalgBenchmarkResult>& results,
 	Real rp[n];
 
 	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "J^T f, ResizableMatrix 3 x n", n, 1, minimumTime, [&]()
-		{ EXUmath::MultMatrixTransposedVectorTemplate(J, f, r); f[0] += 1e-12 * r[n - 1]; return r[0]; }));
+		{ EXUmath::MultMatrixTransposedVector(J, f, r); f[0] += 1e-12 * r[n - 1]; return r[0]; }));
 	results.push_back(LinalgBenchmarkTime(group, "Eigen", "J^T f, MatrixXd 3 x n", n, 1, minimumTime, [&]()
 		{ rd.noalias() = Jd.transpose() * fd; fd[0] += 1e-12 * rd[n - 1]; return rd[0]; }));
 	results.push_back(LinalgBenchmarkTime(group, "Eigen", "J^T f, Matrix<3,n>", n, 1, minimumTime, [&]()
@@ -158,8 +160,8 @@ inline void LinalgBenchmarkJacobian(std::vector<LinalgBenchmarkResult>& results,
 
 	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "J^T K J, ResizableMatrix", n, 1, minimumTime, [&]()
 		{
-			EXUmath::MultMatrixMatrixTemplate(K, J, KJ);
-			EXUmath::MultMatrixTransposedMatrixTemplate(J, KJ, JKJ);
+			EXUmath::MultMatrixMatrix(K, J, KJ);
+			EXUmath::MultMatrixTransposedMatrix(J, KJ, JKJ);
 			K(0, 0) += 1e-12 * JKJ(n - 1, n - 1); return JKJ(0, 0);
 		}));
 	results.push_back(LinalgBenchmarkTime(group, "Eigen", "J^T K J, MatrixXd", n, 1, minimumTime, [&]()
@@ -177,6 +179,36 @@ inline void LinalgBenchmarkJacobian(std::vector<LinalgBenchmarkResult>& results,
 		{ rs = MultTransposedVector(Js, f); f[0] += 1e-12 * rs[n - 1]; return rs[0]; }));
 	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "J^T K J, SlimMatrix<3,n>", n, 1, minimumTime, [&]()
 		{ JKJs = MultTransposedMatrix(Js, Ks * Js); Ks(0, 0) += 1e-12 * JKJs(n - 1, n - 1); return JKJs(0, 0); }));
+}
+
+//! the connector Jacobian as CObjectConnector computes it (#3480): J^T K with MultMatrixTransposedMatrix for a 6 x n marker
+//! Jacobian J and a 6 x 6 K, then (J^T K) J written into the block of a 2n x 2n matrix by MultMatrixMatrixToSubmatrix;
+//! and the 3x3 times 3 x n product of the contacts
+template<Index n>
+inline void LinalgBenchmarkConnector(std::vector<LinalgBenchmarkResult>& results, Real minimumTime)
+{
+	const std::string group = "connector";
+	ResizableMatrix J(6, n), K(6, 6), JtK, jacobian(2 * n, 2 * n);
+	jacobian.SetAll(0.);
+	for (Index i = 0; i < 6; i++)
+	{
+		for (Index j = 0; j < n; j++) { J(i, j) = (i == j % 6) ? 1. : 0.01 * (Real)(i + j); }
+		for (Index j = 0; j < 6; j++) { K(i, j) = (i == j) ? 2. + (Real)i : 0.1 / (Real)(1 + i + j); }
+	}
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "J^T K, 6 x n", n, 1, minimumTime, [&]()
+		{ EXUmath::MultMatrixTransposedMatrix(J, K, JtK); K(0, 0) += 1e-12 * JtK(n - 1, 5); return JtK(0, 0); }));
+	EXUmath::MultMatrixTransposedMatrix(J, K, JtK);
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "(J^T K) J into a block", n, 1, minimumTime, [&]()
+		{
+			EXUmath::MultMatrixMatrixToSubmatrix(JtK, J, jacobian, n, 0);
+			JtK(0, 0) += 1e-12 * jacobian(2 * n - 1, n - 1); return jacobian(n, 0);
+		}));
+
+	Matrix3D A(3, 3, { 0.9, 0.1, -0.2, 0.05, 1.1, 0.3, -0.1, 0.2, 0.8 });
+	ResizableMatrix B(3, n), AB;
+	for (Index i = 0; i < 3; i++) { for (Index j = 0; j < n; j++) { B(i, j) = 0.1 * (Real)(1 + i) - 0.03 * (Real)j; } }
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "3x3 * 3 x n (contact)", n, 1, minimumTime, [&]()
+		{ EXUmath::MultMatrixMatrix(A, B, AB); A(0, 0) += 1e-12 * AB(2, n - 1); return AB(0, 0); }));
 }
 
 //! the vector operations of size n known at compile time: ConstSizeVector against Eigen and the prototype
@@ -258,8 +290,8 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix3d * Vector3d", 3, 1, minimumTime, [&]() { ev = eA * ev; return ev[2]; }));
 		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "Matrix3D^T * Vector3D, GetTransposed", 3, 1, minimumTime, [&]() { v = A.GetTransposed() * v; return v[2]; }));
 		ConstSizeVector<3> v3({ 0.3, -0.2, 0.7 }), r3;
-		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "Matrix3D^T * Vector3D, MultMatrixTransposedVectorTemplate", 3, 1, minimumTime, [&]()
-			{ EXUmath::MultMatrixTransposedVectorTemplate(A, v3, r3); v3 = r3; return v3[2]; }));
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "Matrix3D^T * Vector3D, MultMatrixTransposedVector", 3, 1, minimumTime, [&]()
+			{ EXUmath::MultMatrixTransposedVector(A, v3, r3); v3 = r3; return v3[2]; }));
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix3d^T * Vector3d", 3, 1, minimumTime, [&]() { ev = eA.transpose() * ev; return ev[2]; }));
 		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "Matrix3D * Matrix3D", 3, 1, minimumTime, [&]() { B = A * B; return B(0, 1); }));
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix3d * Matrix3d", 3, 1, minimumTime, [&]() { eB = eA * eB; return eB(0, 1); }));
@@ -280,9 +312,9 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 			v6[i] = ev6[i] = 0.1 * (Real)i;
 			for (Index j = 0; j < 6; j++) { M6(i, j) = eM6(i, j) = pM6(i, j) = (i == j) ? 0.9 : 0.01 * (Real)(i - j); }
 		}
-		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "ConstSizeMatrix<36> * ConstSizeVector<6>", 6, 1, minimumTime, [&]() { EXUmath::MultMatrixVectorTemplate(M6, v6, r6); v6 = r6; return v6[3]; }));
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "ConstSizeMatrix<36> * ConstSizeVector<6>", 6, 1, minimumTime, [&]() { EXUmath::MultMatrixVector(M6, v6, r6); v6 = r6; return v6[3]; }));
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix<6,6> * Matrix<6,1>", 6, 1, minimumTime, [&]() { er6.noalias() = eM6 * ev6; ev6 = er6; return ev6[3]; }));
-		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "ConstSizeMatrix<36> * ConstSizeMatrix<36>", 6, 1, minimumTime, [&]() { EXUmath::MultMatrixMatrixTemplate(M6, M6, R6); R6 *= 0.5; M6 = R6; return M6(1, 2); }));
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "ConstSizeMatrix<36> * ConstSizeMatrix<36>", 6, 1, minimumTime, [&]() { EXUmath::MultMatrixMatrix(M6, M6, R6); R6 *= 0.5; M6 = R6; return M6(1, 2); }));
 		results.push_back(LinalgBenchmarkTime(group, "Eigen", "Matrix<6,6> * Matrix<6,6>", 6, 1, minimumTime, [&]() { eR6.noalias() = eM6 * eM6; eM6 = 0.5 * eR6; return eM6(1, 2); }));
 		results.push_back(LinalgBenchmarkTime(group, "prototype", "fixed 6x6 * 6x6", 6, 1, minimumTime, [&]()
 			{ LinalgBenchmarkFixedMult(pM6, pM6, pR6); for (Index i = 0; i < 36; i++) { pM6.data[i] = 0.5 * pR6.data[i]; } return pM6(1, 2); }));
@@ -307,6 +339,9 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 	LinalgBenchmarkJacobian<12>(results, minimumTime);
 	LinalgBenchmarkJacobian<14>(results, minimumTime);
 	LinalgBenchmarkJacobian<24>(results, minimumTime);
+	LinalgBenchmarkConnector<6>(results, minimumTime);
+	LinalgBenchmarkConnector<7>(results, minimumTime);
+	LinalgBenchmarkConnector<12>(results, minimumTime);
 
 	//+++ AutoDiff<12>: the analytic connector Jacobians (#2884) differentiate by the 12 variations of the two frames
 	{

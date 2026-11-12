@@ -53,7 +53,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 2. **Blurred reflections** (RG6.26.16), on the samples of the soft shadows; then the optional raytracer step RG6.26.12.
-3. **The linear algebra cleanup** (RG5.2.8.1, RG5.2.8.2) and the transposed view (RG5.2.7.2): no computation changes.
+3. **The kernels with a result mode** (RG5.2.8.4, the faster block product of the connectors), then RG5.2.8.5 and the
+   transposed view in the item code (RG5.2.7.3): no computation changes.
 4. **The two Linux differences** (RG4.29): before the rehearsal, so that the Linux jobs can be green.
 5. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
@@ -65,7 +66,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.29 Find why journalBearingTest and sliderCrank3Dbenchmark differ on Linux
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (12 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (8 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
@@ -114,7 +115,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
-| RG5 | OPEN | 15 | Performance |
+| RG5 | OPEN | 11 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -661,9 +662,11 @@ Maintainer 2026-11-12: the recommended expression templates into the plan (RG5.2
 
 #3461. expressionTemplates.md ET.1: both modules, the results into linalgBenchmark.md; they decide RG5.2.7.5 and confirm RG5.2.7.3.
 
-##### **OPEN_RG5.2.7.2** TransposedView: Transposed(A) * x without a copy
+##### **CLOSED_RG5.2.7.2** TransposedView: Transposed(A) * x without a copy
 
 #3461. ET.2: Transposed() (a reference for lvalues, owning for rvalues) with operator* for ConstSizeMatrix and SlimMatrix; unit tests bitwise against GetTransposed().
+
+CLOSED 2026-11-12 (#3479): SlimMatrix.h, unit tests bitwise; expressionTemplates.md section 8. [log](exudynRevisionLog2026c.md#rg5-2-8-1)
 
 ##### **OPEN_RG5.2.7.3** Transposed(A) * x in the hot item code
 
@@ -683,17 +686,23 @@ Maintainer 2026-11-12: the recommended expression templates into the plan (RG5.2
 
 Maintainer 2026-11-12: the proposed steps are good to go (RG5.2.8.1-RG5.2.8.5; the benchmark RG5.2.8.3 before the kernels RG5.2.8.4).
 
-##### **OPEN_RG5.2.8.1** Remove the dead linear algebra functions
+##### **CLOSED_RG5.2.8.1** Remove the dead linear algebra functions
 
 #3462. linalgTemplatesInventory.md LT.1 (section 5.1): MultMatrixMatrixTemplate2, MultMatrixMatrixAddTemplate, the AddSubmatrixTransposedWithFactor chain, ...; build.
 
-##### **OPEN_RG5.2.8.2** The kernels under their plain names, the wrappers and explicit template arguments removed
+CLOSED 2026-11-12 (#3478): the test suite bitwise, unit tests passed; linalgTemplatesInventory.md section 8. [log](exudynRevisionLog2026c.md#rg5-2-8-1)
+
+##### **CLOSED_RG5.2.8.2** The kernels under their plain names, the wrappers and explicit template arguments removed
 
 #3462. LT.2: MultMatrixVector, ... without Template; the 33 wrappers and 75 explicit argument lists gone; MultMatrixVectorSquaredAdd checks instead of resizing; the test suite bitwise.
 
-##### **OPEN_RG5.2.8.3** Benchmark cases for J^T K J as the connectors compute it, and 3x3 times 3 x n
+CLOSED 2026-11-12 (#3478): the test suite bitwise, unit tests passed; linalgTemplatesInventory.md section 8. [log](exudynRevisionLog2026c.md#rg5-2-8-1)
+
+##### **CLOSED_RG5.2.8.3** Benchmark cases for J^T K J as the connectors compute it, and 3x3 times 3 x n
 
 #3462. LT.5, measured before and after RG5.2.8.4: MultMatrixTransposedMatrix + MultMatrixMatrixToSubmatrix for n = 6, 7, 12 (CObjectConnector.cpp), the contact case; both modules.
+
+CLOSED 2026-11-12 (#3480): group 'connector'; the baseline in the log. [log](exudynRevisionLog2026c.md#rg5-2-8-1)
 
 ##### **OPEN_RG5.2.8.4** One kernel per product with a result mode (set, add, subtract)
 

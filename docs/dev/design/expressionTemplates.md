@@ -297,3 +297,12 @@ connectors.
 | ET.5 | only if M1 shows the gain: `SlimVectorBase(T)` explicit, then the restricted elementwise expressions of §5.3, with the review rule on `auto` in CODING_STYLE.md | unchanged | medium |
 
 Full expression templates (option 1) are not proposed.
+
+## 8. Done: E1, the transposed view (RG5.2.7.2, #3479, 2026-11-12)
+
+`src/Linalg/SlimMatrix.h`: `TransposedView` (an lvalue, by reference) and `TransposedCopy` (an rvalue, the matrix kept),
+`Transposed()` for both, and `operator*` with a `SlimVectorBase` and a `SlimMatrixBase`, through `MultTransposedVector`
+and `MultTransposedMatrix`. Only `SlimMatrix` gets the view: `Matrix3D` and `Matrix6D` are `SlimMatrix` (#3459), and the
+run-time sized matrices keep the `EXUmath` kernels. The accessor is `GetMatrix()`, as `Matrix` is a type name. Unit
+test case in `SlimMatrixUnitTests.h`: 3x3, 3x4, 6x6 and an rvalue, bitwise against `A.GetTransposed() * x`. The item
+code is unchanged; its about 30 places are RG5.2.7.3.

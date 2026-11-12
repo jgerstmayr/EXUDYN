@@ -106,16 +106,16 @@ const lest::test slimMatrix_specific_test[] =
 		SlimMatrixTestFill(G, cG, 0.4);
 		SlimMatrixTestFill(H, cH, 2.1);
 		ConstSizeMatrix<9> cGH;
-		EXUmath::MultMatrixMatrixTemplate(cG, cH, cGH);
+		EXUmath::MultMatrixMatrix(cG, cH, cGH);
 		EXPECT(SlimMatrixTestSame(G * H, cGH));
 		EXPECT(SlimMatrixTestSame(G.GetTransposed(), cG.GetTransposed()));
 		ConstSizeMatrix<12> cAG;
 		ConstSizeMatrix<16> cGtAG;
-		EXUmath::MultMatrixMatrixTemplate(cA, cG, cAG);
-		EXUmath::MultMatrixMatrixTemplate(cG.GetTransposed(), cAG, cGtAG);
+		EXUmath::MultMatrixMatrix(cA, cG, cAG);
+		EXUmath::MultMatrixMatrix(cG.GetTransposed(), cAG, cGtAG);
 		EXPECT(SlimMatrixTestSame(MultTransposedMatrix(G, A * G), cGtAG));
 		SlimMatrix<4, 4> viaTemplate; //the EXUmath templates take a SlimMatrix as result
-		EXUmath::MultMatrixMatrixTemplate(G.GetTransposed(), A * G, viaTemplate);
+		EXUmath::MultMatrixMatrix(G.GetTransposed(), A * G, viaTemplate);
 		EXPECT(viaTemplate == MultTransposedMatrix(G, A * G));
 
 		SlimMatrix<6, 6> M, N;
@@ -161,9 +161,40 @@ const lest::test slimMatrix_specific_test[] =
 		SlimMatrixTestFill(G, cG, -0.8);
 		SlimVector<4> e({ 0.5, 0.5, -0.5, 0.5 });
 		ConstSizeVector<3> cGe;
-		EXUmath::MultMatrixVectorTemplate(cG, e, cGe);
+		EXUmath::MultMatrixVector(cG, e, cGe);
 		Vector3D Ge = G * e;
 		EXPECT((Ge[0] == cGe[0] && Ge[1] == cGe[1] && Ge[2] == cGe[2]));
+	},
+
+	CASE("Transposed(A) * x and Transposed(A) * B bitwise as A.GetTransposed() * x - 3x3, 3x4, 6x6, of an rvalue (#3479)")
+	{
+		SlimMatrix<3, 3> A, B;
+		ConstSizeMatrix<9> cA, cB;
+		SlimMatrixTestFill(A, cA, 0.35);
+		SlimMatrixTestFill(B, cB, -1.2);
+		Vector3D v({ 0.3, -0.21, 0.77 });
+		EXPECT(SlimVectorTestSame(Transposed(A) * v, A.GetTransposed() * v));
+		EXPECT(SlimVectorTestSame(Transposed(A) * v, cA.GetTransposed() * v));
+		EXPECT(Transposed(A) * B == A.GetTransposed() * B);
+		EXPECT(SlimMatrixTestSame(Transposed(A) * B, cA.GetTransposed() * cB));
+		EXPECT(SlimVectorTestSame(Transposed(A * B) * v, (A * B).GetTransposed() * v)); //an rvalue: the matrix is kept
+
+		SlimMatrix<3, 4> G;
+		ConstSizeMatrix<12> cG;
+		SlimMatrixTestFill(G, cG, 0.45);
+		SlimVector<4> gtv = Transposed(G) * v;
+		SlimVector<4> gtvReference = G.GetTransposed() * v;
+		EXPECT((gtv[0] == gtvReference[0] && gtv[1] == gtvReference[1] && gtv[2] == gtvReference[2] && gtv[3] == gtvReference[3]));
+		EXPECT(Transposed(G) * A == G.GetTransposed() * A);
+
+		SlimMatrix<6, 6> M, N;
+		ConstSizeMatrix<36> cM, cN;
+		SlimMatrixTestFill(M, cM, 0.9);
+		SlimMatrixTestFill(N, cN, 0.15);
+		Vector6D w({ 0.1, -0.2, 0.33, 0.47, -0.51, 0.6 });
+		EXPECT(SlimVectorTestSame(Transposed(M) * w, M.GetTransposed() * w));
+		EXPECT(SlimVectorTestSame(Transposed(M) * w, cM.GetTransposed() * w));
+		EXPECT(Transposed(M) * N == M.GetTransposed() * N);
 	},
 
 	CASE("SlimMatrix: inverse, determinant, trace, skew matrix, transposing, rows and columns")

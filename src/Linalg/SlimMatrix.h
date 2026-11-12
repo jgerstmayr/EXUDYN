@@ -555,6 +555,66 @@ inline SlimVectorBase<T, columns> MultTransposedVector(const SlimMatrixBase<T, r
 	return vector * matrix;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Transposed(A) * x and Transposed(A) * B without forming the transposed (#3479): Transposed() returns a view, which
+//only operator* takes, in the same statement; no other operator accepts it, so a misuse does not compile. The products
+//are MultTransposedVector and MultTransposedMatrix, the same bits as A.GetTransposed() * x.
+
+//! a view of the transposed of the matrix of an lvalue; it refers to the matrix
+template<class TMatrix>
+class TransposedView
+{
+public:
+	explicit TransposedView(const TMatrix& matrixInit) : matrix(matrixInit) {}
+	const TMatrix& GetMatrix() const { return matrix; }
+private:
+	const TMatrix& matrix;
+};
+
+//! the transposed of the matrix of an rvalue, e.g. Transposed(node->GetRotationMatrix()): it keeps the (not transposed)
+//! matrix, so that the view cannot refer to a temporary that is gone
+template<class TMatrix>
+class TransposedCopy
+{
+public:
+	explicit TransposedCopy(TMatrix&& matrixInit) : matrix(std::move(matrixInit)) {}
+	const TMatrix& GetMatrix() const { return matrix; }
+private:
+	TMatrix matrix;
+};
+
+//! Transposed(A) of an lvalue A: a view, no copy
+template<class TMatrix>
+inline TransposedView<TMatrix> Transposed(const TMatrix& matrix) { return TransposedView<TMatrix>(matrix); }
+
+//! Transposed(A) of an rvalue A: the matrix is kept
+template<class TMatrix, typename std::enable_if<!std::is_lvalue_reference<TMatrix>::value, int>::type = 0>
+inline TransposedCopy<TMatrix> Transposed(TMatrix&& matrix) { return TransposedCopy<TMatrix>(std::move(matrix)); }
+
+//! A^T * v
+template<typename T, typename T2, Index rows, Index columns>
+inline SlimVectorBase<T, columns> operator*(const TransposedView<SlimMatrixBase<T, rows, columns>>& transposed, const SlimVectorBase<T2, rows>& vector)
+{
+	return MultTransposedVector(transposed.GetMatrix(), vector);
+}
+template<typename T, typename T2, Index rows, Index columns>
+inline SlimVectorBase<T, columns> operator*(const TransposedCopy<SlimMatrixBase<T, rows, columns>>& transposed, const SlimVectorBase<T2, rows>& vector)
+{
+	return MultTransposedVector(transposed.GetMatrix(), vector);
+}
+
+//! A^T * B
+template<typename T, Index inner, Index rows, Index columns>
+inline SlimMatrixBase<T, rows, columns> operator*(const TransposedView<SlimMatrixBase<T, inner, rows>>& transposed, const SlimMatrixBase<T, inner, columns>& m2)
+{
+	return MultTransposedMatrix(transposed.GetMatrix(), m2);
+}
+template<typename T, Index inner, Index rows, Index columns>
+inline SlimMatrixBase<T, rows, columns> operator*(const TransposedCopy<SlimMatrixBase<T, inner, rows>>& transposed, const SlimMatrixBase<T, inner, columns>& m2)
+{
+	return MultTransposedMatrix(transposed.GetMatrix(), m2);
+}
+
 template<Index rows, Index columns>
 using SlimMatrix = SlimMatrixBase<Real, rows, columns>;
 

@@ -1174,7 +1174,7 @@ public:
 		if (!SReal::recordExpressions)
 		{
 			SymbolicRealVector result(right.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVectorTemplate(right.matrix, left.GetVector(), result.GetVector());
+			EXUmath::MultMatrixTransposedVector(right.matrix, left.GetVector(), result.GetVector());
 			return result;
 		}
 		VectorExpressionBase::NewCount()++;
@@ -1186,7 +1186,7 @@ public:
 		if (!SReal::recordExpressions)
 		{
 			SymbolicRealVector result(left.NumberOfRows());
-			EXUmath::MultMatrixVectorTemplate(left.matrix, right.GetVector(), result.GetVector());
+			EXUmath::MultMatrixVector(left.matrix, right.GetVector(), result.GetVector());
 			return result;
 		}
 		VectorExpressionBase::NewCount()++;

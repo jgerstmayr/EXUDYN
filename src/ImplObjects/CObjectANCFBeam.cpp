@@ -318,8 +318,8 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 
 				//SWS = (SY + SZ).GetTransposed() * WIW * (SY + SZ);
 				SY += SZ; //SY=SY+SZ
-				EXUmath::MultMatrixMatrixTemplate(fact * WIW, SY, SZ); //SZ=WIW*SY
-				EXUmath::MultMatrixTransposedMatrixAddTemplate(SY, SZ, precomputedMassMatrix); //add to mass matrix
+				EXUmath::MultMatrixMatrix(fact * WIW, SY, SZ); //SZ=WIW*SY
+				EXUmath::MultMatrixTransposedMatrixAdd(SY, SZ, precomputedMassMatrix); //add to mass matrix
 			}
 		}
 		//else
@@ -687,15 +687,15 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs) const
 
 		deformation.MultComponentWise(factInt*parameters.torsionalBendingStiffness);
 
-		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+		EXUmath::MultMatrixTransposedVectorAdd(deltaDeformation, deformation, ode2Lhs);
 
 		if (hasTorsionalBendingDamping)
 		{
-			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
+			EXUmath::MultMatrixVector(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
 
 			deformation.MultComponentWise(factInt * parameters.torsionalBendingDamping);
 
-			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+			EXUmath::MultMatrixTransposedVectorAdd(deltaDeformation, deformation, ode2Lhs);
 		}
 	}
 
@@ -710,15 +710,15 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs) const
 
 		deformation.MultComponentWise(factInt*parameters.axialShearStiffness);
 
-		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+		EXUmath::MultMatrixTransposedVectorAdd(deltaDeformation, deformation, ode2Lhs);
 
 		if (hasAxialShearDamping)
 		{
-			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
+			EXUmath::MultMatrixVector(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
 
 			deformation.MultComponentWise(factInt * parameters.axialShearDamping);
 
-			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+			EXUmath::MultMatrixTransposedVectorAdd(deltaDeformation, deformation, ode2Lhs);
 		}
 	}
 
@@ -741,15 +741,15 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs) const
 
 		deformation.MultComponentWise(factInt * kCS);
 
-		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+		EXUmath::MultMatrixTransposedVectorAdd(deltaDeformation, deformation, ode2Lhs);
 
 		if (hasCrossSectionDamping)
 		{
-			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
+			EXUmath::MultMatrixVector(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
 
 			deformation.MultComponentWise(factInt * dCS);
 
-			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+			EXUmath::MultMatrixTransposedVectorAdd(deltaDeformation, deformation, ode2Lhs);
 		}
 
 	}

@@ -1,0 +1,15 @@
+{
+  "number": 3479,
+  "title": "Linear algebra: Transposed(A) * x and Transposed(A) * B for SlimMatrix without forming the transposed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "expressionTemplates.md E1 (ET.2): Transposed(A) returns a view of a SlimMatrix (Matrix3D, Matrix6D), which only operator* takes, with the products MultTransposedVector and MultTransposedMatrix; for an rvalue the view keeps the matrix, so it cannot refer to a temporary; unit tests bitwise against A.GetTransposed() * x. Its use in the item code is RG5.2.7.3.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 22:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Transposed(A) * x and Transposed(A) * B for SlimMatrix (Matrix3D, Matrix6D) compute the product with the transposed without forming it, with the same results as A.GetTransposed() * x.",
+  "resolvedInVersion": "1.13.613"
+}

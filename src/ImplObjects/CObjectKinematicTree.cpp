@@ -270,8 +270,8 @@ namespace KinematicTreeHT
 	inline void MotionToLink(const Matrix3D& R, const Vector3D& p, const Vector3D& wParent, const Vector3D& vParent,
 		Vector3D& w, Vector3D& v)
 	{
-		EXUmath::MultMatrixTransposedVectorTemplate(R, wParent, w);
-		EXUmath::MultMatrixTransposedVectorTemplate(R, vParent + wParent.CrossProduct(p), v);
+		EXUmath::MultMatrixTransposedVector(R, wParent, w);
+		EXUmath::MultMatrixTransposedVector(R, vParent + wParent.CrossProduct(p), v);
 	}
 
 	//! a force of the link in parent coordinates, added: fParent += R f, nParent += R n + p x (R f)
@@ -356,9 +356,9 @@ void CObjectKinematicTree::BaseMotion(ConfigurationType configuration, bool comp
 	p = node.GetPosition(configuration);
 	if (!computeVelocitiesAccelerations) { return; }
 	w = node.GetAngularVelocityLocal(configuration);
-	EXUmath::MultMatrixTransposedVectorTemplate(A, node.GetVelocity(configuration), v);
-	EXUmath::MultMatrixTransposedVectorTemplate(A, node.GetAngularAcceleration(configuration), aw);
-	EXUmath::MultMatrixTransposedVectorTemplate(A, node.GetAcceleration(configuration), av);
+	EXUmath::MultMatrixTransposedVector(A, node.GetVelocity(configuration), v);
+	EXUmath::MultMatrixTransposedVector(A, node.GetAngularAcceleration(configuration), aw);
+	EXUmath::MultMatrixTransposedVector(A, node.GetAcceleration(configuration), av);
 	av -= w.CrossProduct(v); //d/dt (A^T v_global)
 }
 
@@ -583,11 +583,11 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 		node.GetGlocal(Glocal);
 		node.GetGlocal_t(Glocal_t);
 		wB = node.GetAngularVelocityLocal();
-		EXUmath::MultMatrixTransposedVectorTemplate(AB, node.GetVelocity(), vB);
+		EXUmath::MultMatrixTransposedVector(AB, node.GetVelocity(), vB);
 		LinkedDataVector rotation_t(node.GetRotationParameters_t());
 		awB.SetAll(0.);
 		for (Index r = 0; r < 3; r++) { for (Index k = 0; k < rotation_t.NumberOfItems(); k++) { awB[r] += Glocal_t(r, k) * rotation_t[k]; } }
-		EXUmath::MultMatrixTransposedVectorTemplate(AB, -parameters.gravity, avB);
+		EXUmath::MultMatrixTransposedVector(AB, -parameters.gravity, avB);
 		avB -= wB.CrossProduct(vB);
 	}
 
@@ -652,8 +652,8 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 				Vector3D force = parameters.linkForces.NumberOfItems() ? (Vector3D)parameters.linkForces[i] : Vector3D(0.);
 				//(n, f) = (Ra^T (torque - pa x force), Ra^T force)
 				Vector3D nLink, fLink;
-				EXUmath::MultMatrixTransposedVectorTemplate(Ha[i].GetRotation(), torque - Ha[i].GetTranslation().CrossProduct(force), nLink);
-				EXUmath::MultMatrixTransposedVectorTemplate(Ha[i].GetRotation(), force, fLink);
+				EXUmath::MultMatrixTransposedVector(Ha[i].GetRotation(), torque - Ha[i].GetTranslation().CrossProduct(force), nLink);
+				EXUmath::MultMatrixTransposedVector(Ha[i].GetRotation(), force, fLink);
 				L[i].n += nLink;
 				L[i].f += fLink;
 			}

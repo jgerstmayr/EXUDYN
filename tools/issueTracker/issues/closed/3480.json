@@ -1,0 +1,15 @@
+{
+  "number": 3480,
+  "title": "RunLinalgBenchmark: the connector Jacobian as CObjectConnector computes it, and 3x3 times 3 x n",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "linalgTemplatesInventory.md LT.5: a group 'connector' with J^T K for a 6 x n marker Jacobian (MultMatrixTransposedMatrix) and (J^T K) J written into a block (MultMatrixMatrixToSubmatrix), n = 6, 7, 12, and the 3x3 times 3 x n product of the contacts; measured before and after RG5.2.8.4.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 22:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "RunLinalgBenchmark has a group 'connector': the connector Jacobian as CObjectConnector computes it and the 3x3 times 3 x n product of the contacts.",
+  "resolvedInVersion": "1.13.614"
+}

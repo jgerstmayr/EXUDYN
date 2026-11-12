@@ -304,16 +304,6 @@ void GeneralMatrixEigenSparse::AddSubmatrixWithFactor(const Matrix& submatrix, R
 	AppendSubmatrixTriplets<false>(triplets, submatrix, factor, nullptr, nullptr, rowOffset, columnOffset);
 }
 
-//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
-//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-void GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset, Index columnOffset)
-{
-	//only allowed in triplet mode:
-	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(...): only possible in triplet mode!");
-	AppendSubmatrixTriplets<true>(triplets, submatrix, factor, nullptr, nullptr, rowOffset, columnOffset);
-}
-
-
 //! add possibly smaller GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 //! matrix types of submatrix and *this must be same
 //! operations must be both in triplet mode!

@@ -68,10 +68,10 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 		{
 			//J_pos0.T*K 
 			//pout << "1: " << jac0 << ",\n" << localJac << "\n";
-			EXUmath::MultMatrixTransposedMatrixTemplate(jac0, localJac, temp.matrix0);
+			EXUmath::MultMatrixTransposedMatrix(jac0, localJac, temp.matrix0);
 			//J_pos0.T*K*Jpos0
-			//EXUmath::MultMatrixMatrixTemplate<ResizableMatrix, ResizableMatrix, ResizableMatrix>(temp.matrix0, jac0, temp.matrix1);
-			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.matrix0,
+			//EXUmath::MultMatrixMatrix(temp.matrix0, jac0, temp.matrix1);
+			EXUmath::MultMatrixMatrixToSubmatrix(temp.matrix0,
 				jac0, jacobianODE2.GetInternalDenseMatrix(), 0, 0);
 
 			//jacobianODE2.GetInternalDenseMatrix().SetSubmatrix(jac0.GetTransposed()*localJac*jac0, 0, 0, 1.);
@@ -80,8 +80,8 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 		{
 			//pout << "2: " << jac1 << ",\n" << localJac << "\n";
 			//J_pos1.T*K*Jpos1
-			EXUmath::MultMatrixTransposedMatrixTemplate(jac1, localJac, temp.matrix0);
-			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.matrix0,
+			EXUmath::MultMatrixTransposedMatrix(jac1, localJac, temp.matrix0);
+			EXUmath::MultMatrixMatrixToSubmatrix(temp.matrix0,
 				jac1, jacobianODE2.GetInternalDenseMatrix(), n0, n0);
 			//jacobianODE2.GetInternalDenseMatrix().SetSubmatrix(jac1.GetTransposed()*localJac*jac1, n0, n0, 1.);
 		}
@@ -89,13 +89,13 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 		{
 			localJac *= -1.;
 			//-J_pos0.T*K*Jpos1
-			EXUmath::MultMatrixTransposedMatrixTemplate(jac0, localJac, temp.matrix0);
-			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.matrix0,
+			EXUmath::MultMatrixTransposedMatrix(jac0, localJac, temp.matrix0);
+			EXUmath::MultMatrixMatrixToSubmatrix(temp.matrix0,
 				jac1, jacobianODE2.GetInternalDenseMatrix(), 0, n0);
 
 			//-J_pos1.T*K*Jpos0
-			EXUmath::MultMatrixTransposedMatrixTemplate(jac1, localJac, temp.matrix0);
-			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.matrix0,
+			EXUmath::MultMatrixTransposedMatrix(jac1, localJac, temp.matrix0);
+			EXUmath::MultMatrixMatrixToSubmatrix(temp.matrix0,
 				jac0, jacobianODE2.GetInternalDenseMatrix(), n0, 0);
 
 			//jacobianODE2.GetInternalDenseMatrix().SetSubmatrix(jac0.GetTransposed()*localJac*jac1, 0, n0, 1.);
@@ -267,8 +267,8 @@ static void ChainConnectorJacobian(const CSystemData& cSystemData, const ArrayIn
 					innerJacobian(r, c) = sign[i] * force[r].DValue((int)(dim * k + c));
 				}
 			}
-			EXUmath::MultMatrixTransposedMatrixTemplate(*markerJacobian[i], innerJacobian, temp.jacobianTemp.matrix0);
-			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.jacobianTemp.matrix0, *markerJacobian[k], jacobian, offset[i], offset[k]);
+			EXUmath::MultMatrixTransposedMatrix(*markerJacobian[i], innerJacobian, temp.jacobianTemp.matrix0);
+			EXUmath::MultMatrixMatrixToSubmatrix(temp.jacobianTemp.matrix0, *markerJacobian[k], jacobian, offset[i], offset[k]);
 		}
 	}
 
@@ -428,8 +428,8 @@ static void ChainConnectorJacobianRigid(const CSystemData& cSystemData, Temporar
 					innerJacobian(r + 3, c) = torques[i][r].DValue((int)(6 * k + c));
 				}
 			}
-			EXUmath::MultMatrixTransposedMatrixTemplate(temp.markerTemp[i].tempMatrix, innerJacobian, temp.jacobianTemp.matrix0);
-			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.jacobianTemp.matrix0, temp.markerTemp[k].tempMatrix, jacobian, offsetJacobian[i], offsetJacobian[k]);
+			EXUmath::MultMatrixTransposedMatrix(temp.markerTemp[i].tempMatrix, innerJacobian, temp.jacobianTemp.matrix0);
+			EXUmath::MultMatrixMatrixToSubmatrix(temp.jacobianTemp.matrix0, temp.markerTemp[k].tempMatrix, jacobian, offsetJacobian[i], offsetJacobian[k]);
 		}
 	}
 
@@ -694,8 +694,8 @@ void ConnectorJacobianODE2RigidMarkersNumerical(const CSystemData& cSystemData, 
 		for (Index i = 0; i < 2; i++)
 		{
 			if (n[i] == 0) { continue; }
-			EXUmath::MultMatrixMatrixTemplate(velocityJacobian[i][k], velocity_q, temp.jacobianTemp.localJacobian);
-			EXUmath::MultMatrixTransposedMatrixTemplate(temp.markerTemp[i].tempMatrix, temp.jacobianTemp.localJacobian, temp.jacobianTemp.matrix0);
+			EXUmath::MultMatrixMatrix(velocityJacobian[i][k], velocity_q, temp.jacobianTemp.localJacobian);
+			EXUmath::MultMatrixTransposedMatrix(temp.markerTemp[i].tempMatrix, temp.jacobianTemp.localJacobian, temp.jacobianTemp.matrix0);
 			jacobian.AddSubmatrixWithFactor(temp.jacobianTemp.matrix0, factorODE2, offsetJacobian[i], offsetJacobian[k]);
 		}
 	}

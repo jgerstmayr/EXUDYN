@@ -100,7 +100,7 @@ void CObjectFFRF::InitializeObject()
 
 	//compute Mtt and total mass
 	Matrix3D Mtt;
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, PHIt, Mtt);
+	EXUmath::MultMatrixMatrix(PHItTM, PHIt, Mtt);
 
 	//Mtt = PHIt.T @ massMatrix @ PHIt
 	//Mnew[0:3, 0 : 3] = Mtt
@@ -141,7 +141,7 @@ void CObjectFFRF::InitializeObject()
 	//inertiaLocal = xRefTilde.T @ massMatrix @ xRefTilde
 	Matrix xRefTildeTM;
 	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(xRefTilde, xRefTildeTM);
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(xRefTildeTM, xRefTilde, inertia);
+	EXUmath::MultMatrixMatrix(xRefTildeTM, xRefTilde, inertia);
 
 //#define CObjectFFRFInitializeObjectOutput
 #ifdef CObjectFFRFInitializeObjectOutput
@@ -246,10 +246,10 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 		//Mnew[0:dim3D, dim3D : dim3D + nODE2rot] = Mtr
 		//Mnew[dim3D:dim3D + nODE2rot, 0 : dim3D] = Mtr.T
 		Matrix3D X;
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempRefPosSkew, X);
+		EXUmath::MultMatrixMatrix(PHItTM, tempRefPosSkew, X);
 		X = -1.*A*X;
 		ConstSizeMatrix<GMaxSize> Mtr;
-		EXUmath::MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<GMaxSize>, ConstSizeMatrix<GMaxSize>>(X, Glocal, Mtr);
+		EXUmath::MultMatrixMatrix(X, Glocal, Mtr);
 
 		AddBlock(Mtr, 0, ffrfNodeDim, true);
 
@@ -258,7 +258,7 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 		//Mtf = A @ PHItTM
 		//Mnew[0:dim3D, nODE2rigid : ] = Mtf
 		//Mnew[nODE2rigid:, 0 : dim3D] = Mtf.T
-		EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, Matrix>(A, PHItTM, tempMatrix);
+		EXUmath::MultMatrixMatrix(A, PHItTM, tempMatrix);
 		AddBlock(tempMatrix, 0, nODE2Rigid, true);
 
 
@@ -268,7 +268,7 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 		//Mnew[dim3D:dim3D + nODE2rot, nODE2rigid : ] = Mrf
 		//Mnew[nODE2rigid:, dim3D : dim3D + nODE2rot] = Mrf.T
 		parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(tempRefPosSkew, tempMatrix);
-		EXUmath::MultMatrixMatrixTemplate<ConstSizeMatrix<GMaxSize>, Matrix, Matrix>(-1.*GlocalT, tempMatrix, tempMatrix2);
+		EXUmath::MultMatrixMatrix(-1.*GlocalT, tempMatrix, tempMatrix2);
 		AddBlock(tempMatrix2, ffrfNodeDim, nODE2Rigid, true);
 
 		
@@ -278,10 +278,8 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 		ConstSizeMatrix<MrrMaxSize> Mrr;
 		ConstSizeMatrix<GMaxSize> temp; //gives a 4x3 matrix for EP
 		//Mnew[dim3D:dim3D + nODE2rot, dim3D : dim3D + nODE2rot] = -Mrf @ rfTilde @ G   #G.T @ rfTilde.T @ massMatrix @ rfTilde @ G
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, ConstSizeMatrix<GMaxSize>>(tempMatrix2, tempRefPosSkew, temp);
-		EXUmath::MultMatrixMatrixTemplate<ConstSizeMatrix<GMaxSize>, 
-			ConstSizeMatrix<GMaxSize>, 
-			ConstSizeMatrix<MrrMaxSize>>(temp, -1.*Glocal, Mrr);
+		EXUmath::MultMatrixMatrix(tempMatrix2, tempRefPosSkew, temp);
+		EXUmath::MultMatrixMatrix(temp, -1.*Glocal, Mrr);
 		AddBlock(Mrr, ffrfNodeDim, ffrfNodeDim, false);
 
 		//++++++++++++++++++++++++++++++++
@@ -387,18 +385,18 @@ void CObjectFFRF::ComputeFrameTerms(const Matrix3D& A, const ConstSizeMatrix<12>
 
 	//fTrans: omega3Dtilde @ PHItTM @ rfTilde @ omega3D + 2*PHItTM @ cF_tTilde @ omega3D
 	Matrix3D temp;
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempRefPosSkew, temp);
+	EXUmath::MultMatrixMatrix(PHItTM, tempRefPosSkew, temp);
 	Vector3D tempVec = temp * omega3D;
 	tempVec = omega3Dtilde * tempVec;
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempVelSkew, temp);
+	EXUmath::MultMatrixMatrix(PHItTM, tempVelSkew, temp);
 	tempVec += temp * (2. * omega3D);
 	ode2LhsTT -= A * tempVec; //-= for all ode2Lhs terms
 
 	//fRot: omega3Dtilde @ (rfTilde.T @ massMatrix @ rfTilde) @ omega3D + 2*rfTilde.T @ massMatrix @ cF_tTilde @ omega3D
 	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(tempRefPosSkew, tempMatrix); //tempMatrix=rfTilde.T @ massMatrix
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempRefPosSkew, temp);
+	EXUmath::MultMatrixMatrix(tempMatrix, tempRefPosSkew, temp);
 	tempVec = omega3Dtilde * (temp * omega3D);
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempVelSkew, temp);
+	EXUmath::MultMatrixMatrix(tempMatrix, tempVelSkew, temp);
 	tempVec += 2.*(temp * omega3D);
 	EXUmath::MultMatrixVectorAdd(GlocalT, tempVec, ode2LhsRR); //double negative signs cancel!
 
@@ -481,7 +479,7 @@ void CObjectFFRF::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE
 	{
 		if (eulerParameters) { A = RigidBodyMath::EP2RotationMatrix(rotation); Glocal = RigidBodyMath::EP2Glocal(rotation); }
 		else { A = RigidBodyMath::RotXYZ2RotationMatrix(rotation); Glocal = RigidBodyMath::RotXYZ2GlocalTemplate<CSVector4D>(rotation); }
-		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D>, CSVector4D, Vector3D>(Glocal, rotation_t, omega);
+		EXUmath::MultMatrixVector(Glocal, rotation_t, omega);
 	};
 
 	//by the rotation parameters and their velocities
@@ -695,14 +693,14 @@ void CObjectFFRF::GetMassWeightedPositionJacobian(Matrix& value) const
 
 	//-A PHItTM rfTilde G
 	Matrix3D X;
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempRefPosSkew, X);
+	EXUmath::MultMatrixMatrix(PHItTM, tempRefPosSkew, X);
 	X = -1.*A*X;
 	ConstSizeMatrix<GMaxSize> Jrot;
-	EXUmath::MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<GMaxSize>, ConstSizeMatrix<GMaxSize>>(X, Glocal, Jrot);
+	EXUmath::MultMatrixMatrix(X, Glocal, Jrot);
 	value.AddSubmatrix(Jrot, 0, ffrfNodeDim);
 
 	//A PHItTM
-	EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, Matrix>(A, PHItTM, tempMatrix);
+	EXUmath::MultMatrixMatrix(A, PHItTM, tempMatrix);
 	value.AddSubmatrix(tempMatrix, 0, nODE2Rigid);
 }
 

@@ -192,7 +192,7 @@ namespace EXUmath {
 			&& positionOffset.NumberOfItems() == 3 && localPosition.NumberOfItems() == 3 && transformedPosition.NumberOfItems() == 3, "RigidBodyTransformation: index mismatch");
 		
 		TVector temp;
-		MultMatrixVectorTemplate<TMatrix, TVector, TVector>(rotation, localPosition, temp);
+		MultMatrixVector(rotation, localPosition, temp);
 		transformedPosition = positionOffset;
 		transformedPosition += temp;
 	}
@@ -477,175 +477,8 @@ namespace EXUmath {
 	}
 
 
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//ResizableMatrix/ResizableVector
-	inline void MultMatrixVector(const ResizableMatrix& matrix, Vector3D& vector, ResizableVector& result) {
-		MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(matrix, vector, result);
-	}
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//Matrix x Vector specialization for different situations:
-	inline void MultMatrixVector(const Matrix& matrix, const Vector& vector, Vector& result) {
-		MultMatrixVectorTemplate<Matrix, Vector, Vector>(matrix, vector, result);
-	}
-
-	inline void MultMatrixVector(const Matrix& matrix, const SlimVector<3>& vector, Vector& result) {
-		MultMatrixVectorTemplate<Matrix, SlimVector<3>, Vector>(matrix, vector, result);
-	}
-
-	//result as SlimVector not possible (SetNumberOfItems not implemented)
-	//inline void MultMatrixVector(const Matrix& matrix, const SlimVector<3>& vector, SlimVector<3>& result) {
-	//	MultMatrixVectorTemplate<Matrix, SlimVector<3>, SlimVector<3>>(matrix, vector, result);
-	//}
-
-	//for rotation matrix * vector multiplication
-	inline void MultMatrixVector(const Matrix& matrix, const ConstSizeVector<3>& vector, Vector& result) {
-		MultMatrixVectorTemplate<Matrix, ConstSizeVector<3>, Vector>(matrix, vector, result);
-	}
-	//for rotation matrix * vector multiplication
-	inline void MultMatrixVector(const Matrix& matrix, const ConstSizeVector<3>& vector, ConstSizeVector<3>& result) {
-		MultMatrixVectorTemplate<Matrix, ConstSizeVector<3>, ConstSizeVector<3>>(matrix, vector, result);
-	}
-
-	//for rotation matrix times LDV:
-	inline void MultMatrixVector(const Matrix3D& matrix, const LinkedDataVector& vector, Vector3D& result) {
-		MultMatrixVectorTemplate<Matrix3D, LinkedDataVector, Vector3D>(matrix, vector, result);
-	}
-
-	//for Euler parameter multiplications with G-matrix:
-	inline void MultMatrixVector(const ConstSizeMatrix<12>& matrix, const ConstSizeVector<4>& vector, Vector& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<12>, ConstSizeVector<4>, Vector>(matrix, vector, result);
-	}
-
-	//for Euler parameter multiplications with G-matrix:
-	inline void MultMatrixVector(const ConstSizeMatrix<12>& matrix, const ConstSizeVector<4>& vector, ConstSizeVector<3>& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<12>, ConstSizeVector<4>, ConstSizeVector<3>>(matrix, vector, result);
-	}
-
-	//for Euler parameter multiplications with G-matrix:
-	inline void MultMatrixVector(const ConstSizeMatrix<12>& matrix, const ConstSizeVector<4>& vector, Vector3D& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<12>, ConstSizeVector<4>, Vector3D>(matrix, vector, result);
-	}
-
-	//for Euler parameter multiplications with G-matrix:
-	inline void MultMatrixVector(const ConstSizeMatrix<12>& matrix, const LinkedDataVector& vector, Vector3D& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<12>, LinkedDataVector, Vector3D>(matrix, vector, result);
-	}
-
-	//for Euler parameter multiplications with G^T-matrix:
-	inline void MultMatrixVector(const ConstSizeMatrix<12>& matrix, const Vector3D& vector, ConstSizeVector<4>& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<12>, Vector3D, ConstSizeVector<4>>(matrix, vector, result);
-	}
-
-	//for rotation matrix * vector multiplication
-	inline void MultMatrixVector(const Matrix3D& matrix, Vector3D& vector, Vector& result) {
-		MultMatrixVectorTemplate<Matrix3D, Vector3D, Vector>(matrix, vector, result);
-	}
-	inline void MultMatrixVector(const Matrix3D& matrix, Vector3D& vector, Vector3D& result) {
-		MultMatrixVectorTemplate<Matrix3D, Vector3D, Vector3D>(matrix, vector, result);
-	}
-	inline void MultMatrixVector(const Matrix3D& matrix, const Vector& vector, Vector3D& result) {
-		MultMatrixVectorTemplate<Matrix3D, Vector, Vector3D>(matrix, vector, result);
-	}
-
-	//for rigid-body stiffness times displacemnet calculation:
-	inline void MultMatrixVector(const ConstSizeMatrix<36>& matrix, const Vector6D& vector, Vector6D& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<36>, Vector6D, Vector6D>(matrix, vector, result);
-	}
-
-	//for ANCFCable-ALE:
-	inline void MultMatrixVector(const ConstSizeMatrix<64>& matrix, const CSVector8D& vector, CSVector8D& result) {
-		MultMatrixVectorTemplate<ConstSizeMatrix<64>, CSVector8D, CSVector8D>(matrix, vector, result);
-	}
-
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//transposed version of Matrix x Vector:
-	inline void MultMatrixTransposedVector(const Matrix& matrix, const Vector& vector, Vector& result) {
-		MultMatrixTransposedVectorTemplate<Matrix, Vector, Vector>(matrix, vector, result);
-	}
-
-	inline void MultMatrixTransposedVector(const Matrix& matrix, const SlimVector<3>& vector, Vector& result) {
-		MultMatrixTransposedVectorTemplate<Matrix, SlimVector<3>, Vector>(matrix, vector, result);
-	}
-
-	inline void MultMatrixTransposedVector(const Matrix& matrix, const SlimVector<1>& vector, Vector& result) {
-		MultMatrixTransposedVectorTemplate<Matrix, SlimVector<1>, Vector>(matrix, vector, result);
-	}
-
-	inline void MultMatrixTransposedVector(const Matrix& matrix, const ConstSizeVector<3>& vector, Vector& result) {
-		MultMatrixTransposedVectorTemplate<Matrix, ConstSizeVector<3>, Vector>(matrix, vector, result);
-	}
-
-	inline void MultMatrixTransposedVector(const Matrix& matrix, const ConstSizeVector<3>& vector, ConstSizeVector<3>& result) {
-		MultMatrixTransposedVectorTemplate<Matrix, ConstSizeVector<3>, ConstSizeVector<3>>(matrix, vector, result);
-	}
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//! result += matrix^T*vector (ADD results)
-	inline void MultMatrixTransposedVectorAdd(const Matrix& matrix, const SlimVector<3>& vector, Vector& result) {
-		MultMatrixTransposedVectorAddTemplate<Matrix, SlimVector<3>, Vector>(matrix, vector, result);
-	}
-
-	//! result += matrix*vector (ADD results)
-	inline void MultMatrixVectorAdd(const Matrix& matrix, const Vector& vector, Vector& result) {
-		MultMatrixVectorAddTemplate<Matrix, Vector, Vector>(matrix, vector, result);
-	}
-
-	//! result += matrix*vector (ADD results)
-	inline void MultMatrixVectorAdd(const Matrix& matrix, const Vector3D& vector, Vector& result) {
-		MultMatrixVectorAddTemplate<Matrix, Vector3D, Vector>(matrix, vector, result);
-	}
-
-	//! result += matrix*vector (ADD results)
-	inline void MultMatrixVectorAdd(const Matrix3D& matrix, const Vector& vector, Vector& result) {
-		MultMatrixVectorAddTemplate<Matrix3D, Vector, Vector>(matrix, vector, result);
-	}
-
-	//! result += matrix*vector (ADD results)
-	inline void MultMatrixVectorAdd(const Matrix3D& matrix, const Vector3D& vector, Vector& result) {
-		MultMatrixVectorAddTemplate<Matrix3D, Vector3D, Vector>(matrix, vector, result);
-	}
-
-	//! result += matrix*vector (ADD results)
-	inline void MultMatrixVectorAdd(const ConstSizeMatrix<12>& matrix, const Vector& vector, Vector3D& result) {
-		MultMatrixVectorAddTemplate<ConstSizeMatrix<12>, Vector, Vector3D>(matrix, vector, result);
-	}
-
-	//! result += matrix*vector (ADD results)
-	inline void MultMatrixVectorAdd(const ConstSizeMatrix<12>& matrix, const Vector3D& vector, Vector& result) {
-		MultMatrixVectorAddTemplate<ConstSizeMatrix<12>, Vector3D, Vector>(matrix, vector, result);
-	}
-
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//! Matrix * Matrix multiplication templates; this should also work with operator* in Matrix3D
-	inline void MultMatrixMatrix(const Matrix3D& m1, const Matrix3D& m2, Matrix3D& result) {
-		MultMatrixMatrixTemplate<Matrix3D, Matrix3D, Matrix3D>(m1, m2, result);
-	}
-
-	//! Matrix * Matrix multiplication templates for multiplication with rigid body G-matrices
-	inline void MultMatrixMatrix(const ConstSizeMatrix<12>& m1, const Matrix3D& m2, ConstSizeMatrix<12>& result) {
-		MultMatrixMatrixTemplate<ConstSizeMatrix<12>, Matrix3D, ConstSizeMatrix<12>>(m1, m2, result);
-	}
-
-	//! Matrix * Matrix multiplication templates for multiplication with rigid body G-matrices
-	inline void MultMatrixMatrix(const Matrix3D& m1, const ConstSizeMatrix<12>& m2, ConstSizeMatrix<12>& result) {
-		MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<12>, ConstSizeMatrix<12>>(m1, m2, result);
-	}
-
-	//! Matrix * Matrix multiplication templates e.g. for computation of inertia tensor
-	inline void MultMatrixMatrix(const ConstSizeMatrix<12>& m1, const ConstSizeMatrix<12>& m2, ConstSizeMatrix<16>& result) {
-		MultMatrixMatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<12>, ConstSizeMatrix<16>>(m1, m2, result);
-	}
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//transposed(Matrix)*Matrix:
-
-	//! transposed(Matrix) * Matrix multiplication templates for multiplication with rigid body G-matrices
-	inline void MultMatrixTransposedMatrix(const ConstSizeMatrix<12>& m1, const Matrix3D& m2, ConstSizeMatrix<12>& result) {
-		MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<12>, Matrix3D, ConstSizeMatrix<12>>(m1, m2, result);
-	}
+	//the products of matrices and vectors are the templates of Matrix.h (EXUmath::MultMatrixVector, ...), with the types
+	//deduced (#3478)
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! multiply components of vectors and write result into vector
@@ -835,7 +668,7 @@ namespace EXUmath {
 				"SparseTripletMatrix::MultMatrixVector(x,solution): Size mismatch");
 
 			//the same precondition as the dense path, which sizes the result in
-			//EXUmath::MultMatrixVectorTemplate; without it, an unsized solution is indexed out of
+			//EXUmath::MultMatrixVector; without it, an unsized solution is indexed out of
 			//bounds below (#2474)
 			solution.SetNumberOfItems(NumberOfRows());
 			solution.SetAll(0.); //! because some values may not be touched, others may be written several times ...
@@ -851,7 +684,7 @@ namespace EXUmath {
 		void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
 		{
 			//solution is only added to, so it must already have the right size - exactly as
-			//EXUmath::MultMatrixVectorAddTemplate demands it in the dense path (#2474)
+			//EXUmath::MultMatrixVectorAdd demands it in the dense path (#2474)
 			CHECKandTHROW(NumberOfColumns() == x.NumberOfItems(),
 				"SparseTripletMatrix::MultMatrixVectorAdd(x,solution): Size mismatch");
 			CHECKandTHROW(NumberOfRows() == solution.NumberOfItems(),

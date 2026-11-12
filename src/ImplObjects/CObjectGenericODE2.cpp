@@ -158,7 +158,7 @@ void CObjectGenericODE2::AddMatrixWithFactor(EXUmath::MatrixContainer& jacobianO
 	}
 	if (jacobianODE2.UseDenseMatrix())
 	{
-		EXUmath::FactorTimesMatrixAddTemplate<ResizableMatrix, ResizableMatrix>(factor, matrix.GetInternalDenseMatrix(),
+		EXUmath::FactorTimesMatrixAdd(factor, matrix.GetInternalDenseMatrix(),
 			jacobianODE2.GetInternalDenseMatrix());
 	}
 	else

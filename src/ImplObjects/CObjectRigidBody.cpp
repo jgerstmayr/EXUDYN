@@ -162,7 +162,7 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 	}
 
 
-	EXUmath::MultMatrixMatrix2SubmatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<12>, Matrix>(GlocalInertia, Glocal, massMatrix, nDisplacementCoordinates, nDisplacementCoordinates);
+	EXUmath::MultMatrixMatrixToSubmatrix(GlocalInertia, Glocal, massMatrix, nDisplacementCoordinates, nDisplacementCoordinates);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Terms for COM!=0
@@ -238,7 +238,7 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 	Vector3D temp = omegaBar.CrossProduct(JomegaBar);
 
 	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forces1; //forces acting on rotation coordinates
-	EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp, forces1);
+	EXUmath::MultMatrixTransposedVector(Glocal, temp, forces1);
 
 	Vector3D Glocal_tTheta_t(0.); //used twice!
 
@@ -259,7 +259,7 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 		EXUmath::MultMatrixVector(Glocal_t, rot_t, Glocal_tTheta_t); //Glocal_tTheta_t stored for later usage!
 		EXUmath::MultMatrixVector(localInertia, Glocal_tTheta_t, temp2);
 		
-		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp2, forces2);
+		EXUmath::MultMatrixTransposedVector(Glocal, temp2, forces2);
 		forces1 += forces2;
 		//pout << "forces2=" << forces2 << "\n";
 
@@ -656,9 +656,7 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 	EXUmath::MultMatrixMatrix(A.GetTransposed(), temp, G);
 	EXUmath::MultMatrixMatrix(uLocalTilde, G, temp);
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates> temp2; //temporary matrix during computation
-	EXUmath::MultMatrixTransposedMatrixTemplate< ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>, 
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>, 
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates>>(Glocal, temp, temp2);
+	EXUmath::MultMatrixTransposedMatrix(Glocal, temp, temp2);
 	//==>temp2 contains result, is always defined!
 
 
@@ -1124,7 +1122,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //	//Version1 (different to Version2 (gives different forces1; difference acting in the nullspace of rot):
 //	Vector3D temp = omegaBar.CrossProduct(localInertia * omegaBar);
 //	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forces1; //forces acting on rotation coordinates
-//	EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp, forces1);
+//	EXUmath::MultMatrixTransposedVector(Glocal, temp, forces1);
 //
 //	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal_t; //store this term for case with COM!=0
 //	LinkedDataVector rot_t = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters_t();//store this term for case with COM!=0
@@ -1142,7 +1140,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //		EXUmath::MultMatrixVector(Glocal_t, rot_t, Glocal_tTheta_t); //Glocal_tTheta_t stored for later usage!
 //		EXUmath::MultMatrixVector(localInertia, Glocal_tTheta_t, temp2);
 //
-//		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp2, forces2);
+//		EXUmath::MultMatrixTransposedVector(Glocal, temp2, forces2);
 //		forces1 += forces2;
 //		//pout << "forces2=" << forces2 << "\n";
 //

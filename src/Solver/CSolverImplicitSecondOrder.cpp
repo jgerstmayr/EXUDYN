@@ -975,14 +975,14 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 					LinkedDataVector phi(solutionODE2, off + nPos, nRot);
 					Vector3D phiOld({ phi[0], phi[1], phi[2] });
-					EXUmath::MultMatrixVectorTemplate(Xi, phiOld, phi);
+					EXUmath::MultMatrixVector(Xi, phiOld, phi);
 
 					//OLD: //missing reference solution?
 					//LinkedDataVector phi(solutionODE2, off + nPos, nRot);
 					//LinkedDataVector phi0(computationalSystem.GetSystemData().GetCData().referenceState.ODE2Coords, off + nPos, nRot);
 					//Vector3D phiOld({ phi[0] + phi0[0], phi[1] + phi0[1], phi[2] + phi0[2] });
 					////Vector3D phiOld({ phi[0] , phi[1] , phi[2] });
-					//EXUmath::MultMatrixVectorTemplate(Xi, phiOld, phi);
+					//EXUmath::MultMatrixVector(Xi, phiOld, phi);
 					//phi[0] -= phi0[0];
 					//phi[1] -= phi0[1];
 					//phi[2] -= phi0[2];

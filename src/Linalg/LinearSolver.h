@@ -200,10 +200,6 @@ public:
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) = 0;
 
-	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
-	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) = 0;
-
 	//! add column 'vector' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
 	virtual void AddColumnVector(Index column, const Vector& vector, Index rowOffset = 0) = 0;
 
@@ -373,15 +369,6 @@ public:
 		SetMatrixIsFactorized(false);
 		matrix.AddSubmatrixWithFactor(submatrix, factor, rowOffset, columnOffset);
 	}
-
-	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
-	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override
-	{
-		SetMatrixIsFactorized(false);
-		matrix.AddSubmatrixTransposedWithFactor(submatrix, factor, rowOffset, columnOffset);
-	}
-
 
 	//! add possibly smaller matrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0) override
@@ -626,10 +613,6 @@ public:
 	//! add (possibly) smaller factor*Matrix to this matrix; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override;
-
-	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
-	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add possibly GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 	//! matrix types of submatrix and *this must be same

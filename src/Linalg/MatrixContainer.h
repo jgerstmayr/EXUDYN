@@ -163,14 +163,14 @@ namespace EXUmath {
 		//! multiply matrix with vector: solution = A*x
 		void MultMatrixVector(const Vector& x, Vector& solution) const
 		{
-			if (useDenseMatrix) { MultMatrixVectorTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
+			if (useDenseMatrix) { EXUmath::MultMatrixVector(denseMatrix, x, solution); }
 			else { sparseTripletMatrix.MultMatrixVector(x, solution); }
 		}
 
 		//! multiply matrix with vector and add to solution: solution += A*x
 		void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
 		{
-			if (useDenseMatrix) { MultMatrixVectorAddTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
+			if (useDenseMatrix) { EXUmath::MultMatrixVectorAdd(denseMatrix, x, solution); }
 			else { sparseTripletMatrix.MultMatrixVectorAdd(x, solution); }
 		}
 
@@ -180,14 +180,14 @@ namespace EXUmath {
 		//! multiply matrixContainer with matrix: solution = *this * matrix
 		void MultMatrixDenseMatrix(const Matrix& matrix, Matrix& solution) const
 		{
-			if (useDenseMatrix) { MultMatrixMatrixTemplate<ResizableMatrix, Matrix, Matrix>(denseMatrix, matrix, solution); }
+			if (useDenseMatrix) { MultMatrixMatrix(denseMatrix, matrix, solution); }
 			else { sparseTripletMatrix.MultMatrixDenseMatrix(matrix, solution); }
 		}
 
 		//! multiply matrixContainer with matrix: solution = matrix^T * *this
 		void MultDenseMatrixTransposedMatrix(const Matrix& matrix, Matrix& solution) const
 		{
-			if (useDenseMatrix) { MultMatrixTransposedMatrixTemplate<Matrix, ResizableMatrix, Matrix>(matrix, denseMatrix, solution); }
+			if (useDenseMatrix) { MultMatrixTransposedMatrix(matrix, denseMatrix, solution); }
 			else { sparseTripletMatrix.MultDenseMatrixTransposedMatrix(matrix, solution); }
 		}
 

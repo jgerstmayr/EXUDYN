@@ -192,8 +192,8 @@ void CObjectGenericDAE::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacob
 	ResizableMatrix& jacobian = jacobianODE2.GetInternalDenseMatrix();
 	jacobian.SetNumberOfRowsAndColumns(n, n);
 	jacobian.SetAll(0.);
-	if (parameters.stiffnessMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAddTemplate<Matrix, ResizableMatrix>(factorODE2, parameters.stiffnessMatrix, jacobian); }
-	if (parameters.dampingMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAddTemplate<Matrix, ResizableMatrix>(factorODE2_t, parameters.dampingMatrix, jacobian); }
+	if (parameters.stiffnessMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAdd(factorODE2, parameters.stiffnessMatrix, jacobian); }
+	if (parameters.dampingMatrix.NumberOfRows() != 0) { EXUmath::FactorTimesMatrixAdd(factorODE2_t, parameters.dampingMatrix, jacobian); }
 	if (parameters.jacobianUserFunction) //the derivatives of the user functions by the jacobianUserFunction (#3191)
 	{
 		ComputeUserFunctionCoordinates();

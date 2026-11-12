@@ -225,7 +225,7 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 
 		EXUmath::MultMatrixTransposedMatrix(Glocal, intFactL*parameters.crossSectionInertia, GlocalInertia);
 
-		EXUmath::MultMatrixMatrix2SubmatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<12>, Matrix>(GlocalInertia, Glocal, massMatrix, 
+		EXUmath::MultMatrixMatrixToSubmatrix(GlocalInertia, Glocal, massMatrix, 
 			nDisplacementCoordinates + i*nNode0, nDisplacementCoordinates + i*nNode0);
 
 	}
@@ -289,8 +289,8 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs) const
 		//omegaLocal = ((CNodeRigidBody*)GetCNode(i))->GetAngularVelocityLocal();
 
 		EXUmath::MultVectorComponents(K6D, eps, res);
-		//EXUmath::MultMatrixVectorTemplate(K6D, eps, res);
-		EXUmath::MultMatrixTransposedVectorTemplate(TexpInv[i], res, res2);
+		//EXUmath::MultMatrixVector(K6D, eps, res);
+		EXUmath::MultMatrixTransposedVector(TexpInv[i], res, res2);
 
 		Vector3D resPos({ res2[0], res2[1], res2[2] }); //this is the residual on incremental positions
 		Vector3D resRot({ res2[3], res2[4], res2[5] }); //this is the residual on incremental rotations
@@ -301,8 +301,8 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs) const
 #endif
 		//EXUmath::ApplyTransformation33(A.GetTransposed(), G); //not correct; K6D is in local coordinates => K6D*Glocal gives global equations
 
-		//EXUmath::MultMatrixTransposedVectorTemplate(G, A*resRot, resRotPar);
-		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, resRot, resRotPar);
+		//EXUmath::MultMatrixTransposedVector(G, A*resRot, resRotPar);
+		EXUmath::MultMatrixTransposedVector(Glocal, resRot, resRotPar);
 		resPos = (A*resPos); //resPos is transformed from local into global coordinates
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -311,7 +311,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs) const
 
 
 		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forcesQV; //forces acting on rotation coordinates
-		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp, forcesQV); //using Glocal because of omegaLocal
+		EXUmath::MultMatrixTransposedVector(Glocal, temp, forcesQV); //using Glocal because of omegaLocal
 
 		Vector3D Glocal_tTheta_t(0.); //used twice!
 
@@ -330,7 +330,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs) const
 			EXUmath::MultMatrixVector(Glocal_t, rot_t, Glocal_tTheta_t); //Glocal_tTheta_t stored for later usage!
 			EXUmath::MultMatrixVector(intFactL*parameters.crossSectionInertia, Glocal_tTheta_t, temp2); //the inertia of half the element, as in the mass matrix (#1273)
 
-			EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp2, forces2);
+			EXUmath::MultMatrixTransposedVector(Glocal, temp2, forces2);
 			forcesQV += forces2;
 
 		}
@@ -375,7 +375,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs) const
 			for (Index i = 0; i < 2; i++)
 			{
 				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forceRot;
-				EXUmath::MultMatrixTransposedVectorTemplate(G[i], SV[g][i] * force, forceRot);
+				EXUmath::MultMatrixTransposedVector(G[i], SV[g][i] * force, forceRot);
 				for (Index j = 0; j < forceRot.NumberOfItems(); j++) { ode2Lhs[j + nDim3D + i * nNode0] += forceRot[j]; }
 			}
 		}
@@ -491,7 +491,7 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 
 		//rows of node i: B_i^T C P
 		ConstSizeMatrix<6 * 2 * maxNodeCoordinates> CP(6, dimJacobian, 0.);
-		EXUmath::MultMatrixMatrixTemplate(C, P, CP);
+		EXUmath::MultMatrixMatrix(C, P, CP);
 		for (Index a = 0; a < nCoords; a++)
 		{
 			for (Index j = 0; j < dimJacobian; j++)

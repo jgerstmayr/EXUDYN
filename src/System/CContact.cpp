@@ -757,16 +757,16 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 	{
 		//force part jj:
 		//JposJ.T*d(Fc)/dposJ*JposJ 
-		EXUmath::MultMatrixMatrixTemplate(JacFc, JACj, temp);
+		EXUmath::MultMatrixMatrix(JacFc, JACj, temp);
 
 		if (computeFrictionTerms && rotColumnsj != 0)
 		{
 			//JposJ.T*d(Fc)/drotJ*JrotJ
-			EXUmath::MultMatrixMatrixTemplate(-factRegularizedFriction * rTildeNJ, rotJACj, temp2);
+			EXUmath::MultMatrixMatrix(-factRegularizedFriction * rTildeNJ, rotJACj, temp2);
 
 			temp += temp2;
 		}
-		EXUmath::MultMatrixTransposedMatrixTemplate(JACj, temp, m);
+		EXUmath::MultMatrixTransposedMatrix(JACj, temp, m);
 
 		//torque part jj:
 		if (computeFrictionTerms && rotColumnsj != 0)
@@ -774,18 +774,18 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 			//JrotJ.T*(d(TcJ)/drotJ*JrotJ + d(Tc)/dposJ*JposJ)
 			Matrix3D JacTorqueJ; //JacFcFriction includes factorODE2_t
 			JacTorqueJ = factRegularizedFriction * rTildeNJ;
-			EXUmath::MultMatrixMatrixTemplate(JacTorqueJ * rTildeNJ, rotJACj, temp2);
+			EXUmath::MultMatrixMatrix(JacTorqueJ * rTildeNJ, rotJACj, temp2);
 
-			EXUmath::MultMatrixMatrixTemplate(JacTorqueJ + rTildeNJ * JacTorqueFc, JACj, temp);
+			EXUmath::MultMatrixMatrix(JacTorqueJ + rTildeNJ * JacTorqueFc, JACj, temp);
 			temp2 += temp;
-			EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
+			EXUmath::MultMatrixTransposedMatrix(rotJACj, temp2, temp);
 			m += temp;
 		}
 		if (normalTorqueFactorJ != 0. && rotColumnsj != 0)
 		{
 			//JrotJ.T*d(TcJ)/dposJ*JposJ of the torque of the contact force about the reference point of J (#2849)
-			EXUmath::MultMatrixMatrixTemplate(normalTorqueFactorJ * rTildeNJ * JacFc, JACj, temp);
-			EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp, temp2);
+			EXUmath::MultMatrixMatrix(normalTorqueFactorJ * rTildeNJ * JacFc, JACj, temp);
+			EXUmath::MultMatrixTransposedMatrix(rotJACj, temp, temp2);
 			m += temp2;
 		}
 		EXUmath::AddMatrixToSparseTripletVector(triplets, m, allLTGsGj, allLTGsGj);
@@ -794,16 +794,16 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 		{
 			//force part ji: //negative sign added to JacFc term and removed from rnA term
 			//JposJ.T*d(Fc)/dposI*JposI
-			EXUmath::MultMatrixMatrixTemplate(-1. * JacFc, JACi, temp);
+			EXUmath::MultMatrixMatrix(-1. * JacFc, JACi, temp);
 
 			if (computeFrictionTerms && rotColumnsi != 0)
 			{
 				//JposJ.T*d(Fc)/drotI*JrotI
-				EXUmath::MultMatrixMatrixTemplate(-factRegularizedFriction * rTildeNI, rotJACi, m);
+				EXUmath::MultMatrixMatrix(-factRegularizedFriction * rTildeNI, rotJACi, m);
 
 				temp += m;
 			}
-			EXUmath::MultMatrixTransposedMatrixTemplate(JACj, temp, m);
+			EXUmath::MultMatrixTransposedMatrix(JACj, temp, m);
 
 			//torque part ji:
 			//JrotJ.T*(d(TcJ)/drotI*JrotI + d(Tc)/dposI*JposI)
@@ -811,17 +811,17 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 			{
 				Matrix3D JacTorqueJ; //JacFcFriction includes factorODE2_t
 				JacTorqueJ = factRegularizedFriction * rTildeNJ;
-				EXUmath::MultMatrixMatrixTemplate(JacTorqueJ * rTildeNI, rotJACi, temp2);
-				EXUmath::MultMatrixMatrixTemplate(JacTorqueJ + rTildeNJ * JacTorqueFc, JACi, temp);
+				EXUmath::MultMatrixMatrix(JacTorqueJ * rTildeNI, rotJACi, temp2);
+				EXUmath::MultMatrixMatrix(JacTorqueJ + rTildeNJ * JacTorqueFc, JACi, temp);
 				temp2 -= temp;
-				EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
+				EXUmath::MultMatrixTransposedMatrix(rotJACj, temp2, temp);
 				m += temp;
 			}
 			if (normalTorqueFactorJ != 0. && rotColumnsj != 0)
 			{
 				//JrotJ.T*d(TcJ)/dposI*JposI (#2849)
-				EXUmath::MultMatrixMatrixTemplate(-normalTorqueFactorJ * rTildeNJ * JacFc, JACi, temp);
-				EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp, temp2);
+				EXUmath::MultMatrixMatrix(-normalTorqueFactorJ * rTildeNJ * JacFc, JACi, temp);
+				EXUmath::MultMatrixTransposedMatrix(rotJACj, temp, temp2);
 				m += temp2;
 			}
 
@@ -830,16 +830,16 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//force part ij: 
 			//JposI.T*d(Fc)/dposJ*JposJ
-			EXUmath::MultMatrixMatrixTemplate(-1. * JacFc, JACj, temp);
+			EXUmath::MultMatrixMatrix(-1. * JacFc, JACj, temp);
 
 			if (computeFrictionTerms && rotColumnsj != 0)
 			{
 				//JposI.T*d(Fc)/drotJ*JrotJ //additional *(-1) due to -Jaci compensates negative sign
-				EXUmath::MultMatrixMatrixTemplate(factRegularizedFriction * rTildeNJ, rotJACj, m);
+				EXUmath::MultMatrixMatrix(factRegularizedFriction * rTildeNJ, rotJACj, m);
 
 				temp += m;
 			}
-			EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, m);
+			EXUmath::MultMatrixTransposedMatrix(JACi, temp, m);
 
 			//torque part ij:
 			//JrotI.T*(d(TcI)/drotJ*JrotJ + d(Tc)/dposJ*JposJ)
@@ -847,10 +847,10 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 			{
 				Matrix3D JacTorqueI; //JacFcFriction includes factorODE2_t
 				JacTorqueI = factRegularizedFriction * rTildeNI;
-				EXUmath::MultMatrixMatrixTemplate(JacTorqueI * rTildeNJ, rotJACj, temp2);
-				EXUmath::MultMatrixMatrixTemplate(JacTorqueI + rTildeNI * JacTorqueFc, JACj, temp);
+				EXUmath::MultMatrixMatrix(JacTorqueI * rTildeNJ, rotJACj, temp2);
+				EXUmath::MultMatrixMatrix(JacTorqueI + rTildeNI * JacTorqueFc, JACj, temp);
 				temp2 += temp;
-				EXUmath::MultMatrixTransposedMatrixTemplate(rotJACi, temp2, temp);
+				EXUmath::MultMatrixTransposedMatrix(rotJACi, temp2, temp);
 				m += temp;
 			}
 
@@ -862,17 +862,17 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 	if (columnsi)
 	{
 		//force part ii:
-		EXUmath::MultMatrixMatrixTemplate(JacFc, JACi, temp);
+		EXUmath::MultMatrixMatrix(JacFc, JACi, temp);
 
 		if (computeFrictionTerms && rotColumnsi != 0)
 		{
 			//JposI.T*d(Fc)/drotI*JrotI
 			//SIGN change due to JposI
-			EXUmath::MultMatrixMatrixTemplate(factRegularizedFriction * rTildeNI, rotJACi, temp2);
+			EXUmath::MultMatrixMatrix(factRegularizedFriction * rTildeNI, rotJACi, temp2);
 
 			temp += temp2;
 		}
-		EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, m);
+		EXUmath::MultMatrixTransposedMatrix(JACi, temp, m);
 
 		//torque part ii:
 		if (computeFrictionTerms && rotColumnsi != 0)
@@ -880,10 +880,10 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 			//JrotI.T*(d(TcJ)/drotI*JrotI + d(Tc)/dposI*JposI)
 			Matrix3D JacTorqueI; //JacFcFriction includes factorODE2_t
 			JacTorqueI = factRegularizedFriction * rTildeNI;
-			EXUmath::MultMatrixMatrixTemplate(JacTorqueI * rTildeNI, rotJACi, temp2);
-			EXUmath::MultMatrixMatrixTemplate(JacTorqueI + rTildeNI * JacTorqueFc, JACi, temp);
+			EXUmath::MultMatrixMatrix(JacTorqueI * rTildeNI, rotJACi, temp2);
+			EXUmath::MultMatrixMatrix(JacTorqueI + rTildeNI * JacTorqueFc, JACi, temp);
 			temp2 -= temp;  //SIGN as in theDoc
-			EXUmath::MultMatrixTransposedMatrixTemplate(rotJACi, temp2, temp);
+			EXUmath::MultMatrixTransposedMatrix(rotJACi, temp2, temp);
 			m += temp;
 		}
 		EXUmath::AddMatrixToSparseTripletVector(triplets, m, allLTGsGi, allLTGsGi);
@@ -2601,28 +2601,28 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		{
 			//force part sphere jj: 
 			//Jposm1*d(f_circ)/dposm1*Jposm1
-			EXUmath::MultMatrixMatrixTemplate(JacFcPos, JACj, temp);
+			EXUmath::MultMatrixMatrix(JacFcPos, JACj, temp);
 
 			if (computeFrictionTerms && rotColumnsj != 0)
 			{
 				//Jposm1*d(f_circ)/drotm1*Jrotm1
-				EXUmath::MultMatrixMatrixTemplate(factRegularizedFriction  * rTildeD0, rotJACj, temp2);
+				EXUmath::MultMatrixMatrix(factRegularizedFriction  * rTildeD0, rotJACj, temp2);
 
 				temp += temp2;
 			}
-			EXUmath::MultMatrixTransposedMatrixTemplate(JACj, temp, locJac);
+			EXUmath::MultMatrixTransposedMatrix(JACj, temp, locJac);
 
 			//torque part jj:
 			if (computeFrictionTerms && rotColumnsj != 0)
 			{
 				////reuse temp2 = d\fv_k /dq m1
 				//Jrotm1*d(t_circ)/drotm1*Jrotm1
-				EXUmath::MultMatrixMatrixTemplate(rTildeD0, temp, temp2);
+				EXUmath::MultMatrixMatrix(rTildeD0, temp, temp2);
 
-				EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
+				EXUmath::MultMatrixTransposedMatrix(rotJACj, temp2, temp);
 				locJac += temp;
-				//EXUmath::MultMatrixMatrixTemplate(rTildeD0, temp2, temp); //without all f_k terms
-				//EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp, temp2);
+				//EXUmath::MultMatrixMatrix(rTildeD0, temp2, temp); //without all f_k terms
+				//EXUmath::MultMatrixTransposedMatrix(rotJACj, temp, temp2);
 				//locJac += temp2;
 			}
 #ifdef debugJac
@@ -2634,9 +2634,9 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 			if (columnsi)
 			{
 				//force part ji: 
-				EXUmath::MultMatrixMatrixTemplate(-1.*JacFcPos, JACi, temp);
+				EXUmath::MultMatrixMatrix(-1.*JacFcPos, JACi, temp);
 
-				EXUmath::MultMatrixTransposedMatrixTemplate(JACj, temp, locJac);
+				EXUmath::MultMatrixTransposedMatrix(JACj, temp, locJac);
 
 				//torque part ji:
 				if (computeFrictionTerms && rotColumnsj != 0)
@@ -2646,9 +2646,9 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 					//negative term checked with pure regularized case; agrees with theDoc:
 					RigidBodyMath::ApplySkewMatrixTemplate((sphere.radius+ halfHeight)*d0, -1.*JacFcPos, JacTorque);
 
-					EXUmath::MultMatrixMatrixTemplate(JacTorque, JACi, temp);
+					EXUmath::MultMatrixMatrix(JacTorque, JACi, temp);
 
-					EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp, temp2); 
+					EXUmath::MultMatrixTransposedMatrix(rotJACj, temp, temp2); 
 					locJac += temp2; 
 				}
 
@@ -2660,9 +2660,9 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//force part ANCFij: //negative sign added to JacFcPos term
-				EXUmath::MultMatrixMatrixTemplate(-1.*JacFcPos, JACj, temp);
+				EXUmath::MultMatrixMatrix(-1.*JacFcPos, JACj, temp);
 
-				EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, locJac);
+				EXUmath::MultMatrixTransposedMatrix(JACi, temp, locJac);
 
 				//EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, false>(triplets, locJac, *allLTGs[jgi], *allLTGs[jgj], 1.);
 #ifdef debugJac
@@ -2675,8 +2675,8 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		if (columnsi)
 		{
 			//only force part ANCF ii:
-			EXUmath::MultMatrixMatrixTemplate(JacFcPos, JACi, temp);
-			EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, locJac);
+			EXUmath::MultMatrixMatrix(JacFcPos, JACi, temp);
+			EXUmath::MultMatrixTransposedMatrix(JACi, temp, locJac);
 
 
 			EXUmath::AddMatrixToSparseTripletVector(triplets, locJac, *allLTGs[jgi], *allLTGs[jgi]);

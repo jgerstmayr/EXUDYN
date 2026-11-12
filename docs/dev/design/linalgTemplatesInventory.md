@@ -261,3 +261,18 @@ Name collisions: `GeneralMatrix` and `MatrixContainer` have members `MultMatrixV
 LT.1 and LT.2 change no computation and can go first; LT.3 is the step with the performance gain and needs LT.5's case
 measured before it. The switch of `Matrix3D`/`Matrix6D` to `SlimMatrix` (RG5.2.4, RG5.2.5) is independent: the kernels
 take `SlimMatrix` already, and LT.3 keeps the sizes in locals so that they fold to constants.
+
+## 8. Done: LT.1 and LT.2 (RG5.2.8.1, RG5.2.8.2, #3478, 2026-11-12)
+
+- LT.1: `MultMatrixMatrixTemplate2`, `MultMatrixMatrixAddTemplate`, the commented `MultMatrixVectorSquaredTemplate`,
+  `MatrixBase::AddMatrix`, `MatrixBase::AddSubmatrixTransposedWithFactor` and its `GeneralMatrix` chain
+  (`LinearSolver.h`, `GeneralMatrixEigenSparse` in `LinearSolver.cpp`) removed.
+- LT.2: the kernels of section 1 under their plain names (`EXUmath::MultMatrixVector`, `MultMatrixTransposedVector`,
+  `MultMatrixVectorAdd`, `MultMatrixTransposedVectorAdd`, `MultMatrixVectorSquaredAdd`, `MultMatrixMatrix`,
+  `MultMatrixTransposedMatrix`, `MultMatrixTransposedMatrixAdd`, `FactorTimesMatrixAdd`;
+  `MultMatrixMatrix2SubmatrixTemplate` is `MultMatrixMatrixToSubmatrix`); the wrapper overloads of `BasicLinalg.h` and
+  the explicit template argument lists of 22 files removed (a script, then the compiler: two unqualified calls in
+  `MatrixContainer`, whose members have the same names, are qualified with `EXUmath::`).
+  `MultMatrixVectorSquaredAdd` checks the size of its result instead of resizing it.
+- Bits: the 448 result lines of the test suite equal those before; the C++ unit tests pass. The section numbers and
+  line numbers above refer to the code before this change.

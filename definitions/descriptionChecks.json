@@ -202,9 +202,9 @@
    "fingerprint": "8e5fd4b59ff7"
   },
   "ObjectANCFBeam": {
-   "checked": "2026-11-10",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "c4fc0bbd257d"
+   "fingerprint": "11f27c13f423"
   },
   "ObjectANCFCable": {
    "checked": "2026-10-17",
@@ -217,14 +217,14 @@
    "fingerprint": "e2a531e7864f"
   },
   "ObjectANCFThinPlate": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "d915b6d522b1"
+   "fingerprint": "5677be1f3d9f"
   },
   "ObjectBeamGeometricallyExact": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "b5e7cf3e2179"
+   "fingerprint": "d8a20d4544b1"
   },
   "ObjectBeamGeometricallyExact2D": {
    "checked": "2026-11-10",
@@ -252,9 +252,9 @@
    "fingerprint": "769f07551bf6"
   },
   "ObjectConnectorCoordinateVector": {
-   "checked": "2026-11-06",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "2535ceec972b"
+   "fingerprint": "646b2dcb8763"
   },
   "ObjectConnectorDistance": {
    "checked": "2026-11-08",
@@ -307,9 +307,9 @@
    "fingerprint": "61261ffe0100"
   },
   "ObjectContactCircleCable2D": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "718627597bfb"
+   "fingerprint": "611cdfc1aad6"
   },
   "ObjectContactConvexRoll": {
    "checked": "2026-11-08",
@@ -327,9 +327,9 @@
    "fingerprint": "dbda463bfda7"
   },
   "ObjectContactFrictionCircleCable2D": {
-   "checked": "2026-10-17",
+   "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "3f8898cf229f"
+   "fingerprint": "bab29944c404"
   },
   "ObjectContactSphereCylinder": {
    "checked": "2026-11-08",
@@ -354,12 +354,12 @@
   "ObjectFFRF": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "61a886a381a0"
+   "fingerprint": "4c0f1308e4b2"
   },
   "ObjectFFRFreducedOrder": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "e0e541c8dc17"
+   "fingerprint": "380d99dd446b"
   },
   "ObjectGenericODE1": {
    "checked": "2026-10-29",
@@ -369,7 +369,7 @@
   "ObjectGenericODE2": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "6b8d5703f6eb"
+   "fingerprint": "04f29ce0e8cf"
   },
   "ObjectGround": {
    "checked": "2026-11-02",
@@ -434,7 +434,7 @@
   "ObjectKinematicTree": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "57faf22053e5"
+   "fingerprint": "88752e920030"
   },
   "ObjectMass1D": {
    "checked": "2026-10-17",
@@ -454,7 +454,7 @@
   "ObjectRigidBody": {
    "checked": "2026-11-12",
    "by": "Claude-JG",
-   "fingerprint": "2f3c53817828"
+   "fingerprint": "01450d16dc2c"
   },
   "ObjectRigidBody2D": {
    "checked": "2026-11-02",

@@ -834,7 +834,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
             Matrix3D Deps, Dkappa;
             StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
             SlimVectorBase<TReal, 3> membraneForceResultants;
-            EXUmath::MultMatrixVectorTemplate(Deps, epsMid, membraneForceResultants);
+            EXUmath::MultMatrixVector(Deps, epsMid, membraneForceResultants);
 
             // 8b. Kelvin-Voigt material damping (Rayleigh stiffness-proportional damping):
             //     consistent damping stress σ_d = β · D_eps · ε̇ at the CURRENT configuration.
@@ -856,7 +856,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
                 epsDot[2] = MultVectors121(r_x_cur, r_y_dot) + MultVectors121(r_y_cur, r_x_dot);
                 // damping stress σ_d = β · D_eps · ε̇  → added to N before the virtual-work loop
                 SlimVectorBase<TReal, 3> dampStress;
-                EXUmath::MultMatrixVectorTemplate(Deps, epsDot, dampStress);
+                EXUmath::MultMatrixVector(Deps, epsDot, dampStress);
                 for (Index k = 0; k < 3; k++)
                 {
                     membraneForceResultants[k] += parameters.stiffnessProportionalDamping * dampStress[k];
@@ -1016,7 +1016,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
             Matrix3D Deps, Dkappa;
             StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
             SlimVectorBase<TReal, 3> bendingMomentResultants;
-            EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, bendingMomentResultants);
+            EXUmath::MultMatrixVector(Dkappa, kappa, bendingMomentResultants);
 
             // 10b. Kelvin-Voigt material damping (Rayleigh stiffness-proportional damping):
             //      m_d = β_κ · D_kappa · κ̇  at the CURRENT configuration.  κ̇ is the curvature
@@ -1065,7 +1065,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
                                           + (n3 * r_xy_cur) * dInvNxy_dt);
                 // damping moment m_d = β · D_kappa · κ̇  → added to M before the virtual-work loop
                 SlimVectorBase<TReal, 3> dampMoment;
-                EXUmath::MultMatrixVectorTemplate(Dkappa, kappaDot, dampMoment);
+                EXUmath::MultMatrixVector(Dkappa, kappaDot, dampMoment);
                 for (Index i = 0; i < 3; i++)
                 {
                     bendingMomentResultants[i] += betaBend * dampMoment[i];
@@ -1490,8 +1490,8 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         Real h = ComputeThicknessAtPoint(xi, eta);
         Matrix3D Deps, Dkappa;
         StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
-        EXUmath::MultMatrixVectorTemplate(Deps, eps_mid, N);
-        EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, M);
+        EXUmath::MultMatrixVector(Deps, eps_mid, N);
+        EXUmath::MultMatrixVector(Dkappa, kappa, M);
         CHECKandTHROW(h > 0., "CObjectANCFThinPlate::GetOutputVariableBody: thickness h must be > 0 for StressLocal", ExudynValueError);
         Real zeta = localPosition[2];  // in [-1,1]: -1 = bottom, +1 = top surface
         Real s11 = N[0]/h - zeta*(6.*M[0]/(h*h));
@@ -1530,7 +1530,7 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         SlimVectorBase<Real, 3> N;
         Matrix3D Deps, Dkappa;
         StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
-        EXUmath::MultMatrixVectorTemplate(Deps, eps_mid, N);
+        EXUmath::MultMatrixVector(Deps, eps_mid, N);
         value.SetVector({ N[0], N[1], N[2] });
         break;
     }
@@ -1545,7 +1545,7 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         SlimVectorBase<Real, 3> M;
         Matrix3D Deps, Dkappa;
         StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
-        EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, M);
+        EXUmath::MultMatrixVector(Dkappa, kappa, M);
         value.SetVector({ M[0], M[1], M[2] });
         break;
     }
@@ -1646,12 +1646,12 @@ Real CObjectANCFThinPlate::ComputeElasticEnergy(ConfigurationType configuration)
                 StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
                 if (pass == 0)
                 {
-                    EXUmath::MultMatrixVectorTemplate(Deps, eps_mid, resultant);
+                    EXUmath::MultMatrixVector(Deps, eps_mid, resultant);
                     energy += weights[iGP] * weights[jGP] * J0.GetDeterminant() * 0.5 * (eps_mid * resultant);
                 }
                 else
                 {
-                    EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, resultant);
+                    EXUmath::MultMatrixVector(Dkappa, kappa, resultant);
                     energy += weights[iGP] * weights[jGP] * J0.GetDeterminant() * 0.5 * (kappa * resultant);
                 }
             }

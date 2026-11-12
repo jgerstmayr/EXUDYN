@@ -133,11 +133,11 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 		//	self.massMatrixFFRFreduced[0:self.dim3D, self.dim3D : self.dim3D + self.nODE2rot] = Mtr
 		//	self.massMatrixFFRFreduced[self.dim3D:self.dim3D + self.nODE2rot, 0 : self.dim3D] = Mtr.T
 		Matrix3D temp;
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
+		EXUmath::MultMatrixMatrix(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
 		temp += mass * centerOfMassTilde;
 		temp = -1. * A * temp;
 
-		EXUmath::MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<GMaxSize>, Matrix>(temp, Glocal, tempMatrix);
+		EXUmath::MultMatrixMatrix(temp, Glocal, tempMatrix);
 		massMatrix.AddSubmatrix(tempMatrix, 0, nDim3D);
 		massMatrix.AddTransposedSubmatrix(tempMatrix, nDim3D, 0);
 
@@ -149,7 +149,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 #endif
 
 		//Mtf:
-		EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, Matrix>(A, parameters.mPhitTPsi, tempMatrix);
+		EXUmath::MultMatrixMatrix(A, parameters.mPhitTPsi, tempMatrix);
 		massMatrix.AddSubmatrix(tempMatrix, 0, nODE2Rigid);
 		massMatrix.AddTransposedSubmatrix(tempMatrix, nODE2Rigid, 0);
 
@@ -158,9 +158,9 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 #endif
 
 		//Mrf:
-		EXUmath::MultMatrixTransposedMatrixTemplate<Matrix, Matrix, Matrix>(tempKronZetaI, parameters.mPsiTildePsi, tempMatrix2);
+		EXUmath::MultMatrixTransposedMatrix(tempKronZetaI, parameters.mPsiTildePsi, tempMatrix2);
 		tempMatrix2.AddSubmatrix(parameters.mXRefTildePsi,0,0); //+= operator would call new ...
-		EXUmath::MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<GMaxSize>, Matrix, Matrix>(Glocal, tempMatrix2, tempMatrix);
+		EXUmath::MultMatrixTransposedMatrix(Glocal, tempMatrix2, tempMatrix);
 		tempMatrix *= -1;
 		massMatrix.AddSubmatrix(tempMatrix, nDim3D, nODE2Rigid);
 		massMatrix.AddTransposedSubmatrix(tempMatrix, nODE2Rigid, nDim3D);
@@ -171,17 +171,17 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 
 		//Mrr:
 		//(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI):
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI, temp);
+		EXUmath::MultMatrixMatrix(parameters.mXRefTildePsiTilde, tempKronZetaI, temp);
 		Matrix3D temp2=temp;
 		temp2.TransposeYourself();
 		temp += temp2;
 		temp += inertia;
-		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
-		EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
+		EXUmath::MultMatrixMatrix(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
+		EXUmath::MultMatrixTransposedMatrixAdd(tempKronZetaI, tempMatrix, temp);
 
 		//Mrr = G.T@temp@G:
-		EXUmath::MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<GMaxSize>, Matrix>(temp, Glocal, tempMatrix2);
-		EXUmath::MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<GMaxSize>, Matrix, Matrix>(Glocal, tempMatrix2, tempMatrix);
+		EXUmath::MultMatrixMatrix(temp, Glocal, tempMatrix2);
+		EXUmath::MultMatrixTransposedMatrix(Glocal, tempMatrix2, tempMatrix);
 		massMatrix.AddSubmatrix(tempMatrix, nDim3D, nDim3D);
 
 #ifdef CObjectFFRFreducedOrderComputeMassMatrixOutput
@@ -331,13 +331,13 @@ void CObjectFFRFreducedOrder::ComputeQuadraticVelocityVector(const Matrix3D& A, 
 	//			2 * A @ self.mPhitTPsiTilde @ zeta_tI @ omega3D) #identical to FFRF up to 1e-16
 
 	Matrix3D temp;
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
+	EXUmath::MultMatrixMatrix(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
 	temp += mass * centerOfMassTilde;
 
 	Vector3D fTempTT = A * (omega3Dtilde * (temp * omega3D));
-	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector); //3*nODE2FF length
+	EXUmath::MultMatrixVector(tempKronZetaI_t, omega3D, tempVector); //3*nODE2FF length
 	Vector3D fTemp2; //2 * (A * (parameters.mPhitTPsiTilde * (tempKronZetaI_t * omega3D)));
-	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, Vector3D>(parameters.mPhitTPsiTilde, tempVector, fTemp2); //3*nODE2FF length
+	EXUmath::MultMatrixVector(parameters.mPhitTPsiTilde, tempVector, fTemp2); //3*nODE2FF length
 	fTempTT += 2 * (A*fTemp2);
 
 	ode2LhsTT -= fTempTT;
@@ -352,58 +352,58 @@ void CObjectFFRFreducedOrder::ComputeQuadraticVelocityVector(const Matrix3D& A, 
 
 	//(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI)*omega3D:
 	Vector3D temp3D = inertia * omega3D;
-	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector2); //tempVector2=zetaI*omega3D
-	EXUmath::MultMatrixVectorAddTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
+	EXUmath::MultMatrixVector(tempKronZetaI, omega3D, tempVector2); //tempVector2=zetaI*omega3D
+	EXUmath::MultMatrixVectorAdd(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
 
-	EXUmath::MultMatrixTransposedVectorTemplate<Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector);
-	EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
+	EXUmath::MultMatrixTransposedVector(parameters.mXRefTildePsiTilde, omega3D, tempVector);
+	EXUmath::MultMatrixTransposedVectorAdd(tempKronZetaI, tempVector, temp3D);
 
-	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
-	EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
+	EXUmath::MultMatrixVector(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
+	EXUmath::MultMatrixTransposedVectorAdd(tempKronZetaI, tempVector, temp3D);
 
 	//G.T * omega3Dtilde * (...)
 	Vector3D QrrTerm1 = omega3Dtilde * temp3D;
 	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> fTempRR(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates());
-	EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm1, fTempRR);
+	EXUmath::MultMatrixVector(GlocalT, QrrTerm1, fTempRR);
 
 	//(self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI)*omega3D
-	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector2); //tempVector2=zetaI_t*omega3D
+	EXUmath::MultMatrixVector(tempKronZetaI_t, omega3D, tempVector2); //tempVector2=zetaI_t*omega3D
 
-	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
+	EXUmath::MultMatrixVector(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
 
-	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
-	EXUmath::MultMatrixTransposedVectorAddTemplate<ResizableMatrix, ResizableVector, Vector3D>(tempKronZetaI, tempVector, temp3D);
+	EXUmath::MultMatrixVector(parameters.mPsiTildePsiTilde, tempVector2, tempVector);
+	EXUmath::MultMatrixTransposedVectorAdd(tempKronZetaI, tempVector, temp3D);
 
 	//2 * G.T @ (...)
 	Vector3D QrrTerm2 = 2 * temp3D;
-	EXUmath::MultMatrixVectorAddTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm2, fTempRR);
+	EXUmath::MultMatrixVectorAdd(GlocalT, QrrTerm2, fTempRR);
 
 	ode2LhsRR += fTempRR; //-= [-G.T*(...) - G.T*(...) ] ==> +=
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Q_rr SLOW
 	////(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI):
-	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI, temp);
+	//EXUmath::MultMatrixMatrix(parameters.mXRefTildePsiTilde, tempKronZetaI, temp);
 	//Matrix3D temp2 = temp;
 	//temp2.TransposeYourself();
 	//temp += temp2;
 	//temp += inertia;
-	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
-	//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
+	//EXUmath::MultMatrixMatrix(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
+	//EXUmath::MultMatrixTransposedMatrixAdd(tempKronZetaI, tempMatrix, temp);
 
 	////G.T * omega3Dtilde * (...) *omega3D
 	//Vector3D QrrTerm1 = omega3Dtilde * (temp * omega3D);
 	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> fTempRR(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates());
-	//EXUmath::MultMatrixVectorTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm1, fTempRR);
+	//EXUmath::MultMatrixVector(GlocalT, QrrTerm1, fTempRR);
 
 	//(self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI)
-	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mXRefTildePsiTilde, tempKronZetaI_t, temp);
-	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI_t, tempMatrix);
-	//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
+	//EXUmath::MultMatrixMatrix(parameters.mXRefTildePsiTilde, tempKronZetaI_t, temp);
+	//EXUmath::MultMatrixMatrix(parameters.mPsiTildePsiTilde, tempKronZetaI_t, tempMatrix);
+	//EXUmath::MultMatrixTransposedMatrixAdd(tempKronZetaI, tempMatrix, temp);
 
 	////2 * G.T @ (...)*omega3D
 	//Vector3D QrrTerm2 = 2 * (temp * omega3D);
-	//EXUmath::MultMatrixVectorAddTemplate< ConstSizeMatrix<GMaxSize>, Vector3D, ConstSizeVector<CNodeRigidBody::maxRotationCoordinates>>(GlocalT, QrrTerm2, fTempRR);
+	//EXUmath::MultMatrixVectorAdd(GlocalT, QrrTerm2, fTempRR);
 
 	//ode2LhsRR += fTempRR; //-= [-G.T*(...) - G.T*(...) ] ==> +=
 
@@ -417,29 +417,29 @@ void CObjectFFRFreducedOrder::ComputeQuadraticVelocityVector(const Matrix3D& A, 
 	//			2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D )#identical to FFRF up to 1e-16
 
 
-	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector); 
-	EXUmath::MultMatrixVectorTemplate<Matrix, ResizableVector, ResizableVector>(parameters.mPsiTildePsiTilde, tempVector, tempVector2);
-	EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector2);
+	EXUmath::MultMatrixVector(tempKronZetaI, omega3D, tempVector); 
+	EXUmath::MultMatrixVector(parameters.mPsiTildePsiTilde, tempVector, tempVector2);
+	EXUmath::MultMatrixTransposedVectorAdd(parameters.mXRefTildePsiTilde, omega3D, tempVector2);
 	tempVector2 *= -1.; //(-): add to LHS ...
-	EXUmath::MultMatrixVectorAddTemplate<ResizableMatrix, ResizableVector, LinkedDataVector>(tempKronIZetaOmegaT, tempVector2, ode2LhsFF);
+	EXUmath::MultMatrixVectorAdd(tempKronIZetaOmegaT, tempVector2, ode2LhsFF);
 
 	//"-2"*omega3D: add to LHS, factor 2:
-	EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, (-2.)*omega3D, tempVector);
-	EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, ResizableVector, LinkedDataVector>(parameters.mPsiTildePsi, tempVector, ode2LhsFF);		
+	EXUmath::MultMatrixVector(tempKronZetaI_t, (-2.)*omega3D, tempVector);
+	EXUmath::MultMatrixTransposedVectorAdd(parameters.mPsiTildePsi, tempVector, ode2LhsFF);		
 
 	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	////Q_ff SLOW:
 	////		force[self.nODE2rigid:] -= (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D +
 	////			2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D )#identical to FFRF up to 1e-16
-	//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
-	//EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempMatrix, omega3D, tempVector);
-	//EXUmath::MultMatrixTransposedVectorAddTemplate< Matrix, Vector3D, ResizableVector>(parameters.mXRefTildePsiTilde, omega3D, tempVector);
+	//EXUmath::MultMatrixMatrix(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
+	//EXUmath::MultMatrixVector(tempMatrix, omega3D, tempVector);
+	//EXUmath::MultMatrixTransposedVectorAdd(parameters.mXRefTildePsiTilde, omega3D, tempVector);
 	//tempVector *= -1.; //(-): add to LHS ...
-	//EXUmath::MultMatrixVectorAddTemplate< ResizableMatrix, ResizableVector, LinkedDataVector>(tempKronIZetaOmegaT, tempVector, ode2LhsFF);
+	//EXUmath::MultMatrixVectorAdd(tempKronIZetaOmegaT, tempVector, ode2LhsFF);
 
 	////"-2"*omega3D: add to LHS, factor 2
-	//EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, -2 * omega3D, tempVector);
-	//EXUmath::MultMatrixTransposedVectorAddTemplate<Matrix, ResizableVector, LinkedDataVector>(parameters.mPsiTildePsi, tempVector, ode2LhsFF);
+	//EXUmath::MultMatrixVector(tempKronZetaI_t, -2 * omega3D, tempVector);
+	//EXUmath::MultMatrixTransposedVectorAdd(parameters.mPsiTildePsi, tempVector, ode2LhsFF);
 
 	
 //#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -523,7 +523,7 @@ void CObjectFFRFreducedOrder::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer&
 	{
 		if (eulerParameters) { A = RigidBodyMath::EP2RotationMatrix(rotation); Glocal = RigidBodyMath::EP2Glocal(rotation); }
 		else { A = RigidBodyMath::RotXYZ2RotationMatrix(rotation); Glocal = RigidBodyMath::RotXYZ2GlocalTemplate<CSVector4D>(rotation); }
-		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D>, CSVector4D, Vector3D>(Glocal, rotation_t, omega);
+		EXUmath::MultMatrixVector(Glocal, rotation_t, omega);
 	};
 
 	//by the rotation parameters and their velocities
@@ -731,8 +731,8 @@ void CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian(Matrix& value) con
 			(parameters.mPhitTPsi.NumberOfColumns() == GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates()), 
             "CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi", ExudynValueError);
 
-		//EXUmath::MultMatrixTransposedMatrixTemplate<Matrix, Matrix3D, ResizableMatrix>(parameters.mPhitTPsi, A.GetTransposed(), tempMatrix);
-		EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, ResizableMatrix>(A, parameters.mPhitTPsi, tempMatrix);
+		//EXUmath::MultMatrixTransposedMatrix(parameters.mPhitTPsi, A.GetTransposed(), tempMatrix);
+		EXUmath::MultMatrixMatrix(A, parameters.mPhitTPsi, tempMatrix);
 		//pout << "tempMatrix          =" << tempMatrix.NumberOfRows() << " x " << tempMatrix.NumberOfColumns() << "\n";
 
 		for (Index i = 0; i < tempMatrix.NumberOfRows(); i++)

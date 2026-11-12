@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 582 | 1.13.611 |
+| 1.13 | Newborn | 585 | 1.13.614 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.614** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RunLinalgBenchmark: the connector Jacobian as CObjectConnector computes it, and 3x3 times 3 x n (#3480)
+  - description: linalgTemplatesInventory.md LT.5: a group 'connector' with J^T K for a 6 x n marker Jacobian (MultMatrixTransposedMatrix) and (J^T K) J written into a block (MultMatrixMatrixToSubmatrix), n = 6, 7, 12, and the 3x3 times 3 x n product of the contacts; measured before and after RG5.2.8.4.
+  - **notes:** RunLinalgBenchmark has a group 'connector': the connector Jacobian as CObjectConnector computes it and the 3x3 times 3 x n product of the contacts.
+  - date resolved: **2026-11-12 22:54**, date raised: 2026-11-12
+- **1.13.613** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Linear algebra: Transposed(A) \* x and Transposed(A) \* B for SlimMatrix without forming the transposed (#3479)
+  - description: expressionTemplates.md E1 (ET.2): Transposed(A) returns a view of a SlimMatrix (Matrix3D, Matrix6D), which only operator\* takes, with the products MultTransposedVector and MultTransposedMatrix; for an rvalue the view keeps the matrix, so it cannot refer to a temporary; unit tests bitwise against A.GetTransposed() \* x. Its use in the item code is RG5.2.7.3.
+  - **notes:** Transposed(A) \* x and Transposed(A) \* B for SlimMatrix (Matrix3D, Matrix6D) compute the product with the transposed without forming it, with the same results as A.GetTransposed() \* x.
+  - date resolved: **2026-11-12 22:54**, date raised: 2026-11-12
+- **1.13.612** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Linear algebra: dead functions removed, the kernels under their plain names, the wrappers and explicit template arguments removed (#3478)
+  - description: linalgTemplatesInventory.md LT.1 and LT.2: MultMatrixMatrixTemplate2, MultMatrixMatrixAddTemplate, the commented MultMatrixVectorSquaredTemplate, MatrixBase::AddMatrix and the AddSubmatrixTransposedWithFactor chain of GeneralMatrix removed (no callers); EXUmath::MultMatrixVector, MultMatrixTransposedVector, ... are the templates themselves (without the suffix Template), MultMatrixMatrix2SubmatrixTemplate becomes MultMatrixMatrixToSubmatrix; the 33 one-line wrapper overloads of BasicLinalg.h and the explicit template argument lists of the call sites go; MultMatrixVectorSquaredAdd checks the size of its result instead of resizing it. No computation changes.
+  - **notes:** Linear algebra: unused functions removed; the products EXUmath::MultMatrixVector, MultMatrixTransposedVector, MultMatrixMatrix, ... are the templates themselves, without the suffix Template and without the one-line overloads for fixed types; MultMatrixMatrix2SubmatrixTemplate is MultMatrixMatrixToSubmatrix. No computation changes.
+  - date resolved: **2026-11-12 22:54**, date raised: 2026-11-12
 - **1.13.611** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: depth-aware smoothing and upsampling of the precomputed shadow (#3477)
   - description: raytracerImprovements.md O5: the smoothing at reduced resolution weights the neighbours by the similarity of their depth, and the full resolution interpolates the four nearest values of reduced resolution at the depth of its own hit, instead of nearest-neighbour upsampling followed by box filters; shadows no longer bleed across silhouettes, and the passes at full resolution are gone.
   - **notes:** The raytracer smooths the shadow of reduced resolution with weights by depth and interpolates it at the depth of each pixel, so shadows do not bleed across the silhouettes of objects.

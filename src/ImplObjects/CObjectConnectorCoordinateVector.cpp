@@ -50,7 +50,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 					}
 					if (parameters.quadraticTermMarker0.NumberOfColumns() != 0)
 					{
-						EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker0, markerData.GetMarkerData(0).vectorValue, algebraicEquations);
+						EXUmath::MultMatrixVectorSquaredAdd(parameters.quadraticTermMarker0, markerData.GetMarkerData(0).vectorValue, algebraicEquations);
 					}
 					algebraicEquations *= -1.;
 				}
@@ -62,7 +62,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 					}
 					if (parameters.quadraticTermMarker1.NumberOfColumns() != 0)
 					{
-						EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker1, markerData.GetMarkerData(1).vectorValue, algebraicEquations);
+						EXUmath::MultMatrixVectorSquaredAdd(parameters.quadraticTermMarker1, markerData.GetMarkerData(1).vectorValue, algebraicEquations);
 					}
 				}
 				{
@@ -88,7 +88,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 					}
 					if (parameters.quadraticTermMarker0.NumberOfColumns() != 0)
 					{
-						EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker0, markerData.GetMarkerData(0).vectorValue_t, algebraicEquations);
+						EXUmath::MultMatrixVectorSquaredAdd(parameters.quadraticTermMarker0, markerData.GetMarkerData(0).vectorValue_t, algebraicEquations);
 					}
 					algebraicEquations *= -1.;
 				}
@@ -100,7 +100,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 					}
 					if (parameters.quadraticTermMarker1.NumberOfColumns() != 0)
 					{
-						EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker1, markerData.GetMarkerData(1).vectorValue_t, algebraicEquations);
+						EXUmath::MultMatrixVectorSquaredAdd(parameters.quadraticTermMarker1, markerData.GetMarkerData(1).vectorValue_t, algebraicEquations);
 					}
 				}
 
@@ -161,7 +161,7 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 			{
 				if (parameters.scalingMarker0.NumberOfColumns() != 0)
 				{
-					EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(parameters.scalingMarker0, markerData.GetMarkerData(0).jacobian, temp);
+					EXUmath::MultMatrixMatrix(parameters.scalingMarker0, markerData.GetMarkerData(0).jacobian, temp);
 					usedJac->SetSubmatrix(temp, 0, 0, -1.);
 				}
 				if (parameters.quadraticTermMarker0.NumberOfColumns() != 0)
@@ -172,7 +172,7 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 					{
 						temp2.MultiplyColumn(i, -2.*markerData.GetMarkerData(0).vectorValue[i]); //'-' because of factor -1 for marker0
 					}
-					EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(temp2, markerData.GetMarkerData(0).jacobian, temp);
+					EXUmath::MultMatrixMatrix(temp2, markerData.GetMarkerData(0).jacobian, temp);
 					usedJac->AddSubmatrix(temp, 0, 0);
 				}
 			}
@@ -181,7 +181,7 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 				if (parameters.scalingMarker1.NumberOfColumns() != 0)
 				{
 					//parameters.scalingMarker1 * eye(2*[v[0],2*v[1], ...) * GetMarkerData(1).jacobian
-					EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(parameters.scalingMarker1, markerData.GetMarkerData(1).jacobian, temp);
+					EXUmath::MultMatrixMatrix(parameters.scalingMarker1, markerData.GetMarkerData(1).jacobian, temp);
 					usedJac->SetSubmatrix(temp, 0, jacOffset);
 				}
 				if (parameters.quadraticTermMarker1.NumberOfColumns() != 0)
@@ -193,7 +193,7 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 						temp2.MultiplyColumn(i, 2.*markerData.GetMarkerData(1).vectorValue[i]);
 					}
 					//pout << "temp2=" << temp2 << "\n";
-					EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(temp2, markerData.GetMarkerData(1).jacobian, temp);
+					EXUmath::MultMatrixMatrix(temp2, markerData.GetMarkerData(1).jacobian, temp);
 					usedJac->AddSubmatrix(temp, 0, jacOffset);
 				}
 			}

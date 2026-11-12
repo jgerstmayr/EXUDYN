@@ -6431,6 +6431,24 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-2-8-1"></a>
+### RG5.2.8.1, RG5.2.8.2, RG5.2.7.2 — dead linalg functions, the kernels under their plain names, Transposed(A) (2026-11-12, #3478, #3479)
+
+*(Maintainer 2026-11-12: do the suggested next steps.)*
+
+- #3478 (LT.1, LT.2): see linalgTemplatesInventory.md section 8 - dead functions and the AddSubmatrixTransposedWithFactor
+  chain removed; `...Template` kernels under their plain names, MultMatrixMatrixToSubmatrix; the wrappers of
+  BasicLinalg.h and the explicit template argument lists gone (scratch p_lt12.py, 22 files); MultMatrixVectorSquaredAdd
+  checks instead of resizing. The test suite gives the same 448 result lines; C++ unit tests passed.
+- #3479 (E1/ET.2): TransposedView/TransposedCopy and Transposed() in SlimMatrix.h, operator* with vector and matrix;
+  unit test case bitwise against GetTransposed() (expressionTemplates.md section 8). Not yet used in the item code
+  (RG5.2.7.3).
+
+- #3480 (LT.5): RunLinalgBenchmark group 'connector' (linalgBenchmark.h LinalgBenchmarkConnector<n>, n = 6, 7, 12);
+  test_linalgBenchmark.py knows the group. Baseline, best of 5, regular / fast module: J^T K 6 x n 62 / 63 ns (n = 6),
+  70 / 72 (7), 123 / 127 (12); (J^T K) J into a block 171 / 180 ns (6), 226 / 240 (7), 652 / 682 (12); 3x3 * 3 x n
+  15 / 15 (6), 17 / 17 (7), 28 / 29 (12).
+
 <a id="rg6-26-9"></a>
 ### RG6.26.9-RG6.26.11, RG6.26.13-RG6.26.15 — raytracer: rotated spiral, adaptive probes, depth-aware filter; transparent occluders, directional soft shadows, relative offset (2026-11-12, #3470-#3472, #3475-#3477)
 

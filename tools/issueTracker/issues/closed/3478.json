@@ -1,0 +1,15 @@
+{
+  "number": 3478,
+  "title": "Linear algebra: dead functions removed, the kernels under their plain names, the wrappers and explicit template arguments removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "linalgTemplatesInventory.md LT.1 and LT.2: MultMatrixMatrixTemplate2, MultMatrixMatrixAddTemplate, the commented MultMatrixVectorSquaredTemplate, MatrixBase::AddMatrix and the AddSubmatrixTransposedWithFactor chain of GeneralMatrix removed (no callers); EXUmath::MultMatrixVector, MultMatrixTransposedVector, ... are the templates themselves (without the suffix Template), MultMatrixMatrix2SubmatrixTemplate becomes MultMatrixMatrixToSubmatrix; the 33 one-line wrapper overloads of BasicLinalg.h and the explicit template argument lists of the call sites go; MultMatrixVectorSquaredAdd checks the size of its result instead of resizing it. No computation changes.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 22:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Linear algebra: unused functions removed; the products EXUmath::MultMatrixVector, MultMatrixTransposedVector, MultMatrixMatrix, ... are the templates themselves, without the suffix Template and without the one-line overloads for fixed types; MultMatrixMatrix2SubmatrixTemplate is MultMatrixMatrixToSubmatrix. No computation changes.",
+  "resolvedInVersion": "1.13.612"
+}
