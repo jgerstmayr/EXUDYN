@@ -1,0 +1,16 @@
+{
+  "number": 3445,
+  "title": "raytracer.numberOfThreads = 0 selects the number of logical processors, and is the default",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The default visualizationSettings.raytracer.numberOfThreads was 8; since the raytracer balances its tiles dynamically (#3439) it scales up to the number of logical processors (0.664 s with 8 against 0.37 s with 32 threads on 16 cores / 32 logical processors). The value 0 selects the number of logical processors (std::thread::hardware_concurrency) and is the new default; a positive value is used as before.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 01:14",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsVisualizationSettings.py",
+  "releaseNotes": "visualizationSettings.raytracer.numberOfThreads = 0, the new default, uses the number of logical processors of the computer; the raytracer balances its tiles over them.",
+  "resolvedInVersion": "1.13.578"
+}

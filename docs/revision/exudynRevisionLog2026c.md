@@ -6431,6 +6431,51 @@ Decided 2026-11-01 (maintainer: the name LookupTable, the module exudyn.symbolic
 ### RG20.10.5 - VelocityVerlet checked (2026-11-08, #3377)
 - Against RK67 at 64 times the steps, 4 refinements: parabola exact (1e-12), undamped oscillator order 2.00, damped oscillator order 1.00 to 1.02, free rigid body with rotation vector node order 1.00 (the gyroscopic terms depend on the velocity, as in the damped case). The Lie group update of the positions is in the step. Warning and TEST phase mark removed; the texts of the solver page as asked by the maintainer.
     
+<a id="rg5-8-1"></a>
+### RG5.8.1, RG5.1.2, RG5.1.4, RG5.2, RG5.4, RG5.11.3, RG5.9.10, RG5.10 — the solver baseline, the vectors, the fixed-size matrices, the sparse mass matrix of ObjectFFRF (2026-11-12, #3002, #142, #2183, #3445, #3446)
+
+*(Maintainer 2026-11-12: settings belong in simulationSettings or visualizationSettings, exudyn.special for experimental
+flags and settings outside the solver routines - written into CLAUDE.md and CODING_STYLE.md as the common way, not as a
+hard rule; raytracer.numberOfThreads = 0 for the number of logical processors, as default; RG5.10 halted - Python user
+functions are only one of its problems, and fully decoupled systems can use Python's multiprocessing; do RG5.8.1, RG5.1
+(with an option to switch back to the present Vector and ResizableVector, by typedefs), an evaluation of RG5.2 (fixed
+rows and columns instead of ConstSizeMatrix), RG5.4 with a fallback.)*
+
+**RG5.11.3 (#3445)**: `raytracer.numberOfThreads` minimum 0, default 0 = `std::thread::hardware_concurrency()`.
+**RG5.9.10 (#3446)**: CODING_STYLE.md §1 and CLAUDE.md, a section "The common way - not hard rules".
+
+**RG5.8.1, the solver baseline (#3002)**: solverBaseline.py repaired - the first run by the timer (2026-11-10) failed in
+480 of 540 cases: an error of the solver since fixed, the drift check that SolveDynamic switches on for
+TrapezoidalIndex2 (now `index2CheckConstraints=False`: time, not accuracy, is measured), explicit solvers on models with
+constraints (now skipped); the coordinates counted, the summary with the ratios dense / full Newton / h/4 / 4 threads,
+the module in the file name. Run 2026-11-12 on both modules: 420 cases each, none failed, 804 s each;
+docs/dev/design/solverBaseline.md. The fast module 5-25 % faster; 4 threads slower up to 42 coordinates (1.02-1.70),
+faster from about 300 (0.48-0.86); EigenDense 2.6-18 times slower for the chains of 400-650 coordinates; full Newton
+1.2-8.6 times; for RG5.8.2: a vector addition of all coordinates per evaluation is 0.06 % of a step of the cheapest
+case (contactSpheres with RK44).
+
+**RG5.1.2 and RG5.1.4, not done (#142)**: the allocations per step of the ten performance models
+(`exudyn.special.InfoStat` around each SolveDynamic, linalgBenchmark.md §3.10): vectors 0.00-0.48 per step, all in the
+initialization of a solve; so merging ResizableVector into Vector has nothing to save, and no switch was built.
+`operator[]` is inline (defined in the class); its cost is the range check of the regular module, which the pointer
+loops of L1-L3 avoid in the kernels. generalContactSpheresPerf allocates about 100 arrays per step (GeneralContact).
+
+**RG5.2, evaluated**: docs/dev/design/linalgFixedSize.md (an agent's read-only analysis, checked): ConstSizeMatrix fixes
+only the capacity; after L1-L6 the 3x3 products are as fast as a fixed-size prototype; the gaps of compile-time sizes:
+6x6 products 2.2 times, 6x6 times vector 1.7, J^T K J for 3 x 6 1.7, short ConstSizeVector operations 3-4; Eigen's fixed
+sizes are slower than the prototype with MSVC. Recommended: profile ODE2RHS of the rigid-body chains first, then
+`SlimMatrix<T, rows, columns>`, Matrix6D first, Matrix3D behind a compile switch.
+
+**RG5.4, first part (#2183)**: docs/dev/design/superElementSparse.md (analysis by an agent, checked): the system already
+takes sparse element matrices; #2182 gains nothing (the reduced matrices are already triplets, the element matrix is
+small); the cost is in ObjectFFRF's dense mass matrix and numerical Jacobian, and in the markers on reduced-order bodies
+(#2184); the Python side transports triplets already, no change of the initialization needed. Done:
+`MatrixContainer::AppendSubmatrixAsTriplets`, `AppendTripletsWithOffset`; ObjectFFRF's mass matrix as triplets with
+`exu.special.solver.superElementSparseMassMatrix` (default True, experimental) as the fallback; the dense path without
+the copy of Mff; `ComputeItem(..., MassMatrix)` for sparse mass matrices. NGsolve block, 20 steps: mass matrix 8-20
+times faster (1525 nodes: 1.571 -> 0.080 s), total 6-13 % (24.07 -> 22.53 s), coordinates equal to 1e-16. Test model
+objectFFRFsparseMassMatrixTest.py.
+
 <a id="rg5-9-9"></a>
 ### RG5.9.9, RG6.25, RG5.11.2 — the substitution by rows, hideMbs, the scaling of the raytracer (2026-11-11, #3441, #3442, #3439)
 

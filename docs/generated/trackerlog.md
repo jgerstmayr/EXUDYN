@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.579.dev1
+- Exudyn version = 1.13.582.dev1
 - last change = 2026-11-12
-- Number of issues = 3447
-- Number of resolved issues = 3356 (579 in current version)
+- Number of issues = 3448
+- Number of resolved issues = 3359 (582 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` ObjectFFRF: analytic Jacobian instead of the numerical one (#3447)
+  - description: ObjectFFRF computes its ODE2 Jacobian numerically: one evaluation of the element per coordinate and a dense block of all coordinates. With the mass matrix as triplets (\#2183) it is the largest cost of the element on larger meshes (7.9 s of 24 s for 1525 nodes and 20 steps). An analytic Jacobian - the stiffness and damping matrices as stored triplets plus the coupling terms of the floating frame, as for ObjectFFRFreducedOrder - returned as sparse triplets.
+  - date raised: 2026-11-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The raytracer runs with several threads while a solver runs, from the renderer thread (#3438)
   - description: The raytracer can be started from the main thread and from the renderer thread; the one TaskManager is global, so while a solver uses the threads the raytracer falls back to one thread, and a raytracer started in the renderer thread during a solve crashes. The raytracer shall run in parallel to the solver with threads of its own.
   - date raised: 2026-11-11
@@ -9091,10 +9094,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
   - **remarks:** Delayed on purpose: the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.; deferred until 2029-01-01 (Claude-JG, 2026-10-17): \* of symbolic vectors becomes the product of the components once the scripts that used it for the scalar product have shown up through the TypeError of \#3015
   - date raised: 2026-10-17
-- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
-  - description: revision2026c step RG13.1: before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
-  - **remarks:** planned as revision2026c step RG5.8 (moved from RG13 on 2026-11-09: total coordinates only with a performance gain)
-  - date raised: 2026-10-16
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
   - **remarks:** 2026-10-25 (\#3097): docs/dev/design/pythonUserItems.md is merged into docs/dev/internals/userItems.md; its section 5.3 is there in section 5 (cable markers, a general shape marker).
@@ -9132,10 +9131,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-01-18
 - `EXTENSION` `MEDIUM EFF` MarkerSuperElementRigid (#2184)
   - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
-  - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
-  - date raised: 2026-01-04
-- `EXTENSION` `MEDIUM EFF` SparseTripletMatrix (#2183)
-  - description: add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder
   - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
   - date raised: 2026-01-04
 - `EXTENSION` `MEDIUM EFF` ObjectFFRFreducedOrder (#2182)
@@ -9365,10 +9360,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Add template specializations to SlimArray\<T,2..4\> similar to SlimVector to speed up initialization of short vectors
   - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
   - date raised: 2019-06-02
-- `CHECK` `MEDIUM EFF` Vector performance (#142)
-  - description: check Vector operator\[\], and ConstVector performance regarding inlining
-  - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
-  - date raised: 2019-05-21
 
 ## Known bugs
 

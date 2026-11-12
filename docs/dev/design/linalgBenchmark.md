@@ -325,6 +325,39 @@ pivoting and threads, loaded at run time as an optional dependency - UMFPACK or 
 supports in C++ but which are GPL (UMFPACK) and LGPL (KLU), or PARDISO only after its pivoting is shown to work on the
 index-3 tests.
 
+### 3.10 Allocations per step: merging `ResizableVector` into `Vector` (RG5.1.2, RG5.1.4)
+
+The merge would let a `Vector` keep its memory when it shrinks and grows again, as `ResizableVector` does; it pays only
+if vectors are allocated during the steps. The counters of `exudyn.special.InfoStat` (regular module) around each
+`SolveDynamic` of the ten performance models (1.13.577.dev1, 2026-11-12):
+
+| model | steps | vectors allocated | per step | arrays per step | matrices per step |
+|---|---:|---:|---:|---:|---:|
+| perfRigidPendulum | 1000002 | 24 | 0.00 | 0.00 | 0.00 |
+| perfSpringDamperExplicit | 6500002 | 15 | 0.00 | 0.00 | 0.00 |
+| perfSpringDamperUserFunction | 500001 | 17 | 0.00 | 0.00 | 0.00 |
+| perfObjectFFRFreducedOrder | 20001 | 33 | 0.00 | 0.00 | 0.00 |
+| perfUserFunctions (each run) | 40001 | 20-21 | 0.00 | 0.00 | 0.00 |
+| perf3DRigidBodies | 700 | 49 | 0.07 | 0.28 | 0.06 |
+| perfAccessFunctionsAD (runs) | 101-1001 | 12-26 | 0.02-0.26 | 0.02-0.29 | 0.00-0.14 |
+| perfConnectorInterface (runs) | 101-901 | 12-26 | 0.01-0.26 | 0.03-0.31 | 0.00-0.09 |
+| perfLargeMassSpringChain (runs) | 31-451 | 12-15 | 0.03-0.48 | 0.07-0.65 | 0.01-0.15 |
+| generalContactSpheresPerf | 101 | 15 | 0.15 | **100** | 0.02 |
+
+The vectors are allocated in the initialization of a solve, a fixed number independent of the steps; in the steps none.
+`Vector` and `ResizableVector` do the same arithmetic since L2 (§3.6). So the merge has nothing to save: **RG5.1.2 is
+not done.** What remains of the classes - the virtual `SetNumberOfItems`, `AllocateMemory` and the destructor, needed
+by `LinkedDataVector` and `ResizableConstVector` - costs a call through the virtual table where the type is not known,
+a few nanoseconds per item and evaluation, below the noise of the performance tests.
+
+`operator[]` of `VectorBase` and `ConstSizeVectorBase` is defined in the class and therefore inline; its only cost is
+the range check of the regular module, which the fast module does not have. The kernels that matter loop over pointers
+since L1-L3, so the checks no longer sit in the inner loops (§3.6: regular and fast equal for `Vector +=` up to a
+factor 2 at n = 500, which is the vectorization of the fast module). **RG5.1.4 needs no change.**
+
+`generalContactSpheresPerf` allocates about 100 arrays per step: `GeneralContact` (the search tree or the lists of
+contacts) - a separate question.
+
 ## 4. Eigen as the reference
 
 Eigen 3.3.7 compiled by MSVC is not a reference for every small product: `Matrix3d * Matrix3d` takes 41 ns with

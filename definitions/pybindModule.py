@@ -371,6 +371,8 @@ pb.DefDataAccess('special.solver.parallelSubstitutionPivotThreshold','the diagon
                         dataType='float', isTopLevel = True)
 pb.DefDataAccess('special.solver.parallelSubstitutionSerial','the number of factorizations with parallelSubstitution whose substitution ran serially, as a pivot coupled two subtrees, or that fell back to SparseLU, as the factorization failed; it can be set to 0 (#3432)',
                         dataType='int', isTopLevel = True)
+pb.DefDataAccess('special.solver.superElementSparseMassMatrix','experimental; if True (=default), ObjectFFRF returns its mass matrix as sparse triplets - the stored triplets of massMatrixFF and the nonzeros of the coupling blocks - instead of a dense matrix of all its coordinates, which costs time and memory proportional to the square of the number of mesh coordinates; False: the dense matrix; a mass matrix user function or a dense massMatrixFF always uses the dense matrix (#2183)',
+                        dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.solver.sparseSolveByRows','if True (=default), EigenSparse copies the factors of SparseLU into rows after each factorization and solves forward and backward with them, which is about twice as fast as the supernodal solve of Eigen for the small supernodes of multibody systems; False: the solve of Eigen (#3441)',
                         dataType='bool', isTopLevel = True)
 pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp

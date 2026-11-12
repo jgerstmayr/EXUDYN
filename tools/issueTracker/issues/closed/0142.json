@@ -1,0 +1,15 @@
+{
+  "number": 142,
+  "title": "Vector performance",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "check Vector operator[], and ConstVector performance regarding inlining",
+  "dateRaised": "2019-05-21",
+  "deadline": "2019-07-20",
+  "dateResolved": "2026-11-12 02:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Checked: operator[] of the vectors is defined in the class and inline; its only cost is the range check of the regular module, which the pointer loops of the hot kernels avoid; no change.",
+  "resolvedInVersion": "1.13.580"
+}

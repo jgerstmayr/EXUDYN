@@ -1,0 +1,16 @@
+{
+  "number": 3446,
+  "title": "Where a new setting goes: simulationSettings or visualizationSettings by default, exudyn.special for experimental flags and settings outside the solver",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "Settings are preferably located in simulationSettings or visualizationSettings, which keeps them consistent with the model, reproducible and stored with it. exudyn.special is for experimental flags and for settings that do not belong to one simulation, e.g. operations outside the solver routines. Written as the common way, with exceptions, into CLAUDE.md and CODING_STYLE.md.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 01:14",
+  "resolvedAuthor": "Claude-JG",
+  "file": "CLAUDE.md",
+  "releaseNotes": "CODING_STYLE.md and CLAUDE.md: a new setting goes into simulationSettings or visualizationSettings as the common way; exudyn.special is for experimental flags and for settings acting outside the solver routines.",
+  "resolvedInVersion": "1.13.579"
+}

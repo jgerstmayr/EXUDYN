@@ -663,6 +663,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("parallelSubstitutionPivotThreshold", &PySpecialSolver::parallelSubstitutionPivotThreshold)
 		.def_readwrite("parallelSubstitutionSerial", &PySpecialSolver::parallelSubstitutionSerial)
 		.def_readwrite("sparseSolveByRows", &PySpecialSolver::sparseSolveByRows)
+		.def_readwrite("superElementSparseMassMatrix", &PySpecialSolver::superElementSparseMassMatrix)
 		.def_static("PardisoInfo", []() {
 			std::string message;
 			bool available = PardisoLibrary::Load(message);

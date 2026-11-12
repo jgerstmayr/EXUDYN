@@ -85,6 +85,7 @@ public:
     Real parallelSubstitutionPivotThreshold; //!< the diagonal pivot threshold of that factorization (#3432)
     Index parallelSubstitutionSerial;       //!< factorizations solved serially: a pivot coupled the subtrees, or the factorization failed (#3432)
     bool sparseSolveByRows;                 //!< EigenSparse solves with the rows of its factors instead of Eigen's supernodal solve (#3441)
+    bool superElementSparseMassMatrix;      //!< ObjectFFRF returns its mass matrix as triplets instead of a dense matrix (#2183)
 
     PySpecialSolver()
     {
@@ -109,6 +110,7 @@ public:
         parallelSubstitutionPivotThreshold = 1e-3;
         parallelSubstitutionSerial = 0;
         sparseSolveByRows = true;
+        superElementSparseMassMatrix = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -134,6 +136,7 @@ public:
         os << "  parallelSubstitutionPivotThreshold = " << parallelSubstitutionPivotThreshold << "\n";
         os << "  parallelSubstitutionSerial = " << parallelSubstitutionSerial << "\n";
         os << "  sparseSolveByRows = " << sparseSolveByRows << "\n";
+        os << "  superElementSparseMassMatrix = " << superElementSparseMassMatrix << "\n";
 
         os << "\n";
     }

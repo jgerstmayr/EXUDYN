@@ -1,0 +1,16 @@
+{
+  "number": 3444,
+  "title": "exudev perf --history-add expands wildcards",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "In cmd.exe a wildcard reaches exudev unexpanded, so 'exudev perf --history-add performanceLog_V1.13.5*' gave the literal pattern to performanceHistory.py, which failed with OSError (invalid argument). exudev now expands wildcards itself, as given or relative to python/logs/performance; the help names it. The logs of 1.13.190 to 1.13.548 (Python 3.13, regular and fast module) were added to performanceHistory.json.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11",
+  "dateResolved": "2026-11-12 00:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev perf --history-add expands wildcards itself (cmd.exe passes them on unexpanded), as given or relative to python/logs/performance.",
+  "resolvedInVersion": "1.13.577"
+}

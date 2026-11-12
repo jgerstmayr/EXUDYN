@@ -89,6 +89,38 @@ namespace EXUmath {
 		}
 
 
+		//! sparse mode only: append the nonzero entries of a dense matrix as triplets, its row i at ltg[rowOffset+i] and its
+		//! column j at ltg[columnOffset+j]; transposed: the transposed matrix is appended at these offsets (#2183)
+		template<class TMatrix>
+		void AppendSubmatrixAsTriplets(const TMatrix& matrix, const ArrayIndex& ltg, Index rowOffset, Index columnOffset,
+			bool transposed = false)
+		{
+			ResizableArray<Triplet>& triplets = sparseTripletMatrix.GetTriplets();
+			for (Index i = 0; i < matrix.NumberOfRows(); i++)
+			{
+				for (Index j = 0; j < matrix.NumberOfColumns(); j++)
+				{
+					Real value = matrix(i, j);
+					if (value != 0.)
+					{
+						if (!transposed) { triplets.AppendPure(Triplet(ltg[rowOffset + i], ltg[columnOffset + j], value)); }
+						else { triplets.AppendPure(Triplet(ltg[rowOffset + j], ltg[columnOffset + i], value)); }
+					}
+				}
+			}
+		}
+
+		//! sparse mode only: append the triplets of a sparse matrix, its row at ltg[rowOffset+row] and its column at
+		//! ltg[columnOffset+column] (#2183)
+		void AppendTripletsWithOffset(const SparseTripletMatrix& matrix, const ArrayIndex& ltg, Index rowOffset, Index columnOffset)
+		{
+			ResizableArray<Triplet>& triplets = sparseTripletMatrix.GetTriplets();
+			for (const Triplet& item : matrix.GetTriplets())
+			{
+				triplets.AppendPure(Triplet(ltg[rowOffset + item.row()], ltg[columnOffset + item.col()], item.value()));
+			}
+		}
+
 		//! set both matrices to zero (in dense matrix, cols=rows=0; in sparse matrix, the vector of items is erased)
 		void ClearAllMatrices() {
 			//denseMatrix.SetAll(0); //this would be very slow if repeatedly called

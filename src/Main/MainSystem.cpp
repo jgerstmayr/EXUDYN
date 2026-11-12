@@ -1300,9 +1300,20 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			GetCSystem().ComputeObjectODE2LHS(temp, object, local);
 			return EPyUtils::ToPython(local);
 		case ComputeItemType::MassMatrix:
+		{
+			//local indices, so that the triplets of a body returning a sparse mass matrix are local as well (#2183)
+			Index nODE2 = cSystemData.GetLocalToGlobalODE2()[number].NumberOfItems();
+			ArrayIndex localToLocal;
+			for (Index i = 0; i < nODE2; i++) { localToLocal.Append(i); }
+			temp.massMatrix.ClearAllMatrices();
 			temp.massMatrix.SetUseDenseMatrix(true);
-			body->ComputeMassMatrix(temp.massMatrix, cSystemData.GetLocalToGlobalODE2()[number]);
-			return EPyUtils::ToPython(temp.massMatrix.GetInternalDenseMatrix());
+			body->ComputeMassMatrix(temp.massMatrix, localToLocal);
+			if (temp.massMatrix.UseDenseMatrix()) { return EPyUtils::ToPython(temp.massMatrix.GetInternalDenseMatrix()); }
+			matrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
+			matrix.SetAll(0.);
+			temp.massMatrix.GetInternalSparseTripletMatrix().AddToDenseMatrix(matrix);
+			return EPyUtils::ToPython(matrix);
+		}
 		case ComputeItemType::AlgebraicEquations:
 		case ComputeItemType::ConstraintDrift:
 			GetCSystem().ComputeObjectAlgebraicEquations(temp, number, local);

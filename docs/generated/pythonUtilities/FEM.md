@@ -354,7 +354,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 - **class function description**: optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFsparseMassMatrixTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFsparseMassMatrixTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM)
 
 
 (sec-module-fem-class-objectffrfreducedorderinterface)=

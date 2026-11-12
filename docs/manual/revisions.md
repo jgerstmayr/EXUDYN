@@ -33,7 +33,10 @@ rows of its factors, about twice as fast as the solve of Eigen (#3441); `exu.spe
 switches back. `view0.scene.hideMbs` ... `view3.scene.hideMbs` leave the graphics of chosen systems out of a view
 (#3442). The raytracer always balances its tiles dynamically over its threads, so it reaches its
 best time with `raytracer.numberOfThreads` near the number of logical processors (#3439); `raytracer.numberOfThreads = 0`,
-the new default, selects that number (#3445).
+the new default, selects that number (#3445). `ObjectFFRF` gives its mass matrix to the solver as sparse triplets,
+8-20 times faster for meshes of some hundred to thousand nodes; `exu.special.solver.superElementSparseMassMatrix = False`
+switches back (experimental); `mbs.ComputeItem(body, exu.ComputeItemType.MassMatrix)` also works for a body with a
+sparse mass matrix (#2183).
 
 **Screws in the graphics**: `graphics.ScrewThread` draws external and internal threads, single- or multi-start, right- or
 left-handed, with the metric, triangular, trapezoidal or square profile or one given as points, cut, chamfered or running

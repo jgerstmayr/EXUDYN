@@ -1,0 +1,15 @@
+{
+  "number": 2183,
+  "title": "SparseTripletMatrix",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-11-12 02:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectFFRF gives its mass matrix as sparse triplets (8-20 times faster for meshes of some hundred to thousand nodes), with exu.special.solver.superElementSparseMassMatrix = False as fallback; MatrixContainer appends dense submatrices and triplet matrices with offsets; ComputeItem returns the mass matrix of bodies with sparse mass matrices.",
+  "resolvedInVersion": "1.13.581"
+}

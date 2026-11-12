@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 555 | 1.13.579 |
+| 1.13 | Newborn | 558 | 1.13.582 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.582** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
+  - description: revision2026c step RG13.1: before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
+  - **notes:** python/testing/solverBaseline.py measures the solvers on 13 models, five solvers, dense and sparse, full and modified Newton, two step sizes and 1 and 4 threads, in the regular or the fast module; the baseline of 2026-11-12 is in docs/dev/design/solverBaseline.md.
+  - date resolved: **2026-11-12 02:10**, date raised: 2026-10-16
+- **1.13.581** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` SparseTripletMatrix (#2183)
+  - description: add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder
+  - **notes:** ObjectFFRF gives its mass matrix as sparse triplets (8-20 times faster for meshes of some hundred to thousand nodes), with exu.special.solver.superElementSparseMassMatrix = False as fallback; MatrixContainer appends dense submatrices and triplet matrices with offsets; ComputeItem returns the mass matrix of bodies with sparse mass matrices.
+  - date resolved: **2026-11-12 02:10**, date raised: 2026-01-04
+- **1.13.580** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` Vector performance (#142)
+  - description: check Vector operator\[\], and ConstVector performance regarding inlining
+  - **notes:** Checked: operator\[\] of the vectors is defined in the class and inline; its only cost is the range check of the regular module, which the pointer loops of the hot kernels avoid; no change.
+  - date resolved: **2026-11-12 02:10**, date raised: 2019-05-21
 - **1.13.579** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Where a new setting goes: simulationSettings or visualizationSettings by default, exudyn.special for experimental flags and settings outside the solver (#3446)
   - description: Settings are preferably located in simulationSettings or visualizationSettings, which keeps them consistent with the model, reproducible and stored with it. exudyn.special is for experimental flags and for settings that do not belong to one simulation, e.g. operations outside the solver routines. Written as the common way, with exceptions, into CLAUDE.md and CODING\_STYLE.md.
   - **notes:** CODING\_STYLE.md and CLAUDE.md: a new setting goes into simulationSettings or visualizationSettings as the common way; exudyn.special is for experimental flags and for settings acting outside the solver routines.

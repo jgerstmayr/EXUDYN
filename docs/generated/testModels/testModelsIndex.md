@@ -177,6 +177,7 @@ numericalInverseKinematicsTest
 objectFFRFforceVectorTest
 objectFFRFreducedOrderAccelerations
 objectFFRFreducedOrderTest
+objectFFRFsparseMassMatrixTest
 objectFFRFTest
 objectFFRFTest2
 objectGenericODE2Test

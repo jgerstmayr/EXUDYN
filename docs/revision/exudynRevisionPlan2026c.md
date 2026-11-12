@@ -52,9 +52,10 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The baseline of the solvers** (RG5.8.1), measured by python/testing/solverBaseline.py; it decides on the total coordinates (RG5.8.2).
-3. **The larger open work**, once the next release is planned: the linear algebra benchmark (RG5.1), the plugin
-   interface (RG8).
+2. **The decision on the total coordinates** (RG5.8.2), on the baseline of docs/dev/design/solverBaseline.md.
+3. **The fixed-size matrices** (RG5.2), after the maintainer's evaluation of docs/dev/design/linalgFixedSize.md; the
+   interfaces of the superelement markers (RG5.4.2).
+4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -63,11 +64,10 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.1 Write a linear algebra micro-benchmark that every build carries (2 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
-  - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
+  - RG5.4 Store the superelement matrices as sparse triplets for larger meshes (2 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
-  - RG5.8 Total coordinates, only if they give a performance gain (2 open sub-steps)
+  - RG5.8 Total coordinates, only if they give a performance gain (1 open sub-step)
   - RG5.9 Sparse solvers: MKL PARDISO loaded at run time, the threads of the factorization, the back-substitution
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
   - RG5.11 Raytracer: threads parallel to the solver, and its scaling with the number of threads (1 open sub-step)
@@ -112,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 13 | Performance |
+| RG5 | OPEN | 11 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -497,7 +497,7 @@ Remark (maintainer 2026-11-09, from RG11.7, #2746): objects that compute from th
 
 Remark (2026-11-10, #2884): the 3D joints have analytic derivatives since revision2026c step RG11.6.3; what remains of their Jacobian and reaction forces is the kinematics and Jacobians of the markers and their projection.
 
-### **OPEN_RG5.1** Write a linear algebra micro-benchmark that every build carries
+### **CLOSED_RG5.1** Write a linear algebra micro-benchmark that every build carries
 
 `exudyn.special.RunLinalgBenchmark()`: the real operations - `Vector` add, scale and `MultAdd`, `SlimVector` and
 `Matrix3D` products, `ConstSizeMatrix` and matrix-vector products - over a size sweep across
@@ -508,15 +508,19 @@ The results of the benchmark, and a run before and after each step that changes 
 
 Every run of the benchmark covers the regular and the fast module (maintainer 2026-11-11: both cases must be known); the linear algebra that matters is that of small systems - the local residuals and Jacobians of objects, markers and connectors, below 500 - and the hand-over of the local Jacobians to Eigen's sparse solvers; Eigen is the reference; local optimizations inside the linalg classes first, global changes second.
 
+CLOSED 2026-11-12 with RG5.1.2 and RG5.1.4: the benchmark stays in every build; the evidence for the fixed-size matrices goes on in RG5.2.
+
 #### **CLOSED_RG5.1.1** Measure the products of HomogeneousTransformation with and without the no-rotation flag
 
 $\Hm\vv$, $\Hm_1\Hm_2$, $\Hm^{-1}$, `HasNoRotation` (since #2810): is skipping the rotation a gain or does the branch cost more.
 
 CLOSED 2026-11-11 (#3405): a standalone benchmark with the options of setup.py, the flag on and off: the flag saves 44 % of H*v and 36 % of H1*H2 for a translation, costs 4 % for H1*H2 with rotation (41 % when the two alternate at random) - kept. Invert read the translation through a reference while writing it; written with locals, GetInverse takes 1.0 ns instead of 2.5 to 7.7 ns, the arithmetic the same. [log](exudynRevisionLog2026c.md#rg2-9-4)
 
-#### **OPEN_RG5.1.2** Merge ResizableVector into Vector and make LinkedDataVector free of virtual calls, if the benchmark shows a gain
+#### **CLOSED_RG5.1.2** Merge ResizableVector into Vector and make LinkedDataVector free of virtual calls, if the benchmark shows a gain
 
 From #707.
+
+CLOSED 2026-11-12, not done: the allocations per step of the ten performance models are 0.00-0.48 vectors per step, all in the initialization of a solve (exudyn.special.InfoStat, linalgBenchmark.md section 3.10); the merge has nothing to save, so no switch back was built. [log](exudynRevisionLog2026c.md#rg5-8-1)
 
 #### **CLOSED_RG5.1.3** Time CollectCurrentNodeMarkerData of NodeRigidBodyRotVecLG and optimize it
 
@@ -524,9 +528,11 @@ From #728.
 
 CLOSED 2026-11-11 (#3409): the rotation matrix computed once (G = A, Glocal = I), the coordinates read by pointer; a chain of 1000 bodies with RK44 and Lie group integration 0.725 s -> 0.571 s (-21 %), the results bitwise the same. [log](exudynRevisionLog2026c.md#rg5-1-3)
 
-#### **OPEN_RG5.1.4** Inline Vector::operator[] and ConstVector where the benchmark shows a gain
+#### **CLOSED_RG5.1.4** Inline Vector::operator[] and ConstVector where the benchmark shows a gain
 
 #142, #161, #710.
+
+CLOSED 2026-11-12 (#142), no change: operator[] of VectorBase and ConstSizeVectorBase is defined in the class and inline; its cost is the range check of the regular module, which the pointer loops of L1-L3 keep out of the kernels (linalgBenchmark.md section 3.10). #161 (SlimArray specializations) and #710 (CollectCurrentNodeData of the rigid-body nodes) go to RG5.2. [log](exudynRevisionLog2026c.md#rg5-8-1)
 
 #### **CLOSED_RG5.1.5** Forbid the copy of LinkedDataVector
 
@@ -582,6 +588,8 @@ transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; stee
 
 Maintainer 2026-11-12: an evaluation and a recommendation first; one point is certainly matrices of fixed rows and columns instead of ConstSizeMatrix, which reserves a size but can take any size during the computation (handy, but slow). Evaluation 2026-11-12: docs/dev/design/linalgFixedSize.md - after the local recommendations L1-L6 of RG5.1 the 3x3 products are as fast as a fixed-size prototype; remaining gaps of compile-time sizes: 6x6 products 2.2 times, 6x6 times vector 1.7, J^T K J at 3 x 6 1.7, short ConstSizeVector operations 3-4 times; Eigen fixed sizes rejected (3.3.7/5.0.1 with MSVC slower than the prototype). Recommended: first a profile of ODE2RHS in the rigid-body chains (bodies, markers, connectors), then SlimMatrix<T, rows, columns> with conversions to ConstSizeMatrix, Matrix6D first, Matrix3D behind a compile switch, the rigid body templated on its rotation coordinates only if the profile shows its share; proposed sub-steps in the note, waiting for the maintainer.
 
+#161, #710 from RG5.1.4.
+
 ### **CLOSED_RG5.3** Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
 
 CLOSED 2026-11-01 (maintainer 2026-11-01: the Jacobians revised as a whole): moved to RG9.11.5.
@@ -590,6 +598,20 @@ CLOSED 2026-11-01 (maintainer 2026-11-01: the Jacobians revised as a whole): mov
 
 #2182 (the mass matrix of `ObjectFFRFreducedOrder`), #2183 (adding dense and transposed submatrices to
 `SparseTripletMatrix`), #2184 (`MarkerSuperElementRigid` with precomputed transformations).
+
+Maintainer 2026-11-12: try, with a fallback option; check whether sparse triplets in the interface need a change of the initialization of the Python objects. Analysis: docs/dev/design/superElementSparse.md - no change of the Python side needed (FEM.py transports triplets already); #2182 gains nothing (proposed to close); the cost is in the mass matrix and the numerical Jacobian of ObjectFFRF and in the markers on reduced-order bodies (#2184).
+
+#### **CLOSED_RG5.4.1** The mass matrix of ObjectFFRF as sparse triplets, with a fallback
+
+#2183. CLOSED 2026-11-12 (#2183): MatrixContainer::AppendSubmatrixAsTriplets and AppendTripletsWithOffset; CObjectFFRF::ComputeMassMatrix appends its blocks and the triplets of massMatrixFF in global indices if exu.special.solver.superElementSparseMassMatrix (default True, experimental); ComputeItem(..., MassMatrix) for sparse mass matrices; mass matrix 8-20 times faster (1525 nodes: 1.571 -> 0.080 s for 20 steps), total 6-13 %; test model objectFFRFsparseMassMatrixTest.py. [log](exudynRevisionLog2026c.md#rg5-8-1)
+
+#### **OPEN_RG5.4.2** Precompute the interface sums of MarkerSuperElementRigid and MarkerSuperElementPosition on ObjectFFRFreducedOrder
+
+#2184. The sums over the interface nodes are linear in the modal coordinates with constant weights; computed once at Assemble (a new CMarker::InitializeMarker), a marker costs O(nModes) instead of O(nodes x nModes); both rotation variants; a fallback flag; a performance case with interfaces of 500-2000 nodes (docs/dev/design/superElementSparse.md section 5.1).
+
+#### **OPEN_RG5.4.3** An analytic Jacobian of ObjectFFRF as sparse triplets
+
+#3447. The numerical Jacobian is the largest cost of ObjectFFRF on larger meshes after #2183 (7.9 of 24 s for 1525 nodes).
 
 ### **OPEN_RG5.5** Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 
@@ -646,9 +668,11 @@ CLOSED 2026-11-03 (#3232 closed, won't fix; maintainer 2026-11-03): not relevant
 
 From group RG13 (closed 2026-11-09; maintainer: total coordinates only if a performance gain is expected). Total coordinates (reference plus current) beside the Current and Reference configurations, in the system data, the solvers, the items and the user functions. Today every item adds the reference to the current coordinates itself; the total coordinates would be formed once per update, at the cost of one vector addition and its memory. Only done if the baseline shows that the repeated additions cost more than that. The decision between total and relative coordinates in the user functions (RG7.3.4 point 13, userFunctionBoundary.md section 10) follows from it.
 
-#### **OPEN_RG5.8.1** Measure the solvers on more models, solvers and configurations, as the baseline
+#### **CLOSED_RG5.8.1** Measure the solvers on more models, solvers and configurations, as the baseline
 
 #3002, moved from RG13.1. Rigid multibody, flexible bodies, contact, large systems; implicit and explicit solvers; dense and sparse, modified Newton, step sizes, multithreading - so that the cost of an additional vector addition per step is visible. python/testing/solverBaseline.py, first run by the timer of 2026-11-10 04:00.
+
+CLOSED 2026-11-12 (#3002): solverBaseline.py repaired (the drift check of TrapezoidalIndex2 off, explicit solvers skipped for models with constraints, the ratios in the summary, the module in the file name) and run on both modules: 420 cases each, none failed; docs/dev/design/solverBaseline.md. Fast module 5-25 % faster; 4 threads slower up to 42 coordinates, faster from about 300; EigenDense 2.6-18 times slower at 400-650 coordinates; full Newton 1.2-8.6 times; a vector addition of all coordinates per evaluation is 0.06 % of a step of the cheapest case. [log](exudynRevisionLog2026c.md#rg5-8-1)
 
 #### **OPEN_RG5.8.2** Evaluate whether and how total coordinates give a performance gain
 
