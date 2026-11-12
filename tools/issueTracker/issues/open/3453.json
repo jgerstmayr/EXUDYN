@@ -1,0 +1,11 @@
+{
+  "number": 3453,
+  "title": "Nonlinear finite elements: 4- and 10-node tetrahedra",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HUGE",
+  "description": "Geometrically nonlinear solid finite elements in Exudyn, linear (4 nodes) and quadratic (10 nodes) tetrahedra on NodePoint coordinates, with a mass matrix, the internal forces and an analytic Jacobian, for meshes imported through FEMinterface (NGsolve, Abaqus); they give fully nonlinear reference solutions for the reduced-order and FFRF bodies (#3451) and the very large sparse systems for which PARDISO is expected to pay.",
+  "dateRaised": "2026-11-12",
+  "deadline": "2027-05-11"
+}

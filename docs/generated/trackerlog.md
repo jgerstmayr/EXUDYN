@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.589.dev1
+- Exudyn version = 1.13.590.dev1
 - last change = 2026-11-12
-- Number of issues = 3453
-- Number of resolved issues = 3366 (589 in current version)
+- Number of issues = 3455
+- Number of resolved issues = 3367 (590 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,8 +9039,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` The reaction forces of a joint on a MarkerSuperElementPosition of ObjectFFRF dominate larger meshes (#3452)
-  - description: On an NGsolve block of 1525 nodes (4582 coordinates) as ObjectFFRF on a SphericalJoint through a MarkerSuperElementPosition, 20 steps of GeneralizedAlpha with modified Newton: the solver timer reactionForces (CSystem::ComputeODE2ProjectedReactionForces) takes 12.3 of 14.2 s, 0.14 s per Newton iteration, after the analytic Jacobian of ObjectFFRF (\#3447); the cost is to be located - the Jacobian of the constraint through the marker on all coordinates of the body - and removed.
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` GeneralContact allocates about 100 arrays per step (#3454)
+  - description: The allocation count of solverBaseline.py (RG5.8.1) shows about 100 array allocations per time step in the GeneralContact model, while the other models allocate only during the initialization; the cause is to be located and, where straightforward, the arrays kept between steps.
+  - date raised: 2026-11-12
+- `EXTENSION` `HUGE EFF` `raised by: Claude-JG` Nonlinear finite elements: 4- and 10-node tetrahedra (#3453)
+  - description: Geometrically nonlinear solid finite elements in Exudyn, linear (4 nodes) and quadratic (10 nodes) tetrahedra on NodePoint coordinates, with a mass matrix, the internal forces and an analytic Jacobian, for meshes imported through FEMinterface (NGsolve, Abaqus); they give fully nonlinear reference solutions for the reduced-order and FFRF bodies (\#3451) and the very large sparse systems for which PARDISO is expected to pay.
   - date raised: 2026-11-12
 - `CHECK` `LOW EFF` `raised by: Claude-JG` MarkerSuperElementRigid: the rotation Jacobian without useAlternativeApproach leaves out the tangent operator TexpSO3 (#3451)
   - description: With rotationsExponentialMap \> 0 and experimental.markerSuperElementRigidTexpSO3 (default), the rotation Jacobian of MarkerSuperElementRigid is multiplied by the tangent operator TexpSO3 of the weighted rotation only with useAlternativeApproach = True; with False the Jacobian of the weighted rotation is used without it, while the angular velocity applies it (rotationsExponentialMap = 2). The Jacobian then differs from the derivative of the angular velocity by TexpSO3 - I, which is small for small deformations; to be checked whether the Jacobian should include it in both approaches (found in \#3450).
