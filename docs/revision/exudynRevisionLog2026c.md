@@ -6520,6 +6520,22 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg6-28"></a>
+### RG6.28 — GraphicsMaterialList reads the predefined materials from the settings (2026-11-13, #3490)
+
+*(Maintainer 2026-11-13: do the three suggested steps in this order.)*
+
+- MainGraphicsMaterialList::CopyFromVisSettings (declared, never implemented) copies raytracer.material0-9 into the
+  list; IndexOrName2Index (so Get, GetDict, [], Set and the renderer's GetDictionary) and SetMaterial call it first,
+  and Print. Before, the list was refreshed only when the raytracer drew an image: Get after a change of the settings
+  gave the old values, and Set of any of the ten wrote the stale values of all ten back into the settings.
+- Found with it: GetDict, Set with a dict and so the renderer's GetDictionary/SetDictionary left out the roughness
+  of #3473; added.
+- rendererMaterialsTest.py (new, reference 9): a change in the settings through Get, GetDict, [] and GetDictionary;
+  Set of chrome keeps a change of steel in the settings; a material renamed in the settings found by its name; the
+  roughness through GetDict, Set and SetDictionary; an appended material drawn with the color 1010.
+- introductionAdvanced.md: either way changes a predefined material (was: one of the two ways only).
+
 <a id="rg12-75"></a>
 ### RG12.75 — the Python solvers of exudyn.symbolics without a sparse matrix per residual (2026-11-13, #3498)
 

@@ -73,8 +73,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
   - RG5.13 Show the performance of the releases in the documentation, generated from performanceHistory.json
   - RG5.14 Run the main tasks of a residual and of an explicit stage in fewer parallel regions (5 open sub-steps)
-- **RG6** Graphics and rendering
-  - RG6.28 GraphicsMaterialList reads the predefined materials from the visualization settings
 - **RG7** Python user items
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
 - **RG8** Compiled C++ user items
@@ -118,7 +116,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 1 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -1016,7 +1014,7 @@ CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tre
 
 #3494. With fewer regions the system size from which threads pay drops; the cost threshold of ParallelFor (costs < 1000) and the advice for numberOfThreads measured and adjusted.
 
-## **OPEN_RG6** Graphics and rendering
+## **CLOSED_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -1498,9 +1496,11 @@ CLOSED 2026-11-13 (#3473): material.roughness, raytracer.reflectionSamples; test
 
 CLOSED 2026-11-13 (#3488): the defaults measured and kept; the class descriptions and 38 descriptions of the raytracer settings and materials; the Raytracing section of introductionAdvanced.md rewritten with usage, cost and materials, cross-referenced. [log](exudynRevisionLog2026c.md#rg6-27)
 
-### **OPEN_RG6.28** GraphicsMaterialList reads the predefined materials from the visualization settings
+### **CLOSED_RG6.28** GraphicsMaterialList reads the predefined materials from the visualization settings
 
 #3490. Found in RG6.27: SC.renderer.materials keeps a copy of raytracer.material0-9, refreshed only when the raytracer draws; Get after a change of the settings returns the old values, and Set writes them back. Get, GetDict, [] and GetDictionary read the first ten from the settings; a test model of both ways.
+
+CLOSED 2026-11-13 (#3490): CopyFromVisSettings before every access and Set; roughness in GetDict, Set with a dict and the renderer's dictionary; rendererMaterialsTest.py. [log](exudynRevisionLog2026c.md#rg6-28)
 
 ## **OPEN_RG7** Python user items
 

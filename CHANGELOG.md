@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 603 | 1.13.632 |
+| 1.13 | Newborn | 604 | 1.13.633 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.633** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GraphicsMaterialList.Get returns old values after raytracer.materialN was changed in the settings (#3490)
+  - description: SC.renderer.materials holds the ten predefined materials as a copy of visualizationSettings.raytracer.material0-9, refreshed only when the raytracer draws an image. After SC.visualizationSettings.raytracer.material4.reflectivity = 0.5, SC.renderer.materials.Get('chrome').reflectivity is still 0.25, and a following Set('chrome', ...) writes 0.25 back into the settings, so the change is lost (found while writing \#3488). Get, GetDict, \[\] and GetDictionary shall read the first ten from the settings.
+  - **notes:** SC.renderer.materials reads the ten predefined materials from visualizationSettings.raytracer.material0-9, so a change made in the settings is seen by Get, GetDict and the renderer's dictionary, and Set of one material keeps the changes of the others; GetDict, Set with a dict and the renderer's dictionary carry the roughness.
+  - date resolved: **2026-11-13 12:38**, date raised: 2026-11-13
 - **1.13.632** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Python solvers of exudyn.symbolics build a scipy sparse matrix in every residual, also for small systems (#3498)
   - description: Profiled in \#3497: SolveImplicitRungeKutta on a pendulum of 2 coordinates, 400 steps, 1.8 s, of which 1.1 s in creating scipy.sparse.csr\_matrix (19116 of them; the mass matrix requested as sparse in the residuals of the finite-difference Jacobian, systemModel.py). The symbolic test models that take 6-18 s spend most of their time there. A dense path below a size, or the mass matrix kept between evaluations when it is constant, would speed up the solvers of exudyn.symbolics for the small systems they are mostly used with.
   - **notes:** The Python solvers of exudyn.symbolics are up to two times faster for small systems: the residual uses the dense mass matrix up to 100 coordinates instead of building a sparse matrix each time, and NumpySystem converts a constant mass matrix to sparse only once.

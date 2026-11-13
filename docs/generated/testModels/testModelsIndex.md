@@ -208,6 +208,7 @@ relativeRotationTranslationMechanism
 rendererControlsTest
 rendererDictionaryTest
 rendererItemChangesTest
+rendererMaterialsTest
 restartFileTest
 resultsMonitorTest
 revoluteJointPrismaticJointTest

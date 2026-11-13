@@ -159,14 +159,13 @@ Materials act on faces (triangles, as in all `graphics` functions that create bo
 | 9 | `emission` | `emission`, `indexEmission` | light yellow, emitting |
 
 **Changing and adding materials.** The materials are kept in `SC.renderer.materials`, a GraphicsMaterialList, see
-{ref}`sec-graphicsmateriallist`. Its first ten are `raytracer.material0` to `material9`: `Set` writes into these
-settings, and the raytracer copies the settings into the list before every image. Change a predefined material in one
-of the two ways, not both in the same script:
+{ref}`sec-graphicsmateriallist`. Its first ten are `raytracer.material0` to `material9`: the list reads them from the
+settings, and `Set` writes into them, so either way changes a predefined material:
 
 ```python
 SC.visualizationSettings.raytracer.material4.reflectivity = 0.5   #chrome, by the settings
 #or by name, as VSettingsMaterial:
-chrome = SC.renderer.materials.Get('chrome')
+chrome = SC.renderer.materials.Get('chrome')                       #reflectivity 0.5 here
 chrome.roughness = 0.03
 SC.renderer.materials.Set('chrome', chrome)
 gold = SC.renderer.materials.New()                                 #a new material, index 10

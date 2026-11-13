@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.632.dev1
+- Exudyn version = 1.13.633.dev1
 - last change = 2026-11-13
 - Number of issues = 3499
-- Number of resolved issues = 3409 (632 in current version)
+- Number of resolved issues = 3410 (633 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9363,6 +9363,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` GraphicsMaterialList.Get returns old values after raytracer.materialN was changed in the settings (#3490)
-  - description: SC.renderer.materials holds the ten predefined materials as a copy of visualizationSettings.raytracer.material0-9, refreshed only when the raytracer draws an image. After SC.visualizationSettings.raytracer.material4.reflectivity = 0.5, SC.renderer.materials.Get('chrome').reflectivity is still 0.25, and a following Set('chrome', ...) writes 0.25 back into the settings, so the change is lost (found while writing \#3488). Get, GetDict, \[\] and GetDictionary shall read the first ten from the settings.
-  - date raised: 2026-11-13

@@ -59,8 +59,9 @@ public:
 	//!access with dictionary or SettingsMaterial
 	void PySetMaterial(py::object indexOrName, py::object material);
 
-	//! copying from/to visualizationSettings
-	void CopyFromVisSettings();
+	//! copying from/to visualizationSettings; the first ten materials ARE raytracer.material0-9, so every access
+	//! reads them from there first, as they may have been changed in the settings (#3490)
+	void CopyFromVisSettings() const;
 	void CopyToVisSettings() const;
 
 	//! get available number of materials

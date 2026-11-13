@@ -1826,6 +1826,7 @@ void MainRenderer::SetControlUserFunction(const py::object& function)
 //MainGraphicsMaterialList
 Index MainGraphicsMaterialList::IndexOrName2Index(py::object indexOrName) const
 {
+	CopyFromVisSettings(); //a name may have been changed in the settings (#3490)
 	const std::vector<VSettingsMaterial>& data = mainSystemContainer->GetVisualizationSystemContainer().materials;
 	Index i = -1;
 	if (EPyUtils::IsPyTypeInteger(indexOrName))
@@ -1855,6 +1856,7 @@ Index MainGraphicsMaterialList::IndexOrName2Index(py::object indexOrName) const
 
 void MainGraphicsMaterialList::SetMaterial(Index i, const VSettingsMaterial& material)
 {
+	CopyFromVisSettings(); //the other nine are written back below; they must not undo a change of the settings (#3490)
 	std::vector<VSettingsMaterial>& data = mainSystemContainer->GetVisualizationSystemContainer().materials;
 	if (i > (Index)data.size() - 1) { data.resize(i + 1); }
 	data[i] = material;
@@ -1879,6 +1881,7 @@ void MainGraphicsMaterialList::PySetMaterial(py::object indexOrName, py::object 
 		if (matDict.contains("specular")) { data[i].specular = py::cast<std::array<float, 3>>(matDict["specular"]); }
 		if (matDict.contains("shininess")) { data[i].shininess = py::cast<float>(matDict["shininess"]); }
 		if (matDict.contains("reflectivity")) { data[i].reflectivity = py::cast<float>(matDict["reflectivity"]); }
+		if (matDict.contains("roughness")) { data[i].roughness = py::cast<float>(matDict["roughness"]); }
 		if (matDict.contains("alpha")) { data[i].alpha = py::cast<float>(matDict["alpha"]); }
 		if (matDict.contains("ior")) { data[i].ior = py::cast<float>(matDict["ior"]); }
 		if (matDict.contains("emission")) { data[i].emission = py::cast<std::array<float, 3>>(matDict["emission"]); }
@@ -1912,6 +1915,7 @@ py::dict MainGraphicsMaterialList::PyGetMaterialDict(py::object indexOrName) con
 	matDict["specular"] = List3(mat.specular);
 	matDict["shininess"] = mat.shininess;
 	matDict["reflectivity"] = mat.reflectivity;
+	matDict["roughness"] = mat.roughness;
 	matDict["alpha"] = mat.alpha;
 	matDict["ior"] = mat.ior;
 	matDict["emission"] = List3(mat.emission);
@@ -1957,6 +1961,11 @@ void MainGraphicsMaterialList::Reset()
 
 
 
+void MainGraphicsMaterialList::CopyFromVisSettings() const
+{
+	mainSystemContainer->GetVisualizationSystemContainer().CopyMaterialsFromVisualizationSettings();
+}
+
 void MainGraphicsMaterialList::CopyToVisSettings() const
 {
 	const std::vector<VSettingsMaterial>& data = mainSystemContainer->GetVisualizationSystemContainer().materials;
@@ -1988,6 +1997,7 @@ Index MainGraphicsMaterialList::NumberOfItems() const
 
 void MainGraphicsMaterialList::Print(std::ostream& os) const
 {
+	CopyFromVisSettings();
 	Index cnt = 0;
 	for (auto item : mainSystemContainer->GetVisualizationSystemContainer().materials)
 	{
