@@ -6520,6 +6520,22 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg12-75"></a>
+### RG12.75 — the Python solvers of exudyn.symbolics without a sparse matrix per residual (2026-11-13, #3498)
+
+*(Maintainer 2026-11-13: do the three suggested steps in this order.)*
+
+- SymbolicSystemBase.ODE2ResidualLHS asked for the mass matrix as scipy.sparse.csr_matrix in every residual, also of
+  the finite-difference Jacobians: on a 2-coordinate pendulum, 400 steps of SolveImplicitRungeKutta, 19116 matrices
+  and 1.1 of 1.8 s. Up to _denseSizeLimit = 100 ODE2 coordinates the residual multiplies with the dense matrix now;
+  NumpySystem converts a constant mass matrix to sparse once. SymbolicSystem (from an mbs) has its own residual by
+  blocks and is not affected.
+- Alone: symbolicImplicitRungeKuttaTest 17.5 -> 9.9 s, symbolicTrapezoidalGGLStepSizeTest 10.9 -> 6.1 s,
+  symbolicTrapezoidalGGLTest 7.3 -> 3.5 s, symbolicSystemODE1AETest 2.2 -> 0.8 s; all results equal to their
+  references. The symbolic user item tests (6-8 s) are unchanged: their time is the Python user functions of
+  SolveDynamic, several thousand steps each. SlowTests() updated.
+- The test suites in both modules and pytest passed.
+
 <a id="rg10-37"></a>
 ### RG10.37 — the parallel test suite: long models first, one BLAS thread each, cheaper slow models (2026-11-13, #3497)
 

@@ -29,6 +29,10 @@ try:
 except ImportError:
     raise ImportError('exudyn.symbolics.systemModel needs scipy for its sparse matrices: pip install scipy')
 
+#up to this number of ODE2 coordinates, the residual multiplies with the dense mass matrix: building a scipy sparse
+#matrix for every residual cost more than the product, 60 % of SolveImplicitRungeKutta on a pendulum (#3498)
+_denseSizeLimit = 100
+
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = ['SymbolicSystemBase', 'NumpySystem', 'SymbolicKind', 'SymbolicLoad', 'SymbolicSystem', 'SystemVariables']
 
@@ -184,7 +188,7 @@ class SymbolicSystemBase:
         minus RHS), of size nODE2, without reaction forces"""
         (q, q_t, q_tt) = self._State(q, q_t, q_tt)
         forces = self.ODE2RHS(q, q_t, t) if y is None else self.ODE2RHS(q, q_t, t, y=y)
-        return self.MassMatrix(q, q_t, t, sparse=True) @ q_tt - forces
+        return self.MassMatrix(q, q_t, t, sparse=self.nODE2 > _denseSizeLimit) @ q_tt - forces
 
     def SystemResidual(self, q, q_t, q_tt, y, y_t, z, t, velocityLevel=False):
         """the residual of all equations as the implicit solver of Exudyn has it (#3134): [M q_tt - f + C_q^T z,
@@ -329,6 +333,7 @@ class NumpySystem(SymbolicSystemBase):
     def __init__(self, massMatrix, ode2RHS, initialState=None, massMatrixBlocks=None, ode1RHS=None,
                  initialStateODE1=None, constraints=None, constraintJacobian=None, numberOfConstraints=0):
         self._massMatrix = massMatrix
+        self._massMatrixSparse = None #the constant mass matrix as scipy sparse matrix, once it is needed
         self._forces = ode2RHS
         self.nODE2 = (len(initialState[0]) if initialState is not None else massMatrix.shape[0])
         self._initialState = initialState
@@ -389,7 +394,11 @@ class NumpySystem(SymbolicSystemBase):
         else:
             matrix = self._massMatrix
         if sparse:
-            return scipy.sparse.csr_matrix(matrix)
+            if callable(self._massMatrix):
+                return scipy.sparse.csr_matrix(matrix)
+            if self._massMatrixSparse is None: #a constant matrix is converted once (#3498)
+                self._massMatrixSparse = scipy.sparse.csr_matrix(matrix)
+            return self._massMatrixSparse
         return matrix.toarray() if scipy.sparse.issparse(matrix) else np.array(matrix, dtype=float)
 
     def MassMatrixTriplets(self, q=None, q_t=None, t=0.):

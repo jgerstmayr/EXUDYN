@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 602 | 1.13.631 |
+| 1.13 | Newborn | 603 | 1.13.632 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.632** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Python solvers of exudyn.symbolics build a scipy sparse matrix in every residual, also for small systems (#3498)
+  - description: Profiled in \#3497: SolveImplicitRungeKutta on a pendulum of 2 coordinates, 400 steps, 1.8 s, of which 1.1 s in creating scipy.sparse.csr\_matrix (19116 of them; the mass matrix requested as sparse in the residuals of the finite-difference Jacobian, systemModel.py). The symbolic test models that take 6-18 s spend most of their time there. A dense path below a size, or the mass matrix kept between evaluations when it is constant, would speed up the solvers of exudyn.symbolics for the small systems they are mostly used with.
+  - **notes:** The Python solvers of exudyn.symbolics are up to two times faster for small systems: the residual uses the dense mass matrix up to 100 coordinates instead of building a sparse matrix each time, and NumpySystem converts a constant mass matrix to sparse only once.
+  - date resolved: **2026-11-13 12:24**, date raised: 2026-11-13
 - **1.13.631** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The parallel test suite waits 70-90 s for a few long test models (#3497)
   - description: exudev test --parallel 32 takes 70-90 s because a few models take 20-40 s there: parameterConversionTest (30 s: the whole visualizationSettings dictionary converted three times for each of 24000 probes), symbolicImplicitRungeKuttaTest (28 s: references with more steps than needed, a solve done twice), abaqusImportTest (1 s alone, 21 s in parallel: the BLAS threads of every process on all cores), energiesFlexibleBodiesTest (12 s: 1 s of simulated time). The runner shall start the long models first and give every model one BLAS thread; the models shall be made cheaper where their checks allow it.
   - **notes:** The test suite runs faster in parallel: the long test models start first and every model uses one BLAS thread; parameterConversionTest (30 s to 1.7 s), symbolicImplicitRungeKuttaTest (28 s to 17.5 s) and energiesFlexibleBodiesTest (12 s to 2.3 s) take less time.

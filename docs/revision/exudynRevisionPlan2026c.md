@@ -92,7 +92,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
 - **RG12** Symbolic
   - RG12.71 Evaluate one source for the C++ items, the symbolic user items and their documentation (3 open sub-steps)
-  - RG12.75 Speed up the Python solvers of exudyn.symbolics for small systems: no sparse matrix per residual
 - **RG14** Uniform evaluation of symbolic systems on the CPU and the GPU
   - RG14.2 Evaluate a symbolic system by levels of numpy ufuncs on the CPU, for one state and for ensembles (1 open sub-step)
   - RG14.3 Run the arrays of the uniform evaluation by CuPy on the GPU
@@ -125,7 +124,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG9 | OPEN | 1 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | CLOSED | 0 | Misc |
-| RG12 | OPEN | 5 | Symbolic |
+| RG12 | OPEN | 4 | Symbolic |
 | RG13 | CLOSED | 0 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
 | RG19 | OPEN | 4 | Revision of the robotics submodule |
@@ -4048,9 +4047,11 @@ CLOSED 2026-11-02 (#3219 resolved): rigid markers, the friction of the built-in 
 
 CLOSED 2026-11-02 (#3220 resolved): _StepSize as the step size functions of the C++ solvers; symbolicSolversAdaptiveStepTest equal to SolveDynamic; a Newton failure still raises. [log](exudynRevisionLog2026c.md#rg12-74)
 
-### **OPEN_RG12.75** Speed up the Python solvers of exudyn.symbolics for small systems: no sparse matrix per residual
+### **CLOSED_RG12.75** Speed up the Python solvers of exudyn.symbolics for small systems: no sparse matrix per residual
 
 #3498. Found in RG10.37: 60 % of SolveImplicitRungeKutta on a 2-coordinate pendulum is the creation of scipy.sparse matrices in the residuals; a dense path below a size, or a constant mass matrix kept; measured on symbolicImplicitRungeKuttaTest, symbolicTrapezoidalGGLStepSizeTest and the symbolic user item tests, results unchanged.
+
+CLOSED 2026-11-13 (#3498): the dense mass matrix up to 100 ODE2 coordinates, a constant sparse one converted once; symbolicImplicitRungeKuttaTest 17.5 -> 9.9 s, symbolicTrapezoidalGGLStepSizeTest 10.9 -> 6.1 s, symbolicTrapezoidalGGLTest 7.3 -> 3.5 s, results unchanged. [log](exudynRevisionLog2026c.md#rg12-75)
 
 ## **CLOSED_RG13** Total coordinates
 

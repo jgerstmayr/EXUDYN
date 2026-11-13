@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.631.dev1
+- Exudyn version = 1.13.632.dev1
 - last change = 2026-11-13
 - Number of issues = 3499
-- Number of resolved issues = 3408 (631 in current version)
+- Number of resolved issues = 3409 (632 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` The Python solvers of exudyn.symbolics build a scipy sparse matrix in every residual, also for small systems (#3498)
-  - description: Profiled in \#3497: SolveImplicitRungeKutta on a pendulum of 2 coordinates, 400 steps, 1.8 s, of which 1.1 s in creating scipy.sparse.csr\_matrix (19116 of them; the mass matrix requested as sparse in the residuals of the finite-difference Jacobian, systemModel.py). The symbolic test models that take 6-18 s spend most of their time there. A dense path below a size, or the mass matrix kept between evaluations when it is constant, would speed up the solvers of exudyn.symbolics for the small systems they are mostly used with.
-  - date raised: 2026-11-13
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` contactPrimitivesTableTest differs on macOS ARM by 8.5e-4 (#3496)
   - description: On GitHub's macos-15 (arm64, clang) contactPrimitivesTableTest gives 10.521949247439636 against 10.5211014088147 on Windows, Linux x86-64 and Linux aarch64 (\#3495). The model has many impacts of spheres, cylinders, cones, a cube and an icosahedron, which amplify a difference in the last bits; find the first operation that differs on macOS (a math function, fused multiply-add of clang, an ordering), as \#2954 and \#2990 did for the earlier differences, and remove the model from UnresolvedOnMacOS.
   - date raised: 2026-11-13

@@ -416,10 +416,10 @@ def SlowTests():
     them is left running alone at the end (#3497)"""
 
     return {
-        'symbolicImplicitRungeKuttaTest.py': 17.5, #the solvers of exudyn.symbolics in Python
-        'symbolicTrapezoidalGGLStepSizeTest.py': 10.9,
+        'symbolicImplicitRungeKuttaTest.py': 9.9, #the solvers of exudyn.symbolics in Python
+        'symbolicTrapezoidalGGLStepSizeTest.py': 6.1,
         'symbolicUserTorsionalTurnsTest.py': 8.1,
-        'symbolicTrapezoidalGGLTest.py': 7.3,
+        'symbolicTrapezoidalGGLTest.py': 3.5,
         'symbolicUserContactFrictionTest.py': 6.9,
         'symbolicUserConnectorsTest.py': 6.9,
         'journalBearingTest.py': 6.2,
@@ -428,7 +428,6 @@ def SlowTests():
         'objectFFRFanalyticJacobianTest.py': 2.9,
         'symbolicUserRigidBodiesTest.py': 2.4,
         'energiesFlexibleBodiesTest.py': 2.3,
-        'symbolicSystemODE1AETest.py': 2.2,
         'convexConvexContactTest.py': 2.1,
         'contactPrimitivesTableTest.py': 1.8,
         'parameterConversionTest.py': 1.7,   #walks every parameter of every item and every setting
