@@ -42,10 +42,11 @@ fi
 #stdin: <local ref> <local sha> <remote ref> <remote sha>, one line per ref being pushed
 refused=0
 while read -r localRef localSha remoteRef remoteSha; do
-    #an empty local ref means a branch deletion; judge it by the remote ref instead
-    checkedRef="$localRef"
-    if [ -z "$checkedRef" ] || [ "$checkedRef" = "(delete)" ]; then
-        checkedRef="$remoteRef"
+    #what lands on GitHub is the remote ref, whatever the local branch is called: v2-dev:release/1.14
+    #creates release/1.14 and is allowed, a bare push of v2-dev creates v2-dev there and is refused (#3492)
+    checkedRef="$remoteRef"
+    if [ -z "$checkedRef" ]; then
+        checkedRef="$localRef"
     fi
 
     case "$checkedRef" in

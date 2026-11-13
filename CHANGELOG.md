@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 599 | 1.13.628 |
+| 1.13 | Newborn | 600 | 1.13.629 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.629** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pre-push hook refuses the rehearsal push v2-dev:release/X.Y (#3492)
+  - description: The hook judged a push to GitHub by the local ref, so git push github v2-dev:release/1.14 - the rehearsal command of RELEASE.md - was refused as a push of v2-dev. It judges the remote ref, what lands on GitHub; the local ref only if the remote one is empty.
+  - **notes:** The pre-push hook judges a push to GitHub by the ref it creates there, so git push github v2-dev:release/X.Y, the rehearsal of a release, is allowed, and a push of v2-dev itself is still refused.
+  - date resolved: **2026-11-13 10:28**, date raised: 2026-11-13
 - **1.13.628** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` AutoDiff expressions of the analytic connector Jacobians: measure their share, rewrite the costly ones (#3489)
   - description: For AutoDiff\<12\>, SlimVector operator expressions take 3.6-4.4 times one loop (\#3487). Measure the share of such expressions in the time of the connectors with analytic Jacobians (\#2884); if noticeable, write them as one loop or with MultAdd, bitwise or within rounding; otherwise close with the measurement.
   - **notes:** Measured: the connector forces by automatic differentiation take at most 1.4 % of a run (full Newton, a Jacobian in every iteration) and about 0.1 % with the default modified Newton; writing their vector expressions as loops would save at most about 1 %, so they stay as they are.

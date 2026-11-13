@@ -1,0 +1,16 @@
+{
+  "number": 3492,
+  "title": "pre-push hook refuses the rehearsal push v2-dev:release/X.Y",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The hook judged a push to GitHub by the local ref, so git push github v2-dev:release/1.14 - the rehearsal command of RELEASE.md - was refused as a push of v2-dev. It judges the remote ref, what lands on GitHub; the local ref only if the remote one is empty.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 10:28",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/hooks/pre-push",
+  "releaseNotes": "The pre-push hook judges a push to GitHub by the ref it creates there, so git push github v2-dev:release/X.Y, the rehearsal of a release, is allowed, and a push of v2-dev itself is still refused.",
+  "resolvedInVersion": "1.13.629"
+}

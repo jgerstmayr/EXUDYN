@@ -6520,6 +6520,17 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg10-35"></a>
+### RG10.35 — the pre-push hook judges the ref created on GitHub (2026-11-13, #3492)
+
+*(Maintainer 2026-11-13, at the release rehearsal: git push github v2-dev:release/1.14 was refused.)*
+
+- tools/hooks/pre-push checked the local ref (refs/heads/v2-dev) instead of the remote one (refs/heads/release/1.14),
+  so the rehearsal command of RELEASE.md could not pass; it checks the remote ref now, the local one only if the
+  remote ref is empty.
+- Checked with simulated stdin: v2-dev:release/1.14, master, a tag, deleting release/1.14 exit 0; a bare v2-dev,
+  deleting v2-dev, release/1.14:v2-dev exit 1; a push to origin is not checked.
+
 <a id="rg5-2-7-5"></a>
 ### RG5.2.7.5, RG5.2.7 — the AutoDiff expressions of the connector Jacobians measured, not rewritten (2026-11-13, #3489)
 

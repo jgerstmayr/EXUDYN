@@ -2545,6 +2545,12 @@ of absolute file names and of the defaults; removed by exudev clean. [log](exudy
 
 CLOSED 2026-11-13 (#3491): ties of dateResolved ordered by the stored version, the order the tracker wrote; test_issueTracker.py passes. [log](exudynRevisionLog2026c.md#rg6-27)
 
+### **CLOSED_RG10.35** The pre-push hook judges a push to GitHub by the ref it creates there
+
+#3492. Found by the maintainer at the release rehearsal (2026-11-13): git push github v2-dev:release/1.14 was refused, because the hook checked the local ref v2-dev.
+
+CLOSED 2026-11-13 (#3492): the remote ref is checked; simulated pushes: v2-dev:release/1.14, master, a tag and deleting release/1.14 pass; v2-dev, deleting v2-dev and release/1.14:v2-dev are refused; pushes to origin unchecked. [log](exudynRevisionLog2026c.md#rg10-35)
+
 ## **CLOSED_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of
