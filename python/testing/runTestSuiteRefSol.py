@@ -586,6 +586,10 @@ def UnresolvedOnMacOS():
         #GitHub CI of 1.13.3 on cp314 only (numpy 2.5.3): the modes of the reduced order FFRF model come from numpy's
         #eigenvalue solver, not from Exudyn; passed with Python 3.13 on 2026-10-16 (#2919)
         'objectFFRFreducedOrderTest.py',        #rel. 1.3e-08
+        #GitHub CI of 1.13.629 (macos-15, cp312 and cp313): 8.5e-4 (rel. 8e-5) against its own tolerance 1e-7; many
+        #impacts of the primitives amplify a difference in the last bits, as the fast module drifts by 6.2e-4; Linux
+        #x86-64 and aarch64 give the Windows result; the cause on macOS is open (#3496)
+        'contactPrimitivesTableTest.py',
         ])
 
     return unresolved

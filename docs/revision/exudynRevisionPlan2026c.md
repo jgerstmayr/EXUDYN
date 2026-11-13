@@ -67,6 +67,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG4** Implementation problems and bugs
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
+  - RG4.31 Find why contactPrimitivesTableTest differs on macOS ARM
 - **RG5** Performance
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
@@ -115,7 +116,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | CLOSED | 0 | Release and publication |
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 3 | Implementation problems and bugs |
+| RG4 | OPEN | 4 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 1 | Python user items |
@@ -511,6 +512,10 @@ CLOSED 2026-11-13 (#3465, #3482): Python ** (the C library pow) in the user func
 #3466 (maintainer 2026-11-12: exudev perf --fast on Linux, venvExuP313, failed in perfObjectFFRFreducedOrder.py, which needs scipy).
 
 CLOSED 2026-11-12 (#3466): scipy was missing in WSL's venvExuP313; the performance runner skips such a model like the test suite (not failed, not in the times, listed, skipped in the JSON). [log](exudynRevisionLog2026c.md#rg4-30)
+
+### **OPEN_RG4.31** Find why contactPrimitivesTableTest differs on macOS ARM
+
+#3496. Found in the release rehearsal (#3495): 10.521949247439636 on macos-15 against 10.5211014088147 on Windows and Linux (x86-64 and aarch64); the first operation that differs, then the model out of UnresolvedOnMacOS. Needs a macOS run (GitHub CI or a Mac).
 
 ## **OPEN_RG5** Performance
 
@@ -2586,6 +2591,12 @@ CLOSED 2026-11-13 (#3491): ties of dateResolved ordered by the stored version, t
 #3492. Found by the maintainer at the release rehearsal (2026-11-13): git push github v2-dev:release/1.14 was refused, because the hook checked the local ref v2-dev.
 
 CLOSED 2026-11-13 (#3492): the remote ref is checked; simulated pushes: v2-dev:release/1.14, master, a tag and deleting release/1.14 pass; v2-dev, deleting v2-dev and release/1.14:v2-dev are refused; pushes to origin unchecked. [log](exudynRevisionLog2026c.md#rg10-35)
+
+### **CLOSED_RG10.36** The test suite of the Windows wheels on GitHub with the tolerance of another compiler
+
+#3495. Release rehearsal of 1.14 (2026-11-13, 1.13.629): Ubuntu x86-64 and ARM passed; Windows cp310, cp311, cp313 failed by modelLibraryTest (3.6e-13) or userTetrahedronTest (5.7e-14, 1 ulp) against the absolute Windows tolerance 5e-14 - windows-2025 builds with MSVC 14.51 (Visual Studio 2026), the references come from MSVC 14.44; macOS cp312 and cp313 by contactPrimitivesTableTest (8.5e-4).
+
+CLOSED 2026-11-13 (#3495): runTestSuite.py --other-compiler (testRunnerTools.BaseTolerance(otherCompiler): 3e-11 on Windows, as Linux and macOS), passed by the Windows test-command of pyproject.toml; the local suite with the flag passes (344 + 108); contactPrimitivesTableTest in UnresolvedOnMacOS until #3496. [log](exudynRevisionLog2026c.md#rg10-36)
 
 ## **CLOSED_RG11** Misc
 

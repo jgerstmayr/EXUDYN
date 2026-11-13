@@ -151,11 +151,16 @@ def ModuleIsRegular():
 
 
 #%%******************************************************************************************************
-def BaseTolerance():
+def BaseTolerance(otherCompiler=False):
     """
     The tolerance a test result is compared against, before the per-test factor of
     TestExamplesToleranceFactors(). It depends on the platform, because the reference values were
-    computed on 64 bit Windows.
+    computed on 64 bit Windows, with the compiler of the maintainer's machine.
+
+    Args:
+        otherCompiler: True if the module was built by another compiler than the reference values,
+            e.g. the wheels of GitHub CI (runTestSuite.py --other-compiler): Windows then gets the
+            tolerance of a different compilation, as Linux and macOS (#3495)
 
     Returns:
         float: the base tolerance for this platform
@@ -166,8 +171,9 @@ def BaseTolerance():
         #2022-03-17: 2e-12 instead of 2e-13 to complete all tests; the reference values come from
         #the 64 bit version
         return 2e-12
-    if isMacOS or not isWindows:
-        #different compilation: heavy top gives an error > 2.2e-11, on linux > 2.5e-11
+    if isMacOS or not isWindows or otherCompiler:
+        #different compilation: heavy top gives an error > 2.2e-11, on linux > 2.5e-11; on GitHub's
+        #windows-2025 with MSVC 14.51, modelLibraryTest 3.6e-13 and userTetrahedronTest 1 ulp (#3495)
         return 3e-11
     return 5e-14 #windows 64 bit
 

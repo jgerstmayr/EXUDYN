@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.629.dev1
+- Exudyn version = 1.13.630.dev1
 - last change = 2026-11-13
-- Number of issues = 3495
-- Number of resolved issues = 3406 (629 in current version)
+- Number of issues = 3497
+- Number of resolved issues = 3407 (630 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` contactPrimitivesTableTest differs on macOS ARM by 8.5e-4 (#3496)
+  - description: On GitHub's macos-15 (arm64, clang) contactPrimitivesTableTest gives 10.521949247439636 against 10.5211014088147 on Windows, Linux x86-64 and Linux aarch64 (\#3495). The model has many impacts of spheres, cylinders, cones, a cube and an icosahedron, which amplify a difference in the last bits; find the first operation that differs on macOS (a math function, fused multiply-add of clang, an ordering), as \#2954 and \#2990 did for the earlier differences, and remove the model from UnresolvedOnMacOS.
+  - date raised: 2026-11-13
 - `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` Fewer parallel regions per Newton iteration and per explicit stage (#3494)
   - description: CSystem runs a separate ParallelFor for the mass matrix, the ODE2 right-hand side of the objects, the loads, the algebraic equations, ODE1 and the reaction forces, and the explicit solver three more per stage; each starts and joins the workers. For the small and medium systems that are used most, this overhead dominates: in the solver baseline (\#3002) 4 threads are slower than one for all models below about 300 coordinates (1.04-1.45 times). The main tasks of a residual (and of an explicit stage) shall run in one parallel region, or at least with more work per region; Jacobians and the rare ODE1 cases may stay as they are.
   - date raised: 2026-11-13

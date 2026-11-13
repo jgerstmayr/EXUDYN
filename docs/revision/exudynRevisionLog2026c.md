@@ -6520,6 +6520,24 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg10-36"></a>
+### RG10.36 — the Windows wheels on GitHub tested with the tolerance of another compiler (2026-11-13, #3495)
+
+*(Maintainer 2026-11-13: the release rehearsal on release/1.14 - all Ubuntu wheels passed, all macOS and some Windows
+wheels failed; the logs and artifacts in tmp/GitHubWheelsRH1.14.)*
+
+- Windows (windows-2025, MSVC 14.51 of Visual Studio 2026 in all jobs, passing and failing alike; the reference values
+  come from MSVC 14.44): cp310 modelLibraryTest -3.6e-13 and userTetrahedronTest 5.7e-14 (1 ulp of 264.5), cp311
+  userTetrahedronTest, cp313 modelLibraryTest; the absolute Windows tolerance 5e-14 holds on the machine of the
+  references only. cp311 gave modelLibraryTest -7e-15, cp310/cp313 -3.6e-13: the result moves with the Python
+  version, too.
+- macOS (cp312, cp313): contactPrimitivesTableTest 10.521949247439636, error 8.5e-4 against its own 1e-7; Linux x86-64
+  and aarch64 give the Windows value; raised as #3496 (RG4.31).
+- runTestSuite.py --other-compiler; testRunnerTools.BaseTolerance(otherCompiler) returns 3e-11 on Windows then, as for
+  Linux and macOS; the Windows test-command of [tool.cibuildwheel.windows] in pyproject.toml passes it.
+  contactPrimitivesTableTest in UnresolvedOnMacOS. The local suite with --other-compiler: 344 test models and 108 mini
+  examples passed.
+
 <a id="rg10-35"></a>
 ### RG10.35 — the pre-push hook judges the ref created on GitHub (2026-11-13, #3492)
 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 600 | 1.13.629 |
+| 1.13 | Newborn | 601 | 1.13.630 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.630** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GitHub CI: the Windows wheels fail the test suite by last-digit differences; macOS by contactPrimitivesTableTest (#3495)
+  - description: Release rehearsal of 1.14 (1.13.629): on windows-2025 (MSVC 14.51 of Visual Studio 2026, another compiler than the reference values) modelLibraryTest differs by 3.6e-13 and userTetrahedronTest by 5.7e-14 (1 ulp), against the absolute Windows tolerance of 5e-14, which holds on the machine of the reference values only; which models land off varies with the Python version. runTestSuite.py --other-compiler gives Windows the tolerance of a different compilation (3e-11, as Linux and macOS), and the cibuildwheel test command of Windows passes it. On macos-15 contactPrimitivesTableTest differs by 8.5e-4 (many impacts); it goes into UnresolvedOnMacOS, its cause is \#3496.
+  - **notes:** The test suite of the Windows wheels built on GitHub uses the tolerance of a different compilation (runTestSuite.py --other-compiler), as Linux and macOS do, since the runner's compiler is not the one of the reference values; contactPrimitivesTableTest is not judged on macOS until its difference there is found (\#3496).
+  - date resolved: **2026-11-13 11:45**, date raised: 2026-11-13
 - **1.13.629** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pre-push hook refuses the rehearsal push v2-dev:release/X.Y (#3492)
   - description: The hook judged a push to GitHub by the local ref, so git push github v2-dev:release/1.14 - the rehearsal command of RELEASE.md - was refused as a push of v2-dev. It judges the remote ref, what lands on GitHub; the local ref only if the remote one is empty.
   - **notes:** The pre-push hook judges a push to GitHub by the ref it creates there, so git push github v2-dev:release/X.Y, the rehearsal of a release, is allowed, and a push of v2-dev itself is still refused.

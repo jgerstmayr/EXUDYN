@@ -291,7 +291,9 @@ test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -lo
 #beyond those of Windows and the MSVC runtime (#2928)
 repair-wheel-command = ""
 #re-enabled 2026-08-05 after a strange exit code on Windows had disabled it since 2024-10-09
-test-command = "cd /d {project}/python/testing && python runTestSuite.py -quiet -local --exit-code"
+#--other-compiler: the runner's MSVC is not the one of the reference values, whose Windows tolerance (5e-14) holds on
+#the maintainer's machine only (#3495)
+test-command = "cd /d {project}/python/testing && python runTestSuite.py -quiet -local --exit-code --other-compiler"
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Build switches, read by setup.py. These are the DEFAULTS; they are never rewritten during a

@@ -100,6 +100,7 @@ TSScope.fastSubset = False
 #so that the gating run stays exactly what it has always been
 TSScope.parallel = False
 TSScope.numberOfProcesses = 0 #0: chosen by testRunnerTools.RunModelsInParallel
+otherCompiler = False #--other-compiler: the module is not built by the compiler of the reference values (#3495)
 
 if len(sys.argv) > 1:
     for i in range(len(sys.argv)-1):
@@ -122,6 +123,8 @@ if len(sys.argv) > 1:
                 TSScope.numberOfProcesses = int(sys.argv[i+1].split('=')[1])
         elif sys.argv[i+1] == '--overwrite-log':
             overwriteLog = True
+        elif sys.argv[i+1] == '--other-compiler':
+            otherCompiler = True
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
@@ -143,7 +146,7 @@ TSScope.solutionDirectory = 'solution'
 TSScope.printTestResults = False #print list, which can be imported for new reference values
 #the platform-dependent base tolerance lives in testRunnerTools, so that the suite and the
 #pytest collector cannot drift apart
-TSScope.testTolerance = testRunnerTools.BaseTolerance()
+TSScope.testTolerance = testRunnerTools.BaseTolerance(otherCompiler)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #current date and time
