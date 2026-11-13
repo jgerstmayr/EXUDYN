@@ -6520,6 +6520,39 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg5-14-1"></a>
+### RG5.14.1-RG5.14.2 — the parallel regions measured, the design of one region per residual (2026-11-13, #3494)
+
+*(Maintainer 2026-11-13: do RG5.14.1/.2 now.)*
+
+- The design note docs/dev/design/parallelRegions.md (not published, conf.py excludes docs/dev/design).
+- Measured with a temporary instrumentation of TaskManager::CreateJob, not committed: a counter and a clock per call
+  site keyed by `afunc.target_type().name()` (the lambda's type names the enclosing function), the report and a
+  benchmark of empty regions in ReleaseWorkers, switched by environment variables; built into venvExuP313, measured,
+  reverted, both modules rebuilt. Scripts in the session scratchpad: the counts per site
+  (solverBaseline.GetModel), the times on 1-16 threads with the lower limits at 1e9 and without, the solver timers.
+- Results:
+  - an empty region costs 0.24 / 0.44 / 0.7-0.9 / 3 µs on 2 / 4 / 8 / 16 threads (9950X, two dies);
+  - 5 regions per implicit residual (mass matrix if not constant, objects, loads, reaction forces, algebraic
+    equations), a residual per Newton iteration plus one per step; 2 per Jacobian; 2 per explicit stage plus 5 of
+    GeneralContact, two of them on empty lists in contactSpheres;
+  - the nine small models of modelLibrary start no region (every list below the limit of 20): their slowdown with
+    threads is the start of the workers per solve (massOscillator 0.35 / 0.52 / 1.1 ms on 1 / 4 / 16 threads);
+  - the starts are 11 / 24 / 52 % of a residual of rigidBodySpringDampers50 on 4 / 8 / 16 threads, 6 / 12 % of
+    rigidBodyJoints50, 2-18 % of beam3D60.
+- Found: with no region at all (limits 1e9), rigidBodySpringDampers50 takes 105 ms on 4 or 8 threads against 69 ms on
+  one (median of 7), but 74 ms with the process on one logical processor per core (`start /affinity 55555555`): the
+  spinning workers slow the serial parts of the main thread by up to 50 %, bimodal between runs. New sub-step
+  RG5.14.6. The same effect made a first series of runs disagree with a second one by up to 40 % (rigidBodyJoints50
+  on 4 threads 88 against 62 ms); the note uses the second, consistent series. Suspending the workers during the
+  factorization (#3428, special.solver) changed nothing on rigidBodyJoints50.
+- Design (RG5.14.2): option A, one task list over the five parts with per-thread buffers per output and the existing
+  functions as its callers, recommended for the residual and the explicit stage; B, one region with barriers, for
+  GeneralContact later; C, the product M q_tt per body without the global mass matrix (76 of 204 ms of beam3D60 on
+  one thread), as an option. Five decisions for the maintainer in section 6.
+- Plan: RG5.14.1 and RG5.14.2 closed, RG5.14.6 added; next step 2 is the decision. Also removed: a doubled closing
+  line of RG5.13.
+
 <a id="rg5-13"></a>
 ### RG5.13 — the performance of the releases in the manual (2026-11-13, #3493)
 

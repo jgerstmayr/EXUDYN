@@ -52,8 +52,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Finish the release rehearsal on `release/1.14`** (running since 2026-11-13) - the wheels of all 24 jobs, then the
    release around the end of November 2026, before the removal date of #3361.
-2. **Measure and design fewer parallel regions per residual** (RG5.14.1, RG5.14.2): the threads cost more than they
-   give below about 300 coordinates; the design note is for the maintainer to decide.
+2. **Decide the design of fewer parallel regions** (RG5.14.3, RG5.14.6): docs/dev/design/parallelRegions.md, section
+   6 - one task list per residual, the product M q_tt without the global matrix, the timers, and the workers that slow
+   the main thread by up to 50 % while they wait.
 3. **A real training run of spotReinforcementLearning.py** (RG19.14.4): torch, gym and stable-baselines3 are now in
    venvP313.
 4. **Add the 3D sliding joint with rotation** (RG4.22): tested with the ANCF cable and beam; needs the decision which
@@ -70,7 +71,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG5** Performance
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
-  - RG5.14 Run the main tasks of a residual and of an explicit stage in fewer parallel regions (5 open sub-steps)
+  - RG5.14 Run the main tasks of a residual and of an explicit stage in fewer parallel regions (4 open sub-steps)
 - **RG7** Python user items
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
 - **RG8** Compiled C++ user items
@@ -113,7 +114,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
-| RG5 | OPEN | 8 | Performance |
+| RG5 | OPEN | 7 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 1 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -990,19 +991,21 @@ CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tre
 
 CLOSED 2026-11-13 (#3493): performanceReleasesEmitter.py, the fragment included in performanceErrors.md, section Performance of the releases. [log](exudynRevisionLog2026c.md#rg5-13)
 
-CLOSED 2026-11-13 (#3493): performanceReleasesEmitter.py, the fragment included in performanceErrors.md, section Performance of the releases. [log](exudynRevisionLog2026c.md#rg5-13)
-
 ### **OPEN_RG5.14** Run the main tasks of a residual and of an explicit stage in fewer parallel regions
 
 #3494. Maintainer 2026-11-13: the ParallelFor loops are called several times in a solver - mass matrix, ODE2, constraints, loads; critical for the medium-small systems that are used most; the single ParallelFor calls done once or in parallel right away (or at least more tasks done in parallel), possibly by an elegant change of the structure of CSystem; the Jacobians and the rare ODE1 cases need not be included. Facts: CSystem.cpp has ParallelFor loops for the mass matrix, the ODE2 right-hand side, the loads, the algebraic equations, ODE1 and the reaction forces, CSolverExplicit.cpp three per stage; in the solver baseline (#3002, 1.13.577 fast) 4 threads are slower than 1 below about 300 coordinates (massOscillator 1.29-1.45, nPendulum 1.14, rigidBodySpringDampers 1.04-1.12) and faster from 400 (0.5-0.9).
 
-#### **OPEN_RG5.14.1** Measure the cost of a parallel region and count the regions per Newton iteration and per stage
+#### **CLOSED_RG5.14.1** Measure the cost of a parallel region and count the regions per Newton iteration and per stage
 
 #3494. The start and join of one ParallelFor on 1-16 threads (empty and with little work), the number of regions per residual, Jacobian and explicit stage in the small and medium models of the solver baseline; how much of a step they cost.
 
-#### **OPEN_RG5.14.2** Design: one parallel region for the residual - task lists or a persistent region with barriers
+CLOSED 2026-11-13 (#3494): docs/dev/design/parallelRegions.md sections 1-3: an empty region 0.24/0.44/0.8/3 µs on 2/4/8/16 threads; 5 regions per implicit residual (mass matrix, objects, loads, reaction forces, algebraic equations), 2 per Jacobian, 2 per explicit stage plus 5 of GeneralContact; the small models of the baseline start none (their slowdown is the start of the workers per solve); the starts are 11/24/52 % of a residual of rigidBodySpringDampers50 on 4/8/16 threads; spinning workers slow the serial parts by up to 50 % (RG5.14.6). [log](exudynRevisionLog2026c.md#rg5-14-1)
+
+#### **CLOSED_RG5.14.2** Design: one parallel region for the residual - task lists or a persistent region with barriers
 
 #3494. A design note: which tasks of the residual are independent (objects, loads, constraints, contact), how their outputs are merged without a race (per-thread vectors, as tempArray now), whether the tasks become one list for one ParallelFor or the threads stay in one region and meet at barriers; what changes in CSystem and its callers; for the maintainer to decide.
+
+CLOSED 2026-11-13 (#3494): docs/dev/design/parallelRegions.md sections 4-6: option A (one task list over the five parts, per-thread buffers per output, the existing functions as callers) recommended, B (one region with barriers) for GeneralContact, C (the product M q_tt per body, without the global mass matrix) as an option; five decisions for the maintainer. [log](exudynRevisionLog2026c.md#rg5-14-1)
 
 #### **OPEN_RG5.14.3** The residual of the implicit solvers in one parallel region
 
@@ -1015,6 +1018,10 @@ CLOSED 2026-11-13 (#3493): performanceReleasesEmitter.py, the fragment included 
 #### **OPEN_RG5.14.5** The threshold below which a solver runs serially, measured again
 
 #3494. With fewer regions the system size from which threads pay drops; the cost threshold of ParallelFor (costs < 1000) and the advice for numberOfThreads measured and adjusted.
+
+#### **OPEN_RG5.14.6** Keep the waiting workers from slowing the main thread
+
+#3494. Found in RG5.14.1: with every lower limit at 1e9 (no region starts) rigidBodySpringDampers50 takes 105 ms on 4 or 8 threads against 69 ms on one (median of 7), 74 ms when the process runs on one logical processor per core: a worker spinning on the second logical processor of the main thread's core slows the factorization, the Newton update, the merges and the user functions by up to 50 %, depending on where Windows puts the threads. To try: a pause instruction instead of std::this_thread::yield in the spin, a bounded spin followed by a wait, the workers placed on other cores than the main thread; measured with the solver timers on 1-16 threads, regions on and off.
 
 ## **CLOSED_RG6** Graphics and rendering
 
