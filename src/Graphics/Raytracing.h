@@ -87,6 +87,7 @@ public:
 	static constexpr RTfloat epsilon = std::numeric_limits<RTfloat>::epsilon(); //least significant bit without exponent for float is 1.192093e-7
 	static constexpr RTfloat epsilon5 = 5.f*std::numeric_limits<RTfloat>::epsilon(); //for testing of edge cases
 	Index maxReflectionDepth;
+	Index reflectionSamples;					//! reflected rays per pixel on a rough surface; 1 = sharp (#3473)
 	Index maxTransparencyDepth;
 	Index imageSizeFactor;	// subsampling; faster rendering
 	RTfloat zBiasLines;		//!< slight bias to make lines visible over coplanar geometry
@@ -220,6 +221,7 @@ public:
 		shadowRayOffset = 0.01f;
 		adaptiveShadowSamples = 0;
 		maxReflectionDepth = 0;
+		reflectionSamples = 1;
 		maxTransparencyDepth = 0;
 		globalMaxAlpha = 0;
 

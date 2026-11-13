@@ -382,3 +382,18 @@ new code):
 soft shadow has half the error at the same N, without the rings of the old spiral; the reference image itself took
 4.6 s with all 240 samples and 1.4 s with the adaptive probes. The adaptive probes help less at N = 13 (6 of 13
 probes) than at N = 50. raytracerNOGLFWtest.py: new reference 0.28115557230831 (regular and fast module equal).
+
+### 6.3 Blurred reflections (RG6.26.16, #3473)
+
+`material.roughness` (new, default 0) is the angular radius in radians of the cone of reflected rays;
+`raytracer.reflectionSamples` (new, default 8) the number of rays per pixel on such a surface, on the rotated spiral of
+the soft shadows (Fibonacci, rotation hashed from the hit), averaged; a ray that would point into the surface takes the
+mirror direction. Only the reflections of visible surfaces are blurred (`reflectionDepth == 0`), so the cost does not
+grow with `maxReflectionDepth`; `reflectionSamples = 1` or roughness 0 gives the sharp reflection of before, bit for bit
+(the benchmark images unchanged). Test model raytracerGlossyReflectionTest.py.
+
+The cost is that of the reflections times the number of rays: in the benchmark scene (the reflective floor fills most
+of the 1200 x 1000 image, N = 13, S = 3) 0.093 s sharp, 0.235 s with 4 rays, 0.406 s with 8, 0.833 s with 16 - each
+reflected ray about 0.045 s, with its hard shadow rays. Cheaper later: the probes of #3476 for the reflected rays
+(several rays first, the rest only where their colours differ), and no shadow rays for the hits of the reflections
+(O10, RG6.26.12).

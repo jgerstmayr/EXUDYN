@@ -199,6 +199,7 @@ postNewtonStepContactTest
 pythonUserFunctionArgumentsTest
 raytracerBackFaceTest
 raytracerDuringSolveTest
+raytracerGlossyReflectionTest
 raytracerNOGLFWtest
 reduceURDFrobotDataTest
 reevingSystemSpringsTest

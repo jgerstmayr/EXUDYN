@@ -52,8 +52,10 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **Blurred reflections** (RG6.26.16), on the samples of the soft shadows; then the optional raytracer step RG6.26.12.
-3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+2. **Cheaper reflections** (RG6.26.12): no shadow rays for the hits of weak reflections, and probe rays for blurred
+   reflections; the reflections cost 40 % of an image and the blurred ones a multiple of that.
+3. **The measurements of the temporaries** (RG5.2.7.1): they decide whether fused vector expressions (RG5.2.7.5) pay.
+4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -66,7 +68,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
-  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (2 open sub-steps)
+  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (1 open sub-step)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -112,7 +114,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
 | RG5 | OPEN | 6 | Performance |
-| RG6 | OPEN | 3 | Graphics and rendering |
+| RG6 | OPEN | 2 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -1430,9 +1432,11 @@ CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImp
 
 CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
 
-#### **OPEN_RG6.26.16** Blurred (glossy) reflections: a roughness per material, a number of reflection rays, a switch
+#### **CLOSED_RG6.26.16** Blurred (glossy) reflections: a roughness per material, a number of reflection rays, a switch
 
 #3473. Maintainer 2026-11-12: reflections are sharp; blur them as usual for such surfaces, with a parameter and a flag to turn it off, as it costs; during the improvements, with the samples of the soft shadows.
+
+CLOSED 2026-11-13 (#3473): material.roughness, raytracer.reflectionSamples; test model raytracerGlossyReflectionTest.py; raytracerImprovements.md section 6.3. [log](exudynRevisionLog2026c.md#rg6-26-16)
 
 ## **OPEN_RG7** Python user items
 

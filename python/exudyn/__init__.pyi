@@ -2326,6 +2326,8 @@ class VSettingsMaterial:
     """material name for easier handling."""
     reflectivity: float
     """controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel."""
+    roughness: float
+    """only used by the raytracer: the blur of the reflections of a reflective material, as the angular radius in radians of the cone over which the reflected rays spread, e.g. 0.02 for polished and 0.1 for brushed metal; 0 gives sharp, mirror-like reflections; the raytracer traces raytracer.reflectionSamples rays per pixel for such a surface, which multiplies the cost of its reflections."""
     shininess: float
     """controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny."""
     specular: Tuple[float,float,float]
@@ -2400,6 +2402,8 @@ class VSettingsRaytracer:
     """Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]."""
     numberOfThreads: int
     """Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445); the threads belong to the raytracer alone, so it renders in parallel also while a solver runs and from the renderer thread (#3438)."""
+    reflectionSamples: int
+    """the number of reflected rays per pixel on a surface whose material has a roughness > 0, spread over its cone for blurred reflections (only the reflections of the visible surfaces, not of reflections); 1 turns the blur off and gives sharp reflections at the cost of one ray; range=1..256."""
     verbose: int
     """1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information."""
     def GetDictionary(self) -> dict: ...

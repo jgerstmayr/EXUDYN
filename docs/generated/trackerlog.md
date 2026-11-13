@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.621.dev1
+- Exudyn version = 1.13.622.dev1
 - last change = 2026-11-13
 - Number of issues = 3486
-- Number of resolved issues = 3398 (621 in current version)
+- Number of resolved issues = 3399 (622 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Raytracer: blurred (glossy) reflections with a parameter per material and a switch (#3473)
-  - description: Reflections are mirror-sharp. A material shall get a roughness (0 = sharp, the default) by which the reflected ray is spread over a cone, sampled with a number of reflection rays (a raytracer setting; 1 or roughness 0 keeps the sharp reflection and its cost), with the stratified samples and the adaptive refinement of the soft shadows.
-  - date raised: 2026-11-12
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Expression templates for the small linear algebra: which to enable (#3461)
   - description: Evaluated in docs/dev/design/expressionTemplates.md: full expression templates are not recommended (debugging in VS2022, dangling auto, small measured gain); recommended are a transposed view Transposed(A) \* x without a copy, SlimVectorBase::MultAdd, and fused elementwise expressions on SlimVector only if the measurements M1 show a gain; all keep the order of the sums.
   - date raised: 2026-11-12

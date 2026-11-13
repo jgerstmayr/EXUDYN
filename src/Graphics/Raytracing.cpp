@@ -808,9 +808,35 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 	{
 		RTVector3D reflectDir = rayDirection - 2.0f * (rayDirection * closestHit.normal) * closestHit.normal;
 		reflectDir.NormalizeSafe();
-		reflectionColor = ComputePixelColor(hitPoint + reflectDir * reflRefrOffset, reflectDir, triangles, RTS, otherZ, shadowValue,
-			reflectionDepth + 1,
-			EXUstd::Maximum(reflectionDepth, transparencyDepth)); //for now, transparency not used with reflection
+		//a rough material blurs the reflection of a visible surface: the reflected rays spread over a cone of angular radius
+		//roughness, on the rotated spiral of the soft shadows, and their colors averaged (#3473)
+		Index nReflections = (material.roughness > 0.f && RTS.reflectionSamples > 1 && reflectionDepth == 0 && transparencyDepth == 0)
+			? RTS.reflectionSamples : 1;
+		if (nReflections == 1)
+		{
+			reflectionColor = ComputePixelColor(hitPoint + reflectDir * reflRefrOffset, reflectDir, triangles, RTS, otherZ, shadowValue,
+				reflectionDepth + 1,
+				EXUstd::Maximum(reflectionDepth, transparencyDepth)); //for now, transparency not used with reflection
+		}
+		else
+		{
+			RTVector3D basisN1, basisN2;
+			EXUmath::ComputeOrthogonalBasisVectors(reflectDir, basisN1, basisN2);
+			constexpr RTfloat goldenAngle = 2.39996323f; //pi*(3-sqrt(5))
+			RTfloat rotation = HashAngle(hitPoint);
+			reflectionColor = RTVector3D({ 0.f, 0.f, 0.f });
+			for (Index k = 0; k < nReflections; k++)
+			{
+				RTfloat radius = material.roughness * std::sqrt(((RTfloat)k + 0.5f) / (RTfloat)nReflections);
+				RTfloat phi = (RTfloat)k * goldenAngle + rotation;
+				RTVector3D direction = reflectDir + (radius * std::cos(phi)) * basisN1 + (radius * std::sin(phi)) * basisN2;
+				direction.NormalizeSafe();
+				if (direction * closestHit.normal <= 0.f) { direction = reflectDir; } //not into the surface
+				reflectionColor += ComputePixelColor(hitPoint + direction * reflRefrOffset, direction, triangles, RTS, otherZ, shadowValue,
+					reflectionDepth + 1, EXUstd::Maximum(reflectionDepth, transparencyDepth));
+			}
+			reflectionColor *= 1.f / (RTfloat)nReflections;
+		}
 	}
 
 	//Transparency/Refraction
@@ -1277,6 +1303,7 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 
 	//Raytracing settings:
 	RTS.maxReflectionDepth = EXUstd::Clamp(visSettings->raytracer.maxReflectionDepth, 0, 32);
+	RTS.reflectionSamples = EXUstd::Clamp(visSettings->raytracer.reflectionSamples, 1, 256);
 	RTS.maxTransparencyDepth = EXUstd::Clamp(visSettings->raytracer.maxTransparencyDepth, 0, 32);
 	RTS.keepWindowActive = visSettings->raytracer.keepWindowActive;
 	RTS.backgroundColorReflections = ColorRGBA2RGB(visSettings->raytracer.advanced.backgroundColorReflections);

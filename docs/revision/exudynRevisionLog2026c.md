@@ -6520,6 +6520,23 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg6-26-16"></a>
+### RG6.26.16 — raytracer: blurred reflections (2026-11-13, #3473)
+
+*(Maintainer 2026-11-12: reflections are sharp; blur them as usual for such surfaces, with a parameter and a flag to
+turn it off, as it is costly; 2026-11-12: do the suggested next steps.)*
+
+- VSettingsMaterial.roughness (new, default 0; the comment in ComputePixelColor named a roughness that did not exist),
+  VSettingsRaytracer.reflectionSamples (new, default 8); the reflected rays of a visible rough surface on the rotated
+  spiral of the soft shadows, averaged (scratch p_glossy.py). Roughness 0 or reflectionSamples 1: the sharp reflection,
+  bitwise (the benchmark images unchanged).
+- Test model raytracerGlossyReflectionTest.py (reference 3.2): the floor of chrome with a brick and a sphere; the image
+  with the blur off equals the sharp one, the 8-ray image is closer to the 64-ray one than the sharp one is. Images
+  inspected (sharp against blurred). Found on the way: SetModelView before the first RedrawAndGetImage without a
+  renderer has no effect - the first call initializes the render state from the settings; the model renders once first.
+- Cost in the benchmark scene: 0.093 s sharp, 0.235 / 0.406 / 0.833 s with 4 / 8 / 16 rays. parameterConversionTestReference.txt
+  with the two new parameters. raytracerImprovements.md section 6.3, revisions.md.
+
 <a id="rg5-2-8-5"></a>
 ### RG5.2.8.5 — MatrixBase: AddSubmatrix and AddSubmatrixTransposed with a factor, MultAdd (2026-11-13, #3485)
 

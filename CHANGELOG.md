@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 592 | 1.13.621 |
+| 1.13 | Newborn | 593 | 1.13.622 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.622** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer: blurred (glossy) reflections with a parameter per material and a switch (#3473)
+  - description: Reflections are mirror-sharp. A material shall get a roughness (0 = sharp, the default) by which the reflected ray is spread over a cone, sampled with a number of reflection rays (a raytracer setting; 1 or roughness 0 keeps the sharp reflection and its cost), with the stratified samples and the adaptive refinement of the soft shadows.
+  - **notes:** In the raytracer, a material with roughness \> 0 gets blurred reflections: raytracer.reflectionSamples rays per pixel (default 8) spread over a cone of the angular radius roughness; roughness 0 (the default) or reflectionSamples = 1 gives sharp reflections. The cost of the reflections grows with the number of rays.
+  - date resolved: **2026-11-13 01:21**, date raised: 2026-11-12
 - **1.13.621** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix: AddSubmatrix and AddSubmatrixTransposed with a factor, MultAdd; the duplicates removed (#3485)
   - description: linalgTemplatesInventory.md LT.4: MatrixBase::AddSubmatrix(sm, row, column, factor = 1.) replaces AddSubmatrix and AddSubmatrixWithFactor (the factor last, as SetSubmatrix), AddSubmatrixTransposed(sm, row, column, factor = 1.) replaces AddSubmatrixTransposed and its duplicate AddTransposedSubmatrix, MatrixBase::MultAdd(factor, matrix) replaces EXUmath::FactorTimesMatrixAdd, as VectorBase::MultAdd. The virtual interface of GeneralMatrix keeps its names. Results bitwise (1\*x == x).
   - **notes:** Matrix: AddSubmatrix(sm, row, column, factor) and AddSubmatrixTransposed(sm, row, column, factor) with the factor last and 1 by default, and MultAdd(factor, matrix); AddSubmatrixWithFactor, AddTransposedSubmatrix and EXUmath::FactorTimesMatrixAdd are gone.
