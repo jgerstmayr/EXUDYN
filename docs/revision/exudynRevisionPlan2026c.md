@@ -66,6 +66,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (2 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
+- **RG6** Graphics and rendering
+  - RG6.28 GraphicsMaterialList reads the predefined materials from the visualization settings
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -110,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
 | RG5 | OPEN | 5 | Performance |
-| RG6 | CLOSED | 0 | Graphics and rendering |
+| RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -686,6 +688,8 @@ Measured (RG5.2.7.1, expressionTemplates.md section 9): no gain for Real, so E3 
 
 Maintainer 2026-11-13: narrow it. The step is now: measure the share of the AutoDiff<n> vector expressions in the time of the analytic connector Jacobians (#2884, exudev perf models with such connectors, a profile in the fast module); if it is noticeable, rewrite those expressions as one loop or with MultAdd, bitwise or within rounding; no expression templates on SlimVector. If the share is small, close the step with the measurement.
 
+#3489.
+
 #### **CLOSED_RG5.2.8** Consolidate the linear algebra function templates
 
 #3462. Maintainer 2026-11-12: check the many linalg templates (MultAdd..., Transposed...) - which can be combined or removed, possibly also for performance. Inventory: docs/dev/design/linalgTemplatesInventory.md - dead functions, duplicates, slow kernels in hot code; one kernel per product with a result mode; sub-steps LT.1-LT.5 in its section 7, for the maintainer to choose.
@@ -968,7 +972,7 @@ CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: mini
 
 CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tree, each allocated when a sphere first enters it and grown when it first holds more; only in the first solve (100 per step), a second solve from the initial state 0.15-0.7 per step, both in the same time. [log](exudynRevisionLog2026c.md#rg5-12)
 
-## **CLOSED_RG6** Graphics and rendering
+## **OPEN_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -1443,6 +1447,16 @@ CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImp
 #3473. Maintainer 2026-11-12: reflections are sharp; blur them as usual for such surfaces, with a parameter and a flag to turn it off, as it costs; during the improvements, with the samples of the soft shadows.
 
 CLOSED 2026-11-13 (#3473): material.roughness, raytracer.reflectionSamples; test model raytracerGlossyReflectionTest.py; raytracerImprovements.md section 6.3. [log](exudynRevisionLog2026c.md#rg6-26-16)
+
+### **CLOSED_RG6.27** Revise the raytracer documentation: the settings, the manual section and the materials
+
+#3488. Maintainer 2026-11-13: the descriptions of the shadow and reflection settings adjusted; all raytracer settings revised together with the overall raytracer description in the docs; the material properties in the raytracer section, with cross-references to the visualizationSettings. Measured first (benchmark scene, 13 light samples): shadowScalingFactor 3 / shadowSmoothingSteps 3 stay the defaults (2/3: 10 % closer to the reference at +20 % time); at shadowScalingFactor 1 and raytracer.multiSampling 1 there is no shadow map, so smoothing has no effect and the per-pixel samples are noisy at twice the time; reflectionSamples 8 stays (2 rays give the most grain, 2-3 suffice for roughness up to 0.02 or with multiSampling 2).
+
+CLOSED 2026-11-13 (#3488): the defaults measured and kept; the class descriptions and 38 descriptions of the raytracer settings and materials; the Raytracing section of introductionAdvanced.md rewritten with usage, cost and materials, cross-referenced. [log](exudynRevisionLog2026c.md#rg6-27)
+
+### **OPEN_RG6.28** GraphicsMaterialList reads the predefined materials from the visualization settings
+
+#3490. Found in RG6.27: SC.renderer.materials keeps a copy of raytracer.material0-9, refreshed only when the raytracer draws; Get after a change of the settings returns the old values, and Set writes them back. Get, GetDict, [] and GetDictionary read the first ten from the settings; a test model of both ways.
 
 ## **OPEN_RG7** Python user items
 
@@ -2519,6 +2533,12 @@ comes back): `cache-dir = "build/.ruff_cache"` in pyproject.toml, removed by exu
 CLOSED 2026-10-28 (#3127; maintainer: solution/: raise an issue and fix now): python/testing/conftest.py sets
 EXUDYN_OUTPUTDIRECTORY to `build/pytestOutput/<worker>` unless it is set; a fixture `noOutputDirectory` for the tests
 of absolute file names and of the defaults; removed by exudev clean. [log](exudynRevisionLog2026c.md#rg10-33-3)
+
+### **CLOSED_RG10.34** Order issues resolved in the same minute by their resolution in the check of the stored versions
+
+#3491. Found in RG6.27: the pytest gate reported #3411 as a moved version; #3487 and #3411 were resolved in the same minute (07:45), in this order, and CheckStoredVersions ordered the tie by the numbers.
+
+CLOSED 2026-11-13 (#3491): ties of dateResolved ordered by the stored version, the order the tracker wrote; test_issueTracker.py passes. [log](exudynRevisionLog2026c.md#rg6-27)
 
 ## **CLOSED_RG11** Misc
 

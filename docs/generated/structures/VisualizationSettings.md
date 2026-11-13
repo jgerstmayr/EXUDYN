@@ -652,9 +652,9 @@ VSettingsDialogs has the following items:
 (sec-vsettingsmaterial)=
 ### VSettingsMaterial
 
-Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; the ten materials of the raytracer each start from their own values, which are listed at material0 to material9.
+A material of the raytracer: the colors of a face, its highlights (Phong), reflection, transparency with refraction and emission; OpenGL does not use materials. A face selects a material by the fourth value of its color, 1000 + the index of the material; how, and what each property does, is described in [](#sec-raytracer-materials). The ten predefined materials are raytracer.material0 to material9, whose values are listed in [](#sec-vsettingsraytracer); `SC.renderer.materials` holds them and further ones, see [](#sec-graphicsmateriallist).
 
-Reached as `SC.visualizationSettings.raytracer.material`.
+Reached as `SC.visualizationSettings.raytracer.material0`, `SC.visualizationSettings.raytracer.material1`, `SC.visualizationSettings.raytracer.material2`, `SC.visualizationSettings.raytracer.material3`, `SC.visualizationSettings.raytracer.material4`, `SC.visualizationSettings.raytracer.material5`, `SC.visualizationSettings.raytracer.material6`, `SC.visualizationSettings.raytracer.material7`, `SC.visualizationSettings.raytracer.material8`, `SC.visualizationSettings.raytracer.material9`.
 
 VSettingsMaterial has the following items:
 
@@ -663,22 +663,22 @@ VSettingsMaterial has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
-| `alpha` | UFloat | 1. | alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel |
-| `baseColor` | Float3 | [0.5,0.5,0.5] | RGB default material color if face color has R-color channel -1 |
-| `emission` | Float3 | [0.,0.,0.] | RGB emissive material color (enlightened material) |
-| `ior` | UFloat | 1. | index of refraction for transparent materials (1=no refraction), >1 represents refraction |
-| `name` | String | 'undefined' | material name for easier handling |
-| `reflectivity` | UFloat | 0. | controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel |
-| `roughness` | UFloat | 0. | only used by the raytracer: the blur of the reflections of a reflective material, as the angular radius in radians of the cone over which the reflected rays spread, e.g. 0.02 for polished and 0.1 for brushed metal; 0 gives sharp, mirror-like reflections; the raytracer traces raytracer.reflectionSamples rays per pixel for such a surface, which multiplies the cost of its reflections |
-| `shininess` | UFloat | 32. | controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny |
-| `specular` | Float3 | [0.5,0.5,0.5] | RGB specular material color |
+| `alpha` | UFloat | 1. | opacity of the material, which replaces the alpha value of the color: 1 opaque, 0 fully transparent; a ray through a transparent face is traced further, up to raytracer.maxTransparencyDepth faces, and a shadow lets light through in proportion to 1 - alpha; costs one more ray per transparent face |
+| `baseColor` | Float3 | [0.5,0.5,0.5] | RGB color of the faces of this material whose color has the red value -1, e.g. `graphics.material.steel`; changing it changes the color of all these faces; OpenGL draws such faces black |
+| `emission` | Float3 | [0.,0.,0.] | RGB color that the faces of this material add by themselves, independent of the lights, e.g. for a lamp; it does not light other faces |
+| `ior` | UFloat | 1. | index of refraction of a transparent material (alpha < 1): 1 lets the rays pass straight, 1.5 is glass; a ray enters at a face whose normal points against it and leaves at a face whose normal points along it, so a closed body needs outward normals |
+| `name` | String | 'undefined' | the name of the material, by which `SC.renderer.materials.Get(name)` and `Set(name, material)` find it |
+| `reflectivity` | UFloat | 0. | share of the reflected color in the color of a face, in [0,1]: 0 no reflection (rubber), 1 a perfect mirror; a reflected ray is traced up to raytracer.maxReflectionDepth times, and a ray that hits nothing takes raytracer.advanced.backgroundColorReflections; costs one more ray per reflecting pixel |
+| `roughness` | UFloat | 0. | the blur of the reflections of a reflective material, as the angular radius in radians of the cone over which the reflected rays spread, e.g. 0.02 for polished and 0.1 for brushed metal; 0 gives sharp, mirror-like reflections; for the faces seen directly, the raytracer traces raytracer.reflectionSamples rays per pixel, which multiplies the cost of their reflections |
+| `shininess` | UFloat | 32. | exponent of the highlights (Phong), at least 1: below 5 broad and dull, above 50 small and sharp highlights |
+| `specular` | Float3 | [0.5,0.5,0.5] | RGB color of the highlights (Phong), multiplied by the specular value of each light |
 
 
 
 (sec-vsettingsraytraceradvanced)=
 ### VSettingsRaytracerAdvanced
 
-Advanced settings for raytracer.
+Advanced settings of the raytracer: the shadow map of soft shadows, savings of shadow rays, the distribution of the work over the threads, and colors for special cases; see [](#sec-raytracer-quality).
 
 Reached as `SC.visualizationSettings.raytracer.advanced`.
 
@@ -689,23 +689,23 @@ VSettingsRaytracerAdvanced has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
-| `adaptiveShadowSamples` | UInt | 6 | if lightRadiusVariations is larger, this number of the shadow samples of a light is traced first for each pixel, the innermost and the outermost ones of its disk; if they agree (the pixel fully lit or fully in shadow), the other samples take their value without being traced, which saves most of the cost of soft shadows away from their edges; 0 traces all samples; small details of a shadow, smaller than the spacing of the probes, may be missed; range=0..256 |
+| `adaptiveShadowSamples` | UInt | 6 | if lightRadiusVariations is larger, this number of the samples of a light is traced first for each hit, the innermost and the outermost ones of its disk; if they agree (fully lit or fully in shadow), the other samples take their value without being traced, which saves most of the cost of soft shadows away from their edges; 0 traces all samples; details of a shadow smaller than the spacing of these samples may be missed; range=0..256 |
 | `backFaceColor` | Float4 | [0.,0.,0.,0.] | if the alpha (fourth) value is > 0: faces seen from their back - whose normals point away from the camera, e.g. the inward normals of a closed body - are drawn in this RGB color, without light, to check the orientation of the normals of imported meshes, as the one-sided lighting of OpenGL (openGL.advanced.lightModelTwoSide = False) shows them dark (#3275); 0: drawn as the front |
-| `backgroundColorReflections` | Float4 | [0.4,0.4,0.4,1.] | scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached |
+| `backgroundColorReflections` | Float4 | [0.4,0.4,0.4,1.] | RGBA color of the background seen in reflections and through the last transparent face, also when maxReflectionDepth is reached; the background of the image (general.backgroundColor) is often black or white, which would make reflective objects black or very light, as the scenes are usually not inside a closed room |
 | `minimumShadowWeight` | UFloat | 0. | a hit of a reflected or refracted ray casts its shadow rays only if the weight of the ray, its share in the color of the pixel (the product of the reflectivities, 1 - alpha of the transparent faces, divided by the number of rays of a blurred reflection), is at least this value; otherwise it is lit; e.g. 0.2 saves the shadow rays of weak reflections, such as of a floor of reflectivity 0.12, at the cost of their missing shadows; 0 casts all shadow rays; the visible surfaces always cast theirs |
-| `searchTreeFactor` | PInt | 1 | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128 |
-| `shadowScalingFactor` | UInt | 3 | if lightRadiusVariations>1 and a light casts soft shadows (lightRadius>0), this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries |
-| `shadowSmoothingSteps` | UInt | 3 | if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; each step averages the neighbours of similar depth, so a shadow does not spread across the silhouette of an object; the full resolution interpolates the low-resolution values of similar depth; range=0..32 |
-| `showText` | bool | True | True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings |
-| `tilesPerThread` | PInt | 12 | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads |
-| `zBiasLines` | float | 0.001 | offset for lines to draw in front of faces; relative to scene radius |
+| `searchTreeFactor` | PInt | 1 | multiplies the number of the cells of the search tree, the grid over the scene by which a ray finds the faces it may hit; a larger factor can be faster for scenes with many small faces in a part of a large scene; range=1..128 |
+| `shadowScalingFactor` | UInt | 3 | if a light casts soft shadows (lightRadius > 0, raytracer.lightRadiusVariations > 1), its shadows are computed on a shadow map of the resolution of the window divided by this factor, smoothed (shadowSmoothingSteps) and interpolated to the pixels; the map is used only if shadowScalingFactor x raytracer.multiSampling > 1: with 0, or with 1 and multiSampling = 1, every pixel takes its own samples, without smoothing, which gives grainy soft shadows at about twice the time of the default 3; 2 gives sharper edges of shadows than 3 at about 20 % more time; larger values blur small shadows; range=0..16 |
+| `shadowSmoothingSteps` | UInt | 3 | number of smoothing passes over the shadow map of soft shadows (see shadowScalingFactor): each averages the neighbours of similar depth, so that a shadow does not spread across the silhouette of an object, and the pixels interpolate the values of similar depth; 2 to 3 remove the grain of 13 samples (lightRadiusVariations), more passes gain nothing; no effect without a shadow map; range=0..32 |
+| `showText` | bool | True | True: the raytracer draws the texts of the scene (status text, node and object numbers, ..., as the other settings ask for them); False: no text at all in raytraced images |
+| `tilesPerThread` | PInt | 12 | the image is split into numberOfThreads x tilesPerThread tiles, which the threads take one after the other, so that the expensive parts of an image are shared by all threads |
+| `zBiasLines` | float | 0.001 | lines and edges are drawn by this distance in front of the faces, relative to the size of the scene, so that they are not hidden by the faces they lie on |
 
 
 
 (sec-vsettingsraytracer)=
 ### VSettingsRaytracer
 
-Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.
+Settings of the raytracer, the renderer on the CPU that draws a view with shadows, soft shadows, sharp and blurred reflections, transparency with refraction, emission and fog, through the materials of the faces. It is switched on per view by view0.camera.useRaytracer, and `SC.renderer.RedrawAndGetImage(useRaytracer=True)` gives an image without any window. The lights and their shadows, the ambient light, the background, the line width and the clipping plane are taken from the OpenGL, general and view settings. An image takes from a fraction of a second to seconds: start with a small window. See [](#sec-overview-basics-raytracing), and [](#sec-raytracer-quality) for the cost of each setting.
 
 Reached as `SC.visualizationSettings.raytracer`.
 
@@ -716,28 +716,28 @@ VSettingsRaytracer has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
-| `advanced` | VSettingsRaytracerAdvanced |  | advanced settings for raytracer |
-| `material0` | VSettingsMaterial |  | settings for material0; starts from name='default', baseColor=[0.4, 0.4, 0.9], specular=[0.6, 0.6, 0.6]; every other value is the default of the type |
-| `material1` | VSettingsMaterial |  | settings for material1; starts from name='matt', baseColor=[0., 1., 0.], specular=[0.3, 0.3, 0.3], shininess=5.0; every other value is the default of the type |
-| `material2` | VSettingsMaterial |  | settings for material2; starts from name='steel', baseColor=[0.6, 0.6, 0.6], specular=[0.3, 0.33, 0.4], shininess=25.0, reflectivity=0.1; every other value is the default of the type |
-| `material3` | VSettingsMaterial |  | settings for material3; starts from name='plastic', baseColor=[1., 0., 0.], specular=[0.4, 0.45, 0.45], shininess=20.0, reflectivity=0.1; every other value is the default of the type |
-| `material4` | VSettingsMaterial |  | settings for material4; starts from name='chrome', baseColor=[0.75, 0.75, 0.75], specular=[0.6, 0.62, 0.67], shininess=60.0, reflectivity=0.25; every other value is the default of the type |
-| `material5` | VSettingsMaterial |  | settings for material5; starts from name='shiny', baseColor=[1., 0.5, 0.], specular=[0.7, 0.65, 0.7], shininess=100.0, reflectivity=0.5; every other value is the default of the type |
-| `material6` | VSettingsMaterial |  | settings for material6; starts from name='transparent', baseColor=[0.75, 0.75, 0.75], specular=[0.4, 0.4, 0.45], shininess=20.0, ior=1.05, alpha=0.3; every other value is the default of the type |
-| `material7` | VSettingsMaterial |  | settings for material7; starts from name='glass', baseColor=[0.8, 0.8, 0.8], specular=[0.6, 0.68, 0.63], shininess=50.0, reflectivity=0.6, ior=1.5, alpha=0.15; every other value is the default of the type |
-| `material8` | VSettingsMaterial |  | settings for material8; starts from name='mirror', baseColor=[0.8, 0.8, 0.8], specular=[0.4, 0.4, 0.4], shininess=50.0, reflectivity=0.8; every other value is the default of the type |
-| `material9` | VSettingsMaterial |  | settings for material9; starts from name='emission', baseColor=[0.85, 0.85, 0.7], specular=[0.6, 0.6, 0.6], shininess=20.0, emission=[0.8, 0.8, 0.7]; every other value is the default of the type |
-| `globalFogColor` | Float4 | [0.5,0.5,0.5,1.] | scene RGBA fog color |
-| `globalFogDensity` | UFloat | 0. | global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1) |
-| `imageSizeFactor` | PInt | 1 | Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc. |
-| `keepWindowActive` | bool | False | Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout |
-| `lightRadiusVariations` | PInt | 1 | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8 |
-| `maxReflectionDepth` | UInt | 2 | Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
-| `maxTransparencyDepth` | UInt | 2 | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
-| `multiSampling` | PInt | 1 | Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4] |
+| `advanced` | VSettingsRaytracerAdvanced |  | advanced settings of the raytracer: the shadow map, savings of shadow rays, threads, and colors for special cases |
+| `material0` | VSettingsMaterial |  | material 0, selected by the color `graphics.material.default` or the index `graphics.material.indexDefault`; starts from name='default', baseColor=[0.4, 0.4, 0.9], specular=[0.6, 0.6, 0.6]; every other value is the default of the type |
+| `material1` | VSettingsMaterial |  | material 1, selected by the color `graphics.material.matt` or the index `graphics.material.indexMatt`; starts from name='matt', baseColor=[0., 1., 0.], specular=[0.3, 0.3, 0.3], shininess=5.0; every other value is the default of the type |
+| `material2` | VSettingsMaterial |  | material 2, selected by the color `graphics.material.steel` or the index `graphics.material.indexSteel`; starts from name='steel', baseColor=[0.6, 0.6, 0.6], specular=[0.3, 0.33, 0.4], shininess=25.0, reflectivity=0.1; every other value is the default of the type |
+| `material3` | VSettingsMaterial |  | material 3, selected by the color `graphics.material.plastic` or the index `graphics.material.indexPlastic`; starts from name='plastic', baseColor=[1., 0., 0.], specular=[0.4, 0.45, 0.45], shininess=20.0, reflectivity=0.1; every other value is the default of the type |
+| `material4` | VSettingsMaterial |  | material 4, selected by the color `graphics.material.chrome` or the index `graphics.material.indexChrome`; starts from name='chrome', baseColor=[0.75, 0.75, 0.75], specular=[0.6, 0.62, 0.67], shininess=60.0, reflectivity=0.25; every other value is the default of the type |
+| `material5` | VSettingsMaterial |  | material 5, selected by the color `graphics.material.shiny` or the index `graphics.material.indexShiny`; starts from name='shiny', baseColor=[1., 0.5, 0.], specular=[0.7, 0.65, 0.7], shininess=100.0, reflectivity=0.5; every other value is the default of the type |
+| `material6` | VSettingsMaterial |  | material 6, selected by the color `graphics.material.transparent` or the index `graphics.material.indexTransparent`; starts from name='transparent', baseColor=[0.75, 0.75, 0.75], specular=[0.4, 0.4, 0.45], shininess=20.0, ior=1.05, alpha=0.3; every other value is the default of the type |
+| `material7` | VSettingsMaterial |  | material 7, selected by the color `graphics.material.glass` or the index `graphics.material.indexGlass`; starts from name='glass', baseColor=[0.8, 0.8, 0.8], specular=[0.6, 0.68, 0.63], shininess=50.0, reflectivity=0.6, ior=1.5, alpha=0.15; every other value is the default of the type |
+| `material8` | VSettingsMaterial |  | material 8, selected by the color `graphics.material.mirror` or the index `graphics.material.indexMirror`; starts from name='mirror', baseColor=[0.8, 0.8, 0.8], specular=[0.4, 0.4, 0.4], shininess=50.0, reflectivity=0.8; every other value is the default of the type |
+| `material9` | VSettingsMaterial |  | material 9, selected by the color `graphics.material.emission` or the index `graphics.material.indexEmission`; starts from name='emission', baseColor=[0.85, 0.85, 0.7], specular=[0.6, 0.6, 0.6], shininess=20.0, emission=[0.8, 0.8, 0.7]; every other value is the default of the type |
+| `globalFogColor` | Float4 | [0.5,0.5,0.5,1.] | RGBA color of the fog, see globalFogDensity |
+| `globalFogDensity` | UFloat | 0. | density of an exponential fog, relative to the size of the scene: a face at the distance d is mixed with globalFogColor by the factor exp(-globalFogDensity d / D), D the diameter of the scene; 0 switches the fog off; it becomes visible from about 1 |
+| `imageSizeFactor` | PInt | 1 | renders the image smaller by this factor in each direction, which is faster (2: 4 times fewer rays), e.g. while adjusting a scene; `SC.renderer.RedrawAndGetImage` then returns the smaller image; range=1..16 |
+| `keepWindowActive` | bool | False | special flag, handle with care; True: the raytracer lets the render window process its events during long images (> 2 seconds), as otherwise the window may time out before the image is finished |
+| `lightRadiusVariations` | PInt | 1 | the number of samples of each light with a lightRadius > 0 (openGL.light0.lightRadius, ...), which gives soft shadows on the faces seen directly; 1 gives hard shadows; the samples lie on a spiral over the disk of the light, rotated from hit to hit, so few samples give grain, which the shadow map smooths (advanced.shadowScalingFactor, advanced.shadowSmoothingSteps); e.g. 13 with the default smoothing, 31 for a little more detail at about 10 % more time; the samples are traced at the edges of shadows only (advanced.adaptiveShadowSamples); range=1..256 |
+| `maxReflectionDepth` | UInt | 2 | maximum number of reflections traced for one ray, range=0..32; each transparent face passed counts as well; 2 to 4 suffice usually, more cost time where mirrors face each other |
+| `maxTransparencyDepth` | UInt | 2 | maximum number of transparent faces a ray passes, range=0..32; a ray through a closed body passes two faces, so 2 shows the background through one body; each reflection counts as well; beyond it, the face is drawn opaque |
+| `multiSampling` | PInt | 1 | anti-aliasing: each pixel is the mean of multiSampling x multiSampling rays, which smooths edges, lines and text, and the grain of soft shadows and blurred reflections; the cost grows with its square (3: 9 times); range=1..4; this is the setting of the raytracer, not openGL.multiSampling |
 | `numberOfThreads` | UInt | 0 | Number of CPU-threads (max: 256) used by the raytracer; 0: the number of logical processors of the computer, which is the fastest choice in general (#3445); the threads belong to the raytracer alone, so it renders in parallel also while a solver runs and from the renderer thread (#3438) |
-| `reflectionSamples` | PInt | 8 | the number of reflected rays per pixel on a surface whose material has a roughness > 0, spread over its cone for blurred reflections (only the reflections of the visible surfaces, not of reflections); 1 turns the blur off and gives sharp reflections at the cost of one ray; range=1..256 |
-| `verbose` | Index | 0 | 1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information |
+| `reflectionSamples` | PInt | 8 | the number of reflected rays per pixel on a surface whose material has a roughness > 0, spread over its cone for blurred reflections (only for the faces seen directly; a reflection in a reflection is sharp); 1 turns the blur off and gives sharp reflections at the cost of one ray; fewer rays are faster in proportion but grainy: 2 to 3 suffice for a roughness up to about 0.02, or with multiSampling = 2; range=1..256 |
+| `verbose` | Index | 0 | 1: print the times and counters of each image; 2 and higher: further debug information |
 
 
 

@@ -1,0 +1,15 @@
+{
+  "number": 3488,
+  "title": "Raytracer documentation: the settings, the manual section and the materials",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "The descriptions of visualizationSettings.raytracer, raytracer.advanced and VSettingsMaterial are partly outdated (shadowScalingFactor claims a saving at 1, which at raytracer.multiSampling 1 means no shadow map and no smoothing; lightRadiusVariations recommends avoiding squares, which belonged to the fixed sample pattern; multiSampling and imageSizeFactor). The Raytracing section of the manual still names raytracer.enable and openGL.multiSampling, and says the raytracer cannot run during a multithreaded simulation. The materials are hard to find: their properties, the ten predefined materials and how a color selects one shall be described in the Raytracing section, with cross-references to VSettingsMaterial, raytracer.material0-9 and the GraphicsMaterialList. Measured defaults: shadowScalingFactor 3 and shadowSmoothingSteps 3 stay; reflectionSamples 8 stays, 2-3 rays suffice for roughness up to about 0.02 or with multiSampling 2.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 09:48",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer documentation is revised: the descriptions of all raytracer settings and of the material properties say what each does and what it costs (a shadow map is used only if shadowScalingFactor x raytracer.multiSampling > 1, so at 1 x 1 smoothing has no effect); the section Raytracing of the manual describes the usage, the cost of each setting with measured defaults, and the materials - how a color selects one, their properties and the ten predefined materials -, with links to the settings and to GraphicsMaterialList.",
+  "resolvedInVersion": "1.13.626"
+}

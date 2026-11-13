@@ -1,0 +1,11 @@
+{
+  "number": 3489,
+  "title": "AutoDiff expressions of the analytic connector Jacobians: measure their share, rewrite the costly ones",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "For AutoDiff<12>, SlimVector operator expressions take 3.6-4.4 times one loop (#3487). Measure the share of such expressions in the time of the connectors with analytic Jacobians (#2884); if noticeable, write them as one loop or with MultAdd, bitwise or within rounding; otherwise close with the measurement.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12"
+}

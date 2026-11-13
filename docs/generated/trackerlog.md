@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.625.dev1
+- Exudyn version = 1.13.627.dev1
 - last change = 2026-11-13
-- Number of issues = 3488
-- Number of resolved issues = 3402 (625 in current version)
+- Number of issues = 3492
+- Number of resolved issues = 3404 (627 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` AutoDiff expressions of the analytic connector Jacobians: measure their share, rewrite the costly ones (#3489)
+  - description: For AutoDiff\<12\>, SlimVector operator expressions take 3.6-4.4 times one loop (\#3487). Measure the share of such expressions in the time of the connectors with analytic Jacobians (\#2884); if noticeable, write them as one loop or with MultAdd, bitwise or within rounding; otherwise close with the measurement.
+  - date raised: 2026-11-13
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Expression templates for the small linear algebra: which to enable (#3461)
   - description: Evaluated in docs/dev/design/expressionTemplates.md: full expression templates are not recommended (debugging in VS2022, dangling auto, small measured gain); recommended are a transposed view Transposed(A) \* x without a copy, SlimVectorBase::MultAdd, and fused elementwise expressions on SlimVector only if the measurements M1 show a gain; all keep the order of the sums.
   - date raised: 2026-11-12
@@ -9354,3 +9357,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` GraphicsMaterialList.Get returns old values after raytracer.materialN was changed in the settings (#3490)
+  - description: SC.renderer.materials holds the ten predefined materials as a copy of visualizationSettings.raytracer.material0-9, refreshed only when the raytracer draws an image. After SC.visualizationSettings.raytracer.material4.reflectivity = 0.5, SC.renderer.materials.Get('chrome').reflectivity is still 0.25, and a following Set('chrome', ...) writes 0.25 back into the settings, so the change is lost (found while writing \#3488). Get, GetDict, \[\] and GetDictionary shall read the first ten from the settings.
+  - date raised: 2026-11-13

@@ -76,7 +76,12 @@ def CheckStoredVersions():
     messages = []
     issues = issueTracker.GetIssues()
     closed = [issue for issue in issues if issue['status'] in issueStore.closedStatuses]
-    closed.sort(key=lambda issue: issue['dateResolved'])
+    #issues resolved in the same minute in their order of resolution, which the version written by the tracker
+    #records, not by their numbers (#3491)
+    def ResolutionOrder(issue):
+        stored = str(issue.get('resolvedInVersion', '')).strip().split('.')
+        return (issue['dateResolved'], [int(part) for part in stored] if all(part.isdigit() for part in stored) else [])
+    closed.sort(key=ResolutionOrder)
 
     for issue in issues:
         stored = str(issue.get('resolvedInVersion', '')).strip()

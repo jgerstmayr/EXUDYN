@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 596 | 1.13.625 |
+| 1.13 | Newborn | 598 | 1.13.627 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.627** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` checkIssues.CheckStoredVersions orders issues resolved in the same minute by their numbers (#3491)
+  - description: The check recomputes the version of every closed issue from its place in the order of dateResolved, which has minutes only; two issues resolved in the same minute were ordered by their numbers, so \#3487 (1.13.624) and \#3411 (1.13.625), resolved in this order, were reported as moved versions. Ties are ordered by the version the tracker wrote, which is the order of resolution.
+  - **notes:** The check of the stored versions orders issues resolved in the same minute by their order of resolution instead of their numbers.
+  - date resolved: **2026-11-13 09:48**, date raised: 2026-11-13
+- **1.13.626** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Raytracer documentation: the settings, the manual section and the materials (#3488)
+  - description: The descriptions of visualizationSettings.raytracer, raytracer.advanced and VSettingsMaterial are partly outdated (shadowScalingFactor claims a saving at 1, which at raytracer.multiSampling 1 means no shadow map and no smoothing; lightRadiusVariations recommends avoiding squares, which belonged to the fixed sample pattern; multiSampling and imageSizeFactor). The Raytracing section of the manual still names raytracer.enable and openGL.multiSampling, and says the raytracer cannot run during a multithreaded simulation. The materials are hard to find: their properties, the ten predefined materials and how a color selects one shall be described in the Raytracing section, with cross-references to VSettingsMaterial, raytracer.material0-9 and the GraphicsMaterialList. Measured defaults: shadowScalingFactor 3 and shadowSmoothingSteps 3 stay; reflectionSamples 8 stays, 2-3 rays suffice for roughness up to about 0.02 or with multiSampling 2.
+  - **notes:** The raytracer documentation is revised: the descriptions of all raytracer settings and of the material properties say what each does and what it costs (a shadow map is used only if shadowScalingFactor x raytracer.multiSampling \> 1, so at 1 x 1 smoothing has no effect); the section Raytracing of the manual describes the usage, the cost of each setting with measured defaults, and the materials - how a color selects one, their properties and the ten predefined materials -, with links to the settings and to GraphicsMaterialList.
+  - date resolved: **2026-11-13 09:48**, date raised: 2026-11-13
 - **1.13.625** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ProfileJointPath keeps a line of length zero between two blends, and divides by zero (#3411)
   - description: robotPathPlanningTest.py prints a numpy RuntimeWarning (divide by zero) from ProfileJointPath.GetBasicProfile, in Largest (h = 2(p\_j - p\_i)) and in pDDot = (pDot\[1:\]\*\*2 - pDot\[:-1\]\*\*2)/(2 np.diff(p)). Cause: \_Segments keeps a line between two rounded corners if np.any(end != start), an exact comparison; when the blends of two neighbouring waypoints meet at the middle of the segment - on paths of RRT-Connect, whose waypoints are equally far apart (0.163 rad there), with a blend radius of half the distance or more - the end of the first and the start of the second blend differ by rounding only, and a line of length about 1e-17 becomes a segment whose path parameters are equal. Found 5 such segments of 75 in the first, 8 of 124 in the second path of the test. The checks of the test pass (the trajectory is not visibly wrong), but inf enters the bounds of the accelerations. Fix: drop a line shorter than a tolerance relative to the path length; then check that no interval of p has length zero.
   - **notes:** ProfileJointPath: where the rounded corners of equally spaced waypoints meet in the middle of an edge, no line of length zero is left between them; the profile was computed with thousands of division-by-zero warnings before.

@@ -1,0 +1,15 @@
+{
+  "number": 3491,
+  "title": "checkIssues.CheckStoredVersions orders issues resolved in the same minute by their numbers",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The check recomputes the version of every closed issue from its place in the order of dateResolved, which has minutes only; two issues resolved in the same minute were ordered by their numbers, so #3487 (1.13.624) and #3411 (1.13.625), resolved in this order, were reported as moved versions. Ties are ordered by the version the tracker wrote, which is the order of resolution.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 09:48",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The check of the stored versions orders issues resolved in the same minute by their order of resolution instead of their numbers.",
+  "resolvedInVersion": "1.13.627"
+}

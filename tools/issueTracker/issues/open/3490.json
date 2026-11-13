@@ -1,0 +1,11 @@
+{
+  "number": 3490,
+  "title": "GraphicsMaterialList.Get returns old values after raytracer.materialN was changed in the settings",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "SC.renderer.materials holds the ten predefined materials as a copy of visualizationSettings.raytracer.material0-9, refreshed only when the raytracer draws an image. After SC.visualizationSettings.raytracer.material4.reflectivity = 0.5, SC.renderer.materials.Get('chrome').reflectivity is still 0.25, and a following Set('chrome', ...) writes 0.25 back into the settings, so the change is lost (found while writing #3488). Get, GetDict, [] and GetDictionary shall read the first ten from the settings.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12"
+}

@@ -392,6 +392,8 @@ def TypicalPaths(parseInfo):
         #         class2name = class2name.replace('Settings','')
         
         typicalPaths = typicalPaths.split(',')
+        if _H(parseInfo, 'class') == 'VSettingsMaterial': #the ten numbered materials of the raytracer (#3488)
+            return [path + '.material' + str(i) for path in typicalPaths for i in range(10)]
         for i in range(len(typicalPaths)):
             typicalPaths[i] += '.' if (typicalPaths[i]!='' and class2name!='') else ''
             typicalPaths[i] += class2name[0:1].lower() + class2name[1:]

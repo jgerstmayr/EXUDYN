@@ -27,9 +27,11 @@ The openGL graphics thread (=separate thread) runs the following loop:
 (sec-overview-basics-raytracing)=
 ## Raytracing
 
-For offscreen rendering (e.g. on a supercomputer without and video adapter), for offscreen AI-research on multiple cores, and in order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
-This allows to include shadows and transparency correctly, with additional support for reflections, refraction, emission, fog and materials.
-In the future, textures may be added as well.
+The raytracer is a renderer on the CPU, an alternative to OpenGL for each view. It draws the shadows of every light,
+soft shadows, sharp and blurred reflections, transparency with refraction, emission and fog, through the materials of
+the faces ({ref}`sec-raytracer-materials`). It needs neither a window nor a graphics card, so it also gives images on a
+computer without a display, e.g. for the images of a learning task or on a cluster. An image takes from a fraction of
+a second to several seconds, depending on its size and on the effects used.
 
 (fig-raytracerdemo)=
 ```{figure} /docs/figures/raytracerDemo.jpg
@@ -38,32 +40,149 @@ In the future, textures may be added as well.
 Example image of raytraced renderer view.
 ```
 
-The basic things to know are:
+(sec-raytracer-usage)=
+### Using the raytracer
 
-- Raytracing settings are collected in `SC.visualizationSettings.raytracer` (in the following, we omit 'SC.visualizationSettings').
-- Raytracing is activated by setting `raytracer.enable=True`. Please make sure that you start with small render window sizes / complexity first.
-- The render window size is adjusted by `window.renderWindowSize`. Be careful with this settings.
-- Adjust the `raytracer.numberOfThreads` for optimal performance, use `raytracer.verbose` to see render times for different settings. For testing, use `raytracer.imageSizeFactor>1` to decrease the raytracer's resolution (with same image size), while `openGL.multiSampling` will increase the resolution (anti-aliasing). Note that switching from `openGL.multiSampling=1` and `raytracer.imageSizeFactor=4` to `openGL.multiSampling=3` and `raytracer.imageSizeFactor=1` increases computational costs by a factor $4\times 4\times 3\times 3 = 144$. Use only one light, if sufficient (set `openGL.light1.enable=False`).
-- Scene, lights, shadow, clipping plane, etc. settings are taken form OpenGL settings and directly used in the software renderer, like `openGL.light0.position`, the `shadow` of each light, `openGL.perspective`, `openGL.clippingPlaneNormal`, `openGL.showLines`, etc.;
-- some settings are in general, like `general.backgroundColor` or `general.drawWorldBasis`;
-- In order to see the advantages of the software renderer, materials have to be used, see below.
+- `SC.visualizationSettings.view0.camera.useRaytracer = True` draws the view with the raytracer, in the render window
+  and in the SolutionViewer; `SC.renderer.RedrawAndGetImage(useRaytracer=True)` returns one image without any window,
+  see {ref}`sec-sc-renderer`. Without a running renderer, set the view first with `SC.renderer.ZoomAll()` or
+  `SC.renderer.SetModelView(...)`.
+- Its own settings are `visualizationSettings.raytracer`, see {ref}`sec-vsettingsraytracer`, and
+  `visualizationSettings.raytracer.advanced`, see {ref}`sec-vsettingsraytraceradvanced`; in the following,
+  `visualizationSettings` is left out.
+- It takes the scene from the OpenGL settings: the lights `openGL.light0` to `openGL.light3` with their `position`,
+  `diffuse`, `specular`, attenuation, `shadow` (the raytracer only distinguishes 0 and > 0) and `lightRadius`; the
+  ambient light `openGL.lightModelAmbient`; `openGL.lineWidth` and `openGL.faceTransparencyGlobal`; the background
+  `general.backgroundColor`, `general.backgroundColorBottom` and `general.useGradientBackground`; and from the view the
+  camera (`perspective`, the clipping plane) and the scene (`showLines`, `showFaceEdges`, `facesTransparent`).
+- Faces without a material are drawn with material 0, `default`, which has no reflection; the effects need a
+  material, {ref}`sec-raytracer-materials`.
+- The raytracer has its own threads, `raytracer.numberOfThreads` (0: all logical processors), so it also renders while
+  a solver runs. `raytracer.verbose = 1` prints the times of an image.
+- The text of the render window (solver information, version, ...) is drawn over the image, see
+  `view0.window.showComputationInfo`; `raytracer.advanced.showText = False` removes all text from raytraced images.
 
- **Materials**:
+To add raytracing to a project, give the triangles a material, e.g.
+`color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome]`, and set `view0.camera.useRaytracer = True`
+before `mbs.SolutionViewer()`; the example at the end of {ref}`sec-graphicsdata` does so and shows the image.
 
-- Materials have the type `VSettingsMaterial`, see description in {ref}`sec-vsettingsmaterial`, for adjusting color, reflectivity, shininess, alpha-transparency, etc.;
-- Materials can only be used within triangulated geometries (GraphicsData `TriangleList`) using a material-flag in the color, like `graphics.Sphere(..., color=graphics.material.chrome)`. In the RGBA color, the alpha-channel is replaced by a material index which starts at 1000 (where 1000 represents material index 0). Note that in the regular OpenGL-rendering, alpha$>$1 is equivalent to alpha$=$1. The first 10 materials are linked to `raytracer.material0 ... raytracer.material9`.
-- The material's `baseColor` is used if the color red-channel is set to $-1$. Note that this allows to globally change the color of objects by changing `baseColor` in the material settings in `visualizationSettings`. Summarizing, using `color=[1,0,0,graphics.material.indexSteel]` chooses red color with steel material settings, while `color=[-1,-1,-1,graphics.material.indexSteel]` will use the color of steel (but will be black for OpenGL renderer), identical with `color=graphics.material.steel`.
-- The setting `backgroundColorReflections` can be used to represent the background which is used for rendering, while the background is independently set to black or white. Otherwise, black background leads to black regions on highly reflective objects or very light regions for white backgrounds.
-- System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in `general.showComputationInfo` and similar.
+(sec-raytracer-quality)=
+### Image quality and cost
 
- **Limitations and risks**:
+The cost of an image is the number of rays traced. Every pixel traces at least one ray from the camera; each effect
+adds rays where it is seen:
 
-- Raytracing is CPU-based and therefore slow. Do not use very high resolution (4K) together with multisampling $>1$. Start with small render window sizes (e.g. 600 $\times$ 400)
-- Raytracing usually uses multithreading with speedups $>10$ on 16 cores. However, this cannot be combined with multithreaded simulations. It is therefore recommended to use raytracing in the solution viewer, not during simulation.
-- If software rendering of a single frame gets to long (>4 seconds), timeouts become active and it may occasionally not work. There are some options to compensate, see above.
-- In general, it is **recommended to start with default settings and experiment** with changes using the visualization settings dialog.
+| what | setting | rays |
+|---|---|---|
+| image size | `view0.window.renderWindowSize` | one per pixel |
+| smaller image | `raytracer.imageSizeFactor` = $k$ | $1/k^2$ of them, the image is $k$ times smaller |
+| anti-aliasing | `raytracer.multiSampling` = $m$ | $m^2$ per pixel; smooths edges and lines, and the grain of soft shadows and blurred reflections |
+| shadow | `openGL.light0.shadow` > 0 | one per light and hit |
+| soft shadow | `openGL.light0.lightRadius` > 0, `raytracer.lightRadiusVariations` = $N$ > 1 | up to $N$ per light and hit, at the edges of shadows only (`raytracer.advanced.adaptiveShadowSamples`) |
+| reflection | material `reflectivity` > 0 | one per reflecting hit, up to `raytracer.maxReflectionDepth` levels |
+| blurred reflection | material `roughness` > 0 | `raytracer.reflectionSamples` per reflecting pixel |
+| transparency | material `alpha` < 1 | one per transparent face, up to `raytracer.maxTransparencyDepth` faces |
 
-To add raytracing to your project, give the triangles a material, e.g. `color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome]`, and set `view0.camera.useRaytracer = True` before `mbs.SolutionViewer()`; the example at the end of {ref}`sec-graphicsdata` does so and shows the image.
+**Soft shadows.** A light with a `lightRadius` is a disk; the raytracer takes `lightRadiusVariations` samples of it,
+on a spiral that is rotated from hit to hit. Few samples therefore give grain instead of rings. The grain is removed
+on a **shadow map** of a lower resolution, the resolution of the window divided by
+`raytracer.advanced.shadowScalingFactor`: it is smoothed `raytracer.advanced.shadowSmoothingSteps` times, between
+neighbours of similar depth only, and the pixels interpolate it. The map exists only if `shadowScalingFactor` times
+`raytracer.multiSampling` is larger than 1; with `shadowScalingFactor = 1` and `multiSampling = 1`, every pixel takes
+its own samples, the soft shadows are grainy and the smoothing has no effect. In the scene of
+`raytracerShadowBenchmark.py` (1200 $\times$ 1000 pixels, 13 samples):
+
+| `shadowScalingFactor`, `shadowSmoothingSteps` | time | soft shadow |
+|---|---|---|
+| 3, 3 (the defaults) | 0.10 s | smooth |
+| 2, 3 | 0.12 s | smooth, sharper edges |
+| 2, 0 | 0.11 s | grainy |
+| 1, any, with `multiSampling = 1` | 0.21 s | grainy, no map |
+
+More than 3 smoothing steps gain nothing; more samples (e.g. 31) give a little more detail at about 10 % more time.
+Soft shadows are computed for the faces seen directly; a face seen in a reflection or through a transparent face gets a
+hard shadow, and `raytracer.advanced.minimumShadowWeight` can save even these where the reflection is weak.
+
+**Blurred reflections.** A material with a `roughness` > 0 reflects `raytracer.reflectionSamples` rays (default 8),
+spread over a cone, for the faces seen directly. Fewer rays are faster in proportion but grainy: 2 or 3 rays suffice
+for a roughness up to about 0.02, or together with `raytracer.multiSampling = 2`, whose sub-pixels average the grain.
+
+Start with a small window or with `raytracer.imageSizeFactor` > 1 while adjusting a scene, and add
+`multiSampling = 2` for the final images only: from `multiSampling = 1` and `imageSizeFactor = 4` to
+`multiSampling = 3` and `imageSizeFactor = 1`, the cost grows by $4 \times 4 \times 3 \times 3 = 144$.
+
+(sec-raytracer-materials)=
+### Materials
+
+A **material** decides how a face reflects light: its colors, the highlights, reflection, transparency with
+refraction and emission. OpenGL does not use materials.
+
+**Selecting a material.** A face selects a material by the fourth value of its RGBA color: $1000+i$ selects material
+$i$, and the value of a usual alpha ($\le 1$) selects material 0. A red value of $-1$ takes the color of the face
+from the material's `baseColor`. `graphics.material` gives both: the index, e.g. `graphics.material.indexSteel`
+(1002), and the color, e.g. `graphics.material.steel`, which is `[-1,-1,-1,1002]`:
+
+- `color=[1,0,0,graphics.material.indexSteel]`: red, with the reflection and highlights of steel;
+- `color=graphics.material.steel`: steel in its own `baseColor`, which changes all such faces at once;
+- OpenGL draws an alpha > 1 as 1 and a red value of $-1$ as black.
+
+Materials act on faces (triangles, as in all `graphics` functions that create bodies); lines and text have none.
+
+**The properties** of a material are those of {ref}`sec-vsettingsmaterial`, where their defaults are listed:
+
+| property | effect in the raytracer |
+|---|---|
+| `name` | the name, by which `SC.renderer.materials.Get(...)` and `Set(...)` find the material |
+| `baseColor` | RGB color of the faces whose color has the red value $-1$ |
+| `specular` | RGB color of the highlights (Phong), multiplied by the `specular` value of each light |
+| `shininess` | exponent of the highlights: below 5 broad and dull, above 50 small and sharp |
+| `reflectivity` | share of the reflected color, 0 none, 1 a perfect mirror |
+| `roughness` | angular radius in radians of the cone of the reflected rays: 0 sharp, 0.02 polished, 0.1 brushed |
+| `alpha` | opacity, replacing the alpha of the color: 1 opaque, 0 fully transparent; shadows let light through in proportion to $1-\alpha$ |
+| `ior` | index of refraction of a transparent material: 1 straight through, 1.5 glass; the ray enters at a face whose normal points against it and leaves at one whose normal points along it |
+| `emission` | RGB color the face adds by itself, independent of the lights; it does not light other faces |
+
+**The ten predefined materials** are `raytracer.material0` to `raytracer.material9`; their values are listed in
+{ref}`sec-vsettingsraytracer`:
+
+| index | name | `graphics.material` | character |
+|---|---|---|---|
+| 0 | `default` | `default`, `indexDefault` | blue, no reflection; used by faces without a material |
+| 1 | `matt` | `matt`, `indexMatt` | green, dull |
+| 2 | `steel` | `steel`, `indexSteel` | grey, slightly reflective |
+| 3 | `plastic` | `plastic`, `indexPlastic` | red, slightly reflective |
+| 4 | `chrome` | `chrome`, `indexChrome` | light grey, reflective |
+| 5 | `shiny` | `shiny`, `indexShiny` | orange, strongly reflective |
+| 6 | `transparent` | `transparent`, `indexTransparent` | transparent, slight refraction |
+| 7 | `glass` | `glass`, `indexGlass` | transparent, reflective, refraction of glass |
+| 8 | `mirror` | `mirror`, `indexMirror` | a mirror |
+| 9 | `emission` | `emission`, `indexEmission` | light yellow, emitting |
+
+**Changing and adding materials.** The materials are kept in `SC.renderer.materials`, a GraphicsMaterialList, see
+{ref}`sec-graphicsmateriallist`. Its first ten are `raytracer.material0` to `material9`: `Set` writes into these
+settings, and the raytracer copies the settings into the list before every image. Change a predefined material in one
+of the two ways, not both in the same script:
+
+```python
+SC.visualizationSettings.raytracer.material4.reflectivity = 0.5   #chrome, by the settings
+#or by name, as VSettingsMaterial:
+chrome = SC.renderer.materials.Get('chrome')
+chrome.roughness = 0.03
+SC.renderer.materials.Set('chrome', chrome)
+gold = SC.renderer.materials.New()                                 #a new material, index 10
+gold.name = 'gold'
+gold.baseColor = [0.9, 0.7, 0.2]
+gold.reflectivity = 0.4
+index = SC.renderer.materials.Append(gold)                         #used by the color [-1,-1,-1,1000+index]
+```
+
+The materials are stored with the renderer's dictionary, `SC.renderer.GetDictionary()`, and the first ten with the
+visualization settings.
+
+**Limitations.** The raytracer runs on the CPU: keep the image small (e.g. 600 $\times$ 400 to start) and do not
+combine a large image (4K) with `multiSampling` > 1. An image that takes longer than a few seconds in the render window
+may need `raytracer.keepWindowActive`. Start with the default settings, and change them in the visualization settings
+dialog.
 
 (sec-graphicsdata)=
 ## GraphicsData

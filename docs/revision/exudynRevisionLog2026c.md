@@ -6520,6 +6520,39 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg6-27"></a>
+### RG6.27 — the raytracer documentation: settings, manual section, materials (2026-11-13, #3488)
+
+*(Maintainer 2026-11-13: adjust the descriptions of the shadow and reflection settings; revise all raytracer settings
+together with the overall raytracer description; the material properties in the raytracer section, with
+cross-references to the visualizationSettings.)*
+
+- Measured first (raytracerShadowBenchmark.py scene, 1200 x 1000, against 240 light samples per pixel; scratch
+  rtDefaults.py, a Laplacian difference as the measure of grain): 13 samples, shadowScalingFactor/shadowSmoothingSteps
+  3/3 0.101 s (difference 0.075), 2/3 0.121 s (0.068), 2/0 0.113 s (0.148, grainy), 1 with raytracer.multiSampling 1
+  0.213 s (0.264, grain 7 times): no shadow map (shadowScalingFactor x multiSampling must be > 1), so smoothing has no
+  effect - the cause of the maintainer's observation; more than 3 steps gain nothing; with multiSampling 2, scaling 1
+  has a map and smoothing works (0.40 s). The defaults stay.
+- reflectionSamples (roughness 0.05, 64-ray reference): 1 ray 0.083 s, 2 0.137 s with the most grain of all (1.57
+  against 0.32 sharp), 3 0.185 s, 8 0.42 s (0.56); at roughness 0.02 the grain is a third; multiSampling 2 with 2 rays
+  0.48 s, worse than 8 rays without. The default 8 stays; the descriptions say when 2-3 suffice.
+- structureDefsVisualizationSettings.py: the class descriptions of VSettingsRaytracer, VSettingsRaytracerAdvanced and
+  VSettingsMaterial, and 38 descriptions (all non-deprecated raytracer settings and the material properties): what
+  each does, its cost, the shadow map condition, no "avoid squares" (that was the fixed sample pattern before #3475),
+  material0-9 name their graphics.material color and index. structureModel.TypicalPaths: VSettingsMaterial is reached
+  as raytracer.material0 to material9 (was "raytracer.material").
+- introductionAdvanced.md, section Raytracing rewritten: usage (useRaytracer, RedrawAndGetImage, what is taken from the
+  OpenGL, general and view settings; raytracer.enable, openGL.multiSampling and "not during multithreaded simulations"
+  were outdated), Image quality and cost (rays per setting, the shadow map, the measured table), Materials (selection
+  by the color, the properties, the ten predefined materials, changing and adding them; links to VSettingsMaterial,
+  VSettingsRaytracer, GraphicsMaterialList), limitations. The snippet checked: an appended material (index 10) is drawn
+  with color 1010.
+- Found: SC.renderer.materials.Get returns old values after raytracer.materialN was changed in the settings, and Set
+  writes them back - raised as #3490 (RG6.28); the manual says to use one of the two ways.
+- RG10.34 (#3491): the pytest gate reported #3411 as a moved version - #3487 and #3411 were resolved in the same
+  minute in this order, and checkIssues.CheckStoredVersions ordered the tie by the numbers; ties are now ordered by the
+  stored version, the order of resolution. No version changed.
+
 <a id="rg19-18"></a>
 ### RG19.18 — ProfileJointPath: no line of length zero between two curves (2026-11-13, #3411)
 
