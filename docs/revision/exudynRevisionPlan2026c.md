@@ -50,12 +50,16 @@ and is open. **Open steps** and the **groups** table are generated - never edit 
 
 The title of each says what it does; the sentence after it, why it comes now.
 
-1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
-   4.3.0 and of cp315 on GitHub.
-2. **Read the predefined materials from the settings in GraphicsMaterialList** (RG6.28): a small bug found while
-   documenting the materials; no decision needed.
-3. **Add the 3D sliding joint with rotation** (RG4.22): fully specified, tested with the ANCF cable and beam.
-4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+1. **Finish the release rehearsal on `release/1.14`** (running since 2026-11-13) - the wheels of all 24 jobs, then the
+   release around the end of November 2026, before the removal date of #3361.
+2. **Read the predefined materials from the settings in GraphicsMaterialList** (RG6.28): a small bug, no decision.
+3. **Show the performance of the releases in the documentation** (RG5.13): a generated table, no decision.
+4. **Measure and design fewer parallel regions per residual** (RG5.14.1, RG5.14.2): the threads cost more than they
+   give below about 300 coordinates; the design note is for the maintainer to decide.
+5. **A real training run of spotReinforcementLearning.py** (RG19.14.4): torch, gym and stable-baselines3 are now in
+   venvP313.
+6. **Add the 3D sliding joint with rotation** (RG4.22): fully specified, tested with the ANCF cable and beam.
+7. **The larger open work**, after the release: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -64,13 +68,13 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
+  - RG5.13 Show the performance of the releases in the documentation, generated from performanceHistory.json
+  - RG5.14 Run the main tasks of a residual and of an explicit stage in fewer parallel regions (5 open sub-steps)
 - **RG6** Graphics and rendering
   - RG6.28 GraphicsMaterialList reads the predefined materials from the visualization settings
 - **RG7** Python user items
-  - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
@@ -112,9 +116,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 3 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 2 | Python user items |
+| RG7 | OPEN | 1 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -599,7 +603,7 @@ CLOSED 2026-11-11 (#3420): the global timers finalize matrix and factorize; Fina
 
 CLOSED 2026-11-11 (#3426): Eigen 5.0.1 builds unchanged; SparseLU and setFromTriplets the same speed, dense LU faster in the fast module, small fixed-size products slower; 323 of 333 test results the same, 10 by round-off (up to 3e-8 for contact); no open Eigen bug concerns Exudyn - not now. MKL PARDISO 2.5-24 times faster when its analysis is kept, but wrong or failing on index-3 Jacobians, and no way from Python to hand the increment back to the Newton loop - not now; linearSolver.reuseAnalyzedPattern shortens the factorization by 20-31 % where the pattern stays. [log](exudynRevisionLog2026c.md#rg5-1-12)
 
-### **OPEN_RG5.2** Make the hot linear algebra vectorizable with compile-time sizes
+### **CLOSED_RG5.2** Make the hot linear algebra vectorizable with compile-time sizes
 
 The solver time of long-vector models sits in `ODE2RHS` - per-object 3x3 and short-vector work - and
 `ConstSizeMatrix` carries its size at run time, so it cannot be unrolled. Candidates: compile-time sizes, homogeneous
@@ -608,6 +612,8 @@ transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; stee
 Maintainer 2026-11-12: an evaluation and a recommendation first; one point is certainly matrices of fixed rows and columns instead of ConstSizeMatrix, which reserves a size but can take any size during the computation (handy, but slow). Evaluation 2026-11-12: docs/dev/design/linalgFixedSize.md - after the local recommendations L1-L6 of RG5.1 the 3x3 products are as fast as a fixed-size prototype; remaining gaps of compile-time sizes: 6x6 products 2.2 times, 6x6 times vector 1.7, J^T K J at 3 x 6 1.7, short ConstSizeVector operations 3-4 times; Eigen fixed sizes rejected (3.3.7/5.0.1 with MSVC slower than the prototype). Recommended: first a profile of ODE2RHS in the rigid-body chains (bodies, markers, connectors), then SlimMatrix<T, rows, columns> with conversions to ConstSizeMatrix, Matrix6D first, Matrix3D behind a compile switch, the rigid body templated on its rotation coordinates only if the profile shows its share; proposed sub-steps in the note, waiting for the maintainer.
 
 #161, #710 from RG5.1.4.
+
+CLOSED 2026-11-13: all sub-steps done (RG5.2.1-RG5.2.9): SlimMatrix with Matrix3D and Matrix6D, the rigid body templated on its rotation coordinates, the transposed view and MultAdd, the linear algebra templates consolidated; fused expressions not done (RG5.2.7.5).
 
 #### **CLOSED_RG5.2.1** Profile ODE2RHS of the rigid-body models: bodies, marker data, connectors, assembly
 
@@ -976,6 +982,34 @@ CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: mini
 #3454. The allocation count of solverBaseline.py (RG5.8.1) shows about 100 array allocations per step in the GeneralContact model, while the other models allocate only during the initialization. Maintainer 2026-11-12: find the cause; if it is straightforward, solve it at once.
 
 CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tree, each allocated when a sphere first enters it and grown when it first holds more; only in the first solve (100 per step), a second solve from the initial state 0.15-0.7 per step, both in the same time. [log](exudynRevisionLog2026c.md#rg5-12)
+
+### **OPEN_RG5.13** Show the performance of the releases in the documentation, generated from performanceHistory.json
+
+#3493. Maintainer 2026-11-13: the evolution of the performance in the docs - a table like performanceHistory.md, only for releases and with much less detail (the models, not the single runs); generated from the .json file, for Windows regular and fast where available. The releases in performanceHistory.json: 1.9.0, 1.10.0, 1.11.0 and 1.13.6 regular, 1.13.6 fast (Windows, Python 3.13). Todo: a generated page in docs/generated/, its place in the table of contents, written by tools/regenerate.py.
+
+### **OPEN_RG5.14** Run the main tasks of a residual and of an explicit stage in fewer parallel regions
+
+#3494. Maintainer 2026-11-13: the ParallelFor loops are called several times in a solver - mass matrix, ODE2, constraints, loads; critical for the medium-small systems that are used most; the single ParallelFor calls done once or in parallel right away (or at least more tasks done in parallel), possibly by an elegant change of the structure of CSystem; the Jacobians and the rare ODE1 cases need not be included. Facts: CSystem.cpp has ParallelFor loops for the mass matrix, the ODE2 right-hand side, the loads, the algebraic equations, ODE1 and the reaction forces, CSolverExplicit.cpp three per stage; in the solver baseline (#3002, 1.13.577 fast) 4 threads are slower than 1 below about 300 coordinates (massOscillator 1.29-1.45, nPendulum 1.14, rigidBodySpringDampers 1.04-1.12) and faster from 400 (0.5-0.9).
+
+#### **OPEN_RG5.14.1** Measure the cost of a parallel region and count the regions per Newton iteration and per stage
+
+#3494. The start and join of one ParallelFor on 1-16 threads (empty and with little work), the number of regions per residual, Jacobian and explicit stage in the small and medium models of the solver baseline; how much of a step they cost.
+
+#### **OPEN_RG5.14.2** Design: one parallel region for the residual - task lists or a persistent region with barriers
+
+#3494. A design note: which tasks of the residual are independent (objects, loads, constraints, contact), how their outputs are merged without a race (per-thread vectors, as tempArray now), whether the tasks become one list for one ParallelFor or the threads stay in one region and meet at barriers; what changes in CSystem and its callers; for the maintainer to decide.
+
+#### **OPEN_RG5.14.3** The residual of the implicit solvers in one parallel region
+
+#3494. ODE2 right-hand side, loads and algebraic equations (and the mass matrix where it is computed with them), bitwise or within rounding; the test suite and the solver baseline on 1-16 threads.
+
+#### **OPEN_RG5.14.4** The explicit stage in one parallel region
+
+#3494. The right-hand side, the loads and the mass matrix of a stage, and the update loops of CSolverExplicit.cpp.
+
+#### **OPEN_RG5.14.5** The threshold below which a solver runs serially, measured again
+
+#3494. With fewer regions the system size from which threads pay drops; the cost threshold of ParallelFor (costs < 1000) and the advice for numberOfThreads measured and adjusted.
 
 ## **OPEN_RG6** Graphics and rendering
 
@@ -1724,9 +1758,11 @@ by `show`; userGraphicsDataTest.py. [log](exudynRevisionLog2026c.md#rg7-14)
 CLOSED 2026-10-23 (#3067; maintainer: add useful graphics to the existing user body examples, run with graphics and the
 SolutionViewer when not in test mode): seven test models, results unchanged. [log](exudynRevisionLog2026c.md#rg7-14-1)
 
-### **OPEN_RG7.15** Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
+### **CLOSED_RG7.15** Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
 
 Maintainer 2026-10-25, the review of ObjectConnectorUser, ObjectJointUser and MarkerUser, and two findings in the test models.
+
+CLOSED 2026-11-13: all points of the review done (RG7.15.1-RG7.15.9).
 
 #### **CLOSED_RG7.15.1** Open the SolutionViewer before the solution file is switched off again in the user item test models
 

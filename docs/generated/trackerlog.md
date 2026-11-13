@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.629.dev1
 - last change = 2026-11-13
-- Number of issues = 3493
+- Number of issues = 3495
 - Number of resolved issues = 3406 (629 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` Fewer parallel regions per Newton iteration and per explicit stage (#3494)
+  - description: CSystem runs a separate ParallelFor for the mass matrix, the ODE2 right-hand side of the objects, the loads, the algebraic equations, ODE1 and the reaction forces, and the explicit solver three more per stage; each starts and joins the workers. For the small and medium systems that are used most, this overhead dominates: in the solver baseline (\#3002) 4 threads are slower than one for all models below about 300 coordinates (1.04-1.45 times). The main tasks of a residual (and of an explicit stage) shall run in one parallel region, or at least with more work per region; Jacobians and the rare ODE1 cases may stay as they are.
+  - date raised: 2026-11-13
+- `DOCU` `LOW EFF` `raised by: Claude-JG` The performance of the releases as a generated table in the documentation (#3493)
+  - description: A page of the documentation shows how the performance models evolve over the releases: one row per performance model (file times, no single runs or timers), one column per release, for Windows with the regular module and with the fast module where it exists; generated from python/logs/performance/performanceHistory.json by performanceHistory.py during the regeneration, so it is never written by hand.
+  - date raised: 2026-11-13
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Expression templates for the small linear algebra: which to enable (#3461)
   - description: Evaluated in docs/dev/design/expressionTemplates.md: full expression templates are not recommended (debugging in VS2022, dangling auto, small measured gain); recommended are a transposed view Transposed(A) \* x without a copy, SlimVectorBase::MultAdd, and fused elementwise expressions on SlimVector only if the measurements M1 show a gain; all keep the order of the sums.
   - date raised: 2026-11-12

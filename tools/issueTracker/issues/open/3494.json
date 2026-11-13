@@ -1,0 +1,11 @@
+{
+  "number": 3494,
+  "title": "Fewer parallel regions per Newton iteration and per explicit stage",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "HIGH",
+  "description": "CSystem runs a separate ParallelFor for the mass matrix, the ODE2 right-hand side of the objects, the loads, the algebraic equations, ODE1 and the reaction forces, and the explicit solver three more per stage; each starts and joins the workers. For the small and medium systems that are used most, this overhead dominates: in the solver baseline (#3002) 4 threads are slower than one for all models below about 300 coordinates (1.04-1.45 times). The main tasks of a residual (and of an explicit stage) shall run in one parallel region, or at least with more work per region; Jacobians and the rare ODE1 cases may stay as they are.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12"
+}

@@ -1,0 +1,11 @@
+{
+  "number": 3493,
+  "title": "The performance of the releases as a generated table in the documentation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "A page of the documentation shows how the performance models evolve over the releases: one row per performance model (file times, no single runs or timers), one column per release, for Windows with the regular module and with the fast module where it exists; generated from python/logs/performance/performanceHistory.json by performanceHistory.py during the regeneration, so it is never written by hand.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12"
+}
