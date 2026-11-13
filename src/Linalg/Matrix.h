@@ -939,50 +939,45 @@ public:
 	}
 
 
-	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
+	//! add factor*sm, a matrix of possibly smaller size, at (*this) 'row' and 'column'; the factor last, as in
+	//! SetSubmatrix; factor 1 gives the bits of adding sm (1*x == x) (#3485)
 	template<class TMatrix>
-	void AddSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0)
+	void AddSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0, T factor = 1.)
 	{
-#ifndef EXUDYN_RELEASE
 		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
-#endif
 		for (Index i = 0; i < sm.NumberOfRows(); i++)
 		{
+			T* target = &data[(i + row)*numberOfColumns + column];
 			for (Index j = 0; j < sm.NumberOfColumns(); j++)
 			{
-				data[(i + row)*numberOfColumns + column + j] += sm.GetUnsafe(i, j);
+				target[j] += factor * sm.GetUnsafe(i, j);
 			}
 		}
 	}
 
-	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
+	//! add factor*sm^T, sm^T of possibly smaller size, at (*this) 'row' and 'column' (#3485)
 	template<class TMatrix>
-	void AddSubmatrixWithFactor(const TMatrix& sm, Real factor, Index row = 0, Index column = 0)
-	{
-		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrixWithFactor size mismatch");
-
-		for (Index i = 0; i < sm.numberOfRows; i++)
-		{
-			for (Index j = 0; j < sm.numberOfColumns; j++)
-			{
-				data[(i + row)*numberOfColumns + column + j] += factor * sm(i, j);
-			}
-		}
-	}
-
-	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
-	template<class TMatrix>
-	void AddSubmatrixTransposed(const TMatrix& sm, Index row = 0, Index column = 0)
+	void AddSubmatrixTransposed(const TMatrix& sm, Index row = 0, Index column = 0, T factor = 1.)
 	{
 		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposed size mismatch");
-
-		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		for (Index i = 0; i < sm.NumberOfColumns(); i++)
 		{
-			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			T* target = &data[(i + row)*numberOfColumns + column];
+			for (Index j = 0; j < sm.NumberOfRows(); j++)
 			{
-				data[(j + row)*numberOfColumns + column + i] += sm(i, j);
+				target[j] += factor * sm.GetUnsafe(j, i);
 			}
 		}
+	}
+
+	//! add factor*matrix, a matrix of the same size, as VectorBase::MultAdd (#3485)
+	template<class TMatrix>
+	void MultAdd(T factor, const TMatrix& matrix)
+	{
+		CHECKandTHROW(matrix.NumberOfRows() == NumberOfRows() && matrix.NumberOfColumns() == NumberOfColumns(), "Matrix::MultAdd size mismatch");
+		const Index n = NumberOfRows()*NumberOfColumns();
+		const T* source = matrix.GetDataPointer();
+		for (Index i = 0; i < n; i++) { data[i] += factor * source[i]; }
 	}
 
 	//! Add submatrix (factor * sm) with possibly smaller size than *this matrix
@@ -1050,21 +1045,6 @@ public:
 		}
 		return sm;
 	}
-
-	//add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
-	void AddTransposedSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
-	{
-		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
-
-		for (Index i = 0; i < sm.numberOfColumns; i++)
-		{
-			for (Index j = 0; j < sm.numberOfRows; j++)
-			{
-				data[(i + row)*numberOfColumns + column + j] += sm(j, i);
-			}
-		}
-	}
-
 
 	//! Returns the maximum-norm (largest absolute value in matrix)
 	T MaxNorm() const;
@@ -1338,23 +1318,6 @@ namespace EXUmath {
 	inline void MultMatrixTransposedMatrixAdd(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
 	{
 		MultMatrixTransposedMatrix<ResultMode::add>(m1, m2, result);
-	}
-
-	//! generic factor times matrix computation: result += factor*matrix:
-	//! both matrices must have same shape; result must be initialized
-	template<class TMatrix, class TMatrixResult>
-	inline void FactorTimesMatrixAdd(Real factor, const TMatrix& matrix, TMatrixResult& result)
-	{
-		CHECKandTHROW((matrix.NumberOfRows() == result.NumberOfRows()) &&
-			(matrix.NumberOfColumns() == result.NumberOfColumns()),
-			"FactorTimesMatrixAdd(TMatrix,TMatrixResult): Size mismatch");
-
-		Real* matrixData = matrix.GetDataPointer();
-		Real* resultData = result.GetDataPointer();
-		for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++)
-		{
-			resultData[i] += factor*matrixData[i];
-		}
 	}
 
 	void MatrixTests();

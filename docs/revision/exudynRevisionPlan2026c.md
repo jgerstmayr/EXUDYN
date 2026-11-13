@@ -53,8 +53,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 2. **Blurred reflections** (RG6.26.16), on the samples of the soft shadows; then the optional raytracer step RG6.26.12.
-3. **The rest of the linear algebra cleanup** (RG5.2.8.5): no computation changes.
-4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -63,7 +62,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (5 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (3 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
@@ -112,7 +111,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 8 | Performance |
+| RG5 | OPEN | 6 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -683,11 +682,13 @@ CLOSED 2026-11-13 (#3484): unit test bitwise. [log](exudynRevisionLog2026c.md#rg
 
 #3461. ET.5: SlimVectorBase(T) explicit, then the restricted expressions of expressionTemplates.md 5.3, with a rule on auto in CODING_STYLE.md.
 
-#### **OPEN_RG5.2.8** Consolidate the linear algebra function templates
+#### **CLOSED_RG5.2.8** Consolidate the linear algebra function templates
 
 #3462. Maintainer 2026-11-12: check the many linalg templates (MultAdd..., Transposed...) - which can be combined or removed, possibly also for performance. Inventory: docs/dev/design/linalgTemplatesInventory.md - dead functions, duplicates, slow kernels in hot code; one kernel per product with a result mode; sub-steps LT.1-LT.5 in its section 7, for the maintainer to choose.
 
 Maintainer 2026-11-12: the proposed steps are good to go (RG5.2.8.1-RG5.2.8.5; the benchmark RG5.2.8.3 before the kernels RG5.2.8.4).
+
+CLOSED 2026-11-13 (#3462): LT.1-LT.5 done (RG5.2.8.1-RG5.2.8.5). [log](exudynRevisionLog2026c.md#rg5-2-8-5)
 
 ##### **CLOSED_RG5.2.8.1** Remove the dead linear algebra functions
 
@@ -713,9 +714,11 @@ CLOSED 2026-11-12 (#3480): group 'connector'; the baseline in the log. [log](exu
 
 CLOSED 2026-11-12 (#3481): bitwise; the block product 2.3-3.7x faster, exudev perf regular -4.8 %; linalgTemplatesInventory.md section 9. [log](exudynRevisionLog2026c.md#rg5-2-8-4)
 
-##### **OPEN_RG5.2.8.5** The MatrixBase members AddSubmatrix, AddSubmatrixTransposed and MultAdd with a factor, the duplicates removed
+##### **CLOSED_RG5.2.8.5** The MatrixBase members AddSubmatrix, AddSubmatrixTransposed and MultAdd with a factor, the duplicates removed
 
 #3462. LT.4; the test suite bitwise.
+
+CLOSED 2026-11-13 (#3485): bitwise; linalgTemplatesInventory.md section 10. [log](exudynRevisionLog2026c.md#rg5-2-8-5)
 
 #### **CLOSED_RG5.2.9** Decide: Matrix3D as SlimMatrix<3,3> for good, and remove EXUDYN_MATRIX3D_CONSTSIZE
 

@@ -367,7 +367,7 @@ public:
 	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		SetMatrixIsFactorized(false);
-		matrix.AddSubmatrixWithFactor(submatrix, factor, rowOffset, columnOffset);
+		matrix.AddSubmatrix(submatrix, rowOffset, columnOffset, factor);
 	}
 
 	//! add possibly smaller matrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added

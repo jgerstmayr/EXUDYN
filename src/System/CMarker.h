@@ -234,7 +234,7 @@ public: //
 		ComputeMarkerDataJacobianDerivative(cSystemData, v6D, markerData);
 		if (markerData.jacobianDerivative.NumberOfRows() != 0)
 		{
-			jacobian.AddSubmatrixWithFactor(markerData.jacobianDerivative, factor, offset, offset);
+			jacobian.AddSubmatrix(markerData.jacobianDerivative, offset, offset, factor);
 		}
 	}
 

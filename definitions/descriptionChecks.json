@@ -357,9 +357,9 @@
    "fingerprint": "4c0f1308e4b2"
   },
   "ObjectFFRFreducedOrder": {
-   "checked": "2026-11-12",
+   "checked": "2026-11-13",
    "by": "Claude-JG",
-   "fingerprint": "380d99dd446b"
+   "fingerprint": "d7d158d7bbbf"
   },
   "ObjectGenericODE1": {
    "checked": "2026-10-29",
@@ -367,9 +367,9 @@
    "fingerprint": "085e8c870be6"
   },
   "ObjectGenericODE2": {
-   "checked": "2026-11-12",
+   "checked": "2026-11-13",
    "by": "Claude-JG",
-   "fingerprint": "04f29ce0e8cf"
+   "fingerprint": "74d87e5f3229"
   },
   "ObjectGround": {
    "checked": "2026-11-02",

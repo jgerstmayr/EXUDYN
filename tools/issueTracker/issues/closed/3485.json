@@ -1,0 +1,15 @@
+{
+  "number": 3485,
+  "title": "Matrix: AddSubmatrix and AddSubmatrixTransposed with a factor, MultAdd; the duplicates removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "linalgTemplatesInventory.md LT.4: MatrixBase::AddSubmatrix(sm, row, column, factor = 1.) replaces AddSubmatrix and AddSubmatrixWithFactor (the factor last, as SetSubmatrix), AddSubmatrixTransposed(sm, row, column, factor = 1.) replaces AddSubmatrixTransposed and its duplicate AddTransposedSubmatrix, MatrixBase::MultAdd(factor, matrix) replaces EXUmath::FactorTimesMatrixAdd, as VectorBase::MultAdd. The virtual interface of GeneralMatrix keeps its names. Results bitwise (1*x == x).",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 01:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Matrix: AddSubmatrix(sm, row, column, factor) and AddSubmatrixTransposed(sm, row, column, factor) with the factor last and 1 by default, and MultAdd(factor, matrix); AddSubmatrixWithFactor, AddTransposedSubmatrix and EXUmath::FactorTimesMatrixAdd are gone.",
+  "resolvedInVersion": "1.13.621"
+}

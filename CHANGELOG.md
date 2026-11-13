@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 590 | 1.13.619 |
+| 1.13 | Newborn | 592 | 1.13.621 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.621** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix: AddSubmatrix and AddSubmatrixTransposed with a factor, MultAdd; the duplicates removed (#3485)
+  - description: linalgTemplatesInventory.md LT.4: MatrixBase::AddSubmatrix(sm, row, column, factor = 1.) replaces AddSubmatrix and AddSubmatrixWithFactor (the factor last, as SetSubmatrix), AddSubmatrixTransposed(sm, row, column, factor = 1.) replaces AddSubmatrixTransposed and its duplicate AddTransposedSubmatrix, MatrixBase::MultAdd(factor, matrix) replaces EXUmath::FactorTimesMatrixAdd, as VectorBase::MultAdd. The virtual interface of GeneralMatrix keeps its names. Results bitwise (1\*x == x).
+  - **notes:** Matrix: AddSubmatrix(sm, row, column, factor) and AddSubmatrixTransposed(sm, row, column, factor) with the factor last and 1 by default, and MultAdd(factor, matrix); AddSubmatrixWithFactor, AddTransposedSubmatrix and EXUmath::FactorTimesMatrixAdd are gone.
+  - date resolved: **2026-11-13 01:04**, date raised: 2026-11-13
+- **1.13.620** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Consolidate the linear algebra function templates (MultMatrix..., Add..., Transposed...) (#3462)
+  - description: Inventory in docs/dev/design/linalgTemplatesInventory.md: dead functions, duplicates (set/add pairs, AddSubmatrixTransposed and AddTransposedSubmatrix, the WithFactor variants, 33 non-template wrappers, 75 explicit template argument lists), and slow kernels in hot code (MultMatrixMatrix2SubmatrixTemplate with checked access in the connector Jacobians and the rigid-body mass matrix); proposed: one kernel per product with a result mode set/add/subtract, the order of the sums kept.
+  - **notes:** The linear algebra templates were checked and consolidated: dead functions removed, the kernels under their plain names without wrapper overloads, one kernel per product with a set/add/subtract mode (the block product of the connector Jacobians 2-4 times faster), and the matrix members AddSubmatrix, AddSubmatrixTransposed and MultAdd with a factor; the results are unchanged.
+  - date resolved: **2026-11-13 01:04**, date raised: 2026-11-12
 - **1.13.619** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SlimVectorBase::MultAdd (#3484)
   - description: expressionTemplates.md E2 (ET.4): v.MultAdd(factor, w) adds factor\*w to a SlimVector without a temporary, as VectorBase and ConstSizeVectorBase do; the same bits as v += factor\*w.
   - **notes:** SlimVector (Vector3D, Vector6D, ...) has MultAdd(factor, v), as Vector and ConstSizeVector.

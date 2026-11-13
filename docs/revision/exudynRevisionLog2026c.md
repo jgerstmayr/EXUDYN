@@ -6520,6 +6520,16 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg5-2-8-5"></a>
+### RG5.2.8.5 — MatrixBase: AddSubmatrix and AddSubmatrixTransposed with a factor, MultAdd (2026-11-13, #3485)
+
+*(Maintainer 2026-11-12: the proposed steps are good to go; 2026-11-12: do the suggested next steps.)*
+
+Matrix.h (scratch p_lt4.py): the merged members; AddTransposedSubmatrix and FactorTimesMatrixAdd removed; the 5 calls of
+AddSubmatrixWithFactor on dense matrices (CMarker.h, CObjectConnector.cpp, CObjectFFRFreducedOrder.cpp, found by the
+compiler) with the factor last; GeneralMatrixEXUdense forwards. Unit test case; C++ unit tests passed; the test suite
+in both modules unchanged. RG5.2.8 closed (#3462): LT.1-LT.5 done (linalgTemplatesInventory.md sections 8-10).
+
 <a id="rg5-2-7-3"></a>
 ### RG5.2.7.3, RG5.2.7.4 — Transposed(A) * x in the item code, SlimVector::MultAdd (2026-11-13, #3483, #3484)
 

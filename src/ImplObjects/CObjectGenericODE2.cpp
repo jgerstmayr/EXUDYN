@@ -158,8 +158,7 @@ void CObjectGenericODE2::AddMatrixWithFactor(EXUmath::MatrixContainer& jacobianO
 	}
 	if (jacobianODE2.UseDenseMatrix())
 	{
-		EXUmath::FactorTimesMatrixAdd(factor, matrix.GetInternalDenseMatrix(),
-			jacobianODE2.GetInternalDenseMatrix());
+		jacobianODE2.GetInternalDenseMatrix().MultAdd(factor, matrix.GetInternalDenseMatrix());
 	}
 	else
 	{

@@ -277,6 +277,34 @@ const lest::test slimMatrix_specific_test[] =
 		EXPECT(SlimVectorTestSame(viaMultAdd, viaOperator));
 	},
 
+	CASE("Matrix: AddSubmatrix, AddSubmatrixTransposed with a factor, MultAdd, bitwise as the entries (#3485)")
+	{
+		ResizableMatrix big(6, 7), sm(2, 3);
+		for (Index i = 0; i < 6; i++) { for (Index j = 0; j < 7; j++) { big(i, j) = SlimMatrixTestValue(i, j, 0.2); } }
+		for (Index i = 0; i < 2; i++) { for (Index j = 0; j < 3; j++) { sm(i, j) = SlimMatrixTestValue(i, j, 1.4); } }
+		ResizableMatrix added(big), addedFactor(big), addedTransposed(big), sum(big);
+		added.AddSubmatrix(sm, 1, 2);
+		addedFactor.AddSubmatrix(sm, 1, 2, -0.3);
+		addedTransposed.AddSubmatrixTransposed(sm, 2, 4, 0.7);
+		sum.MultAdd(0.45, big);
+		bool same = true;
+		for (Index i = 0; i < 6; i++)
+		{
+			for (Index j = 0; j < 7; j++)
+			{
+				bool inBlock = i >= 1 && i < 3 && j >= 2 && j < 5;
+				bool inTransposed = i >= 2 && i < 5 && j >= 4 && j < 6;
+				if (added(i, j) != (inBlock ? big(i, j) + sm(i - 1, j - 2) : big(i, j))) { same = false; }
+				if (addedFactor(i, j) != (inBlock ? big(i, j) + -0.3 * sm(i - 1, j - 2) : big(i, j))) { same = false; }
+				if (addedTransposed(i, j) != (inTransposed ? big(i, j) + 0.7 * sm(j - 4, i - 2) : big(i, j))) { same = false; }
+				if (sum(i, j) != big(i, j) + 0.45 * big(i, j)) { same = false; }
+			}
+		}
+		EXPECT(same);
+		EXPECT_THROWS(added.AddSubmatrix(sm, 5, 0));
+		EXPECT_THROWS(added.AddSubmatrixTransposed(sm, 0, 6));
+	},
+
 	CASE("SlimMatrix: inverse, determinant, trace, skew matrix, transposing, rows and columns")
 	{
 		SlimMatrix<3, 3> A;

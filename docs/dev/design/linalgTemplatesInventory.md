@@ -303,3 +303,14 @@ take `SlimMatrix` already, and LT.3 keeps the sizes in locals so that they fold 
 regular total 42.0 -> 40.0 s (-4.8 %), the implicit rigid models -9 to -19 %, nothing slower by more than 5 %; fast
 total 32.6 -> 32.9 s (noise), `perfConnectorInterface:rigid-n100-implicit` -34 %. Results equal except the two
 multithreaded models, which vary between runs of the same module (linalgFixedSize.md section 10).
+
+## 10. Done: LT.4 (RG5.2.8.5, #3485, 2026-11-13)
+
+`MatrixBase::AddSubmatrix(sm, row = 0, column = 0, factor = 1.)` (replaces `AddSubmatrix` and `AddSubmatrixWithFactor`,
+whose factor came before the offsets), `AddSubmatrixTransposed(sm, row = 0, column = 0, factor = 1.)` (replaces it and
+its duplicate `AddTransposedSubmatrix`), `MatrixBase::MultAdd(factor, matrix)` (replaces `EXUmath::FactorTimesMatrixAdd`).
+All three read the source by `GetUnsafe` or the data pointer and check the sizes once. The virtual `GeneralMatrix`
+interface keeps `AddSubmatrixWithFactor`; `GeneralMatrixEXUdense` forwards to `AddSubmatrix`. Bits: `1*x == x`, one add
+per entry as before; the test suite unchanged in both modules; a unit test case compares the entries.
+
+With this, the steps LT.1-LT.5 of section 7 are done.

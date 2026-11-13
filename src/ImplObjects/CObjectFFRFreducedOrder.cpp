@@ -139,7 +139,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 
 		EXUmath::MultMatrixMatrix(temp, Glocal, tempMatrix);
 		massMatrix.AddSubmatrix(tempMatrix, 0, nDim3D);
-		massMatrix.AddTransposedSubmatrix(tempMatrix, nDim3D, 0);
+		massMatrix.AddSubmatrixTransposed(tempMatrix, nDim3D, 0);
 
 #ifdef CObjectFFRFreducedOrderComputeMassMatrixOutput
 		pout << "Mtr=" << tempMatrix << "\n\n";
@@ -151,7 +151,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 		//Mtf:
 		EXUmath::MultMatrixMatrix(A, parameters.mPhitTPsi, tempMatrix);
 		massMatrix.AddSubmatrix(tempMatrix, 0, nODE2Rigid);
-		massMatrix.AddTransposedSubmatrix(tempMatrix, nODE2Rigid, 0);
+		massMatrix.AddSubmatrixTransposed(tempMatrix, nODE2Rigid, 0);
 
 #ifdef CObjectFFRFreducedOrderComputeMassMatrixOutput
 		pout << "Mtf=" << tempMatrix << "\n\n";
@@ -163,7 +163,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 		EXUmath::MultMatrixTransposedMatrix(Glocal, tempMatrix2, tempMatrix);
 		tempMatrix *= -1;
 		massMatrix.AddSubmatrix(tempMatrix, nDim3D, nODE2Rigid);
-		massMatrix.AddTransposedSubmatrix(tempMatrix, nODE2Rigid, nDim3D);
+		massMatrix.AddSubmatrixTransposed(tempMatrix, nODE2Rigid, nDim3D);
 
 #ifdef CObjectFFRFreducedOrderComputeMassMatrixOutput
 		pout << "Mrf=" << tempMatrix << "\n\n";
@@ -493,7 +493,7 @@ void CObjectFFRFreducedOrder::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer&
 	auto AddMatrix = [&](const PyMatrixContainer& matrix, Real factor)
 	{
 		if (matrix.NumberOfRows() == 0 || factor == 0.) { return; }
-		if (matrix.UseDenseMatrix()) { jacobian.AddSubmatrixWithFactor(matrix.GetInternalDenseMatrix(), factor, nODE2Rigid, nODE2Rigid); }
+		if (matrix.UseDenseMatrix()) { jacobian.AddSubmatrix(matrix.GetInternalDenseMatrix(), nODE2Rigid, nODE2Rigid, factor); }
 		else { matrix.GetInternalSparseTripletMatrix().AddToDenseMatrix(jacobian, nODE2Rigid, nODE2Rigid, factor); }
 	};
 	AddMatrix(parameters.stiffnessMatrixReduced, factorODE2);

@@ -108,11 +108,11 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 		{
 			if (n0 != 0 && markerData.GetMarkerData(0).jacobianDerivative.NumberOfRows() != 0)
 			{
-				jacobianODE2.GetInternalDenseMatrix().AddSubmatrixWithFactor(markerData.GetMarkerData(0).jacobianDerivative, -factorODE2, 0, 0); //force on marker0 acts with negative sign!
+				jacobianODE2.GetInternalDenseMatrix().AddSubmatrix(markerData.GetMarkerData(0).jacobianDerivative, 0, 0, -factorODE2); //force on marker0 acts with negative sign!
 			}
 			if (n1 != 0 && markerData.GetMarkerData(1).jacobianDerivative.NumberOfRows() != 0)
 			{
-				jacobianODE2.GetInternalDenseMatrix().AddSubmatrixWithFactor(markerData.GetMarkerData(1).jacobianDerivative, factorODE2, n0, n0);
+				jacobianODE2.GetInternalDenseMatrix().AddSubmatrix(markerData.GetMarkerData(1).jacobianDerivative, n0, n0, factorODE2);
 			}
 		}
 	}
@@ -696,7 +696,7 @@ void ConnectorJacobianODE2RigidMarkersNumerical(const CSystemData& cSystemData, 
 			if (n[i] == 0) { continue; }
 			EXUmath::MultMatrixMatrix(velocityJacobian[i][k], velocity_q, temp.jacobianTemp.localJacobian);
 			EXUmath::MultMatrixTransposedMatrix(temp.markerTemp[i].tempMatrix, temp.jacobianTemp.localJacobian, temp.jacobianTemp.matrix0);
-			jacobian.AddSubmatrixWithFactor(temp.jacobianTemp.matrix0, factorODE2, offsetJacobian[i], offsetJacobian[k]);
+			jacobian.AddSubmatrix(temp.jacobianTemp.matrix0, offsetJacobian[i], offsetJacobian[k], factorODE2);
 		}
 	}
 }
