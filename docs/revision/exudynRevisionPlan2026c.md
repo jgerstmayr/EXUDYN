@@ -52,14 +52,14 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Finish the release rehearsal on `release/1.14`** (running since 2026-11-13) - the wheels of all 24 jobs, then the
    release around the end of November 2026, before the removal date of #3361.
-2. **Read the predefined materials from the settings in GraphicsMaterialList** (RG6.28): a small bug, no decision.
-3. **Show the performance of the releases in the documentation** (RG5.13): a generated table, no decision.
-4. **Measure and design fewer parallel regions per residual** (RG5.14.1, RG5.14.2): the threads cost more than they
+2. **Show the performance of the releases in the documentation** (RG5.13): a generated table, no decision.
+3. **Measure and design fewer parallel regions per residual** (RG5.14.1, RG5.14.2): the threads cost more than they
    give below about 300 coordinates; the design note is for the maintainer to decide.
-5. **A real training run of spotReinforcementLearning.py** (RG19.14.4): torch, gym and stable-baselines3 are now in
+4. **A real training run of spotReinforcementLearning.py** (RG19.14.4): torch, gym and stable-baselines3 are now in
    venvP313.
-6. **Add the 3D sliding joint with rotation** (RG4.22): fully specified, tested with the ANCF cable and beam.
-7. **The larger open work**, after the release: the plugin interface (RG8).
+5. **Add the 3D sliding joint with rotation** (RG4.22): tested with the ANCF cable and beam; needs the decision which
+   rotations the joint locks.
+6. **The larger open work**, after the release: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -1499,6 +1499,8 @@ CLOSED 2026-11-13 (#3488): the defaults measured and kept; the class description
 ### **CLOSED_RG6.28** GraphicsMaterialList reads the predefined materials from the visualization settings
 
 #3490. Found in RG6.27: SC.renderer.materials keeps a copy of raytracer.material0-9, refreshed only when the raytracer draws; Get after a change of the settings returns the old values, and Set writes them back. Get, GetDict, [] and GetDictionary read the first ten from the settings; a test model of both ways.
+
+CLOSED 2026-11-13 (#3490): CopyFromVisSettings before every access and Set; roughness in GetDict, Set with a dict and the renderer's dictionary; rendererMaterialsTest.py. [log](exudynRevisionLog2026c.md#rg6-28)
 
 CLOSED 2026-11-13 (#3490): CopyFromVisSettings before every access and Set; roughness in GetDict, Set with a dict and the renderer's dictionary; rendererMaterialsTest.py. [log](exudynRevisionLog2026c.md#rg6-28)
 
