@@ -94,7 +94,6 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG19** Revision of the robotics submodule
   - RG19.14 A floating base for legged robots; wheeled robots keep their joints x, y and the rotation (1 open sub-step)
   - RG19.15 The joint torque loads: the test models on SetControl now, the deprecated parameters removed at the end of the deprecation period (1 open sub-step)
-  - RG19.18 ProfileJointPath: no line of length zero between two blends
 - **RG20** Advanced solvers
   - RG20.3 Adjoint sensitivities on the symbolic system for optimization (1 open sub-step)
 - **RG22** Nonlinear finite elements: tetrahedra
@@ -121,7 +120,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG12 | OPEN | 4 | Symbolic |
 | RG13 | CLOSED | 0 | Total coordinates |
 | RG14 | OPEN | 6 | Uniform evaluation of symbolic systems on the CPU and the GPU |
-| RG19 | OPEN | 5 | Revision of the robotics submodule |
+| RG19 | OPEN | 4 | Revision of the robotics submodule |
 | RG20 | OPEN | 2 | Advanced solvers |
 | RG21 | CLOSED | 0 | Path planning and navigation of robots |
 | RG22 | OPEN | 2 | Nonlinear finite elements: tetrahedra |
@@ -4324,9 +4323,11 @@ Maintainer 2026-11-08: the proposals of docs/dev/design/robotics.md section 3.5 
 
 #3375.
 
-### **OPEN_RG19.18** ProfileJointPath: no line of length zero between two blends
+### **CLOSED_RG19.18** ProfileJointPath: no line of length zero between two blends
 
 #3411 (maintainer 2026-11-11: an issue and a step; the warning of robotPathPlanningTest.py comes from the planning part, which the visualization did not change). The cause is in _Segments: the exact comparison np.any(end != start) keeps a line of length about 1e-17 where two blends meet at the middle of a segment, as on the paths of RRT-Connect with equally spaced waypoints; then h = 0 in Largest and np.diff(p) = 0 in pDDot. Fix by a tolerance relative to the path length; a test that no interval of p has length zero.
+
+CLOSED 2026-11-13 (#3411): a line is kept only if longer than 1e-12 times the length of the path; robotPathPlanningTest.py with a zigzag of equally spaced waypoints, without warnings (reference 25). [log](exudynRevisionLog2026c.md#rg19-18)
 
 ## **OPEN_RG20** Advanced solvers
 

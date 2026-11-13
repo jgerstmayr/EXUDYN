@@ -2,11 +2,15 @@
   "number": 3411,
   "title": "ProfileJointPath keeps a line of length zero between two blends, and divides by zero",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "robotPathPlanningTest.py prints a numpy RuntimeWarning (divide by zero) from ProfileJointPath.GetBasicProfile, in Largest (h = 2(p_j - p_i)) and in pDDot = (pDot[1:]**2 - pDot[:-1]**2)/(2 np.diff(p)). Cause: _Segments keeps a line between two rounded corners if np.any(end != start), an exact comparison; when the blends of two neighbouring waypoints meet at the middle of the segment - on paths of RRT-Connect, whose waypoints are equally far apart (0.163 rad there), with a blend radius of half the distance or more - the end of the first and the start of the second blend differ by rounding only, and a line of length about 1e-17 becomes a segment whose path parameters are equal. Found 5 such segments of 75 in the first, 8 of 124 in the second path of the test. The checks of the test pass (the trajectory is not visibly wrong), but inf enters the bounds of the accelerations. Fix: drop a line shorter than a tolerance relative to the path length; then check that no interval of p has length zero.",
   "dateRaised": "2026-11-11",
   "deadline": "2027-05-10",
-  "file": "python/exudyn/robotics/motion.py"
+  "dateResolved": "2026-11-13 07:45",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/motion.py",
+  "releaseNotes": "ProfileJointPath: where the rounded corners of equally spaced waypoints meet in the middle of an edge, no line of length zero is left between them; the profile was computed with thousands of division-by-zero warnings before.",
+  "resolvedInVersion": "1.13.625"
 }

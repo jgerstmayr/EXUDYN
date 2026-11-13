@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 595 | 1.13.624 |
+| 1.13 | Newborn | 596 | 1.13.625 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.625** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ProfileJointPath keeps a line of length zero between two blends, and divides by zero (#3411)
+  - description: robotPathPlanningTest.py prints a numpy RuntimeWarning (divide by zero) from ProfileJointPath.GetBasicProfile, in Largest (h = 2(p\_j - p\_i)) and in pDDot = (pDot\[1:\]\*\*2 - pDot\[:-1\]\*\*2)/(2 np.diff(p)). Cause: \_Segments keeps a line between two rounded corners if np.any(end != start), an exact comparison; when the blends of two neighbouring waypoints meet at the middle of the segment - on paths of RRT-Connect, whose waypoints are equally far apart (0.163 rad there), with a blend radius of half the distance or more - the end of the first and the start of the second blend differ by rounding only, and a line of length about 1e-17 becomes a segment whose path parameters are equal. Found 5 such segments of 75 in the first, 8 of 124 in the second path of the test. The checks of the test pass (the trajectory is not visibly wrong), but inf enters the bounds of the accelerations. Fix: drop a line shorter than a tolerance relative to the path length; then check that no interval of p has length zero.
+  - **notes:** ProfileJointPath: where the rounded corners of equally spaced waypoints meet in the middle of an edge, no line of length zero is left between them; the profile was computed with thousands of division-by-zero warnings before.
+  - date resolved: **2026-11-13 07:45**, date raised: 2026-11-11
 - **1.13.624** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RunLinalgBenchmark: the cost of temporary vectors (#3487)
   - description: Cases in RunLinalgBenchmark for chains of vector operations on SlimVector and Vector (a + b\*c - d, sums of several products, as in the item code): the operator form with its temporaries against the in-place form (copy, +=, MultAdd), in both modules; the results decide whether fused elementwise expressions are worth their complexity.
   - **notes:** RunLinalgBenchmark: the group temporaries measures vector and matrix expressions with the temporaries of the operators against the same without them; for Real vectors of size 3 they cost nothing, for AutoDiff\<12\> vectors 3.6-4.4 times one loop; the results are in linalgBenchmark.md section 3.11.

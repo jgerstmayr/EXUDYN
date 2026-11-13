@@ -34,6 +34,7 @@ from exudyn.robotics.motion import Trajectory, ProfileJointPath
 import numpy as np
 import os
 import time
+import warnings
 
 testIsActive = exu.sys.get('testIsActive', False)
 checks = [] #True or False per check; the result is their sum
@@ -99,6 +100,21 @@ corner.Add(ProfileJointPath([qStart, qCorner, qCorner + np.array([0, 0.5, 0, 0, 
 (t0, t1) = (corner.GetTimes()[0], corner.GetTimes()[-1])
 cornerSpeeds = [np.max(np.abs(corner.Evaluate(t)[1])) for t in np.linspace(t0, t1, 2001)[100:-100]]
 checks += [min(cornerSpeeds) < 8.*1.05*(t1 - t0)/2000]
+
+#waypoints at equal distances, fully rounded: the curves meet in the middle of the edges, with no line of length zero
+#between them, which divided by zero (#3411); no warning, a finite motion that ends at the last waypoint
+zigzag = [qStart + np.array([0.3*k, 0.3*(k % 2), 0, 0, 0, 0]) for k in range(6)]
+with warnings.catch_warnings():
+    warnings.simplefilter('error')
+    try:
+        zigzagTrajectory = Trajectory(qStart, maxVelocities=maxVelocities, maxAccelerations=maxAccelerations)
+        zigzagTrajectory.Add(ProfileJointPath(zigzag, blendRadius=1.))
+        (t0, t1) = (zigzagTrajectory.GetTimes()[0], zigzagTrajectory.GetTimes()[-1])
+        zigzagValues = np.array([np.concatenate(zigzagTrajectory.Evaluate(t)) for t in np.linspace(t0, t1, 501)])
+        checks += [bool(np.all(np.isfinite(zigzagValues))) and np.max(np.abs(zigzagValues[-1, :6] - zigzag[-1])) < 1e-10]
+    except RuntimeWarning as warning:
+        exu.Print('ProfileJointPath: warning', warning)
+        checks += [False]
 
 #the waypoints without blending: the robot stops at each of them; two equal waypoints are refused
 stops = Trajectory.FromWaypoints([qStart, 0.5*(qStart + qGoal), qGoal], maxVelocities, maxAccelerations, blendFactor=0.)

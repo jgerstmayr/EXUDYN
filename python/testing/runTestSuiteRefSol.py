@@ -273,7 +273,7 @@ def TestExamplesReferenceSolution():
         'outputInterpolationOrderTest.py':12.00015959838674, #new 2026-11-09: the order of the output within the step (#3379)
         'automaticStepLieGroupTest.py':5.000000000056531, #new 2026-11-09: the first step with Lie group nodes (#3313)
         'robotFloatingBaseTest.py':4.803800000000002, #new 2026-11-09: a floating base for Robot (#3359)
-        'robotPathPlanningTest.py':24, #2026-11-10: the checks of ProfileJointPath (#3397); before: 20, #new 2026-11-09: path planning of a serial robot (#3383)
+        'robotPathPlanningTest.py':25, #2026-11-13: equally spaced waypoints without a line of length zero (#3411); 24: 2026-11-10, the checks of ProfileJointPath (#3397); before: 20, #new 2026-11-09: path planning of a serial robot (#3383)
         'robotNavigationTest.py':44.46530100307383, #new 2026-11-09: navigation of mobile robots (#3384)
         'robotDeprecatedJointLoadsTest.py':9, #new 2026-11-09: the deprecated joint loads of CreateRedundantCoordinateMBS (#3386)
         'lieGroupOutputWithinStepTest.py':4, #new 2026-11-09: the output within the step of Lie group nodes (#3389)

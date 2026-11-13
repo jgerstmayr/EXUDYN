@@ -686,12 +686,15 @@ class ProfileJointPath:
             (lIn, lOut) = (float(cMath.norm(eIn)), float(cMath.norm(eOut)))
             r = 0.5*self.blendRadius*min(lIn, lOut)
             corners += [(P[k] - r/lIn*eIn, P[k] + r/lOut*eOut) if r > 0. else None]
+        #where two curves meet in the middle of an edge, the line between them has a length of rounding errors; it is
+        #left out by a tolerance relative to the length of the path, as its parameter interval would be zero (#3411)
+        tolerance = 1e-12*sum(float(cMath.norm(P[k] - P[k - 1])) for k in range(1, len(P)))
         segments = []
         start = P[0]
         for k in range(1, len(P)):
             corner = corners[k - 1] if k < len(P) - 1 else None
             end = corner[0] if corner is not None else P[k]
-            if np.any(end != start):
+            if float(cMath.norm(end - start)) > tolerance:
                 segments += [('line', start, end)]
             if corner is not None:
                 segments += [('curve', corner[0], P[k], corner[1])]

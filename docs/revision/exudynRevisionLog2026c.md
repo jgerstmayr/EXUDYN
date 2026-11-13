@@ -6520,6 +6520,19 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg19-18"></a>
+### RG19.18 — ProfileJointPath: no line of length zero between two curves (2026-11-13, #3411)
+
+*(Maintainer 2026-11-13: do the next three suggested steps.)*
+
+- Reproduced: six waypoints at equal distances with blendRadius 1 gave lines of 5.6e-17 to 3e-16 between the curves
+  and 3000-9500 RuntimeWarnings (divide by zero) while the profile was computed; spacings that are not exact in
+  binary (0.37) did not.
+- motion.py, ProfileJointPath._Segments: a line is kept only if it is longer than 1e-12 times the length of the path
+  (was: any difference of its ends). The curves then meet directly; their ends differ by rounding only.
+- robotPathPlanningTest.py: a zigzag of six waypoints at the distance 0.3, fully rounded, computed with the warnings
+  turned into errors: no warning, finite values, the end at the last waypoint; reference 24 -> 25.
+
 <a id="rg5-2-7-1"></a>
 ### RG5.2.7.1 — the cost of the temporaries measured (2026-11-13, #3487)
 
