@@ -335,10 +335,12 @@ if TSScope.runTestExamples:
     if TSScope.parallel:
         exu.Print('running ' + str(TSScope.totalTests) + ' test models in parallel')
         print('running ' + str(TSScope.totalTests) + ' test models in parallel', flush=True)
+        from runTestSuiteRefSol import SlowTests
         TSScope.parallelResults = testRunnerTools.RunModelsInParallel(
             TSScope.testFileList, TSScope.solutionDirectory, TSScope.invalidResult,
             numberOfProcesses=TSScope.numberOfProcesses, printProgress=True,
-            compactProgress=not writeToConsole) #a line rewritten in place when quiet (#2895)
+            compactProgress=not writeToConsole, #a line rewritten in place when quiet (#2895)
+            startFirst=SlowTests()) #the long models first (#3497)
 
     TSScope.testExamplesCnt = 0
     for TSScope.file in TSScope.testFileList:

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 601 | 1.13.630 |
+| 1.13 | Newborn | 602 | 1.13.631 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.631** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The parallel test suite waits 70-90 s for a few long test models (#3497)
+  - description: exudev test --parallel 32 takes 70-90 s because a few models take 20-40 s there: parameterConversionTest (30 s: the whole visualizationSettings dictionary converted three times for each of 24000 probes), symbolicImplicitRungeKuttaTest (28 s: references with more steps than needed, a solve done twice), abaqusImportTest (1 s alone, 21 s in parallel: the BLAS threads of every process on all cores), energiesFlexibleBodiesTest (12 s: 1 s of simulated time). The runner shall start the long models first and give every model one BLAS thread; the models shall be made cheaper where their checks allow it.
+  - **notes:** The test suite runs faster in parallel: the long test models start first and every model uses one BLAS thread; parameterConversionTest (30 s to 1.7 s), symbolicImplicitRungeKuttaTest (28 s to 17.5 s) and energiesFlexibleBodiesTest (12 s to 2.3 s) take less time.
+  - date resolved: **2026-11-13 12:04**, date raised: 2026-11-13
 - **1.13.630** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GitHub CI: the Windows wheels fail the test suite by last-digit differences; macOS by contactPrimitivesTableTest (#3495)
   - description: Release rehearsal of 1.14 (1.13.629): on windows-2025 (MSVC 14.51 of Visual Studio 2026, another compiler than the reference values) modelLibraryTest differs by 3.6e-13 and userTetrahedronTest by 5.7e-14 (1 ulp), against the absolute Windows tolerance of 5e-14, which holds on the machine of the reference values only; which models land off varies with the Python version. runTestSuite.py --other-compiler gives Windows the tolerance of a different compilation (3e-11, as Linux and macOS), and the cibuildwheel test command of Windows passes it. On macos-15 contactPrimitivesTableTest differs by 8.5e-4 (many impacts); it goes into UnresolvedOnMacOS, its cause is \#3496.
   - **notes:** The test suite of the Windows wheels built on GitHub uses the tolerance of a different compilation (runTestSuite.py --other-compiler), as Linux and macOS do, since the runner's compiler is not the one of the reference values; contactPrimitivesTableTest is not judged on macOS until its difference there is found (\#3496).

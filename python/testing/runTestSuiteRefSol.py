@@ -140,7 +140,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamCurvedTest.py':4.561491685469839, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
         'geometricallyExactBeamRightAngleFrame.py':3.3061810772089983, #2026-11-11: the substitution by the rows of the factors (#3441); before 3.3061810769580746; 2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 3.306181715978533; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'rightAngleFrame.py':4.371823197994703, #2026-11-02: the local Jacobians along the Euler parameters, the reaction forces of the system-wide one by lambda (#3201), before 4.3718231979938516; 2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
-        'energiesFlexibleBodiesTest.py':5.850170605188874, #2026-11-02: the Jacobian of ObjectKinematicTree its own, with d(M q_tt)/dq (#3211), before 5.850170605200625; 2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992), +2.8e-10; before 5.850170604918973; 2026-10-05: the ANCF thin plate of the working copy 2026 (#2857), round-off; before 5.850170604919896; #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
+        'energiesFlexibleBodiesTest.py':5.850196680023826, #2026-11-13: 0.25 s instead of 1 s, 12 s of test time (#3497), before 5.850170605188874; 2026-11-02: the Jacobian of ObjectKinematicTree its own, with d(M q_tt)/dq (#3211), before 5.850170605200625; 2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992), +2.8e-10; before 5.850170604918973; 2026-10-05: the ANCF thin plate of the working copy 2026 (#2857), round-off; before 5.850170604919896; #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
         'computeItemTest.py':71.26280786627946, #2026-11-06: the initial accelerations: the differences of fourth order in another order of summation (#303), before 71.26280786962762; new 2026-10-02: mbs.ComputeItem and NumericalJacobian on a double pendulum (#2779)
         'emptySystemTest.py':124.09765181769477, #new 2026-10-02: a system without coordinates through every solver, dense and sparse (#2790)
@@ -411,17 +411,27 @@ def TestExamplesReferenceSolution():
 #decorators: runTestSuite.py --fast and the pytest marker both read this
 #list, so there is one definition. Update it when a model changes substantially.
 def SlowTests():
+    """the test models that take longest, with their seconds when run alone (Windows, regular module, 1.13.630,
+    2026-11-13); runTestSuite.py --fast skips them, and --parallel starts them first, longest first, so that none of
+    them is left running alone at the end (#3497)"""
 
     return {
-        'parameterConversionTest.py': 4.4,   #walks every parameter of every item
-        'createSphereQuadContact.py': 1.4,
-        'sphereTriangleTest2.py': 1.3,
-        'createSphereTriangleContact.py': 1.0,
-        'abaqusImportTest.py': 0.9,          #reads and converts several meshes
-        'taskmanagerTest.py': 0.8,
-        'objectFFRFTest2.py': 0.7,
-        'explicitLieGroupMBSTest.py': 0.6,
-        'objectFFRFTest.py': 0.6,
+        'symbolicImplicitRungeKuttaTest.py': 17.5, #the solvers of exudyn.symbolics in Python
+        'symbolicTrapezoidalGGLStepSizeTest.py': 10.9,
+        'symbolicUserTorsionalTurnsTest.py': 8.1,
+        'symbolicTrapezoidalGGLTest.py': 7.3,
+        'symbolicUserContactFrictionTest.py': 6.9,
+        'symbolicUserConnectorsTest.py': 6.9,
+        'journalBearingTest.py': 6.2,
+        'symbolicUserContactTest.py': 6.0,
+        'symbolicSparseMatrixProductTest.py': 3.4,
+        'objectFFRFanalyticJacobianTest.py': 2.9,
+        'symbolicUserRigidBodiesTest.py': 2.4,
+        'energiesFlexibleBodiesTest.py': 2.3,
+        'symbolicSystemODE1AETest.py': 2.2,
+        'convexConvexContactTest.py': 2.1,
+        'contactPrimitivesTableTest.py': 1.8,
+        'parameterConversionTest.py': 1.7,   #walks every parameter of every item and every setting
         }
 
 
@@ -879,7 +889,7 @@ def AVX2ReferenceSolutionUpdate():
         'symbolicItemOutputTest.py':               3.4207948324002095,        #drift 1.1e-13
         'carRollingDiscTest.py':                   -0.23940048804187597,      #drift 1.0e-13
         'robotFrictionEndStopsTest.py':            11.671115042362164,        #drift 1.0e-13
-        'energiesFlexibleBodiesTest.py':           5.850170605188781,         #drift 9.3e-14
+        'energiesFlexibleBodiesTest.py':           5.850196680023847,         #drift 2.1e-14 (#3497)
         'genericODE2test.py':                      0.03604546349916921,       #drift 8.0e-14
         'userRigidBodyTest.py':                    13.47575502137632,         #drift 7.3e-14
         'generalContactTriangleMomentumTest.py':   4.035299999516811,         #drift 7.0e-14

@@ -1,0 +1,12 @@
+{
+  "number": 3498,
+  "title": "The Python solvers of exudyn.symbolics build a scipy sparse matrix in every residual, also for small systems",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Profiled in #3497: SolveImplicitRungeKutta on a pendulum of 2 coordinates, 400 steps, 1.8 s, of which 1.1 s in creating scipy.sparse.csr_matrix (19116 of them; the mass matrix requested as sparse in the residuals of the finite-difference Jacobian, systemModel.py). The symbolic test models that take 6-18 s spend most of their time there. A dense path below a size, or the mass matrix kept between evaluations when it is constant, would speed up the solvers of exudyn.symbolics for the small systems they are mostly used with.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "file": "python/exudyn/symbolics/systemModel.py"
+}

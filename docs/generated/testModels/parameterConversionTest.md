@@ -211,11 +211,13 @@ def Leaves(obj, dictionary, path):
         else:
             yield obj, name, path + '.' + name, getattr(obj, name)
 
+#the probes work on the structure that owns the leaf: its SetDictionary converts the same leaf as the one of the root,
+#but only its own members, not the 650 of visualizationSettings for each of the 24000 probes (30 s, #3497)
 SC = exu.SystemContainer()
 for rootName, root in [('SimulationSettings', exu.SimulationSettings()), ('VisualizationSettings', SC.visualizationSettings)]:
     saved = root.GetDictionary()
     for owner, name, path, original in list(Leaves(root, saved, rootName)):
-        keys = path.split('.')[1:]
+        ownerSaved = owner.GetDictionary()
         for access in ['attribute', 'dict']:
             row = []
             for probeName, probe in probes:
@@ -223,17 +225,14 @@ for rootName, root in [('SimulationSettings', exu.SimulationSettings()), ('Visua
                     if access == 'attribute':
                         setattr(owner, name, probe)
                     else: #SetDictionary with this leaf replaced
-                        d = root.GetDictionary()
-                        sub = d
-                        for key in keys[:-1]:
-                            sub = sub[key]
-                        sub[keys[-1]] = probe
-                        root.SetDictionary(d)
+                        owner.SetDictionary(dict(ownerSaved, **{name: probe}))
                     return getattr(owner, name)
                 row.append(Outcome(Run))
                 with contextlib.redirect_stdout(io.StringIO()):
-                    root.SetDictionary(saved) #restore everything, whatever the probe left behind
+                    owner.SetDictionary(ownerSaved) #restore the structure, whatever the probe left behind
             Record(path + ' ' + access, row)
+    with contextlib.redirect_stdout(io.StringIO()):
+        root.SetDictionary(saved) #and the whole root once
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 inspect.getframeinfo = inspectGetFrameInfo

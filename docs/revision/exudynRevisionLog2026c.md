@@ -6520,6 +6520,32 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg10-37"></a>
+### RG10.37 — the parallel test suite: long models first, one BLAS thread each, cheaper slow models (2026-11-13, #3497)
+
+*(Maintainer 2026-11-13: exudev test --parallel 32 takes 70-90 s, a few tests take 20-30 s; check them, run the long
+ones first, reduce their integration time or complexity - the values may move.)*
+
+- Measured alone (Windows, regular): parameterConversionTest 30 s, symbolicImplicitRungeKuttaTest 28 s,
+  energiesFlexibleBodiesTest 12 s, symbolicTrapezoidalGGLStepSizeTest 10.9 s; abaqusImportTest 1 s alone but 21 s in
+  the parallel run (scipy's BLAS threads in every process). Scratch stmtTime.py (time per top-level statement).
+- parameterConversionTest: every one of its 24000 structure probes converted the whole dictionary of
+  visualizationSettings (650 leaves) up to three times; the probes now set and restore the structure that owns the
+  leaf (its SetDictionary converts the same leaf), the root restored once: 30 -> 1.7 s, all 6326 recorded outcomes
+  unchanged.
+- symbolicImplicitRungeKuttaTest: the fine-step agreement with 400 steps (Radau3 keeps 800, it needs them for 1e-7),
+  the ODE1 reference by Radau5 with 200 steps instead of LobattoIIIA4 with 800, the 50-step ODE1 solves no longer
+  repeated, the references of the slider crank and of the ball with 5000 instead of 20000 steps: 28 -> 17.5 s, the
+  result unchanged (all orders still pass; the slider crank order 4.65/3.99, was 4.92/3.94).
+- energiesFlexibleBodiesTest: 0.25 s instead of 1 s simulated: 12 -> 2.3 s; reference 5.850196680023826 (fast module
+  5.850196680023847).
+- testRunnerTools.RunModelsInParallel(startFirst=...): the models of SlowTests() start first, the longest first; the
+  results keep the order of the file list. Every model process gets OMP/OPENBLAS/MKL_NUM_THREADS = 1 unless set.
+  SlowTests() with the measured times (it is also the skip list of --fast).
+- exudev test --parallel 32: 29.5 s here; regular and fast-module suites, pytest passed.
+- The remaining long models are the symbolic ones: the Python solvers build a scipy sparse matrix in every residual
+  (60 % of SolveImplicitRungeKutta on a 2-coordinate pendulum) - raised as #3498, RG12.75.
+
 <a id="rg10-36"></a>
 ### RG10.36 — the Windows wheels on GitHub tested with the tolerance of another compiler (2026-11-13, #3495)
 

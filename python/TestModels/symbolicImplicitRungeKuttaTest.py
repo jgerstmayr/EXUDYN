@@ -57,7 +57,7 @@ pendulum = NumpySystem(np.eye(2), lambda q, q_t, t: np.array([0., -g]), initialS
                        constraints=lambda q, q_t, y, z, t: np.array([0.5*(q @ q - L**2)]),
                        constraintJacobian=lambda q, q_t, y, t: np.array([q]), numberOfConstraints=1)
 reference = SolveImplicitRungeKutta(pendulum, Settings(400), 'LobattoIIIA4')
-difference = max(np.max(np.abs(SolveImplicitRungeKutta(pendulum, Settings(800), method)['q'][-1] - reference['q'][-1]))
+difference = max(np.max(np.abs(SolveImplicitRungeKutta(pendulum, Settings(800 if method == 'Radau3' else 400), method)['q'][-1] - reference['q'][-1]))
                  for method in implicitRungeKuttaMethods)
 Check(difference < 1e-7, 'the methods with fine steps (Radau3 of order 3): ' + str(difference))
 u = 0
@@ -105,7 +105,7 @@ creator.Record()
 mbs.Assemble()
 system = SymbolicSystem(mbs)
 endTime = 0.25
-settings = Settings(20000, endTime)
+settings = Settings(5000, endTime)
 settings.timeIntegration.generalizedAlpha.spectralRadius = 0.9
 settings.timeIntegration.newton.relativeTolerance = 1e-10
 mbs.SolveDynamic(settings)
@@ -179,13 +179,14 @@ withODE1 = NumpySystem(np.eye(2), lambda q, q_t, t, y: np.array([0., -g]), initi
                        ode1RHS=lambda q, q_t, y, t: -y*(1 + 0.1*q_t[0]**2), initialStateODE1=[1.],
                        constraints=lambda q, q_t, y, z, t: np.array([0.5*(q @ q - L**2)]),
                        constraintJacobian=lambda q, q_t, y, t: np.array([q]), numberOfConstraints=1)
-referenceY = SolveImplicitRungeKutta(withODE1, Settings(800))['y'][-1][0]
+referenceY = SolveImplicitRungeKutta(withODE1, Settings(200), 'Radau5')['y'][-1][0] #error 1e-12
 for method in implicitRungeKuttaMethods:
-    errors = [abs(SolveImplicitRungeKutta(withODE1, Settings(steps), method)['y'][-1][0] - referenceY) for steps in [25, 50]]
+    y = [SolveImplicitRungeKutta(withODE1, Settings(steps), method)['y'][-1][0] for steps in [25, 50]]
+    errors = [abs(value - referenceY) for value in y]
     order = float(np.log2(errors[0]/errors[1]))
     exu.Print('ODE1 coordinates, ' + method + ': error with 50 steps', errors[1], ', order', order)
     Check(order > (2.8 if method == 'Radau3' else 3.8), 'the order of the ODE1 coordinates, ' + method + ': ' + str(order))
-    u += round(float(SolveImplicitRungeKutta(withODE1, Settings(50), method)['y'][-1][0]), 8)
+    u += round(float(y[1]), 8)
 
 #data coordinates: a ball on a unilateral spring, switched by its data coordinate in the post-Newton step (#3253)
 from exudyn.itemInterface import NodePoint, ObjectGenericODE2, LoadForceVector, MarkerNodePosition, MarkerBodyPosition, \
@@ -219,7 +220,7 @@ def BallModel():
     mbs.Assemble()
     return (mbs, ball)
 (mbsBall, ball) = BallModel()
-SolveGeneralizedAlpha(SymbolicSystem(mbsBall), Settings(20000))
+SolveGeneralizedAlpha(SymbolicSystem(mbsBall), Settings(5000))
 referenceHeight = mbsBall.GetNodeOutput(ball, exu.OutputVariableType.Position)[1]
 (mbsBall, ball) = BallModel()
 result = SolveImplicitRungeKutta(SymbolicSystem(mbsBall), Settings(1000), 'LobattoIIIA4')

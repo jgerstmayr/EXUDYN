@@ -1,0 +1,15 @@
+{
+  "number": 3497,
+  "title": "The parallel test suite waits 70-90 s for a few long test models",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "exudev test --parallel 32 takes 70-90 s because a few models take 20-40 s there: parameterConversionTest (30 s: the whole visualizationSettings dictionary converted three times for each of 24000 probes), symbolicImplicitRungeKuttaTest (28 s: references with more steps than needed, a solve done twice), abaqusImportTest (1 s alone, 21 s in parallel: the BLAS threads of every process on all cores), energiesFlexibleBodiesTest (12 s: 1 s of simulated time). The runner shall start the long models first and give every model one BLAS thread; the models shall be made cheaper where their checks allow it.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 12:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The test suite runs faster in parallel: the long test models start first and every model uses one BLAS thread; parameterConversionTest (30 s to 1.7 s), symbolicImplicitRungeKuttaTest (28 s to 17.5 s) and energiesFlexibleBodiesTest (12 s to 2.3 s) take less time.",
+  "resolvedInVersion": "1.13.631"
+}

@@ -1085,7 +1085,7 @@ def ExecModel(fileName, quiet=False):
 
 #%%******************************************************************************************************
 def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
-                      pythonExecutable=None):
+                      pythonExecutable=None, environment=None):
     """
     Run ONE test model in a fresh interpreter and return what the suite needs to judge it.
 
@@ -1099,6 +1099,7 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
         invalidResult: the value the suite uses for 'no result was set'
         timeout: seconds after which the model is killed and counted as failed
         pythonExecutable: interpreter to use; default sys.executable
+        environment: the environment variables of the process; default those of this one
 
     Returns:
         dict with 'result', 'seconds', 'output' (everything the model printed), 'failed', 'tolerance' and
@@ -1119,7 +1120,7 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
     try:
         completed = subprocess.run([pythonExecutable or sys.executable, '-c', source],
                                    capture_output=True, text=True, errors='replace',
-                                   timeout=timeout)
+                                   timeout=timeout, env=environment)
         output = completed.stdout + completed.stderr
         failed = completed.returncode != 0
     except subprocess.TimeoutExpired:
@@ -1164,7 +1165,7 @@ def ProgressLine(count, total, text):
 
 #%%******************************************************************************************************
 def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfProcesses=0,
-                        printProgress=True, timeout=1800, compactProgress=False):
+                        printProgress=True, timeout=1800, compactProgress=False, startFirst=None):
     """
     Run the test models in parallel, each in its own interpreter.
 
@@ -1182,6 +1183,8 @@ def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfPro
         printProgress: write one line per finished model to the real console
         timeout: seconds per model
         compactProgress: with printProgress, one line rewritten in place instead (quiet runs)
+        startFirst: dict file name -> expected seconds; these models start first, the longest first, so
+            that a long model does not run alone at the end (#3497)
 
     Returns:
         dict: file name -> dict as returned by RunModelInProcess
@@ -1193,9 +1196,16 @@ def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfPro
 
     results = {}
     finished = [0]
+    #one thread for numpy's and scipy's BLAS in each model: with many processes, every model starting threads on all
+    #cores made abaqusImportTest take 21 s instead of 1 s (#3497); a value set by the caller is kept
+    environment = dict(os.environ)
+    for name in ['OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS']:
+        environment.setdefault(name, '1')
+    startFirst = startFirst or {}
+    order = sorted([f for f in fileNames if f in startFirst], key=lambda f: -startFirst[f])             + [f for f in fileNames if f not in startFirst]
 
     def Run(fileName):
-        r = RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=timeout)
+        r = RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=timeout, environment=environment)
         finished[0] += 1
         if printProgress and compactProgress:
             ProgressLine(finished[0], len(fileNames), 'test model ' + fileName)
@@ -1206,7 +1216,8 @@ def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfPro
 
     #threads only start and wait for processes, so the GIL is irrelevant here
     with ThreadPoolExecutor(max_workers=numberOfProcesses) as pool:
-        for fileName, r in zip(fileNames, pool.map(Run, fileNames)):
-            results[fileName] = r
+        finishedResults = dict(zip(order, pool.map(Run, order)))
+    for fileName in fileNames: #the results in the order of fileNames
+        results[fileName] = finishedResults[fileName]
 
     return results

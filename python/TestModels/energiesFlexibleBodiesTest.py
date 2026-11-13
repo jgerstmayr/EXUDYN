@@ -106,8 +106,8 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
-simulationSettings.timeIntegration.numberOfSteps = 1000
-simulationSettings.timeIntegration.endTime = 1
+simulationSettings.timeIntegration.numberOfSteps = 250
+simulationSettings.timeIntegration.endTime = 0.25 #a few oscillations of each model; 1 s took 12 s (#3497)
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 #the cross-section deformation of ObjectANCFBeam carries no mass, so its mass matrix is singular for initial accelerations
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
