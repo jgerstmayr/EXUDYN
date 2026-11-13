@@ -6520,6 +6520,26 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg4-32"></a>
+### RG4.32 — the workers of the TaskManager read a job with acquire ordering (2026-11-13, #3499)
+
+*(Maintainer 2026-11-13: the log of the failed Ubuntu aarch64 cp313 job of the second rehearsal run, in
+tmp/GitHubWheelsRH1.14/logUbuntu-arm3.13.txt.)*
+
+- The log: `runTestSuite.py` ended with exit code 139 (segmentation fault) at test 308 of 344,
+  persistentThreadsTest.py, after parallelSubstitutionTest.py; no test failed before. The first run had passed on
+  aarch64 for every Python version, so the crash is intermittent.
+- Cause: `CreateJob` writes the job (`TaskManager::func`, a pointer to the `std::function` of the `ParallelFor` call,
+  which lives only for that call) and then stores the start flag of each worker with seq_cst; the worker loaded the
+  flag with `MEMORY_ORDER_SYNCLOAD` = `std::memory_order_relaxed`, which orders nothing. On x86 every load acquires, so
+  it never showed; on ARM the worker may see the new flag with the old `func` and call the destroyed function of the
+  previous job. The same relaxed load let the main thread read the results of a worker after its end flag without a
+  guarantee that they were visible. persistentThreadsTest starts many short jobs on the same workers, which makes the
+  window more likely.
+- Fix: `MEMORY_ORDER_SYNCLOAD` = `std::memory_order_acquire` (one line, Threading.cpp); the same instruction on x86.
+- Gates: both modules built, both test suites passed (345 and 342 models), pytest exit 0. Not testable here on ARM:
+  the check is the next run of the Wheels workflow.
+
 <a id="rg5-14-1"></a>
 ### RG5.14.1-RG5.14.2 — the parallel regions measured, the design of one region per residual (2026-11-13, #3494)
 

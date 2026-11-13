@@ -514,6 +514,12 @@ CLOSED 2026-11-12 (#3466): scipy was missing in WSL's venvExuP313; the performan
 
 #3496. Found in the release rehearsal (#3495): 10.521949247439636 on macos-15 against 10.5211014088147 on Windows and Linux (x86-64 and aarch64); the first operation that differs, then the model out of UnresolvedOnMacOS. Needs a macOS run (GitHub CI or a Mac).
 
+### **CLOSED_RG4.32** The workers of the TaskManager read a job with acquire ordering
+
+#3499. Found in the release rehearsal of 1.14 (#3495, second run): the tests of the Ubuntu aarch64 wheel for Python 3.13 ended with a segmentation fault (exit code 139) in persistentThreadsTest.py; the first run had passed on aarch64. The start and end flags of a job were loaded with memory_order_relaxed: on ARM a worker could see the start flag before the job pointer and call the destroyed std::function of the previous job.
+
+CLOSED 2026-11-13 (#3499): MEMORY_ORDER_SYNCLOAD in Threading.cpp is std::memory_order_acquire (the stores were already seq_cst); both test suites and pytest pass on Windows; the aarch64 check is the next run of the Wheels workflow. [log](exudynRevisionLog2026c.md#rg4-32)
+
 ## **OPEN_RG5** Performance
 
 Measurement first, then the code that is actually hot.

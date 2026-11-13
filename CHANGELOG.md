@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 605 | 1.13.634 |
+| 1.13 | Newborn | 606 | 1.13.635 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.635** `FIX` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The workers of the TaskManager read a job without acquire ordering, which crashes on ARM (#3499)
+  - description: Found in the release rehearsal of 1.14 (\#3495): the tests of the Ubuntu aarch64 wheel for Python 3.13 ended with a segmentation fault (exit code 139) in persistentThreadsTest.py, while the same tests passed on aarch64 in the run before. The flags by which the main thread starts a job and by which a worker reports it finished are loaded with std::memory\_order\_relaxed (MEMORY\_ORDER\_SYNCLOAD). On x86 every load has acquire semantics, so this never showed; on ARM a worker may see the start flag before the new job pointer (TaskManager::func) and call the std::function of the previous job, which no longer exists, and the main thread may read the results of a worker before they are visible. The loads get std::memory\_order\_acquire, which costs nothing on x86.
+  - **notes:** The worker threads load the start and end flags of a parallel job with acquire ordering instead of relaxed ordering; on ARM (Linux aarch64, macOS on Apple silicon) a worker could otherwise run the previous, already destroyed job and crash, or the main thread could read results not yet visible. No change on x86.
+  - date resolved: **2026-11-13 15:49**, date raised: 2026-11-13
 - **1.13.634** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The performance of the releases as a generated table in the documentation (#3493)
   - description: A page of the documentation shows how the performance models evolve over the releases: one row per performance model (file times, no single runs or timers), one column per release, for Windows with the regular module and with the fast module where it exists; generated from python/logs/performance/performanceHistory.json by performanceHistory.py during the regeneration, so it is never written by hand.
   - **notes:** The manual shows the performance of the releases: section Performance of the releases in Performance and ways to speed up computations, a table per module of the time of each performance model in each release, generated from the performance history.

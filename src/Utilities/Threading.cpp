@@ -23,7 +23,7 @@
 #include <thread> //needed on MacOS, automatic elsewhere
 
 
-#define MEMORY_ORDER_SYNCLOAD std::memory_order_relaxed //on intel same as memory_order_seq_cst?
+#define MEMORY_ORDER_SYNCLOAD std::memory_order_acquire //a worker must see the job (func) before it runs it, the main thread the results; relaxed crashed on ARM; free on x86 (#3499)
 #define MEMORY_ORDER_SYNCSTORE std::memory_order_seq_cst
 
 //#define PRINTDEBUGINFORMATION

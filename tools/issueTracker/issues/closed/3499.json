@@ -1,0 +1,18 @@
+{
+  "number": 3499,
+  "title": "The workers of the TaskManager read a job without acquire ordering, which crashes on ARM",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "Found in the release rehearsal of 1.14 (#3495): the tests of the Ubuntu aarch64 wheel for Python 3.13 ended with a segmentation fault (exit code 139) in persistentThreadsTest.py, while the same tests passed on aarch64 in the run before. The flags by which the main thread starts a job and by which a worker reports it finished are loaded with std::memory_order_relaxed (MEMORY_ORDER_SYNCLOAD). On x86 every load has acquire semantics, so this never showed; on ARM a worker may see the start flag before the new job pointer (TaskManager::func) and call the std::function of the previous job, which no longer exists, and the main thread may read the results of a worker before they are visible. The loads get std::memory_order_acquire, which costs nothing on x86.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 15:49",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/Threading.cpp",
+  "line": "26",
+  "releaseNotes": "The worker threads load the start and end flags of a parallel job with acquire ordering instead of relaxed ordering; on ARM (Linux aarch64, macOS on Apple silicon) a worker could otherwise run the previous, already destroyed job and crash, or the main thread could read results not yet visible. No change on x86.",
+  "resolvedInVersion": "1.13.635"
+}
