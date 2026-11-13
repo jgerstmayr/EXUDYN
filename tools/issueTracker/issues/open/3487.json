@@ -1,0 +1,12 @@
+{
+  "number": 3487,
+  "title": "RunLinalgBenchmark: the cost of temporary vectors",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "Cases in RunLinalgBenchmark for chains of vector operations on SlimVector and Vector (a + b*c - d, sums of several products, as in the item code): the operator form with its temporaries against the in-place form (copy, +=, MultAdd), in both modules; the results decide whether fused elementwise expressions are worth their complexity.",
+  "dateRaised": "2026-11-13",
+  "deadline": "2027-05-12",
+  "file": "src/Tests/linalgBenchmark.cpp"
+}

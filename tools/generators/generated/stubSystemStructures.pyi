@@ -1108,6 +1108,8 @@ class VSettingsRaytracerAdvanced:
     """if the alpha (fourth) value is > 0: faces seen from their back - whose normals point away from the camera, e.g. the inward normals of a closed body - are drawn in this RGB color, without light, to check the orientation of the normals of imported meshes, as the one-sided lighting of OpenGL (openGL.advanced.lightModelTwoSide = False) shows them dark (#3275); 0: drawn as the front."""
     backgroundColorReflections: Tuple[float,float,float,float]
     """scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached."""
+    minimumShadowWeight: float
+    """a hit of a reflected or refracted ray casts its shadow rays only if the weight of the ray, its share in the color of the pixel (the product of the reflectivities, 1 - alpha of the transparent faces, divided by the number of rays of a blurred reflection), is at least this value; otherwise it is lit; e.g. 0.2 saves the shadow rays of weak reflections, such as of a floor of reflectivity 0.12, at the cost of their missing shadows; 0 casts all shadow rays; the visible surfaces always cast theirs."""
     searchTreeFactor: int
     """This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128."""
     shadowScalingFactor: int

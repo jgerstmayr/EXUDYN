@@ -6520,6 +6520,28 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg6-26-12"></a>
+### RG6.26.12, RG6.26 — raytracer: cheaper reflections; the group closed (2026-11-13, #3486)
+
+*(Maintainer 2026-11-13: do the next three suggested steps.)*
+
+- raytracer.advanced.minimumShadowWeight (new, default 0): ComputePixelColor carries the weight of the ray (the product
+  of the reflectivities and of 1 - alpha, divided by the number of rays of a blurred reflection) as its last argument;
+  a secondary hit below the weight counts as lit, without shadow rays (O10). Default 0: the six configurations of
+  raytracerShadowBenchmark.py give the same MD5 as before.
+- Benchmark scene, N = 13, S = 3: sharp reflection 0.094 -> 0.091 s at 0.2 (-3 %; the estimate of up to 30 % in the
+  design note predates sections 6-6.1, after which the shadow rays of reflection hits cost little); roughness 0.05 with
+  8 rays 0.424 -> 0.301 s (-29 %), the difference to a 64-ray reference 0.157 -> 0.226 (the shadows inside the
+  reflection are missing). Scratch rtCheap.py.
+- Probe rays for blurred reflections (innermost and outermost first, their mean if the colours agree within 2/255)
+  implemented, measured and removed: 3 probes of 8 rays 0.383 s (-10 %), difference 0.197 - worse than 16 rays without
+  probes (0.156 at 0.655 s); the rays that hit nothing are the cheap ones, those that hit an object differ in colour.
+- raytracerGlossyReflectionTest.py: a fourth check (minimumShadowWeight 0.2 removes the shadow of the brick on the
+  sphere in the reflection, mean difference 0.16), the light moved low to [-5, -2, 2] so that the shadow is in the
+  reflection at all (with the light above, one pixel changed); reference 3.2 -> 4.2.
+- O7 (BVH) not evaluated: no user scene is known in which the grid is the limit. RG6.26 closed with this step.
+  raytracerImprovements.md section 6.4, revisions.md.
+
 <a id="rg6-26-16"></a>
 ### RG6.26.16 — raytracer: blurred reflections (2026-11-13, #3473)
 

@@ -52,10 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **Cheaper reflections** (RG6.26.12): no shadow rays for the hits of weak reflections, and probe rays for blurred
-   reflections; the reflections cost 40 % of an image and the blurred ones a multiple of that.
-3. **The measurements of the temporaries** (RG5.2.7.1): they decide whether fused vector expressions (RG5.2.7.5) pay.
-4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+2. **The measurements of the temporaries** (RG5.2.7.1): they decide whether fused vector expressions (RG5.2.7.5) pay.
+3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -67,8 +65,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (3 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
-- **RG6** Graphics and rendering
-  - RG6.26 Raytracer: the cost of shadows and soft shadows, and the options to reduce it (1 open sub-step)
 - **RG7** Python user items
   - RG7.15 Complete the user items after the maintainer's review: data and post-Newton of the connector, the Jacobian of the joint, the body marker
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -114,7 +110,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
 | RG5 | OPEN | 6 | Performance |
-| RG6 | OPEN | 2 | Graphics and rendering |
+| RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 1 | Structural core improvements |
@@ -966,7 +962,7 @@ CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: mini
 
 CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tree, each allocated when a sphere first enters it and grown when it first holds more; only in the first solve (100 per step), a second solve from the initial state 0.15-0.7 per step, both in the same time. [log](exudynRevisionLog2026c.md#rg5-12)
 
-## **OPEN_RG6** Graphics and rendering
+## **CLOSED_RG6** Graphics and rendering
 
 The renderer, the settings dialogs, and the rendering revision they are heading for. Not planned, by decision: a
 raytracer for curved geometry and curved Hex20 faces (#2709).
@@ -1338,11 +1334,13 @@ Recommendation: a member hideMbs of VSettingsScene - so view0.scene.hideMbs ... 
 
 CLOSED 2026-11-11 (#3442): view[0-3].scene.hideMbs (TArrayIndex, default []); SystemHiddenInView(viewID, system, settings) in GlfwRenderer::RenderGraphicsData (faces, edges, lines, points, texts, shadows, picking), RenderState::ComputeMaxSceneSize/ComputeZoomToItem (GraphicsData::ComputeMaxScene with the hidden systems), Raytracer::SensorTraceLines (viewID) and Raytracer::SoftwareRenderer (triangles, lines, texts); test model viewHideMbsTest.py with raytracer images against containers holding only the shown systems. [log](exudynRevisionLog2026c.md#rg5-9-9)
 
-### **OPEN_RG6.26** Raytracer: the cost of shadows and soft shadows, and the options to reduce it
+### **CLOSED_RG6.26** Raytracer: the cost of shadows and soft shadows, and the options to reduce it
 
 #3460. Maintainer 2026-11-12: the raytracer got faster, but lightRadius variations are handled very inefficiently, possibly other things as well; better options, in particular for shadows - analyze first, the analysis and the suggestions in a design file raytracerImprovements.md. The proposed sub-steps are in its section 5, for the maintainer to choose.
 
 Maintainer 2026-11-12: the proposed speedup is very good, into the plan (RG6.26.2-RG6.26.12); the three correctness points as issues and steps (RG6.26.13-RG6.26.15); blurred reflections if doable during the improvements (RG6.26.16); start with the first steps.
+
+CLOSED 2026-11-13 (#3460, #3468-#3477, #3486): the benchmark scene 0.151 -> 0.091 s at the settings of the test model (N = 13, S = 3), soft shadows without the bands of the fixed spiral and without bleeding across silhouettes, the three correctness points, blurred reflections; raytracerImprovements.md section 6. [log](exudynRevisionLog2026c.md#rg6-26-12)
 
 #### **CLOSED_RG6.26.1** Analysis: how shadows are computed, measurements, inefficiencies, options
 
@@ -1410,9 +1408,11 @@ O5: no shadow bleeding across silhouettes, smaller sample counts; the reference 
 
 CLOSED 2026-11-12 (#3470-#3472, #3475-#3477, one reference update): raytracerImprovements.md section 6.2. [log](exudynRevisionLog2026c.md#rg6-26-9)
 
-#### **OPEN_RG6.26.12** Optional: shadow rays of secondary hits by their weight; a BVH evaluated on large user scenes
+#### **CLOSED_RG6.26.12** Optional: shadow rays of secondary hits by their weight; a BVH evaluated on large user scenes
 
 O10 (a setting keeps today's behaviour), O7 only if a user scene shows the grid as the limit.
+
+CLOSED 2026-11-13 (#3486): raytracer.advanced.minimumShadowWeight (default 0: the images unchanged); blurred reflections -29 % at 0.2, sharp ones -3 %; probe rays for blurred reflections measured and not kept (-10 % at more error than 16 plain rays); O7 not evaluated, no user scene known in which the grid is the limit. raytracerImprovements.md section 6.4. [log](exudynRevisionLog2026c.md#rg6-26-12)
 
 #### **CLOSED_RG6.26.13** The offset of the shadow ray relative to the scene size
 

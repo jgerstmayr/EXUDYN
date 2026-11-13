@@ -511,7 +511,7 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 //for screen pixel or for reflection/refraction: compute pixel color of given ray origin and direction
 RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
 	const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, RTfloat& zDepth, ShadowValue& shadowValue,
-	Index reflectionDepth, Index transparencyDepth, Index shadowMode, const RTVector3D& rayOriginNormalized)
+	Index reflectionDepth, Index transparencyDepth, Index shadowMode, const RTVector3D& rayOriginNormalized, RTfloat weight)
 {
 	IntersectionResult closestHit;
 	RTfloat minDistanceZ = std::numeric_limits<RTfloat>::lowest();
@@ -702,7 +702,8 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 		constexpr Index maxLightSamples = 256;
 		std::array<RTfloat, maxLightSamples> transmission;
 		nLightPoints = EXUstd::Minimum(nLightPoints, maxLightSamples);
-		if (shadowMode != 2 && light.shadow)
+		//a hit of a weak reflected or refracted ray counts as lit, without shadow rays (#3486)
+		if (shadowMode != 2 && light.shadow && weight >= RTS.minimumShadowWeight)
 		{
 			auto Trace = [&](Index np)
 			{
@@ -816,7 +817,8 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 		{
 			reflectionColor = ComputePixelColor(hitPoint + reflectDir * reflRefrOffset, reflectDir, triangles, RTS, otherZ, shadowValue,
 				reflectionDepth + 1,
-				EXUstd::Maximum(reflectionDepth, transparencyDepth)); //for now, transparency not used with reflection
+				EXUstd::Maximum(reflectionDepth, transparencyDepth), //for now, transparency not used with reflection
+				0, RTVector3D({ 0.f,0.f,0.f }), weight * material.reflectivity);
 		}
 		else
 		{
@@ -824,17 +826,19 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 			EXUmath::ComputeOrthogonalBasisVectors(reflectDir, basisN1, basisN2);
 			constexpr RTfloat goldenAngle = 2.39996323f; //pi*(3-sqrt(5))
 			RTfloat rotation = HashAngle(hitPoint);
-			reflectionColor = RTVector3D({ 0.f, 0.f, 0.f });
-			for (Index k = 0; k < nReflections; k++)
+			RTfloat rayWeight = weight * material.reflectivity / (RTfloat)nReflections;
+			auto TraceReflection = [&](Index k)
 			{
 				RTfloat radius = material.roughness * std::sqrt(((RTfloat)k + 0.5f) / (RTfloat)nReflections);
 				RTfloat phi = (RTfloat)k * goldenAngle + rotation;
 				RTVector3D direction = reflectDir + (radius * std::cos(phi)) * basisN1 + (radius * std::sin(phi)) * basisN2;
 				direction.NormalizeSafe();
 				if (direction * closestHit.normal <= 0.f) { direction = reflectDir; } //not into the surface
-				reflectionColor += ComputePixelColor(hitPoint + direction * reflRefrOffset, direction, triangles, RTS, otherZ, shadowValue,
-					reflectionDepth + 1, EXUstd::Maximum(reflectionDepth, transparencyDepth));
-			}
+				return ComputePixelColor(hitPoint + direction * reflRefrOffset, direction, triangles, RTS, otherZ, shadowValue,
+					reflectionDepth + 1, EXUstd::Maximum(reflectionDepth, transparencyDepth), 0, RTVector3D({ 0.f,0.f,0.f }), rayWeight);
+			};
+			reflectionColor = RTVector3D({ 0.f, 0.f, 0.f });
+			for (Index k = 0; k < nReflections; k++) { reflectionColor += TraceReflection(k); }
 			reflectionColor *= 1.f / (RTfloat)nReflections;
 		}
 	}
@@ -851,7 +855,7 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 		{  // No total internal reflection
 			refractionColor = ComputePixelColor(hitPoint + refractDir * reflRefrOffset, refractDir,
 				triangles, RTS, otherZ, shadowValue, EXUstd::Maximum(reflectionDepth, transparencyDepth), transparencyDepth + 1, 0,
-				rayOriginNormalized); //use original rayOriginNormalized for gradient background in case of pure transparency, if we look through objects (not considering then refraction!)
+				rayOriginNormalized, weight * (1.f - alphaUsed)); //use original rayOriginNormalized for gradient background in case of pure transparency, if we look through objects (not considering then refraction!)
 		}
 		else
 		{
@@ -1316,6 +1320,7 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 	RTS.shadowScalingFactor = EXUstd::Clamp(visSettings->raytracer.advanced.shadowScalingFactor, 0, 16);
 	RTS.shadowSmoothingSteps = EXUstd::Clamp(visSettings->raytracer.advanced.shadowSmoothingSteps, 0, 32);
 	RTS.adaptiveShadowSamples = EXUstd::Clamp(visSettings->raytracer.advanced.adaptiveShadowSamples, 0, 256);
+	RTS.minimumShadowWeight = EXUstd::Clamp(visSettings->raytracer.advanced.minimumShadowWeight, 0.f, 1.f);
 
 	RTS.verbose = visSettings->raytracer.verbose;
 	//0: the logical processors; the tiles are balanced dynamically, so all of them pay (#3439, #3445)

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.622.dev1
+- Exudyn version = 1.13.623.dev1
 - last change = 2026-11-13
-- Number of issues = 3486
-- Number of resolved issues = 3399 (622 in current version)
+- Number of issues = 3488
+- Number of resolved issues = 3400 (623 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` `LOW EFF` `raised by: Claude-JG` RunLinalgBenchmark: the cost of temporary vectors (#3487)
+  - description: Cases in RunLinalgBenchmark for chains of vector operations on SlimVector and Vector (a + b\*c - d, sums of several products, as in the item code): the operator form with its temporaries against the in-place form (copy, +=, MultAdd), in both modules; the results decide whether fused elementwise expressions are worth their complexity.
+  - date raised: 2026-11-13
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Expression templates for the small linear algebra: which to enable (#3461)
   - description: Evaluated in docs/dev/design/expressionTemplates.md: full expression templates are not recommended (debugging in VS2022, dangling auto, small measured gain); recommended are a transposed view Transposed(A) \* x without a copy, SlimVectorBase::MultAdd, and fused elementwise expressions on SlimVector only if the measurements M1 show a gain; all keep the order of the sums.
   - date raised: 2026-11-12

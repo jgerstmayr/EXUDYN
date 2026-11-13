@@ -1597,6 +1597,10 @@ definitions.append(StructureDefinition(
             pythonName='adaptiveShadowSamples',
             defaultValue=6,
             description=r'if lightRadiusVariations is larger, this number of the shadow samples of a light is traced first for each pixel, the innermost and the outermost ones of its disk; if they agree (the pixel fully lit or fully in shadow), the other samples take their value without being traced, which saves most of the cost of soft shadows away from their edges; 0 traces all samples; small details of a shadow, smaller than the spacing of the probes, may be missed; range=0..256'),
+        StructureParameter(type=Tfloat(minimum=0),
+            pythonName='minimumShadowWeight',
+            defaultValue=0.,
+            description=r'a hit of a reflected or refracted ray casts its shadow rays only if the weight of the ray, its share in the color of the pixel (the product of the reflectivities, 1 - alpha of the transparent faces, divided by the number of rays of a blurred reflection), is at least this value; otherwise it is lit; e.g. 0.2 saves the shadow rays of weak reflections, such as of a floor of reflectivity 0.12, at the cost of their missing shadows; 0 casts all shadow rays; the visible surfaces always cast theirs'),
         ],
     ))
 

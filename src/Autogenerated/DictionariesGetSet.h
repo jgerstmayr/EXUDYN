@@ -4761,6 +4761,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.minimumShadowWeight;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "a hit of a reflected or refracted ray casts its shadow rays only if the weight of the ray, its share in the color of the pixel (the product of the reflectivities, 1 - alpha of the transparent faces, divided by the number of rays of a blurred reflection), is at least this value; otherwise it is lit; e.g. 0.2 saves the shadow rays of weak reflections, such as of a floor of reflectivity 0.12, at the cost of their missing shadows; 0 casts all shadow rays; the visible surfaces always cast theirs";
+    structureDict["minimumShadowWeight"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.searchTreeFactor;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
@@ -4816,6 +4824,7 @@ inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
     structureDict["adaptiveShadowSamples"] = data.adaptiveShadowSamples;
     structureDict["backFaceColor"] = EPyUtils::ToPythonMember(data.backFaceColor);
     structureDict["backgroundColorReflections"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
+    structureDict["minimumShadowWeight"] = data.minimumShadowWeight;
     structureDict["searchTreeFactor"] = data.searchTreeFactor;
     structureDict["shadowScalingFactor"] = data.shadowScalingFactor;
     structureDict["shadowSmoothingSteps"] = data.shadowSmoothingSteps;
@@ -4830,6 +4839,7 @@ inline void SetDictionary(VSettingsRaytracerAdvanced& data, const py::dict& d) {
     EPyUtils::FromPython(d["adaptiveShadowSamples"], data.adaptiveShadowSamples, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.adaptiveShadowSamples");
     EPyUtils::FromPython(d["backFaceColor"], data.backFaceColor, "VSettingsRaytracerAdvanced.backFaceColor");
     EPyUtils::FromPython(d["backgroundColorReflections"], data.backgroundColorReflections, "VSettingsRaytracerAdvanced.backgroundColorReflections");
+    EPyUtils::FromPython(d["minimumShadowWeight"], data.minimumShadowWeight, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.minimumShadowWeight");
     EPyUtils::FromPython(d["searchTreeFactor"], data.searchTreeFactor, EPyUtils::RangeCheck::positive, "VSettingsRaytracerAdvanced.searchTreeFactor");
     EPyUtils::FromPython(d["shadowScalingFactor"], data.shadowScalingFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.shadowScalingFactor");
     EPyUtils::FromPython(d["shadowSmoothingSteps"], data.shadowSmoothingSteps, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.shadowSmoothingSteps");

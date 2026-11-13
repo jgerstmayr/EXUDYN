@@ -396,4 +396,32 @@ The cost is that of the reflections times the number of rays: in the benchmark s
 of the 1200 x 1000 image, N = 13, S = 3) 0.093 s sharp, 0.235 s with 4 rays, 0.406 s with 8, 0.833 s with 16 - each
 reflected ray about 0.045 s, with its hard shadow rays. Cheaper later: the probes of #3476 for the reflected rays
 (several rays first, the rest only where their colours differ), and no shadow rays for the hits of the reflections
-(O10, RG6.26.12).
+(O10, RG6.26.12); section 6.4 measures both.
+
+### 6.4 Shadow rays of weak secondary hits (RG6.26.12, #3486)
+
+`raytracer.advanced.minimumShadowWeight` (new, default 0): a hit of a reflected or refracted ray casts its shadow rays
+only if the weight of the ray - its share in the colour of the pixel: the product of the reflectivities and of
+1 - alpha of the transparent faces passed, divided by the number of rays of a blurred reflection - is at least this
+value; otherwise it counts as lit. The visible surfaces always cast theirs; 0 gives the images of before, bit for bit
+(the six benchmark configurations unchanged). `ComputePixelColor` carries the weight as its last argument.
+
+Benchmark scene (section 2, N = 13, S = 3, floor reflectivity 0.12; best of 5; difference to a blurred reflection
+with 64 rays, in 0..255):
+
+| configuration | time [s] | difference to sharp | difference to 64 rays |
+|---|---:|---:|---:|
+| sharp reflection, all shadow rays | 0.094 | 0 | 0.637 |
+| sharp reflection, `minimumShadowWeight = 0.2` | 0.091 | 0.024 | 0.649 |
+| roughness 0.05, 8 rays, all shadow rays | 0.424 | 0.643 | 0.157 |
+| roughness 0.05, 8 rays, `minimumShadowWeight = 0.2` | 0.301 | 0.687 | 0.226 |
+
+For sharp reflections the gain is small (3 %): after the steps of sections 6-6.1 the shadow rays of the reflection
+hits cost little against the reflected rays themselves, so the estimate of O10 (up to 30 %) does not hold any more. For
+blurred reflections it is 29 %, at the price of the shadows inside the reflection.
+
+Measured and not kept: probe rays for blurred reflections, as `adaptiveShadowSamples` does for shadows (the innermost
+and outermost rays first, their mean if the colours agree within 2/255). With 3 probes of 8 rays the image took 0.383
+against 0.426 s (-10 %) and its difference to 64 rays grew from 0.157 to 0.197 - worse than 16 rays without probes
+(0.156). The reflected rays that hit nothing are cheap and those that hit an object differ in colour, so the probes
+save the cheap rays. O7 (a BVH) is not evaluated: no user scene is known in which the grid is the limit.

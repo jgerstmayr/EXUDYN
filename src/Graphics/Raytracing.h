@@ -175,6 +175,7 @@ public:
 	RTfloat shadowDepthTolerance;				//! a depth difference of this size halves the weight of a neighbour (#3477)
 	RTfloat shadowRayOffset;					//! a shadow ray starts this far from the hit, relative to the scene size (#3470)
 	Index adaptiveShadowSamples;				//! the probe samples per pixel and light; 0 = all samples always (#3476)
+	RTfloat minimumShadowWeight;				//! a secondary hit of a smaller weight casts no shadow rays (#3486)
 	Index shadowScalingFactor;					//! reduced resolution of shadows (AAfactor additionally multiplied)
 	Index shadowSmoothingSteps;					//! number of smoothing steps at lower resolution shadow map
 	bool preComputeShadow;						//! if yes, precomputes (smoothed) shadow with lower resolution
@@ -220,6 +221,7 @@ public:
 		shadowDepthTolerance = 1.f;
 		shadowRayOffset = 0.01f;
 		adaptiveShadowSamples = 0;
+		minimumShadowWeight = 0.f;
 		maxReflectionDepth = 0;
 		reflectionSamples = 1;
 		maxTransparencyDepth = 0;
@@ -368,7 +370,8 @@ public:
 	RTVector3D ComputePixelColor(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const ResizableArray<GLTriangle>& triangles,
 		const RaytracingSettings& RTS, RTfloat& zDepth, ShadowValue& shadowValue, Index reflectionDepth = 0, Index transparencyDepth = 0,
 		Index shadowMode = 0, //0=normal, 1=compute shadow (returns shadow in RTVector3D[0]), 2=use computed shadow
-		const RTVector3D& rayOriginNormalized=RTVector3D({0.f,0.f,0.f}));
+		const RTVector3D& rayOriginNormalized=RTVector3D({0.f,0.f,0.f}),
+		RTfloat weight = 1.f); //the share of this ray in the color of the pixel, for minimumShadowWeight (#3486)
 
 	//! draw line with points given in modelview
 	void RasterizeLine(const RTVector3D& p0, const RTVector3D& p1, const RTVector4D& color0, const RTVector4D& color1,
