@@ -6520,6 +6520,24 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg5-2-7-5"></a>
+### RG5.2.7.5, RG5.2.7 — the AutoDiff expressions of the connector Jacobians measured, not rewritten (2026-11-13, #3489)
+
+*(Maintainer 2026-11-13: narrow RG5.2.7.5 to the AutoDiff expressions; do it as proposed.)*
+
+- Measured with temporary timers in CObjectConnector.cpp (scratch adProbe.py, applied for the measurement and reverted
+  by git checkout; fast module): around ComputeConnectorForceRigidDiff / ComputeConnectorForcePositionDiff and around
+  the whole Jacobian of the connector. perfAccessFunctionsAD.py: Jacobian 4.1 ms of 1.06 s, the force 1.0 ms;
+  perfConnectorInterface.py: 1.2 ms of 1.12 s, the force 0.16 ms (modified Newton: few Jacobians).
+- Worst case (scratch adWorst.py, full Newton, a Jacobian in every iteration): 50 rigid bodies with
+  RigidBodySpringDamper, 5.51 s, Jacobian 0.34 s (6.2 %), the force 0.079 s (1.4 %, 0.9 us per call); 50 rigid bodies
+  with 100 SpringDamper, 7.32 s, the force 0.029 s (0.4 %; this variant did not converge with full Newton in some
+  steps, which does not change the ratio).
+- With the factor 3.6-4.4 of RG5.2.7.1, loops instead of the operators could save at most about 1 % of the worst case:
+  no rewrite. Step closed with the measurement, expressionTemplates.md section 10; RG5.2.7 closed (E1, E2 done, E3
+  not done for Real or AutoDiff). The rest of the Jacobian (4.8 % in the worst case) is Real code: seeding, marker
+  Jacobians, the chain.
+
 <a id="rg6-27"></a>
 ### RG6.27 — the raytracer documentation: settings, manual section, materials (2026-11-13, #3488)
 

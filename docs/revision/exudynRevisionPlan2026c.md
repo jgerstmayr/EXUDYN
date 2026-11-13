@@ -52,9 +52,10 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **Measure the AutoDiff expressions of the connector Jacobians, rewrite the costly ones** (RG5.2.7.5): the operators
-   take 4 times one loop for AutoDiff<12>; their share in the time decides whether a rewrite pays.
-3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
+2. **Read the predefined materials from the settings in GraphicsMaterialList** (RG6.28): a small bug found while
+   documenting the materials; no decision needed.
+3. **Add the 3D sliding joint with rotation** (RG4.22): fully specified, tested with the ANCF cable and beam.
+4. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -63,7 +64,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (2 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG6** Graphics and rendering
@@ -111,7 +112,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 5 | Performance |
+| RG5 | OPEN | 3 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -650,11 +651,13 @@ linalgFixedSize.md section 5, point 4: bodies and marker kinematics are about 45
 
 CLOSED 2026-11-12 (#3463), not done: the templated G products are bitwise equal but change the rigid models by -6 to +2 % (noise); not kept. [log](exudynRevisionLog2026c.md#rg5-2-5)
 
-#### **OPEN_RG5.2.7** Expression templates: the transposed view, SlimVector MultAdd, fused elementwise expressions after measurement
+#### **CLOSED_RG5.2.7** Expression templates: the transposed view, SlimVector MultAdd, fused elementwise expressions after measurement
 
 #3461. Maintainer 2026-11-12: no expression templates were used in Exudyn so far; where they simplify code at the same performance, the most important ones shall be enabled; a design file. Design: docs/dev/design/expressionTemplates.md - full expression templates not recommended; E1 Transposed(A) * x, E2 SlimVectorBase::MultAdd, E3 after the measurements M1; sub-steps ET.1-ET.5 in its section 7, for the maintainer to choose.
 
 Maintainer 2026-11-12: the recommended expression templates into the plan (RG5.2.7.1-RG5.2.7.5).
+
+CLOSED 2026-11-13 (#3461): E1 (Transposed) and E2 (MultAdd) done; E3 (fused expressions) not done, neither for Real (no gain) nor for AutoDiff (at most about 1 % of a run). [log](exudynRevisionLog2026c.md#rg5-2-7-5)
 
 ##### **CLOSED_RG5.2.7.1** Measure the temporaries: the cases M1a-M1e in RunLinalgBenchmark
 
@@ -680,7 +683,7 @@ CLOSED 2026-11-13 (#3483): 63 places, bitwise; exudev perf within noise. [log](e
 
 CLOSED 2026-11-13 (#3484): unit test bitwise. [log](exudynRevisionLog2026c.md#rg5-2-7-3)
 
-##### **OPEN_RG5.2.7.5** AutoDiff expressions of the analytic connector Jacobians: measure their share, then write the costly ones as loops or with MultAdd
+##### **CLOSED_RG5.2.7.5** AutoDiff expressions of the analytic connector Jacobians: measure their share, then write the costly ones as loops or with MultAdd
 
 #3461. ET.5: SlimVectorBase(T) explicit, then the restricted expressions of expressionTemplates.md 5.3, with a rule on auto in CODING_STYLE.md.
 
@@ -689,6 +692,8 @@ Measured (RG5.2.7.1, expressionTemplates.md section 9): no gain for Real, so E3 
 Maintainer 2026-11-13: narrow it. The step is now: measure the share of the AutoDiff<n> vector expressions in the time of the analytic connector Jacobians (#2884, exudev perf models with such connectors, a profile in the fast module); if it is noticeable, rewrite those expressions as one loop or with MultAdd, bitwise or within rounding; no expression templates on SlimVector. If the share is small, close the step with the measurement.
 
 #3489.
+
+CLOSED 2026-11-13 (#3489): the force by AutoDiff is at most 1.4 % of a run (full Newton, 50 rigid bodies with RigidBodySpringDamper), about 0.1 % with modified Newton; a rewrite would save at most about 1 %: not done. expressionTemplates.md section 10. [log](exudynRevisionLog2026c.md#rg5-2-7-5)
 
 #### **CLOSED_RG5.2.8** Consolidate the linear algebra function templates
 

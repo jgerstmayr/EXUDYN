@@ -321,3 +321,21 @@ The cases of section 6 are the group `temporaries` of `RunLinalgBenchmark`; the 
   places is writing them as loops or with `MultAdd`.
 - E1 is confirmed for products of matrices (`Transposed(A) * B` -18 %); for `Transposed(A) * x` on `SlimMatrix<3,3>` it
   is neutral, as `exudev perf` showed after RG5.2.7.3. E2 (`MultAdd`) is 5 times faster than `v = v + w*s` in a chain.
+
+## 10. The share in the connector Jacobians (RG5.2.7.5, #3489, 2026-11-13)
+
+Timers around the connector force by automatic differentiation (`ComputeConnectorForceRigidDiff`,
+`ComputeConnectorForcePositionDiff`) and around the whole Jacobian of a connector, in the fast module, for the
+measurement only:
+
+| model | run | Jacobian by AD, whole | of it the force | per call |
+|---|---|---|---|---|
+| `perfAccessFunctionsAD.py` | 1.06 s | 4.1 ms | 1.0 ms rigid, 0.04 ms position | 0.8 us rigid |
+| `perfConnectorInterface.py` | 1.12 s | 1.2 ms | 0.16 ms | |
+| 50 rigid bodies, RigidBodySpringDamper, full Newton (a Jacobian in every iteration) | 5.51 s | 0.34 s (6.2 %) | 0.079 s (1.4 %) | 0.9 us |
+| 50 rigid bodies, 100 SpringDamper, full Newton | 7.32 s | 0.48 s | 0.029 s (0.4 %) | 0.1 us |
+
+The force by AD is at most 1.4 % of a run, in the worst case of a Jacobian in every Newton iteration, and about 0.1 %
+with the modified Newton of the defaults. Writing its expressions as loops could save at most 3/4 of it (section 9),
+about 1 % in the worst case: not worth a rewrite. **E3 is not done, neither for `Real` nor for `AutoDiff`**; the rest
+of the Jacobian (the seeding, the marker Jacobians and the chain, 4.8 % in the worst case) is `Real` code.

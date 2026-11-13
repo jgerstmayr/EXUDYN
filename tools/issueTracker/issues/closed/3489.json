@@ -2,10 +2,14 @@
   "number": 3489,
   "title": "AutoDiff expressions of the analytic connector Jacobians: measure their share, rewrite the costly ones",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
   "description": "For AutoDiff<12>, SlimVector operator expressions take 3.6-4.4 times one loop (#3487). Measure the share of such expressions in the time of the connectors with analytic Jacobians (#2884); if noticeable, write them as one loop or with MultAdd, bitwise or within rounding; otherwise close with the measurement.",
   "dateRaised": "2026-11-13",
-  "deadline": "2027-05-12"
+  "deadline": "2027-05-12",
+  "dateResolved": "2026-11-13 09:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Measured: the connector forces by automatic differentiation take at most 1.4 % of a run (full Newton, a Jacobian in every iteration) and about 0.1 % with the default modified Newton; writing their vector expressions as loops would save at most about 1 %, so they stay as they are.",
+  "resolvedInVersion": "1.13.628"
 }

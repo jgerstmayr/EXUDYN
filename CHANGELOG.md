@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 598 | 1.13.627 |
+| 1.13 | Newborn | 599 | 1.13.628 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.628** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` AutoDiff expressions of the analytic connector Jacobians: measure their share, rewrite the costly ones (#3489)
+  - description: For AutoDiff\<12\>, SlimVector operator expressions take 3.6-4.4 times one loop (\#3487). Measure the share of such expressions in the time of the connectors with analytic Jacobians (\#2884); if noticeable, write them as one loop or with MultAdd, bitwise or within rounding; otherwise close with the measurement.
+  - **notes:** Measured: the connector forces by automatic differentiation take at most 1.4 % of a run (full Newton, a Jacobian in every iteration) and about 0.1 % with the default modified Newton; writing their vector expressions as loops would save at most about 1 %, so they stay as they are.
+  - date resolved: **2026-11-13 09:59**, date raised: 2026-11-13
 - **1.13.627** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` checkIssues.CheckStoredVersions orders issues resolved in the same minute by their numbers (#3491)
   - description: The check recomputes the version of every closed issue from its place in the order of dateResolved, which has minutes only; two issues resolved in the same minute were ordered by their numbers, so \#3487 (1.13.624) and \#3411 (1.13.625), resolved in this order, were reported as moved versions. Ties are ordered by the version the tracker wrote, which is the order of resolution.
   - **notes:** The check of the stored versions orders issues resolved in the same minute by their order of resolution instead of their numbers.
