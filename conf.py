@@ -108,6 +108,8 @@ exclude_patterns = ['rotorAnsys.rst',
                     #as documents of their own they would be orphans and fail the strict
                     #build (#2591)
                     'docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md',
+                    #the table of the performance of the releases, INCLUDED by docs/manual/performanceErrors.md (#3493)
+                    'docs/generated/performanceReleases.md',
                     'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

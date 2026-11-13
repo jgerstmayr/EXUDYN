@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 604 | 1.13.633 |
+| 1.13 | Newborn | 605 | 1.13.634 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.634** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The performance of the releases as a generated table in the documentation (#3493)
+  - description: A page of the documentation shows how the performance models evolve over the releases: one row per performance model (file times, no single runs or timers), one column per release, for Windows with the regular module and with the fast module where it exists; generated from python/logs/performance/performanceHistory.json by performanceHistory.py during the regeneration, so it is never written by hand.
+  - **notes:** The manual shows the performance of the releases: section Performance of the releases in Performance and ways to speed up computations, a table per module of the time of each performance model in each release, generated from the performance history.
+  - date resolved: **2026-11-13 12:49**, date raised: 2026-11-13
 - **1.13.633** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GraphicsMaterialList.Get returns old values after raytracer.materialN was changed in the settings (#3490)
   - description: SC.renderer.materials holds the ten predefined materials as a copy of visualizationSettings.raytracer.material0-9, refreshed only when the raytracer draws an image. After SC.visualizationSettings.raytracer.material4.reflectivity = 0.5, SC.renderer.materials.Get('chrome').reflectivity is still 0.25, and a following Set('chrome', ...) writes 0.25 back into the settings, so the change is lost (found while writing \#3488). Get, GetDict, \[\] and GetDictionary shall read the first ten from the settings.
   - **notes:** SC.renderer.materials reads the ten predefined materials from visualizationSettings.raytracer.material0-9, so a change made in the settings is seen by Get, GetDict and the renderer's dictionary, and Set of one material keeps the changes of the others; GetDict, Set with a dict and the renderer's dictionary carry the roughness.

@@ -201,3 +201,18 @@ The faster versions are available for all release versions, but only for some `.
 - adjust `simulationSettings.solution.sensors.writePeriod` to avoid time spent on writing sensor files
 - use `simulationSettings.solution.file.write = False`, otherwise much output may be written to file;
 - if solution file is needed, adjust `simulationSettings.solution.file.writePeriod` to larger values and also adjust `simulationSettings.solution.precision`, e.g., to 6, in order to avoid larger files; also adjust `simulationSettings.solution.file.export.velocities = False` and `simulationSettings.solution.file.export.accelerations = False` to avoid large output files
+
+(sec-overview-basics-performancereleases)=
+### Performance of the releases
+
+The performance models of `python/PerformanceModels` are run for every release with `runPerformanceTests.py`. The
+tables give the wall-clock time in seconds of each model file - several simulations each, with Python and the setup of
+the model included -, measured on the maintainer's computer; lower is better. A model added later has empty cells, and
+a model changed between two releases - more bodies, other solver settings - is not comparable across that change; the
+last row adds the models present in every release.
+
+```{include} /docs/generated/performanceReleases.md
+```
+
+The history with the development versions, the single runs and the solver timers is
+`python/logs/performance/performanceHistory.md` in the repository.

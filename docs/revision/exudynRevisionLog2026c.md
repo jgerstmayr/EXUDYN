@@ -6520,6 +6520,24 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg5-13"></a>
+### RG5.13 — the performance of the releases in the manual (2026-11-13, #3493)
+
+*(Maintainer 2026-11-13: in the performance section of the main part of the docs, "Performance and ways to speed
+up".)*
+
+- tools/generators/performanceReleasesEmitter.py (new stage of generate.py, reads performanceHistory.json): the
+  fragment docs/generated/performanceReleases.md with one table per module (regular: 1.9.0, 1.10.0, 1.11.0, 1.13.6;
+  fast: 1.13.6), Windows, the computer of the newest release run; one row per performance model (file times), the
+  last row the total of the models present in every release (17.66, 17.57, 17.94, 16.44 s regular). Excluded from the
+  document tree in conf.py, as the key binding fragments.
+- performanceErrors.md: section "Performance of the releases" at the end of "Performance and ways to speed up
+  computations", with the include and a note that a model changed between releases is not comparable across the
+  change; the full history stays python/logs/performance/performanceHistory.md.
+- The table grows when a release run is added with exudev perf --history-add; the next is 1.14.
+- Also committed: docs/generated/testModels/rendererMaterialsTest.md, the page of the test model of RG6.28, left out
+  of its commit.
+
 <a id="rg6-28"></a>
 ### RG6.28 — GraphicsMaterialList reads the predefined materials from the settings (2026-11-13, #3490)
 

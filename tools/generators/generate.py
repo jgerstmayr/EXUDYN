@@ -99,6 +99,9 @@ stages = [
     #(#2591)
     Stage('tools/generators/keyBindingsEmitter.py', ['python/exudyn/misc/keyBindings.py'],
           ['docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md']),
+    #the performance of the releases in the manual, from the performance history (#3493)
+    Stage('tools/generators/performanceReleasesEmitter.py', ['python/logs/performance/performanceHistory.json'],
+          ['docs/generated/performanceReleases.md']),
     #the notebooks are the one place of a tutorial: their page and their example script (#2831); the
     #stored outputs come from tools/runNotebooks.py, which is not a stage - it runs the models
     Stage('tools/generators/notebookEmitter.py', ['python/Notebooks'],

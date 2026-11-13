@@ -52,14 +52,13 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Finish the release rehearsal on `release/1.14`** (running since 2026-11-13) - the wheels of all 24 jobs, then the
    release around the end of November 2026, before the removal date of #3361.
-2. **Show the performance of the releases in the documentation** (RG5.13): a generated table, no decision.
-3. **Measure and design fewer parallel regions per residual** (RG5.14.1, RG5.14.2): the threads cost more than they
+2. **Measure and design fewer parallel regions per residual** (RG5.14.1, RG5.14.2): the threads cost more than they
    give below about 300 coordinates; the design note is for the maintainer to decide.
-4. **A real training run of spotReinforcementLearning.py** (RG19.14.4): torch, gym and stable-baselines3 are now in
+3. **A real training run of spotReinforcementLearning.py** (RG19.14.4): torch, gym and stable-baselines3 are now in
    venvP313.
-5. **Add the 3D sliding joint with rotation** (RG4.22): tested with the ANCF cable and beam; needs the decision which
+4. **Add the 3D sliding joint with rotation** (RG4.22): tested with the ANCF cable and beam; needs the decision which
    rotations the joint locks.
-6. **The larger open work**, after the release: the plugin interface (RG8).
+5. **The larger open work**, after the release: the plugin interface (RG8).
 
 # Revision plan open steps
 
@@ -71,7 +70,6 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG5** Performance
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
-  - RG5.13 Show the performance of the releases in the documentation, generated from performanceHistory.json
   - RG5.14 Run the main tasks of a residual and of an explicit stage in fewer parallel regions (5 open sub-steps)
 - **RG7** Python user items
   - RG7.18 Add MarkerNodeUser, a marker on the coordinates of nodes by Python user functions, for the coordinate constraint as user item
@@ -115,7 +113,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 4 | Implementation problems and bugs |
-| RG5 | OPEN | 9 | Performance |
+| RG5 | OPEN | 8 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 1 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -986,9 +984,13 @@ CLOSED 2026-11-12 (#3445): visualizationSettings.raytracer.numberOfThreads: mini
 
 CLOSED 2026-11-12 (#3454), no change: the arrays are the cells of the search tree, each allocated when a sphere first enters it and grown when it first holds more; only in the first solve (100 per step), a second solve from the initial state 0.15-0.7 per step, both in the same time. [log](exudynRevisionLog2026c.md#rg5-12)
 
-### **OPEN_RG5.13** Show the performance of the releases in the documentation, generated from performanceHistory.json
+### **CLOSED_RG5.13** Show the performance of the releases in the documentation, generated from performanceHistory.json
 
 #3493. Maintainer 2026-11-13: the evolution of the performance in the docs - a table like performanceHistory.md, only for releases and with much less detail (the models, not the single runs); generated from the .json file, for Windows regular and fast where available. The releases in performanceHistory.json: 1.9.0, 1.10.0, 1.11.0 and 1.13.6 regular, 1.13.6 fast (Windows, Python 3.13). Todo: a generated page in docs/generated/, its place in the table of contents, written by tools/regenerate.py.
+
+CLOSED 2026-11-13 (#3493): performanceReleasesEmitter.py, the fragment included in performanceErrors.md, section Performance of the releases. [log](exudynRevisionLog2026c.md#rg5-13)
+
+CLOSED 2026-11-13 (#3493): performanceReleasesEmitter.py, the fragment included in performanceErrors.md, section Performance of the releases. [log](exudynRevisionLog2026c.md#rg5-13)
 
 ### **OPEN_RG5.14** Run the main tasks of a residual and of an explicit stage in fewer parallel regions
 
