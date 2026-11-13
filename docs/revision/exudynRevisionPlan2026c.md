@@ -52,7 +52,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **The measurements of the temporaries** (RG5.2.7.1): they decide whether fused vector expressions (RG5.2.7.5) pay.
+2. **Fused vector expressions only for AutoDiff, or not at all** (RG5.2.7.5): the measurement shows no gain for Real
+   and 4 times for AutoDiff<12>; a decision whether to measure the share of the AutoDiff expressions in the connector
+   Jacobians and write those as loops, or to close the step.
 3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
@@ -62,7 +64,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
 - **RG5** Performance
-  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (3 open sub-steps)
+  - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes (2 open sub-steps)
   - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
   - RG5.10 Solve the systems of one SystemContainer in parallel, each on its own thread
 - **RG7** Python user items
@@ -109,7 +111,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | CLOSED | 0 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 3 | Implementation problems and bugs |
-| RG5 | OPEN | 6 | Performance |
+| RG5 | OPEN | 5 | Performance |
 | RG6 | CLOSED | 0 | Graphics and rendering |
 | RG7 | OPEN | 2 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
@@ -654,9 +656,11 @@ CLOSED 2026-11-12 (#3463), not done: the templated G products are bitwise equal 
 
 Maintainer 2026-11-12: the recommended expression templates into the plan (RG5.2.7.1-RG5.2.7.5).
 
-##### **OPEN_RG5.2.7.1** Measure the temporaries: the cases M1a-M1e in RunLinalgBenchmark
+##### **CLOSED_RG5.2.7.1** Measure the temporaries: the cases M1a-M1e in RunLinalgBenchmark
 
 #3461. expressionTemplates.md ET.1: both modules, the results into linalgBenchmark.md; they decide RG5.2.7.5 and confirm RG5.2.7.3.
+
+CLOSED 2026-11-13 (#3487): the group temporaries in RunLinalgBenchmark, both modules; for Real the operators cost the same as one loop (0.77 ns, fast), for AutoDiff<12> 3.6-4.4 times; Transposed(A) * B -18 %; linalgBenchmark.md section 3.11, expressionTemplates.md section 9. [log](exudynRevisionLog2026c.md#rg5-2-7-1)
 
 ##### **CLOSED_RG5.2.7.2** TransposedView: Transposed(A) * x without a copy
 
@@ -679,6 +683,8 @@ CLOSED 2026-11-13 (#3484): unit test bitwise. [log](exudynRevisionLog2026c.md#rg
 ##### **OPEN_RG5.2.7.5** Fused elementwise expressions on SlimVector, only if the measurement shows a gain
 
 #3461. ET.5: SlimVectorBase(T) explicit, then the restricted expressions of expressionTemplates.md 5.3, with a rule on auto in CODING_STYLE.md.
+
+Measured (RG5.2.7.1, expressionTemplates.md section 9): no gain for Real, so E3 as planned (on SlimVectorBase<Real>) does not pay; for AutoDiff<12> the operators take 3.6-4.4 times one loop. Open: whether to close this step, or to narrow it to the AutoDiff expressions of the analytic connector Jacobians (#2884) after measuring their share.
 
 #### **CLOSED_RG5.2.8** Consolidate the linear algebra function templates
 

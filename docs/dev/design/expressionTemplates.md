@@ -306,3 +306,18 @@ and `MultTransposedMatrix`. Only `SlimMatrix` gets the view: `Matrix3D` and `Mat
 run-time sized matrices keep the `EXUmath` kernels. The accessor is `GetMatrix()`, as `Matrix` is a type name. Unit
 test case in `SlimMatrixUnitTests.h`: 3x3, 3x4, 6x6 and an rvalue, bitwise against `A.GetTransposed() * x`. The item
 code is unchanged; its about 30 places are RG5.2.7.3.
+
+## 9. The measurements M1a-M1e (RG5.2.7.1, #3487, 2026-11-13)
+
+The cases of section 6 are the group `temporaries` of `RunLinalgBenchmark`; the table is
+[linalgBenchmark.md](linalgBenchmark.md) section 3.11. What they decide:
+
+- **E3 for `Real` does not pay.** `c = a*s1 + b*s2 - d` on `SlimVector<3>` takes 0.77 ns with the eager operators and with
+  one hand-written loop alike (fast module); the compiler removes the temporaries of 3 doubles. The condition of section
+  5.3 (a gain of at least 2 times) is not met.
+- **For `AutoDiff<12>` the temporaries cost 3.6-4.4 times** (47-69 ns against 13-16 ns). Fused expressions would pay
+  there, but only there: whether they pay in a simulation depends on the share of `SlimVectorBase<AutoDiff<12>,3>`
+  expressions in the analytic connector Jacobians (#2884), not measured yet. A cheaper remedy than E3 for those few
+  places is writing them as loops or with `MultAdd`.
+- E1 is confirmed for products of matrices (`Transposed(A) * B` -18 %); for `Transposed(A) * x` on `SlimMatrix<3,3>` it
+  is neutral, as `exudev perf` showed after RG5.2.7.3. E2 (`MultAdd`) is 5 times faster than `v = v + w*s` in a chain.

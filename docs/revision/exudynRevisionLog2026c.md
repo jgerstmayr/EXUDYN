@@ -6520,6 +6520,25 @@ right away.)*
   shadow image now (0.115 -> 0.088 s). Test suite (regular and fast) and pytest unchanged. Table in
   raytracerImprovements.md section 6; revisions.md.
 
+<a id="rg5-2-7-1"></a>
+### RG5.2.7.1 — the cost of the temporaries measured (2026-11-13, #3487)
+
+*(Maintainer 2026-11-13: do the next three suggested steps.)*
+
+- linalgBenchmark.h: the group `temporaries` (LinalgBenchmarkTemporaries, LinalgBenchmarkTemporariesM1bc for Real and
+  AutoDiff<12>) with the cases M1a-M1e of expressionTemplates.md section 6; the operator form against one loop,
+  MultAdd, Transposed() and the EXUmath kernels; the `v * A` variant of M1d does not exist (the operator is commented
+  out in SlimVector.h). test_linalgBenchmark.py expects the group. Scratch p_temporaries.py, tempBench.py (best of 3,
+  minimumTime 0.05).
+- Results (fast module): Real `c = a*s1 + b*s2 - d` 0.77 ns with operators and with one loop - the compiler removes the
+  temporaries; AutoDiff<12> 69 ns against 16 ns (4.4 times; regular 3.6 times); the chain `v = v + w*s` 2.8 ns against
+  0.5 ns with MultAdd; `Transposed(A) * B` -18 %, `Transposed(A) * x` neutral for SlimMatrix<3,3>, the expression of M1d
+  without any temporary -27 %; Vector (heap) 92 ns. In the regular module the hand-written loops are slower than the
+  operators (range checks per index).
+- Decision material for RG5.2.7.5 appended to the step: E3 does not pay for Real; for AutoDiff it would, depending on
+  the share of such expressions in the connector Jacobians. linalgBenchmark.md section 3.11, expressionTemplates.md
+  section 9.
+
 <a id="rg6-26-12"></a>
 ### RG6.26.12, RG6.26 — raytracer: cheaper reflections; the group closed (2026-11-13, #3486)
 

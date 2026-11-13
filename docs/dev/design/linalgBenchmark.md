@@ -39,7 +39,7 @@ results = exu.special.RunLinalgBenchmark(minimumTime=0.05, numberOfThreads=16)
 ```
 
 and the same with `EXUDYN_MODULE=fast` (`exudev build --fast` first). Each operation runs in batches that double until
-`minimumTime` has passed. Groups: `vector`, `small`, `jacobian`, `dense`, `assembly`, `autodiff`; libraries: `Exudyn`,
+`minimumTime` has passed. Groups: `vector`, `small`, `temporaries`, `jacobian`, `connector`, `dense`, `assembly`, `autodiff`; libraries: `Exudyn`,
 `Eigen` (the reference), `prototype` (a row-major matrix of compile-time size, `LinalgBenchmarkFixedMatrix`, with plain
 loops: the evidence for what known sizes gain without changing an Exudyn class). The source is
 `src/Linalg/linalgBenchmark.h`; `tools/benchmarks/avx2Benchmark.py` is the counterpart on the level of the solvers.
@@ -360,6 +360,50 @@ search tree of `GeneralContact` (`ArrayIndex` per cell, 32000 cells), each alloc
 grown when it first holds more; `SearchTree::ClearItems` keeps their memory between the steps. Solved again from the
 initial state, the same model allocates 0.15-0.6 arrays per step, and both solves take the same time (4.58 and 4.57 s
 for 101 steps; 20.28 and 20.32 s for 401 steps with 46624 and 59 arrays) - nothing to change (#3454).
+
+### 3.11 The temporaries of the eager operators (RG5.2.7.1, #3487)
+
+The group `temporaries` holds the cases M1a-M1e of [expressionTemplates.md](expressionTemplates.md) section 6: each
+expression as the item code writes it, against the same computation without temporaries. M1a is a chain (each call
+reads the result of the one before); M1b and M1c cycle through eight independent input sets (throughput, as in the item
+code). "scalars as T": the factors converted to the vector type first, as `TReal` code does. Best of three runs with
+`minimumTime=0.05`, 2026-11-13, MSVC, the same machine as section 3.
+
+| operation | regular [ns] | fast [ns] |
+|---|---:|---:|
+| `M1a v = v + w*s, operators` | 2.82 | 2.81 |
+| `M1a v = v + w*s, one loop` | 2.29 | 0.93 |
+| `M1a v = v + w*s, MultAdd` | 0.52 | 0.50 |
+| `M1b c = a*s1 + b*s2 - d, operators, SlimVector<3>` | 0.77 | 0.77 |
+| `M1b c = a*s1 + b*s2 - d, operators, scalars as T, SlimVector<3>` | 0.77 | 0.77 |
+| `M1b c = a*s1 + b*s2 - d, one loop, SlimVector<3>` | 1.63 | 0.77 |
+| `M1b c = a*s1 + b*s2 - d, one loop, scalars as T, SlimVector<3>` | 1.53 | 0.77 |
+| `M1b c = a*s1 + b*s2 - d, operators, Vector` | 96.12 | 91.54 |
+| `M1b c = a*s1 + b*s2 - d, operators, SlimVectorBase<AutoDiff<12>,3>` | 46.55 | 69.28 |
+| `M1b c = a*s1 + b*s2 - d, operators, scalars as T, SlimVectorBase<AutoDiff<12>,3>` | 38.40 | 64.84 |
+| `M1b c = a*s1 + b*s2 - d, one loop, SlimVectorBase<AutoDiff<12>,3>` | 12.78 | 15.83 |
+| `M1b c = a*s1 + b*s2 - d, one loop, scalars as T, SlimVectorBase<AutoDiff<12>,3>` | 17.96 | 17.12 |
+| `M1d Aj^T * (A1*w1 - A0*w0), GetTransposed()` | 9.19 | 9.24 |
+| `M1d Aj^T * (A1*w1 - A0*w0), Transposed()` | 9.12 | 9.19 |
+| `M1d Aj^T * (A1*w1 - A0*w0), no temporaries` | 10.04 | 6.70 |
+| `M1d Aj^T * (A1*w1 - A0*w0), ConstSizeMatrix<9>, GetTransposed()` | 16.88 | 9.85 |
+| `M1e A^T * B, GetTransposed()` | 8.76 | 8.25 |
+| `M1e A^T * B, Transposed()` | 7.36 | 6.80 |
+| `M1e A^T * B, ConstSizeMatrix<9>, GetTransposed()` | 14.67 | 12.92 |
+| `M1e A^T * B, ConstSizeMatrix<9>, MultMatrixTransposedMatrix` | 13.29 | 12.27 |
+
+- **`Real`, `SlimVector<3>`: the temporaries cost nothing.** In the fast module the operators and one hand-written loop
+  both take 0.77 ns (M1b); in the regular module the loop is slower (1.63 ns), because each `v[i]` is range checked and
+  the operators are not.
+- **`AutoDiff<12>`: the temporaries cost 3.6 times (regular) and 4.4 times (fast) the loop** - 47 and 69 ns against 13
+  and 16 ns for `c = a*s1 + b*s2 - d`. Each temporary is 39 doubles, written and read once more.
+- M1a, the chain `v = v + w*s`: 2.8 ns with the operators, 0.5 ns with `MultAdd`; the loop 0.9 ns (fast).
+- M1d, `Aj^T * (A1*w1 - A0*w0)`: `Transposed()` and `GetTransposed()` take the same time for `SlimMatrix` (copying 9
+  doubles is cheap); without any temporary 6.7 against 9.2 ns (fast, -27 %). `ConstSizeMatrix<9>` is slower in both
+  modules.
+- M1e, `A^T * B`: `Transposed()` 6.8 against 8.3 ns (-18 %, fast).
+- `Vector` (heap) as the operand of the same expression: 92-96 ns, 120 times `SlimVector<3>` - the reason why the
+  solvers use `CopyFrom` and `MultAdd` and the item code the stack types.
 
 ## 4. Eigen as the reference
 

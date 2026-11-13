@@ -27,7 +27,7 @@ def test_singleThreaded():
                  'ConstSizeMatrix<36> * ConstSizeVector<6>', 'HT inverse, rotation', 'Matrix * Vector',
                  'J^T K J, ResizableMatrix', '(J^T K) J into a block', 'dense factorize (InvertSpecial)', 'AddSubmatrix + FinalizeMatrix (setFromTriplets)']:
         assert name in operations
-    assert set(r['group'] for r in results) == {'vector', 'small', 'jacobian', 'connector', 'autodiff', 'dense', 'assembly'}
+    assert set(r['group'] for r in results) == {'vector', 'small', 'temporaries', 'jacobian', 'connector', 'autodiff', 'dense', 'assembly'}
     assert set(r['library'] for r in results) == {'Exudyn', 'Eigen', 'prototype'}
     for r in results:
         assert set(r.keys()) == {'group', 'library', 'operation', 'size', 'threads', 'nsPerCall', 'checkSum'}

@@ -8,6 +8,8 @@
 *				  - group 'vector': Vector, ConstSizeVector and ResizableVectorParallel add, scale, MultAdd over sizes
 *				    3 to 500 and across ResizableVectorParallelThreadingLimit, single- and multithreaded
 *				  - group 'small': Matrix3D, ConstSizeMatrix 6x6, HomogeneousTransformation, SlimVector
+*				  - group 'temporaries': vector and matrix expressions with the temporaries of the eager operators
+*				    against the same without them, for Real and AutoDiff<12> (#3487)
 *				  - group 'jacobian': J^T f and J^T K J for a 3 x n Jacobian, n = 6 ... 24, as the connectors do
 *				  - group 'connector': J^T K and (J^T K) J into a block for a 6 x n marker Jacobian (n = 6, 7, 12), as
 *				    CObjectConnector computes it, and 3x3 * 3 x n of the contacts (#3480)
@@ -225,6 +227,119 @@ inline void LinalgBenchmarkFixedVector(std::vector<LinalgBenchmarkResult>& resul
 		{ for (Index i = 0; i < n; i++) { pa[i] += pb[i]; } return pa[0]; }));
 }
 
+//! the cost of the temporaries of the eager vector and matrix operators (#3487, expressionTemplates.md M1a-M1e): each
+//! expression as the item code writes it, against the same computation written without temporaries; the eight input
+//! sets of M1b and M1c are cycled, so that the calls are independent (throughput, as in the item code), not a chain
+inline Real LinalgBenchmarkValue(Real x) { return x; }
+template<int nDiff>
+inline Real LinalgBenchmarkValue(const EXUmath::AutoDiff<nDiff, Real>& x) { return x.Value() + x.DValue(nDiff - 1); }
+
+template<class T>
+inline void LinalgBenchmarkTemporariesM1bc(std::vector<LinalgBenchmarkResult>& results, Real minimumTime, const std::string& typeName,
+	const T (&a)[8][3], const T (&b)[8][3], const T (&d)[8][3])
+{
+	const std::string group = "temporaries";
+	typedef SlimVectorBase<T, 3> V3;
+	V3 va[8], vb[8], vd[8];
+	for (Index k = 0; k < 8; k++) { for (Index i = 0; i < 3; i++) { va[k][i] = a[k][i]; vb[k][i] = b[k][i]; vd[k][i] = d[k][i]; } }
+	const Real s1 = 0.7, s2 = -0.3;
+	Index k = 0;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1b c = a*s1 + b*s2 - d, operators, " + typeName, 3, 1, minimumTime, [&]()
+		{ k = (k + 1) & 7; V3 c = va[k] * s1 + vb[k] * s2 - vd[k]; return LinalgBenchmarkValue(c[0]) + LinalgBenchmarkValue(c[2]); }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1b c = a*s1 + b*s2 - d, operators, scalars as T, " + typeName, 3, 1, minimumTime, [&]()
+		{ k = (k + 1) & 7; const T t1 = s1, t2 = s2; V3 c = va[k] * t1 + vb[k] * t2 - vd[k]; return LinalgBenchmarkValue(c[0]) + LinalgBenchmarkValue(c[2]); }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1b c = a*s1 + b*s2 - d, one loop, " + typeName, 3, 1, minimumTime, [&]()
+		{
+			k = (k + 1) & 7; V3 c;
+			for (Index i = 0; i < 3; i++) { c[i] = va[k][i] * s1 + vb[k][i] * s2 - vd[k][i]; }
+			return LinalgBenchmarkValue(c[0]) + LinalgBenchmarkValue(c[2]);
+		}));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1b c = a*s1 + b*s2 - d, one loop, scalars as T, " + typeName, 3, 1, minimumTime, [&]()
+		{
+			k = (k + 1) & 7; const T t1 = s1, t2 = s2; V3 c;
+			for (Index i = 0; i < 3; i++) { c[i] = va[k][i] * t1 + vb[k][i] * t2 - vd[k][i]; }
+			return LinalgBenchmarkValue(c[0]) + LinalgBenchmarkValue(c[2]);
+		}));
+}
+
+inline void LinalgBenchmarkTemporaries(std::vector<LinalgBenchmarkResult>& results, Real minimumTime)
+{
+	const std::string group = "temporaries";
+	//M1a: v = v + w*s, a chain as a time integration writes it
+	Vector3D v({ 0.3, -0.2, 0.7 }), w({ -0.1, 0.5, 0.2 });
+	const Real s = 1e-6;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1a v = v + w*s, operators", 3, 1, minimumTime, [&]() { v = v + w * s; return v[0]; }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1a v = v + w*s, one loop", 3, 1, minimumTime, [&]()
+		{ for (Index i = 0; i < 3; i++) { v[i] = v[i] + w[i] * s; } return v[0]; }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1a v = v + w*s, MultAdd", 3, 1, minimumTime, [&]() { v.MultAdd(s, w); return v[0]; }));
+
+	//M1b with Real, and with Vector (heap) as the counterpart that does not occur in hot code
+	Real a[8][3], b[8][3], d[8][3];
+	for (Index k = 0; k < 8; k++)
+	{
+		for (Index i = 0; i < 3; i++) { a[k][i] = 0.1 * (Real)(k + i); b[k][i] = 0.2 - 0.03 * (Real)(k * i); d[k][i] = 0.05 * (Real)(k - i); }
+	}
+	LinalgBenchmarkTemporariesM1bc<Real>(results, minimumTime, "SlimVector<3>", a, b, d);
+	{
+		Vector ha[8], hb[8], hd[8];
+		for (Index k = 0; k < 8; k++) { ha[k] = Vector({ a[k][0], a[k][1], a[k][2] }); hb[k] = Vector({ b[k][0], b[k][1], b[k][2] }); hd[k] = Vector({ d[k][0], d[k][1], d[k][2] }); }
+		Index k = 0;
+		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1b c = a*s1 + b*s2 - d, operators, Vector", 3, 1, minimumTime, [&]()
+			{ k = (k + 1) & 7; Vector c = ha[k] * 0.7 + hb[k] * (-0.3) - hd[k]; return c[0] + c[2]; }));
+	}
+
+	//M1c: the same with AutoDiff<12>, the type of the analytic connector Jacobians (#2884): a temporary is 39 doubles
+	{
+		typedef EXUmath::AutoDiff<12, Real> DReal12;
+		DReal12 da[8][3], db[8][3], dd[8][3];
+		for (Index k = 0; k < 8; k++)
+		{
+			for (Index i = 0; i < 3; i++)
+			{
+				da[k][i] = a[k][i]; da[k][i].DValue((int)i) = 1.;
+				db[k][i] = b[k][i]; db[k][i].DValue((int)(i + 6)) = 1.;
+				dd[k][i] = d[k][i]; dd[k][i].DValue((int)(i + 3)) = 0.5;
+			}
+		}
+		LinalgBenchmarkTemporariesM1bc<DReal12>(results, minimumTime, "SlimVectorBase<AutoDiff<12>,3>", da, db, dd);
+	}
+
+	//M1d: Ajoint^T * (A1*w1 - A0*w0), the relative angular velocity in joint coordinates of the connectors
+	Matrix3D A0(3, 3, { 0.36, 0.48, -0.8, -0.8, 0.6, 0., 0.48, 0.64, 0.6 });
+	Matrix3D A1 = A0.GetTransposed();
+	Matrix3D Aj = A0 * A1;
+	Vector3D w0({ 0.1, 0.2, -0.3 }), w1({ -0.2, 0.4, 0.1 }), r;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1d Aj^T * (A1*w1 - A0*w0), GetTransposed()", 3, 1, minimumTime, [&]()
+		{ r = Aj.GetTransposed() * (A1 * w1 - A0 * w0); w1[0] += 1e-12 * r[1]; return r[0]; }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1d Aj^T * (A1*w1 - A0*w0), Transposed()", 3, 1, minimumTime, [&]()
+		{ r = Transposed(Aj) * (A1 * w1 - A0 * w0); w1[0] += 1e-12 * r[1]; return r[0]; }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1d Aj^T * (A1*w1 - A0*w0), no temporaries", 3, 1, minimumTime, [&]()
+		{
+			Vector3D u;
+			for (Index i = 0; i < 3; i++)
+			{
+				u[i] = (A1(i, 0) * w1[0] + A1(i, 1) * w1[1] + A1(i, 2) * w1[2]) - (A0(i, 0) * w0[0] + A0(i, 1) * w0[1] + A0(i, 2) * w0[2]);
+			}
+			for (Index j = 0; j < 3; j++) { r[j] = Aj(0, j) * u[0] + Aj(1, j) * u[1] + Aj(2, j) * u[2]; }
+			w1[0] += 1e-12 * r[1]; return r[0];
+		}));
+	ConstSizeMatrix<9> cA0 = A0, cA1 = A1, cAj = Aj;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1d Aj^T * (A1*w1 - A0*w0), ConstSizeMatrix<9>, GetTransposed()", 3, 1, minimumTime, [&]()
+		{ r = cAj.GetTransposed() * (cA1 * w1 - cA0 * w0); w1[0] += 1e-12 * r[1]; return r[0]; }));
+
+	//M1e: A^T * B, 3x3
+	Matrix3D C;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1e A^T * B, GetTransposed()", 3, 1, minimumTime, [&]()
+		{ C = A0.GetTransposed() * A1; A1(0, 0) += 1e-12 * C(2, 2); return C(0, 1); }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1e A^T * B, Transposed()", 3, 1, minimumTime, [&]()
+		{ C = Transposed(A0) * A1; A1(0, 0) += 1e-12 * C(2, 2); return C(0, 1); }));
+	ConstSizeMatrix<9> cC;
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1e A^T * B, ConstSizeMatrix<9>, GetTransposed()", 3, 1, minimumTime, [&]()
+		{ cC = cA0.GetTransposed() * cA1; cA1(0, 0) += 1e-12 * cC(2, 2); return cC(0, 1); }));
+	results.push_back(LinalgBenchmarkTime(group, "Exudyn", "M1e A^T * B, ConstSizeMatrix<9>, MultMatrixTransposedMatrix", 3, 1, minimumTime, [&]()
+		{ EXUmath::MultMatrixTransposedMatrix(cA0, cA1, cC); cA1(0, 0) += 1e-12 * cC(2, 2); return cC(0, 1); }));
+}
+
 //! the benchmark; numberOfThreads > 1 adds the multithreaded ResizableVectorParallel runs
 inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, Index numberOfThreads)
 {
@@ -332,6 +447,8 @@ inline std::vector<LinalgBenchmarkResult> RunLinalgBenchmark(Real minimumTime, I
 		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "HT inverse, rotation", 3, 1, minimumTime, [&]() { H2 = H2.GetInverse(); return H2.GetTranslation()[1]; }));
 		results.push_back(LinalgBenchmarkTime(group, "Exudyn", "HT inverse, translation", 3, 1, minimumTime, [&]() { T2 = T2.GetInverse(); return T2.GetTranslation()[1]; }));
 	}
+
+	LinalgBenchmarkTemporaries(results, minimumTime);
 
 	//+++ the Jacobian kernels of the connectors: n = 6 (two 3D points), 7 (EP body), 12 (two rigid bodies), 14 (two EP bodies), 24 (two beam nodes)
 	LinalgBenchmarkJacobian<6>(results, minimumTime);

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 594 | 1.13.623 |
+| 1.13 | Newborn | 595 | 1.13.624 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.624** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RunLinalgBenchmark: the cost of temporary vectors (#3487)
+  - description: Cases in RunLinalgBenchmark for chains of vector operations on SlimVector and Vector (a + b\*c - d, sums of several products, as in the item code): the operator form with its temporaries against the in-place form (copy, +=, MultAdd), in both modules; the results decide whether fused elementwise expressions are worth their complexity.
+  - **notes:** RunLinalgBenchmark: the group temporaries measures vector and matrix expressions with the temporaries of the operators against the same without them; for Real vectors of size 3 they cost nothing, for AutoDiff\<12\> vectors 3.6-4.4 times one loop; the results are in linalgBenchmark.md section 3.11.
+  - date resolved: **2026-11-13 07:45**, date raised: 2026-11-13
 - **1.13.623** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` raytracer: cheaper reflections (#3486)
   - description: Reflections take 40 % of an image in a scene with a weakly reflective floor, and blurred reflections a multiple of that. raytracer.advanced.minimumShadowWeight: a hit of a reflected or refracted ray whose share in the color of the pixel is below it casts no shadow rays (0, the default, casts all). raytracer.advanced.adaptiveReflectionSamples: a blurred reflection traces its innermost and outermost rays first and takes their mean if their colors agree, as adaptiveShadowSamples does for soft shadows.
   - **notes:** raytracer.advanced.minimumShadowWeight (new, default 0): a hit of a reflected or refracted ray whose share in the color of the pixel is below this value casts no shadow rays and counts as lit; with 0.2, blurred reflections take 29 % less time in the benchmark scene, sharp ones 3 %; the default leaves the images unchanged.
