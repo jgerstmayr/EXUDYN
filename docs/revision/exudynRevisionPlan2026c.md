@@ -52,9 +52,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Rehearse the next release on a `release/*` branch** (the release probably around the end of November 2026, before the removal date of #3361) with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
-2. **Fused vector expressions only for AutoDiff, or not at all** (RG5.2.7.5): the measurement shows no gain for Real
-   and 4 times for AutoDiff<12>; a decision whether to measure the share of the AutoDiff expressions in the connector
-   Jacobians and write those as loops, or to close the step.
+2. **Measure the AutoDiff expressions of the connector Jacobians, rewrite the costly ones** (RG5.2.7.5): the operators
+   take 4 times one loop for AutoDiff<12>; their share in the time decides whether a rewrite pays.
 3. **The larger open work**, once the next release is planned: the plugin interface (RG8).
 
 # Revision plan open steps
@@ -679,11 +678,13 @@ CLOSED 2026-11-13 (#3483): 63 places, bitwise; exudev perf within noise. [log](e
 
 CLOSED 2026-11-13 (#3484): unit test bitwise. [log](exudynRevisionLog2026c.md#rg5-2-7-3)
 
-##### **OPEN_RG5.2.7.5** Fused elementwise expressions on SlimVector, only if the measurement shows a gain
+##### **OPEN_RG5.2.7.5** AutoDiff expressions of the analytic connector Jacobians: measure their share, then write the costly ones as loops or with MultAdd
 
 #3461. ET.5: SlimVectorBase(T) explicit, then the restricted expressions of expressionTemplates.md 5.3, with a rule on auto in CODING_STYLE.md.
 
 Measured (RG5.2.7.1, expressionTemplates.md section 9): no gain for Real, so E3 as planned (on SlimVectorBase<Real>) does not pay; for AutoDiff<12> the operators take 3.6-4.4 times one loop. Open: whether to close this step, or to narrow it to the AutoDiff expressions of the analytic connector Jacobians (#2884) after measuring their share.
+
+Maintainer 2026-11-13: narrow it. The step is now: measure the share of the AutoDiff<n> vector expressions in the time of the analytic connector Jacobians (#2884, exudev perf models with such connectors, a profile in the fast module); if it is noticeable, rewrite those expressions as one loop or with MultAdd, bitwise or within rounding; no expression templates on SlimVector. If the share is small, close the step with the measurement.
 
 #### **CLOSED_RG5.2.8** Consolidate the linear algebra function templates
 
